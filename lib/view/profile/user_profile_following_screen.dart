@@ -141,10 +141,14 @@ class UserProfileFollowingScreenState
                                         color:
                                             Color.fromARGB(255, 186, 186, 186)),
                                   ),
-                                  trailing: ElevatedButton(
+                                  trailing: TextButton(
                                     style: TextButton.styleFrom(
-                                        elevation: 2,
-                                        backgroundColor: Colors.white),
+                                      backgroundColor: Colors.white,
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
                                     onPressed: () async {
                                       await APIs.addChatUser(person.email)
                                           .then((value) {
@@ -156,7 +160,11 @@ class UserProfileFollowingScreenState
                                     },
                                     child: const Text(
                                       'Unfollow',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight
+                                            .bold, // Adjust the font weight as needed
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -165,7 +173,7 @@ class UserProfileFollowingScreenState
                           );
                         } else {
                           return const Center(
-                            child: Text('No Connections Found!',
+                            child: Text('No Following Found!',
                                 style: TextStyle(fontSize: 20)),
                           );
                         }
