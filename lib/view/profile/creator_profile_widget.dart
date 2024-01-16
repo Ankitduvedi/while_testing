@@ -9,7 +9,8 @@ import 'package:while_app/resources/components/message/apis.dart';
 import 'package:while_app/view/profile/creators_reels_screen.dart';
 
 class CreatorProfile extends StatelessWidget {
-  CreatorProfile({super.key});
+  CreatorProfile({super.key, required this.userID});
+  final String userID;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -19,7 +20,7 @@ class CreatorProfile extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('videos')
-            .where('uploadedBy', isEqualTo: APIs.me.id)
+            .where('uploadedBy', isEqualTo: userID)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

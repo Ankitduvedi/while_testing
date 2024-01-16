@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:while_app/resources/components/message/models/chat_user.dart';
+import 'package:while_app/view/profile/creator_profile_widget.dart';
 import 'package:while_app/view/profile/friend_profile_data_widget.dart';
 
 class FriendProfileScreen extends StatelessWidget {
@@ -49,9 +50,9 @@ class FriendProfileScreen extends StatelessWidget {
               ),
             ];
           },
-          body: const Column(
+          body: Column(
             children: [
-              Material(
+              const Material(
                 child: TabBar(
                   padding: EdgeInsets.all(0),
                   indicatorColor: Colors.black,
@@ -61,9 +62,12 @@ class FriendProfileScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text("Become a Content creator")),
-                    Center(child: Text("Become a Mentor")),
-                    Center(child: Text("Become a Freelancer")),
+                    Center(
+                        child: CreatorProfile(
+                      userID: chatUser.id,
+                    )),
+                    const Center(child: Text("Become a Mentor")),
+                    const Center(child: Text("Become a Freelancer")),
                   ],
                 ),
               ),

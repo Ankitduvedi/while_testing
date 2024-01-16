@@ -36,12 +36,13 @@ class UserProfileFollowingScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -49,9 +50,9 @@ class UserProfileFollowingScreenState
         ),
         title: const Text(
           'Following',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
       ),
 
       //body
@@ -130,8 +131,16 @@ class UserProfileFollowingScreenState
                                       ),
                                     ),
                                   ),
-                                  title: Text(person.name),
-                                  subtitle: Text(person.email),
+                                  title: Text(
+                                    person.name,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    person.email,
+                                    style: TextStyle(
+                                        color: const Color.fromARGB(
+                                            255, 186, 186, 186)),
+                                  ),
                                   trailing: ElevatedButton(
                                     style: TextButton.styleFrom(
                                         elevation: 2,
