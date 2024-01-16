@@ -133,13 +133,13 @@ class UserProfileFollowingScreenState
                                   ),
                                   title: Text(
                                     person.name,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                   subtitle: Text(
                                     person.email,
-                                    style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 186, 186, 186)),
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 186, 186, 186)),
                                   ),
                                   trailing: ElevatedButton(
                                     style: TextButton.styleFrom(
