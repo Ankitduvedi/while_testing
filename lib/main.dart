@@ -45,7 +45,7 @@ class MyApp extends river.ConsumerWidget {
       child: const MaterialApp(
         title: 'While',
         debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.home,
+        initialRoute: RoutesName.splash,
         onGenerateRoute: Routes.generateRoute,
         home: Wrapper(),
       ),
