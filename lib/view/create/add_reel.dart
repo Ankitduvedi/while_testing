@@ -135,7 +135,11 @@ class _AddReelState extends State<AddReel> {
             'views': 0,
             'thumbnail': data['assets']['thumbnail'],
           };
-          collectionReference.add(vid).then((value) {
+          FirebaseFirestore.instance
+              .collection('videos')
+              .doc(id)
+              .set(vid)
+              .then((value) {
             // Utils.toastMessage('Your video is uploaded!');
             setState(() {
               isloading = false;
@@ -143,6 +147,14 @@ class _AddReelState extends State<AddReel> {
             Navigator.pop(context);
             return data['videoId'];
           });
+          // collectionReference.add(vid).then((value) {
+          //   // Utils.toastMessage('Your video is uploaded!');
+          //   setState(() {
+          //     isloading = false;
+          //   });
+          //   Navigator.pop(context);
+          //   return data['videoId'];
+          // });
         } else {
           // Handle upload failure
           Dialogs.showSnackbar(context, 'Failed');
