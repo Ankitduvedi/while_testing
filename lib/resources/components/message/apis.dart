@@ -149,6 +149,29 @@ class APIs {
     return true;
   }
 
+  static Future<bool> unfollow(String id) async {
+    firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('following')
+        .doc(id)
+        .delete();
+    firestore
+        .collection('users')
+        .doc(id)
+        .collection('follower')
+        .doc(user.uid)
+        .delete();
+
+    return true;
+  }
+
+  static Future<bool> deleteReel(String id) async {
+    firestore.collection('videos').doc(id).delete();
+
+    return true;
+  }
+
   static Future<bool> following(String id) async {
     firestore
         .collection('users')

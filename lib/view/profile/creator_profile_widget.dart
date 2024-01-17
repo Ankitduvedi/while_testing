@@ -58,12 +58,17 @@ class CreatorProfile extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: InkWell(
-                          onTap: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => CreatorReelsScreen(
-                                        video: videoList[startIndex + index],
-                                        index: 0,
-                                      ))),
+                          onLongPress: () {
+                            final String id = snapshot.data!.docs[index].id;
+                            _showOptionsDialog(context, id);
+                          },
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CreatorReelsScreen(
+                                      video: videoList[startIndex + index],
+                                      index: 0,
+                                    )));
+                          },
                           child: ClipRRect(
                             // borderRadius: BorderRadius.circular(mq.height * .13),
                             child: CachedNetworkImage(
@@ -84,6 +89,44 @@ class CreatorProfile extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _showOptionsDialog(BuildContext context, String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Choose an Option'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Perform the action for Option 1
+              },
+              child: const Text('Option 1'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Perform the action for Option 2
+              },
+              child: const Text('Option 2'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                APIs.deleteReel(id);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors
+                    .red, // Change the text color to red for delete option
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

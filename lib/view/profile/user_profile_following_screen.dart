@@ -150,11 +150,11 @@ class UserProfileFollowingScreenState
                                       ),
                                     ),
                                     onPressed: () async {
-                                      await APIs.addChatUser(person.email)
+                                      await APIs.unfollow(person.id)
                                           .then((value) {
                                         if (value) {
                                           Dialogs.showSnackbar(
-                                              context, 'User Added');
+                                              context, 'Unfollowed');
                                         }
                                       });
                                     },
@@ -173,8 +173,9 @@ class UserProfileFollowingScreenState
                           );
                         } else {
                           return const Center(
-                            child: Text('No Following Found!',
-                                style: TextStyle(fontSize: 20)),
+                            child: Text('You are not following Anyone!',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white)),
                           );
                         }
                     }
