@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:while_app/data/model/video_model.dart';
 import 'package:while_app/main.dart';
 import 'package:while_app/resources/components/message/apis.dart';
 import 'package:while_app/view/profile/creators_reels_screen.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 
 class CreatorProfile extends StatelessWidget {
@@ -96,106 +94,55 @@ class CreatorProfile extends StatelessWidget {
     );
   }
 
-  // void _showOptionsDialog(BuildContext context, String id) {
-  //   final StreamController<DocumentSnapshot<Map<String, dynamic>>> _controller =
-  //     StreamController<DocumentSnapshot<Map<String, dynamic>>>();
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       http.get(Uri.parse('https://sandbox.api.video/videos/vi1n0cJIAJLommOiqmqPGvhm'))
-  //           .then((response) {
-  //         if (response.statusCode == 200) {
-  //           final Map<String, dynamic> data = json.decode(response.body);
-  //           _controller.add(DocumentSnapshot<Map<String, dynamic>>(
-  //             data: data,
-  //             exists: true,
-  //             reference: null, // You can provide a proper reference if needed
-  //           ));
-  //         } else {
-  //           _controller.addError('Failed to fetch data.');
-  //         }
-  //       }).catchError((error) {
-  //         _controller.addError('Failed to fetch data: $error');
-  //       });
-
-  //       return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-  //         stream: _controller.stream,
-  //         builder: (context, snapshot) {
-  //           if (snapshot.hasError) {
-  //             return AlertDialog(
-  //               title: const Text('Error'),
-  //               content: Text('Failed to fetch data: ${snapshot.error}'),
-  //             );
-  //           }
-
-  //           if (!snapshot.hasData || !snapshot.data!.exists) {
-  //             return AlertDialog(
-  //               title: const Text('Error'),
-  //               content: const Text('Data does not exist.'),
-  //             );
-  //           }
-
-  //           var data = snapshot.data!.data();
-  //           String title = data!['title'] ?? "No Title";
-  //           String description = data['description'] ?? "No Description";
-  //           int views = data['views'] ?? 0;
-  //           DateTime uploadedAt =
-  //               (data['uploadedAt'] as Timestamp?)?.toDate() ?? DateTime.now();
-
-  //           return AlertDialog(
-  //             title: const Text('Choose an Option'),
-  //             content: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 Text('Title: $title'),
-  //                 Text('Description: $description'),
-  //                 Text('Views: $views'),
-  //                 Text('Uploaded At: ${uploadedAt.toString()}'),
-  //               ],
-  //             ),
-  //             actions: [
-  //               TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                   // Perform the action for Option 1
-  //                 },
-  //                 child: const Text('Option 1'),
-  //               ),
-  //               TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                   // Perform the action for Option 2
-  //                 },
-  //                 child: const Text('Option 2'),
-  //               ),
-  //               TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                   // APIs.deleteReel(id);
-  //                   // Perform the action for Delete
-  //                 },
-  //                 style: TextButton.styleFrom(
-  //                   foregroundColor: Colors
-  //                       .red, // Change the text color to red for delete option
-  //                 ),
-  //                 child: const Text('Delete'),
-  //               ),
-  //             ],
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
   void _showOptionsDialog(BuildContext context, String id) {
     final Uri uri =
         Uri.parse('https://sandbox.api.video/videos/vi1n0cJIAJLommOiqmqPGvhm');
-    const String apiKey =
-        'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6'; // replace with your actual API key
+    const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // Define the initial dialog content with predefined buttons
+        Widget initialDialogContent = AlertDialog(
+          title: const Text('Choose an Option'),
+          content: const SizedBox(
+            height: 45,
+            width: 0,
+            child: Center(
+              child: CircularProgressIndicator(
+                value: null,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Perform the action for Option 1
+              },
+              child: const Text('Option 1'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Perform the action for Option 2
+              },
+              child: const Text('Option 2'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                APIs.deleteReel(id);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+
+        // Use a FutureBuilder to fetch data in the background
         return FutureBuilder(
           future: http.get(
             uri,
@@ -205,67 +152,97 @@ class CreatorProfile extends StatelessWidget {
             },
           ),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const AlertDialog(
-                title: Text('Error'),
-                content: Text('Failed to fetch data.'),
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Data is still being fetched, show the initial dialog content
+              return initialDialogContent;
+            } else if (snapshot.hasError) {
+              // Error while fetching data, show an error dialog
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Failed to fetch data: ${snapshot.error}'),
               );
-            }
-
-            if (!snapshot.hasData) {
+            } else if (!snapshot.hasData) {
+              // Data does not exist, show an error dialog
               return const AlertDialog(
                 title: Text('Error'),
                 content: Text('Data does not exist.'),
               );
-            }
+            } else {
+              // Data is fetched successfully, update the dialog content
+              var data = json.decode(snapshot.data!.body);
+              String title = data['title'] ?? "No Title";
+              String description = data['description'] ?? "No Description";
+              int views = data['views'] ?? 1000;
+              DateTime uploadedAt = DateTime.parse(data['createdAt']);
 
-            var data = json
-                .decode(snapshot.data!.body); // Assuming the response is JSON
-            String title = data['title'] ?? "No Title";
-            String description = data['description'] ?? "No Description";
-            int views = data['views'] ?? 1000;
-            DateTime uploadedAt = DateTime.parse(data['createdAt']);
-
-            return AlertDialog(
-              title: const Text('Choose an Option'),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Title: $title'),
-                  Text('Description: $description'),
-                  Text('Views: $views'),
-                  Text('Uploaded At: ${uploadedAt.toString()}'),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // Perform the action for Option 1
-                  },
-                  child: const Text('Option 1'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // Perform the action for Option 2
-                  },
-                  child: const Text('Option 2'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    APIs.deleteReel(id);
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors
-                        .red, // Change the text color to red for delete option
+              return AlertDialog(
+                title: const Hero(
+                  tag: 'dialog-title', // Use a unique tag for the Hero widget
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: Text('Choose an Option',
+                        style:
+                            TextStyle(fontSize: 16.0)), // Set a fixed text size
                   ),
-                  child: const Text('Delete'),
                 ),
-              ],
-            );
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Hero(
+                      tag:
+                          'dialog-content', // Use a unique tag for the Hero widget
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Title: $title',
+                                style: const TextStyle(
+                                    fontSize: 14.0)), // Set a fixed text size
+                            Text('Description: $description',
+                                style: const TextStyle(
+                                    fontSize: 14.0)), // Set a fixed text size
+                            Text('Views: $views',
+                                style: const TextStyle(
+                                    fontSize: 14.0)), // Set a fixed text size
+                            Text('Uploaded At: ${uploadedAt.toString()}',
+                                style: const TextStyle(
+                                    fontSize: 14.0)), // Set a fixed text size
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      // Perform the action for Option 1
+                    },
+                    child: const Text('Option 1'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      // Perform the action for Option 2
+                    },
+                    child: const Text('Option 2'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      APIs.deleteReel(id);
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                    ),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              );
+            }
           },
         );
       },
