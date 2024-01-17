@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:video_compress/video_compress.dart';
@@ -197,7 +196,6 @@ class _AddReelState extends State<AddReel> {
     // await Future.value(uploadTask);
 
     // final newUrl = await storageRef.getDownloadURL();
-    final user = FirebaseAuth.instance.currentUser!;
   }
 
   @override
@@ -250,6 +248,7 @@ class _AddReelState extends State<AddReel> {
                       Utils.flushBarErrorMessage(
                           'Please enter description', context);
                     } else {
+                      FocusManager.instance.primaryFocus?.unfocus();
                       uploadVideo(
                           context,
                           _titleController.text.toString(),

@@ -93,11 +93,28 @@ class CreatorProfile extends StatelessWidget {
   }
 
   void _showOptionsDialog(BuildContext context, String id) {
+    // Fetch additional details based on 'id' or any other criteria
+    String title = "Sample Title";
+    String description = "Sample Description";
+    int views = 100; // Sample views count
+    DateTime uploadedAt =
+        DateTime.now(); // Replace this with actual upload date
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Choose an Option'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Title: $title'),
+              Text('Description: $description'),
+              Text('Views: $views'),
+              Text('Uploaded At: ${uploadedAt.toString()}'),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
