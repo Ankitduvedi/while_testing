@@ -58,7 +58,8 @@ dependencies:
   firebase_messaging: ^14.7.6
   emoji_picker_flutter: ^1.6.1
   gallery_saver: ^2.3.2
-
+  share: 
+  uni_links:
   fijkplayer: ^0.10.0
   flutter_riverpod: ^2.3.7
   video_compress:

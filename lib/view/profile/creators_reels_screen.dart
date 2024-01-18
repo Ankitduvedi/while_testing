@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:while_app/data/model/video_model.dart';
+import 'package:share/share.dart';
+
 // import 'package:while_app/resources/components/videoPlayer/circle_animation.dart';
 
 class CreatorReelsScreen extends StatefulWidget {
@@ -154,12 +156,16 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                               ),
                             ],
                           ),
-                          const InkWell(
-                              child: Icon(
-                            Icons.share,
-                            color: Colors.white,
-                            size: 30,
-                          )),
+                          InkWell(
+                              onTap: () {
+                                // Share text
+                                Share.share('Check out this amazing content!');
+                              },
+                              child: const Icon(
+                                Icons.share,
+                                color: Colors.white,
+                                size: 30,
+                              )),
 
                           // CircleAnimation(
                           //     child: buildMusicAlbum('profile photo')),
