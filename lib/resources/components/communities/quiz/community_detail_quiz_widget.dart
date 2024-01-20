@@ -41,18 +41,19 @@ void _hardQuiz(BuildContext context) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           GestureDetector(
             onTap: () => _easyQuiz(context),
-            child: const QuizTile(level: 'Easy', gradientColors: [Colors.blue, Colors.green])),
+            child: const QuizTile(level: 'Easy', gradientColors: [Color.fromARGB(255, 87, 208, 235), Color.fromARGB(255, 107, 233, 112)])),
           GestureDetector(
             onTap: () => _mediumQuiz(context),
-            child: const QuizTile(level: 'Medium', gradientColors: [Colors.orange, Colors.yellow])),
+            child: const QuizTile(level: 'Medium', gradientColors: [Color.fromARGB(255, 231, 198, 152), Colors.yellow])),
           GestureDetector(
             onTap: () => _hardQuiz(context),
-            child: const QuizTile(level: 'Hard', gradientColors: [Colors.red, Colors.purple])),
+            child: const QuizTile(level: 'Hard', gradientColors: [Color.fromARGB(255, 238, 148, 142), Color.fromARGB(255, 227, 16, 16)])),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -93,7 +94,7 @@ class QuizTile extends StatelessWidget {
       child: Center(
         child: Text(
           level,
-          style: const TextStyle(fontSize: 24, color: Colors.white),
+          style: const TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );
