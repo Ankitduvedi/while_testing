@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -157,9 +158,11 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                             ],
                           ),
                           InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                //generate url
+                                final url = await APIs.shareDynamicLinks();
                                 // Share text
-                                Share.share('Check out this amazing content!');
+                                Share.share(url);
                               },
                               child: const Icon(
                                 Icons.share,

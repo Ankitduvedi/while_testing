@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
@@ -874,5 +875,36 @@ class APIs {
       'email': clas.email,
       'domain': clas.about,
     });
+  }
+
+  ///////////dynamic links
+  static Future<String> shareDynamicLinks() async {
+    log('function called');
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://while.co.in/app/?screen=/home"),
+      uriPrefix: "https://while.co.in/app",
+      androidParameters: const AndroidParameters(
+        packageName: "com.example.while_app",
+        //minimumVersion: 20,
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: "com.example.app.ios",
+        appStoreId: "123456789",
+        minimumVersion: "1.0.1",
+      ),
+      googleAnalyticsParameters: const GoogleAnalyticsParameters(
+        source: "While",
+        medium: "social",
+        campaign: "example-promo",
+      ),
+      // socialMetaTagParameters: SocialMetaTagParameters(
+      //   title: "Example of a Dynamic Link",
+      //   imageUrl: Uri.parse("https://example.com/image.png"),
+      // ),
+    );
+    final dynamicLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+    log(dynamicLink.shortUrl.toString());
+    return dynamicLink.shortUrl.toString();
   }
 }
