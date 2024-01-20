@@ -16,12 +16,6 @@ import 'utils/routes/routes.dart';
 import 'view/profile/user_profile_screen.dart';
 import 'package:get/get.dart';
 
-// final userProvider = river.StreamProvider((ref) {
-//   return FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(APIs.me.id)
-//       .snapshots();
-// });
 late Size mq;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +27,6 @@ void main() async {
 }
 
 class MyApp extends river.ConsumerWidget {
-  //final DeepLinkHandler _deepLinkHandler = DeepLinkHandler();
   const MyApp({super.key});
 
   @override
@@ -79,37 +72,14 @@ void initDynamicLinks() async {
       // Set up the `onLink` event listener next as it may be received here
       final route =
           pendingDynamicLinkData.link.queryParameters['screen'].toString();
+      final url = pendingDynamicLinkData.link.queryParameters['url'].toString();
       if (route != null) {
         log(route);
+        log(url);
         log('////initDyanamic ');
         // Example of using the dynamic link to push the user to a different screen
         Get.toNamed(route);
       }
     },
   );
-  // FirebaseDynamicLinks.instance.onLink(
-  //   onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-  //     final Uri? deeplink = dynamicLink?.link;
-  //     if (deeplink != null) {
-  //       Get.toNamed(deeplink.queryParameters.values.first);
-  //       // print("deeplink");
-  //     }
-  //   },
-  //   onError: (OnLinkErrorException e) async {
-  //     print(e.message);
-  //   },
-  // );
-
-  // FirebaseDynamicLinks.instance
-  //     .getInitialLink()
-  //     .then((PendingDynamicLinkData? dynamicLink) {
-  //   final Uri? deepLink = dynamicLink?.link;
-  //   if (deepLink != null) {
-  //     //Get.toNamed(deepLink.queryParameters.values.first);
-  //     Get.toNamed(deepLink.queryParameters['screen'] ?? '/');
-  //     log(deepLink.toString());
-  //     print(deepLink.toString());
-  //     // Handle the initial deep link as needed
-  //   }
-  // });
 }

@@ -878,10 +878,10 @@ class APIs {
   }
 
   ///////////dynamic links
-  static Future<String> shareDynamicLinks() async {
+  static Future<String> shareDynamicLinks(String screen, String url) async {
     log('function called');
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://while.co.in/app/?screen=/home"),
+      link: Uri.parse("https://while.co.in/app/?screen=/$screen&url=$url"),
       uriPrefix: "https://while.co.in/app",
       androidParameters: const AndroidParameters(
         packageName: "com.example.while_app",

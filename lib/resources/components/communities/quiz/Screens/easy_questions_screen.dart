@@ -58,7 +58,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   Timer? timer;
 
   startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (seconds > 0) {
           seconds--;
@@ -115,7 +115,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
             return Center(
               child: Text(
                 'Error: ${snapshot.error}',
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             );
           }
@@ -141,7 +141,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
                     height: 60,
                     child: Container(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.black),
+                      decoration: const BoxDecoration(color: Colors.black),
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +150,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   CupertinoIcons.back,
                                   color: Colors.white,
                                   size: 40,
@@ -158,12 +158,12 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
                             Stack(alignment: Alignment.center, children: [
                               Text(
                                 "$seconds",
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                               CircularProgressIndicator(
                                 value: seconds / 45,
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.lightGreen),
+                                valueColor: const AlwaysStoppedAnimation(
+                                    Colors.lightGreen),
                               ),
                             ]),
                             SizedBox(
@@ -173,10 +173,10 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
                                   onPressed: () {},
                                   label: Text(
                                     "${widget.lives}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.red, fontSize: 20),
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     CupertinoIcons.heart_fill,
                                     color: Colors.red,
                                     size: 35,

@@ -160,7 +160,8 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                           InkWell(
                               onTap: () async {
                                 //generate url
-                                final url = await APIs.shareDynamicLinks();
+                                final url = await APIs.shareDynamicLinks(
+                                    'screen', 'url12345');
                                 // Share text
                                 Share.share(url);
                               },
