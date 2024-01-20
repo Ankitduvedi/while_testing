@@ -12,22 +12,39 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+
+     Size screenSize = MediaQuery.of(context).size;
+
+    // Access width and height
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
+
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+
+      body: Stack(
         children: [
-          const SizedBox(
-            height: 30,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Image.asset('assets/quiz.png', 
+            width: screenWidth,
+            height: screenHeight,
+           // fit: BoxFit.cover,
+            
+            ),
           ),
-          const Text(
-              style: TextStyle(fontSize: 28), 'This screen will provide instructions for the quiz'),
-          const SizedBox(
-            height: 30,
-          ),
-          ElevatedButton.icon(
-            onPressed: startQuiz,
-            icon: const Icon(Icons.arrow_forward_ios_rounded),
-            label: const Text(style: TextStyle(fontSize: 20), 'Start Quiz'),
+          Padding(
+            padding: EdgeInsets.fromLTRB(screenWidth*0.2, screenHeight*0.82, screenWidth*0.2, screenHeight*0),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(screenWidth*0.8, screenHeight*0.1),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+              ),
+              onPressed: startQuiz,
+              icon: const Icon(Icons.arrow_forward_ios_rounded, size: 28,),
+              label: const Text(style: TextStyle(fontSize: 30), 'Start Quiz'),
+            ),
           ),
           // TextButton(
           //   onPressed: () {},

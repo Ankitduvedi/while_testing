@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
   const ResultsScreen(
-      {super.key, required this.chosenAnswers, required this.onPressed});
+      {super.key, required this.chosenAnswers, required this.onPressed, required this.correctAnswers});
 
   final List<String> chosenAnswers;
   final void Function() onPressed;
+  final int correctAnswers;
 
   // List<Map<String, Object>> getSummaryData() {
   //   final List<Map<String, Object>> summary = [];
@@ -37,18 +38,20 @@ class ResultsScreen extends StatelessWidget {
     //   return data['user_answer'] == data['correct_answer'];
     // }).length;
 
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Container(
+        //decoration: BoxDecoration(color: Colors.red),
+        //color: Colors.pink,
 
 
         margin: const EdgeInsets.all(40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-                'You answered out of questions correctly!',
-                style: TextStyle(fontSize: 25),
+            Text(
+                'You answered $correctAnswers questions correctly!',
+                style: TextStyle(fontSize: 25, color: Colors.white),
                 textAlign: TextAlign.center),
             const SizedBox(height: 40),
             // QuestionsSummary(summaryData),
@@ -57,7 +60,7 @@ class ResultsScreen extends StatelessWidget {
             ),
             ElevatedButton.icon(onPressed: onPressed, 
             icon: const Icon(Icons.cached_outlined),
-            label: const Text(style: TextStyle(fontSize: 20),'Restart Quiz'))
+            label: const Text(style: TextStyle(fontSize: 20),'Back to Community'))
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+//WWW
+
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/easy_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
@@ -20,6 +22,8 @@ class Quiz extends StatefulWidget {
 class _QuizState extends State<Quiz> {
   List<String> selectedAnswers = [];
   Widget? activeScreeen;
+  int lives = 3;
+  int correctAnswers = 0;
 
   @override
   void initState() {
@@ -34,18 +38,24 @@ class _QuizState extends State<Quiz> {
           activeScreeen = EasyQuestionsScreen(
             onSelectAnswer: chooseAnswer,
             user: widget.user,
+            correctAnswers: correctAnswers,
+            lives: lives,
           );
         }
         if (widget.category == 'Medium') {
           activeScreeen = MediumQuestionsScreen(
+            lives: lives,
             onSelectAnswer: chooseAnswer,
             user: widget.user,
+            correctAnswers: correctAnswers,
           );
         }
         if (widget.category == 'Hard') {
           activeScreeen = HardQuestionsScreen(
             onSelectAnswer: chooseAnswer,
             user: widget.user,
+            correctAnswers: correctAnswers,
+            lives: lives,
           );
         }
       },
@@ -54,19 +64,21 @@ class _QuizState extends State<Quiz> {
 
   void restartQuiz() {
     setState(() {
-      activeScreeen = StartScreen(switchScreen);
+      Navigator.pop(context);
+      //activeScreeen = QuizScreen(user: widget.user);
       selectedAnswers = [];
     });
   }
 
-  void chooseAnswer(String answer) {
+  void chooseAnswer(String answer, int lives, int correctAnswers) {
     selectedAnswers.add(answer);
 
-    if (selectedAnswers.length == 5) {
+    if (selectedAnswers.length == 10 || lives == 0) {
       setState(() {
         activeScreeen = ResultsScreen(
           chosenAnswers: selectedAnswers,
           onPressed: restartQuiz,
+          correctAnswers: correctAnswers,
         );
       });
     }
