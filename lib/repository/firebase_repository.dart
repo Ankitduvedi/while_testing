@@ -14,6 +14,7 @@ class FirebaseAuthMethods {
 
   User get user => _auth.currentUser!;
   ChatUser newUser = ChatUser(
+    lives: 0,
     easyQuestions: 0,
     hardQuestions: 0,
     image: 'image',

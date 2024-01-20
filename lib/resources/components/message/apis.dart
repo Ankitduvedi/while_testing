@@ -28,6 +28,7 @@ class APIs {
 
   // for storing self information
   static ChatUser me = ChatUser(
+    lives: 0,
     id: user.uid,
     easyQuestions: 0,
     hardQuestions: 0,
@@ -286,6 +287,7 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      lives: 0,
       easyQuestions: 0,
       id: user.uid,
       hardQuestions: 0,
@@ -317,6 +319,7 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      lives: 0,
       easyQuestions: 0,
       hardQuestions: 0,
       mediumQuestions: 0,

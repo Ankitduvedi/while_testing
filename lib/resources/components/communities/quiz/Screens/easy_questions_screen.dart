@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,10 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class EasyQuestionsScreen extends StatefulWidget {
   final CommunityUser user;
-  int lives;
 
   EasyQuestionsScreen({
     super.key,
     required this.user,
-    required this.lives,
   });
 
   @override
@@ -25,6 +24,12 @@ class EasyQuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
+  late int lives;
+  getlive() async {
+    lives = await LivesManager.getLives();
+    setState(() {});
+  }
+
   int correctAnswers = 0;
 
   Future<List<Map<String, dynamic>>> _getQuestions() async {
@@ -43,6 +48,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   @override
   void initState() {
     super.initState();
+    getlive();
     quizzz = _getQuestions();
     startTimer();
   }
@@ -79,11 +85,12 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
       if (selectedAnswers == correctAnswer) {
         correctAnswers++;
       } else {
-        widget.lives--;
+        lives--;
+        LivesManager.decrementLife();
       }
       timer!.cancel();
 
-      if ((questions.length - 1) > currentQuestionIndex && widget.lives > 0) {
+      if ((questions.length - 1) > currentQuestionIndex && lives > 0) {
         currentQuestionIndex = currentQuestionIndex + 1;
         startTimer();
         seconds = 45;
@@ -183,7 +190,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
                                 TextButton.icon(
                                   onPressed: () {},
                                   label: Text(
-                                    "${widget.lives}",
+                                    "${lives}",
                                     style: const TextStyle(
                                         color: Colors.red, fontSize: 20),
                                   ),

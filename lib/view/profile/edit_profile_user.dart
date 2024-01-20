@@ -26,6 +26,7 @@ class _ProfileScreenState extends State<EditUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final ChatUser user = ChatUser(
+      lives: 0,
       easyQuestions: 0,
       hardQuestions: 0,
       mediumQuestions: 0,
