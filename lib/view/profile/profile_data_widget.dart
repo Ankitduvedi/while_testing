@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/view/profile/user_profile_follower_screen.dart';
-import 'package:while_app/view/profile/user_profile_following_screen.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view/profile/user_profile_follower_screen.dart';
+import 'package:com.example.while_app/view/profile/user_profile_following_screen.dart';
 import '../../main.dart';
 import '../../resources/components/bottom_options_sheet.dart';
 

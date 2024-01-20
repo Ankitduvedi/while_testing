@@ -8,9 +8,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:while_app/resources/components/message/helper/dialogs.dart';
-import 'package:while_app/resources/components/message/models/chat_user.dart';
-import 'package:while_app/resources/components/message/models/classroom_user.dart';
+import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
 
 import '../message/apis.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/container_button.dart';
-import 'package:while_app/resources/components/menu_container.dart';
+import 'package:com.example.while_app/resources/components/container_button.dart';
+import 'package:com.example.while_app/resources/components/menu_container.dart';
 
 class CreateMenuScreen extends StatelessWidget {
   const CreateMenuScreen({super.key});

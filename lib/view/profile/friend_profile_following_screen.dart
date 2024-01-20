@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/resources/components/message/helper/dialogs.dart';
-import 'package:while_app/resources/components/message/models/chat_user.dart';
-import 'package:while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 
 import '../../main.dart';
 

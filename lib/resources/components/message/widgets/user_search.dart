@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 
 class UserSearch extends StatefulWidget {
   const UserSearch({Key? key}) : super(key: key);

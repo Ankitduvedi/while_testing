@@ -5,7 +5,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:while_app/resources/components/message/widgets/message_card.dart';
+import 'package:com.example.while_app/resources/components/message/widgets/message_card.dart';
 import '../../../main.dart';
 import 'apis.dart';
 import 'helper/my_date_util.dart';
@@ -170,7 +170,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             list.isNotEmpty ? list[0].image : widget.user.image,
                         errorWidget: (context, url, error) =>
                             const CircleAvatar(
-                                child: Icon(CupertinoIcons.person, color: Colors.white,)),
+                                child: Icon(
+                          CupertinoIcons.person,
+                          color: Colors.white,
+                        )),
                       ),
                     ),
 

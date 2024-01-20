@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/colors.dart';
-import 'package:while_app/resources/components/header_widget.dart';
-import 'package:while_app/resources/components/round_button.dart';
-import 'package:while_app/resources/components/text_container_widget.dart';
-import 'package:while_app/utils/utils.dart';
+import 'package:com.example.while_app/resources/colors.dart';
+import 'package:com.example.while_app/resources/components/header_widget.dart';
+import 'package:com.example.while_app/resources/components/round_button.dart';
+import 'package:com.example.while_app/resources/components/text_container_widget.dart';
+import 'package:com.example.while_app/utils/utils.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);

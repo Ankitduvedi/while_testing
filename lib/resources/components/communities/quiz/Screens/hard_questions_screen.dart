@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
 class HardQuestionsScreen extends StatefulWidget {
   final CommunityUser user;
   final void Function(String answer) onSelectAnswer;
 
-  const HardQuestionsScreen({super.key, required this.user, required this.onSelectAnswer});
+  const HardQuestionsScreen(
+      {super.key, required this.user, required this.onSelectAnswer});
 
   @override
   _QuestionsScreenState createState() => _QuestionsScreenState();
@@ -19,7 +20,7 @@ class _QuestionsScreenState extends State<HardQuestionsScreen> {
   void answerQuestion(String selectedAnswers) {
     widget.onSelectAnswer(selectedAnswers);
     setState(() {
-      currentQuestionIndex = currentQuestionIndex +1;
+      currentQuestionIndex = currentQuestionIndex + 1;
     });
   }
 
@@ -84,22 +85,22 @@ class _QuestionsScreenState extends State<HardQuestionsScreen> {
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
 
- List<Widget> _buildAnswerButtons(Map<String, dynamic> question) {
-  final options = question['options'];
+  List<Widget> _buildAnswerButtons(Map<String, dynamic> question) {
+    final options = question['options'];
 
-  if (options is Map<String, dynamic>) {
-    return options.keys.map((option) {
-      return ElevatedButton(
-        onPressed: () {
-          // Handle the selected answer
-          answerQuestion(option);
-        },
-        child: Text(options[option]),
-      );
-    }).toList();
-  } else {
-    // Handle the case where 'options' is not a Map
-    return [const Text('Error: Options not available')];
+    if (options is Map<String, dynamic>) {
+      return options.keys.map((option) {
+        return ElevatedButton(
+          onPressed: () {
+            // Handle the selected answer
+            answerQuestion(option);
+          },
+          child: Text(options[option]),
+        );
+      }).toList();
+    } else {
+      // Handle the case where 'options' is not a Map
+      return [const Text('Error: Options not available')];
+    }
   }
-}
 }

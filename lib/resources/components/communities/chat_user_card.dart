@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:while_app/main.dart';
+import 'package:com.example.while_app/main.dart';
 
 import '../message/apis.dart';
 import '../message/chat_screen.dart';

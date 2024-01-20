@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/communities/add_community_widget.dart';
-import 'package:while_app/resources/components/message/home_screen.dart';
-import 'package:while_app/view/social/notification.dart';
-import 'package:while_app/view/social/status_screen.dart';
-import 'package:while_app/view/social/story_screen.dart';
+import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
+import 'package:com.example.while_app/resources/components/message/home_screen.dart';
+import 'package:com.example.while_app/view/social/notification.dart';
+import 'package:com.example.while_app/view/social/status_screen.dart';
+import 'package:com.example.while_app/view/social/connect_screen.dart';
 
 import '../../resources/components/communities/community_home_screen.dart';
 
@@ -183,7 +183,7 @@ class _SocialScreenState extends State<SocialScreen>
             body: TabBarView(
               controller: _controller,
               children: [
-                const StoryScreen(),
+                const ConnectScreen(),
                 HomeScreenFinal(
                   isSearching: isSearchingHasValue,
                   value: value,

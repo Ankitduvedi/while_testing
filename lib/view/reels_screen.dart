@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
-import 'package:while_app/controller/feed_item.dart';
-import 'package:while_app/controller/videos_lists.dart';
-import 'package:while_app/data/model/video_model.dart';
+import 'package:com.example.while_app/controller/feed_item.dart';
+import 'package:com.example.while_app/controller/videos_lists.dart';
+import 'package:com.example.while_app/data/model/video_model.dart';
 import '../utils/data_provider.dart';
 import 'package:provider/provider.dart' as provi;
 

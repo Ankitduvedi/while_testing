@@ -6,18 +6,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:while_app/main.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.example.while_app/main.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 
-class StoryScreen extends StatefulWidget {
-  const StoryScreen({Key? key}) : super(key: key);
+class ConnectScreen extends StatefulWidget {
+  const ConnectScreen({Key? key}) : super(key: key);
 
   @override
-  StoryScreenState createState() => StoryScreenState();
+  ConnectScreenState createState() => ConnectScreenState();
 }
 
-class StoryScreenState extends State<StoryScreen>
+class ConnectScreenState extends State<ConnectScreen>
     with SingleTickerProviderStateMixin {
   late Stream<QuerySnapshot> peopleStream;
   late Stream<QuerySnapshot> pagesStream;
@@ -148,17 +149,18 @@ class StoryScreenState extends State<StoryScreen>
                           filteredPeople[index].data() as Map<String, dynamic>;
 
                       return ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(mq.height * .03),
-                          child: CachedNetworkImage(
-                            width: mq.height * .055,
-                            height: mq.height * .055,
-                            fit: BoxFit.fill,
-                            imageUrl: person['image'],
-                            errorWidget: (context, url, error) =>
-                                const CircleAvatar(
-                                    child: Icon(CupertinoIcons.person)),
-                          ),
+                        leading: GestureDetector(
+                          // onTap: () {
+                          //   showDialog(
+                          //       context: context,
+                          //       builder: (_) => ProfileDialog(user: person));
+                          // },
+                          child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(mq.height * .03),
+                              child: Image.network(
+                                person['image'],
+                              )),
                         ),
                         title: Text(
                           person['name'],

@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:while_app/view/video_player_screen.dart';
+import 'package:com.example.while_app/view/video_player_screen.dart';
 
 class VideoItem {
   final String videoUrl;
@@ -135,7 +135,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     reverse: false,
                     autoPlay: true,
                     autoPlayInterval: const Duration(seconds: 3),
-                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: true,
                     onPageChanged: (index, reason) {

@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:while_app/main.dart';
+import 'package:com.example.while_app/main.dart';
 import '../message/apis.dart';
 import 'cdetail.dart';
 import '../message/helper/my_date_util.dart';
@@ -78,20 +78,21 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 ),
 
                 //user name
-                title: Text(widget.user.name,
-                style: const TextStyle(color: Colors.white),
+                title: Text(
+                  widget.user.name,
+                  style: const TextStyle(color: Colors.white),
                 ),
 
                 //last message
                 subtitle: Text(
-                    _message != null
-                        ? _message!.types == Types.image
-                            ? 'image'
-                            : _message!.msg
-                        : widget.user.about,
-                    maxLines: 1,
-                    style: const TextStyle(color: Colors.white),
-                    ),
+                  _message != null
+                      ? _message!.types == Types.image
+                          ? 'image'
+                          : _message!.msg
+                      : widget.user.about,
+                  maxLines: 1,
+                  style: const TextStyle(color: Colors.white),
+                ),
 
                 //last message time
                 trailing: _message == null
@@ -114,7 +115,6 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                                 context: context, time: _message!.sent),
                             style: const TextStyle(color: Colors.white),
                           ),
-                          
               );
             },
           )),

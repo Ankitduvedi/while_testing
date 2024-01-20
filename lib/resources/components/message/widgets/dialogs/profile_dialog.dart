@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:while_app/view/profile/friend_profile_screen%20copy.dart';
+import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
 import '../../../../../main.dart';
 import '../../models/chat_user.dart';
 

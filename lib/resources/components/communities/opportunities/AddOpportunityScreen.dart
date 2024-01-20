@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/message/models/community_user.dart';
-import 'package:while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
+import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -66,13 +66,16 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
               ),
             ),
             ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.white)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white)),
               onPressed: () {
                 // Upload the new opportunity to Firestore
                 _uploadOpportunity();
                 Navigator.pop(context);
               },
-              child: const Text('Add Opportunity',  style: TextStyle(color: Colors.black)),
+              child: const Text('Add Opportunity',
+                  style: TextStyle(color: Colors.black)),
             ),
           ],
         ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:while_app/resources/components/communities/quiz/quiz_model.dart';
-import 'package:while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/quiz_model.dart';
+import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
 const uuid = Uuid();
 
@@ -30,40 +30,39 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   List<String> categories = ['Easy', 'Medium', 'Hard'];
   String selectedCategory = 'Easy';
 
-void _saveQuestion() async {
-  final newQuestion = Questions(
-    id: uuid.v4(),
-    question: questionController.text,
-    options: {
-      'A': option1Controller.text,
-      'B': option2Controller.text,
-      'C': option3Controller.text,
-      'D': option4Controller.text,
-    },
-    correctAnswer: selectedOption,
-  );
+  void _saveQuestion() async {
+    final newQuestion = Questions(
+      id: uuid.v4(),
+      question: questionController.text,
+      options: {
+        'A': option1Controller.text,
+        'B': option2Controller.text,
+        'C': option3Controller.text,
+        'D': option4Controller.text,
+      },
+      correctAnswer: selectedOption,
+    );
 
-  FirebaseFirestore.instance
-      .collection('communities')
-      .doc(widget.user.id)
-      .collection('quizzes')
-      .doc(widget.user.id)
-      .collection(selectedCategory)
-      .doc(newQuestion.id)
-      .set({
-    'question': newQuestion.question,
-    'options': newQuestion.options,
-    'correctAnswer': newQuestion.correctAnswer,
-    'id': newQuestion.id,
-  }).then((_) {
-    questionController.clear();
-    option1Controller.clear();
-    option2Controller.clear();
-    option3Controller.clear();
-    option4Controller.clear();
-  });
-}
-
+    FirebaseFirestore.instance
+        .collection('communities')
+        .doc(widget.user.id)
+        .collection('quizzes')
+        .doc(widget.user.id)
+        .collection(selectedCategory)
+        .doc(newQuestion.id)
+        .set({
+      'question': newQuestion.question,
+      'options': newQuestion.options,
+      'correctAnswer': newQuestion.correctAnswer,
+      'id': newQuestion.id,
+    }).then((_) {
+      questionController.clear();
+      option1Controller.clear();
+      option2Controller.clear();
+      option3Controller.clear();
+      option4Controller.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +109,8 @@ void _saveQuestion() async {
                         selectedOption = value!;
                       });
                     },
-                    items: options.map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        options.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -131,7 +131,8 @@ void _saveQuestion() async {
                         selectedCategory = value!;
                       });
                     },
-                    items: categories.map<DropdownMenuItem<String>>((String value) {
+                    items: categories
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -145,8 +146,6 @@ void _saveQuestion() async {
                 onPressed: () {
                   _saveQuestion();
                   Navigator.pop(context);
-
-                  
                 },
                 child: const Text('Save Question'),
               ),

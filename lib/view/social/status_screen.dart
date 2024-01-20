@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/view/social/full_screen_status.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view/social/full_screen_status.dart';
 import 'package:intl/intl.dart';
 
 class StatusScreenn extends StatefulWidget {
@@ -118,7 +118,8 @@ class StatusScreenState extends State<StatusScreenn> {
                             );
                           },
                           leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(mq.height * .03),
+                            borderRadius:
+                                BorderRadius.circular(mq.height * .03),
                             child: CachedNetworkImage(
                               width: mq.height * .055,
                               height: mq.height * .055,
@@ -129,8 +130,14 @@ class StatusScreenState extends State<StatusScreenn> {
                                       child: Icon(CupertinoIcons.person)),
                             ),
                           ),
-                          title: Text(person['userName'], style: const TextStyle(color: Colors.white),),
-                          subtitle: Text(formattedDate, style: const TextStyle(color: Colors.white),),
+                          title: Text(
+                            person['userName'],
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            formattedDate,
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                         Divider(
                           color: Colors.grey.shade800,
@@ -139,7 +146,6 @@ class StatusScreenState extends State<StatusScreenn> {
                         )
                       ],
                     ),
-                    
                   );
                 },
               );
@@ -153,7 +159,8 @@ class StatusScreenState extends State<StatusScreenn> {
         },
         backgroundColor: Colors.white,
         child: const Icon(
-          Icons.add, color: Colors.black,
+          Icons.add,
+          color: Colors.black,
         ),
       ),
     );

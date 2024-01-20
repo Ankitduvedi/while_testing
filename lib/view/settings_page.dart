@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:while_app/resources/components/text_button.dart';
+import 'package:com.example.while_app/resources/components/text_button.dart';
 
 import '../repository/firebase_repository.dart';
 

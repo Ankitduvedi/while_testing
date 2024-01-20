@@ -3,11 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:while_app/controller/videos_lists.dart';
-import 'package:while_app/data/model/video_model.dart';
-import 'package:while_app/main.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/view/profile/creators_reels_screen.dart';
+import 'package:com.example.while_app/controller/videos_lists.dart';
+import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.example.while_app/main.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view/profile/creators_reels_screen.dart';
 import 'package:http/http.dart' as http;
 
 class CreatorProfile extends StatelessWidget {

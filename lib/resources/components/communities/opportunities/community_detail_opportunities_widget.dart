@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:while_app/resources/components/message/models/community_user.dart';
-import 'package:while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
-import 'package:while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 
 class Opportunity {
   final String name;
@@ -141,15 +141,23 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
               return Column(
                 children: [
                   ListTile(
-                    title: Text(opportunity.name, style: const TextStyle(color: Colors.white),),
-                    subtitle: Text(opportunity.description, style: const TextStyle(color: Colors.white),),
+                    title: Text(
+                      opportunity.name,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      opportunity.description,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                     onTap: () {
                       _showOpportunityDetails(opportunity);
                     },
                   ),
-                  Divider(color: Colors.grey.shade800,
-                  thickness: 1,
-                  height: 0,)
+                  Divider(
+                    color: Colors.grey.shade800,
+                    thickness: 1,
+                    height: 0,
+                  )
                 ],
               );
             },
@@ -168,7 +176,10 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
                       )));
         },
         tooltip: 'Add Opportunity',
-        child: const Icon(Icons.add, color: Colors.black,),
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
       ),
     );
   }

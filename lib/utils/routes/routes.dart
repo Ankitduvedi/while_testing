@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:while_app/utils/routes/routes_name.dart';
-import 'package:while_app/view/auth/forgot_password_screen.dart';
-import 'package:while_app/view/create/add_reel.dart';
-import 'package:while_app/view/home_screen.dart';
-import 'package:while_app/view/post_preview.dart';
-import 'package:while_app/view/social/create_menu_screen.dart';
-import 'package:while_app/view/splash_view.dart';
-import 'package:while_app/view_model/wrapper/wrapper.dart';
+import 'package:com.example.while_app/utils/routes/routes_name.dart';
+import 'package:com.example.while_app/view/auth/forgot_password_screen.dart';
+import 'package:com.example.while_app/view/create/add_reel.dart';
+import 'package:com.example.while_app/view/home_screen.dart';
+import 'package:com.example.while_app/view/post_preview.dart';
+import 'package:com.example.while_app/view/social/create_menu_screen.dart';
+import 'package:com.example.while_app/view/splash_view.dart';
+import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
 import '../../view/auth/login_screen.dart';
 import '../../view/auth/register_screen.dart';
 import '../../view/profile/user_profile_screen.dart';

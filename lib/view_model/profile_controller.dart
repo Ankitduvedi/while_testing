@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/utils/utils.dart';
-import 'package:while_app/view_model/session_controller.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/utils/utils.dart';
+import 'package:com.example.while_app/view_model/session_controller.dart';
 
 class ProfileController with ChangeNotifier {
   // ignore: deprecated_member_use

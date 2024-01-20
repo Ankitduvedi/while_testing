@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/view/profile/creator_profile_widget.dart';
-import 'package:while_app/view/profile/profile_data_widget.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
+import 'package:com.example.while_app/view/profile/profile_data_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

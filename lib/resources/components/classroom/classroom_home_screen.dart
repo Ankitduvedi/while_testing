@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/classroom/add_classroom_widget.dart';
-import 'package:while_app/resources/components/classroom/classroom_home_card.dart';
-import 'package:while_app/resources/components/message/models/classroom_user.dart';
+import 'package:com.example.while_app/resources/components/classroom/add_classroom_widget.dart';
+import 'package:com.example.while_app/resources/components/classroom/classroom_home_card.dart';
+import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
 import '../message/apis.dart';
 import '../message/helper/dialogs.dart';
 

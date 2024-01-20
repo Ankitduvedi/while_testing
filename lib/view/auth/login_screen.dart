@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:while_app/resources/colors.dart';
-import 'package:while_app/resources/components/round_button.dart';
-import 'package:while_app/resources/components/text_container_widget.dart';
-import 'package:while_app/utils/routes/routes_name.dart';
-import 'package:while_app/utils/utils.dart';
+import 'package:com.example.while_app/resources/colors.dart';
+import 'package:com.example.while_app/resources/components/round_button.dart';
+import 'package:com.example.while_app/resources/components/text_container_widget.dart';
+import 'package:com.example.while_app/utils/routes/routes_name.dart';
+import 'package:com.example.while_app/utils/utils.dart';
 import '../../repository/firebase_repository.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[

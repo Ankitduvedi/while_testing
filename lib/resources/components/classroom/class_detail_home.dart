@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/classroom/class_timetable.dart';
-import 'package:while_app/resources/components/classroom/profile_screen_class_admin.dart';
-import 'package:while_app/resources/components/communities/community_detail_resources_widget%20.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/resources/components/message/models/classroom_user.dart';
+import 'package:com.example.while_app/resources/components/classroom/class_timetable.dart';
+import 'package:com.example.while_app/resources/components/classroom/profile_screen_class_admin.dart';
+import 'package:com.example.while_app/resources/components/communities/community_detail_resources_widget%20.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
 
 late Size mq;
 

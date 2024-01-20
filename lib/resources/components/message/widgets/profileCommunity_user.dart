@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 
 import 'dart:io';
 

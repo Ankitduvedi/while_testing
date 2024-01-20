@@ -6,8 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:while_app/utils/routes/routes_name.dart';
-import 'package:while_app/view_model/session_controller.dart';
+import 'package:com.example.while_app/utils/routes/routes_name.dart';
+import 'package:com.example.while_app/view_model/session_controller.dart';
 
 class PostProvider extends ChangeNotifier {
   final databaseReference = FirebaseDatabase.instance.ref();
@@ -89,9 +89,7 @@ class PostProvider extends ChangeNotifier {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection(FirebaseAuth.instance.currentUser!.email!).add({
-          "caption": caption,
-          "postUrl": newUrl
-        });
+        .collection(FirebaseAuth.instance.currentUser!.email!)
+        .add({"caption": caption, "postUrl": newUrl});
   }
 }

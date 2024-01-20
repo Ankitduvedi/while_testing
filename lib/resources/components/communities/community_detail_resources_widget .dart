@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
 //import 'package:video_player/video_player.dart';
-import 'package:while_app/resources/components/communities/resource_image_viewer.dart';
+import 'package:com.example.while_app/resources/components/communities/resource_image_viewer.dart';
 //import 'package:while_app/resources/components/communities/resource_video_viewer.dart';
 
 class CommunityDetailResources extends StatefulWidget {
@@ -171,37 +171,45 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
               return Column(
                 children: [
                   ListTile(
-                    title: Text(resource['title'] ??
-                        'Resource $index',style: const TextStyle(color: Colors.white),), // Use the title if available
-                    subtitle: Text(resource['text'],style: const TextStyle(color: Colors.white),),
+                    title: Text(
+                      resource['title'] ?? 'Resource $index',
+                      style: const TextStyle(color: Colors.white),
+                    ), // Use the title if available
+                    subtitle: Text(
+                      resource['text'],
+                      style: const TextStyle(color: Colors.white),
+                    ),
                     onTap: () {
                       // Handle the resource item click
                       // You can open or download the resource here
-                      
-        if (resource['type'] == 'jpg' ||
-            resource['type'] == 'jpeg' ||
-            resource['type'] == 'png') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                  builder: (context) => ImageViewer(resource['url'], resource['title']),
-            ),
-          );
-        // } else if (resource['type'] == 'mp4') {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => VideoViewer(resource['url']),
-        //     ),
-        //   );
-        // } else {
-          // Handle other resource types (e.g., PDFs)
-        }
+
+                      if (resource['type'] == 'jpg' ||
+                          resource['type'] == 'jpeg' ||
+                          resource['type'] == 'png') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ImageViewer(resource['url'], resource['title']),
+                          ),
+                        );
+                        // } else if (resource['type'] == 'mp4') {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => VideoViewer(resource['url']),
+                        //     ),
+                        //   );
+                        // } else {
+                        // Handle other resource types (e.g., PDFs)
+                      }
                     },
                   ),
-                  Divider(color: Colors.grey.shade800,
-                  thickness: 1,
-                  height: 0,)
+                  Divider(
+                    color: Colors.grey.shade800,
+                    thickness: 1,
+                    height: 0,
+                  )
                 ],
               );
             },
@@ -214,7 +222,10 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
           pickAndPreviewFile();
         },
         tooltip: 'Upload File',
-        child: const Icon(Icons.upload, color: Colors.black,),
+        child: const Icon(
+          Icons.upload,
+          color: Colors.black,
+        ),
       ),
     );
   }

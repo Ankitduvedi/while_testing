@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:while_app/main.dart';
+import 'package:com.example.while_app/main.dart';
 
 import '../apis.dart';
 import '../helper/dialogs.dart';

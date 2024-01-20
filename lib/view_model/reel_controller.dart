@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:while_app/utils/routes/routes_name.dart';
+import 'package:com.example.while_app/utils/routes/routes_name.dart';
 
 class ReelController with ChangeNotifier {
   final picker = ImagePicker();

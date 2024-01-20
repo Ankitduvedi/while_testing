@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:while_app/data/model/video_model.dart';
-import 'package:while_app/resources/components/message/helper/dialogs.dart';
 // import 'package:while_app/resources/components/videoPlayer/circle_animation.dart';
 
 class FeedItem2 extends StatefulWidget {

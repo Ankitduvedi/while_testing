@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/communities/quiz/add_quiz.dart';
-import 'package:while_app/resources/components/communities/quiz/quiz.dart';
-import 'package:while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/quiz.dart';
+import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key, required this.user});
@@ -9,34 +9,41 @@ class QuizScreen extends StatelessWidget {
   final CommunityUser user;
 
   _createQuiz(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => AddQuestionScreen(user: user,)),
-  );
-}
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddQuestionScreen(
+                user: user,
+              )),
+    );
+  }
 
+  void _easyQuiz(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Quiz(user: user, category: 'Easy'),
+      ),
+    );
+  }
 
+  void _mediumQuiz(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Quiz(user: user, category: 'Medium'),
+      ),
+    );
+  }
 
-void _easyQuiz(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Quiz(user: user, category: 'Easy'),),
-  );
-}
-
-void _mediumQuiz(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Quiz(user: user, category: 'Medium'),),
-  );
-}
-
-void _hardQuiz(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Quiz(user: user, category: 'Hard'),),
-  );
-}
+  void _hardQuiz(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Quiz(user: user, category: 'Hard'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,21 +52,25 @@ void _hardQuiz(BuildContext context) {
         padding: const EdgeInsets.all(16.0),
         children: [
           GestureDetector(
-            onTap: () => _easyQuiz(context),
-            child: const QuizTile(level: 'Easy', gradientColors: [Colors.blue, Colors.green])),
+              onTap: () => _easyQuiz(context),
+              child: const QuizTile(
+                  level: 'Easy', gradientColors: [Colors.blue, Colors.green])),
           GestureDetector(
-            onTap: () => _mediumQuiz(context),
-            child: const QuizTile(level: 'Medium', gradientColors: [Colors.orange, Colors.yellow])),
+              onTap: () => _mediumQuiz(context),
+              child: const QuizTile(
+                  level: 'Medium',
+                  gradientColors: [Colors.orange, Colors.yellow])),
           GestureDetector(
-            onTap: () => _hardQuiz(context),
-            child: const QuizTile(level: 'Hard', gradientColors: [Colors.red, Colors.purple])),
+              onTap: () => _hardQuiz(context),
+              child: const QuizTile(
+                  level: 'Hard', gradientColors: [Colors.red, Colors.purple])),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createQuiz(context),
         child: const Icon(Icons.add),
-    ),
-      );
+      ),
+    );
   }
 }
 
@@ -67,7 +78,8 @@ class QuizTile extends StatelessWidget {
   final String level;
   final List<Color> gradientColors;
 
-  const QuizTile({super.key, required this.level, required this.gradientColors});
+  const QuizTile(
+      {super.key, required this.level, required this.gradientColors});
 
   @override
   Widget build(BuildContext context) {

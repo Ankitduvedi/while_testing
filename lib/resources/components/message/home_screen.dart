@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:while_app/resources/components/communities/chat_user_card.dart';
+import 'package:com.example.while_app/resources/components/communities/chat_user_card.dart';
 import '../../../main.dart';
 import 'apis.dart';
 import 'helper/dialogs.dart';

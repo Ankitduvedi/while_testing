@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
-import 'package:while_app/resources/components/communities/quiz/community_detail_quiz_widget.dart';
-import 'package:while_app/resources/components/communities/community_detail_resources_widget%20.dart';
-import 'package:while_app/resources/components/message/apis.dart';
-import 'package:while_app/resources/components/communities/profile_screen_community_admin.dart';
-import 'package:while_app/resources/components/message/widgets/profileCommunity_user.dart';
+import 'package:com.example.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/community_detail_quiz_widget.dart';
+import 'package:com.example.while_app/resources/components/communities/community_detail_resources_widget%20.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/resources/components/communities/profile_screen_community_admin.dart';
+import 'package:com.example.while_app/resources/components/message/widgets/profileCommunity_user.dart';
 import '../../../main.dart';
 import 'cchat.dart';
 import '../message/models/community_user.dart';
@@ -42,7 +42,9 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
       OpportunitiesScreen(
         user: widget.user,
       ),
-      QuizScreen(user: widget.user,),
+      QuizScreen(
+        user: widget.user,
+      ),
     ];
     return Scaffold(
       backgroundColor: Colors.black,
@@ -163,7 +165,6 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
 
           SingleChildScrollView(
             child: SizedBox(
-              
               height: mq.height - keyboardSpace - mq.height / 5.2,
               child: items[current],
             ),

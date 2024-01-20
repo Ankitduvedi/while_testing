@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
 import 'package:provider/provider.dart';
-import 'package:while_app/resources/components/create_container.dart';
-import 'package:while_app/view_model/post_provider.dart';
-import 'package:while_app/view_model/reel_controller.dart';
+import 'package:com.example.while_app/resources/components/create_container.dart';
+import 'package:com.example.while_app/view_model/post_provider.dart';
+import 'package:com.example.while_app/view_model/reel_controller.dart';
 
 class CreateScreen extends river.ConsumerStatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
