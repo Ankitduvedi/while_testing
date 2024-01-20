@@ -1,6 +1,7 @@
 import 'dart:developer';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/easy_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
@@ -27,6 +28,21 @@ class _QuizState extends State<Quiz> {
   int correctAnswers = 0;
   late int lives;
   late DateTime? time;
+  late int easyQuestions;
+  late int attemptedEasyQuestion;
+
+  participantsData() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('communities')
+        .doc(widget.user.id)
+        .collection('participants')
+        .doc(APIs.me.id)
+        .get();
+    easyQuestions = await querySnapshot.data()!['easyQuestions'];
+    attemptedEasyQuestion =
+        await querySnapshot.data()!['attemptedEasyQuestion'];
+    setState(() {});
+  }
 
   renewLive() async {
     lives = await LivesManager.getLives();
@@ -53,15 +69,20 @@ class _QuizState extends State<Quiz> {
   void initState() {
     activeScreeen = StartScreen(switchScreen);
     renewLive();
+    participantsData();
     super.initState();
   }
 
   void switchScreen() {
     setState(
       () {
-        if (widget.category == 'Easy' && lives > 0) {
+        if (widget.category == 'Easy' &&
+            lives > 0 &&
+            widget.user.easyQuestions > attemptedEasyQuestion) {
           activeScreeen = EasyQuestionsScreen(
             user: widget.user,
+            attemptedEasyQuestion: attemptedEasyQuestion,
+            easyQuestions: easyQuestions,
           );
         }
         if (widget.category == 'Medium') {

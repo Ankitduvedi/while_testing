@@ -59,6 +59,10 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
         'id': newQuestion.id,
         'timeStamp': FieldValue.serverTimestamp()
       }).then((_) {
+        FirebaseFirestore.instance
+            .collection('communities')
+            .doc(widget.user.id)
+            .update({'easyQuestions': widget.user.easyQuestions + 1});
         _clearFields();
       });
       Navigator.pop(context);

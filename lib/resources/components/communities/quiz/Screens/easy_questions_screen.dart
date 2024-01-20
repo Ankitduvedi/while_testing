@@ -11,10 +11,14 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class EasyQuestionsScreen extends StatefulWidget {
   final CommunityUser user;
+  final int easyQuestions;
+  final int attemptedEasyQuestion;
 
   EasyQuestionsScreen({
     super.key,
     required this.user,
+    required this.attemptedEasyQuestion,
+    required this.easyQuestions,
   });
 
   @override
@@ -31,7 +35,6 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   }
 
   int correctAnswers = 0;
-
   Future<List<Map<String, dynamic>>> _getQuestions() async {
     const category = 'Easy'; // Set the category as needed
     final querySnapshot = await FirebaseFirestore.instance
@@ -45,10 +48,14 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  late int currentQuestionIndex;
   @override
   void initState() {
+    currentQuestionIndex = widget.attemptedEasyQuestion;
     super.initState();
     getlive();
+    log('//attempted questions');
+    log(widget.attemptedEasyQuestion.toString());
     quizzz = _getQuestions();
     startTimer();
   }
@@ -59,7 +66,6 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
     timer!.cancel();
   }
 
-  var currentQuestionIndex = 0;
   int seconds = 45;
   Timer? timer;
 
@@ -71,7 +77,6 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
         } else {
           setState(() {
             answerQuestion(null, 'e');
-
             startTimer();
             seconds = 45;
           });
@@ -95,8 +100,12 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
         startTimer();
         seconds = 45;
       } else {
-        APIs.updateScore(widget.user.id, 'easyQuestions', correctAnswers,
-            'attemptedEasyQuestion', currentQuestionIndex + 1);
+        APIs.updateScore(
+            widget.user.id,
+            'easyQuestions',
+            correctAnswers + widget.easyQuestions,
+            'attemptedEasyQuestion',
+            (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ResultsScreen(
             totalAnswers: currentQuestionIndex,
