@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,15 +83,18 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
       }
       timer!.cancel();
 
-      if ((questions.length - 1) > currentQuestionIndex) {
+      if ((questions.length - 1) > currentQuestionIndex && widget.lives > 0) {
         currentQuestionIndex = currentQuestionIndex + 1;
         startTimer();
         seconds = 45;
       } else {
+        APIs.updateScore(widget.user.id, 'easyQuestions', correctAnswers,
+            'attemptedEasyQuestion', currentQuestionIndex + 1);
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ResultsScreen(
             totalAnswers: currentQuestionIndex,
             correctAnswers: correctAnswers,
+            level: 'easyQuestions',
           ),
         ));
       }

@@ -29,6 +29,9 @@ class APIs {
   // for storing self information
   static ChatUser me = ChatUser(
     id: user.uid,
+    easyQuestions: 0,
+    hardQuestions: 0,
+    mediumQuestions: 0,
     name: user.displayName.toString(),
     email: user.email.toString(),
     about: "Hey, I'm using While",
@@ -214,7 +217,26 @@ class APIs {
   }
 
   static Future<bool> addUserToCommunity(String id) async {
-    firestore
+    await firestore
+        .collection('communities')
+        .doc(id)
+        .collection('participants')
+        .doc(user.uid)
+        .set(APIs.me.toJson())
+        .then((value) => firestore
+                .collection('communities')
+                .doc(id)
+                .collection('participants')
+                .doc(user.uid)
+                .update({
+              'easyQuestions': 0,
+              'mediumQuestions': 0,
+              'hardQuestions': 0,
+              'attemptedEasyQuestion': 0,
+              'attemptedMediumQuestion': 0,
+              'attemptedHardQuestion': 0,
+            }));
+    await firestore
         .collection('users')
         .doc(user.uid)
         .collection('my_communities')
@@ -222,12 +244,25 @@ class APIs {
         .set({
       'id': id,
     });
+    return true;
+  }
+
+  static Future<bool> updateScore(
+    String id,
+    String scoredLevel,
+    int score,
+    String attemptedLevel,
+    int attempted,
+  ) async {
     firestore
         .collection('communities')
         .doc(id)
         .collection('participants')
         .doc(user.uid)
-        .set(me.toJson());
+        .update({
+      scoredLevel: score,
+      attemptedLevel: attempted,
+    });
     return true;
   }
 
@@ -251,7 +286,10 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      easyQuestions: 0,
       id: user.uid,
+      hardQuestions: 0,
+      mediumQuestions: 0,
       name: newUser.name.toString(),
       email: newUser.email.toString(),
       about: newUser.about,
@@ -279,6 +317,9 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      easyQuestions: 0,
+      hardQuestions: 0,
+      mediumQuestions: 0,
       id: user.uid,
       name: user.displayName.toString(),
       email: user.email.toString(),

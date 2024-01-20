@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
   const ResultsScreen(
-      {super.key, required this.totalAnswers, required this.correctAnswers});
+      {super.key,
+      required this.totalAnswers,
+      required this.correctAnswers,
+      required this.level});
 
   final int totalAnswers;
   final int correctAnswers;
+  final String level;
 
   // List<Map<String, Object>> getSummaryData() {
   //   final List<Map<String, Object>> summary = [];

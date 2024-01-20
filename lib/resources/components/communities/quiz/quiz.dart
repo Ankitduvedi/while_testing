@@ -74,6 +74,7 @@ class _QuizState extends State<Quiz> {
     if (selectedAnswers.length == 10 || lives == 0) {
       setState(() {
         activeScreeen = ResultsScreen(
+          level: '',
           totalAnswers: 0,
           correctAnswers: correctAnswers,
         );
