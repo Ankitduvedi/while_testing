@@ -7,6 +7,9 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 class CommunityProviders extends StateNotifier<CommunityUser> {
   CommunityProviders()
       : super(CommunityUser(
+            easyQuestions: 0,
+            hardQuestions: 0,
+            mediumQuestions: 0,
             image: 'aa',
             about: 'about',
             name: 'Ankit',
@@ -23,6 +26,9 @@ class CommunityProviders extends StateNotifier<CommunityUser> {
     var data = APIs.getCommunityInfos(community);
 
     state = CommunityUser(
+        easyQuestions: 0,
+        hardQuestions: 0,
+        mediumQuestions: 0,
         image: data.image,
         about: data.about,
         name: data.name,

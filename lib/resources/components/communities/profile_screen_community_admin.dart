@@ -51,6 +51,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         noOfUsers: 'noOfUsers',
         domain: 'domain',
         timeStamp: '',
+        easyQuestions: 0,
+        hardQuestions: 0,
+        mediumQuestions: 0,
         admin: 'admin');
     return GestureDetector(
       // for hiding keyboard

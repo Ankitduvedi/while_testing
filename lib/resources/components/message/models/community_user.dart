@@ -14,6 +14,9 @@ class CommunityUser {
     required this.domain,
     required this.admin,
     required this.timeStamp,
+    required this.easyQuestions,
+    required this.mediumQuestions,
+    required this.hardQuestions,
   });
   late String image;
   late String about;
@@ -29,6 +32,9 @@ class CommunityUser {
   late String domain;
   late String admin;
   late String timeStamp;
+  late int easyQuestions;
+  late int mediumQuestions;
+  late int hardQuestions;
 
   CommunityUser.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
@@ -45,6 +51,9 @@ class CommunityUser {
     domain = json['domain'] ?? '';
     admin = json['admin'] ?? '';
     timeStamp = json['timeStamp'] ?? '';
+    easyQuestions = json['easyQuestions'] ?? '';
+    mediumQuestions = json['mediumQuestions'] ?? '';
+    hardQuestions = json['hardQuestions'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -63,7 +72,9 @@ class CommunityUser {
     data['domain'] = domain;
     data['admin'] = admin;
     data['timeStamp'] = timeStamp;
-
+    data['easyQuestions'] = easyQuestions;
+    data['mediumQuestions'] = mediumQuestions;
+    data['hardQuestions'] = hardQuestions;
     return data;
   }
 }

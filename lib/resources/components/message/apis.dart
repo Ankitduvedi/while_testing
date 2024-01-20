@@ -765,17 +765,21 @@ class APIs {
         .snapshots()
         .map((event) {
       return ds = CommunityUser(
-          image: event.data()!['image'],
-          about: event.data()!['about'],
-          name: event.data()!['name'],
-          createdAt: event.data()!['createdAt'],
-          id: event.data()!['id'],
-          email: event.data()!['email'],
-          type: event.data()!['type'],
-          noOfUsers: event.data()!['noOfUsers'],
-          domain: event.data()!['domain'],
-          timeStamp: event.data()!['timeStamp'],
-          admin: event.data()!['admin']);
+        image: event.data()!['image'],
+        about: event.data()!['about'],
+        name: event.data()!['name'],
+        createdAt: event.data()!['createdAt'],
+        id: event.data()!['id'],
+        email: event.data()!['email'],
+        type: event.data()!['type'],
+        noOfUsers: event.data()!['noOfUsers'],
+        domain: event.data()!['domain'],
+        timeStamp: event.data()!['timeStamp'],
+        admin: event.data()!['admin'],
+        easyQuestions: event.data()!['easyQuestions'],
+        mediumQuestions: event.data()!['mediumQuestions'],
+        hardQuestions: event.data()!['hardQuestions'],
+      );
     });
   }
 

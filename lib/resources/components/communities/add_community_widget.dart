@@ -193,6 +193,9 @@ class AddCommunityScreen {
                             noOfUsers: '1',
                             domain: domain,
                             timeStamp: time,
+                            easyQuestions: 0,
+                            hardQuestions: 0,
+                            mediumQuestions: 0,
                             admin: APIs.me.name);
                         APIs.addCommunities(community, File(image!.path));
 
