@@ -68,7 +68,9 @@ void _saveQuestion() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.pink,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: const Text('Add Question'),
       ),
       body: SingleChildScrollView(
