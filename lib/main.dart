@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -46,19 +45,11 @@ class MyApp extends river.ConsumerWidget {
         statusBarBrightness: Brightness.light,
         systemStatusBarContrastEnforced: false);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-//     Get.config(
-//   defaultTransition: Transition.fade,
-//   defaultGlobalState: true,
-//   defaultOpaqueRoute: Get.isOpaqueRouteDefault,
-//   defaultPopGesture: Get.isPopGestureEnable,
-//   defaultDurationTransition: Get.defaultDurationTransition,
-//   defaultGlobalStateManagement: Get.defaultGlobalStateManagement,
-//   defaultPreventAnimation: Get.isPreventAnimationDefault,
-// );
+
     return MultiProvider(
       providers: providersList,
       child: GetMaterialApp(
-        routes: {'/screen': (BuildContext context) => const ProfileScreen()},
+        routes: {'/profile': (BuildContext context) => const ProfileScreen()},
         title: 'While',
         debugShowCheckedModeBanner: false,
         initialRoute: RoutesName.splash,
@@ -82,6 +73,20 @@ _initializeFirebase() async {
 }
 
 void initDynamicLinks() async {
+  log('////initDyanamic ');
+  FirebaseDynamicLinks.instance.onLink.listen(
+    (pendingDynamicLinkData) {
+      // Set up the `onLink` event listener next as it may be received here
+      final route =
+          pendingDynamicLinkData.link.queryParameters['screen'].toString();
+      if (route != null) {
+        log(route);
+        log('////initDyanamic ');
+        // Example of using the dynamic link to push the user to a different screen
+        Get.toNamed(route);
+      }
+    },
+  );
   // FirebaseDynamicLinks.instance.onLink(
   //   onSuccess: (PendingDynamicLinkData? dynamicLink) async {
   //     final Uri? deeplink = dynamicLink?.link;
@@ -94,17 +99,17 @@ void initDynamicLinks() async {
   //     print(e.message);
   //   },
   // );
-  log('////initDyanamic ');
-  FirebaseDynamicLinks.instance
-      .getInitialLink()
-      .then((PendingDynamicLinkData? dynamicLink) {
-    final Uri? deepLink = dynamicLink?.link;
-    if (deepLink != null) {
-      //Get.toNamed(deepLink.queryParameters.values.first);
-      Get.toNamed(deepLink.queryParameters['screen'] ?? '/');
-      log(deepLink.toString());
-      print(deepLink.toString());
-      // Handle the initial deep link as needed
-    }
-  });
+
+  // FirebaseDynamicLinks.instance
+  //     .getInitialLink()
+  //     .then((PendingDynamicLinkData? dynamicLink) {
+  //   final Uri? deepLink = dynamicLink?.link;
+  //   if (deepLink != null) {
+  //     //Get.toNamed(deepLink.queryParameters.values.first);
+  //     Get.toNamed(deepLink.queryParameters['screen'] ?? '/');
+  //     log(deepLink.toString());
+  //     print(deepLink.toString());
+  //     // Handle the initial deep link as needed
+  //   }
+  // });
 }
