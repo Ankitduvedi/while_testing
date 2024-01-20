@@ -36,9 +36,7 @@ class _QuizState extends State<Quiz> {
       () {
         if (widget.category == 'Easy') {
           activeScreeen = EasyQuestionsScreen(
-            onSelectAnswer: chooseAnswer,
             user: widget.user,
-            correctAnswers: correctAnswers,
             lives: lives,
           );
         }
@@ -76,8 +74,7 @@ class _QuizState extends State<Quiz> {
     if (selectedAnswers.length == 10 || lives == 0) {
       setState(() {
         activeScreeen = ResultsScreen(
-          chosenAnswers: selectedAnswers,
-          onPressed: restartQuiz,
+          totalAnswers: 0,
           correctAnswers: correctAnswers,
         );
       });

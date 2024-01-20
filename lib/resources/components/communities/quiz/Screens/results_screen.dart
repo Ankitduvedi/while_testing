@@ -7,10 +7,9 @@ import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
   const ResultsScreen(
-      {super.key, required this.chosenAnswers, required this.onPressed, required this.correctAnswers});
+      {super.key, required this.totalAnswers, required this.correctAnswers});
 
-  final List<String> chosenAnswers;
-  final void Function() onPressed;
+  final int totalAnswers;
   final int correctAnswers;
 
   // List<Map<String, Object>> getSummaryData() {
@@ -44,13 +43,11 @@ class ResultsScreen extends StatelessWidget {
         //decoration: BoxDecoration(color: Colors.red),
         //color: Colors.pink,
 
-
         margin: const EdgeInsets.all(40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-                'You answered $correctAnswers questions correctly!',
+            Text('You answered $correctAnswers questions correctly!',
                 style: TextStyle(fontSize: 25, color: Colors.white),
                 textAlign: TextAlign.center),
             const SizedBox(height: 40),
@@ -58,9 +55,11 @@ class ResultsScreen extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            ElevatedButton.icon(onPressed: onPressed, 
-            icon: const Icon(Icons.cached_outlined),
-            label: const Text(style: TextStyle(fontSize: 20),'Back to Community'))
+            ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.cached_outlined),
+                label: const Text(
+                    style: TextStyle(fontSize: 20), 'Back to Community'))
           ],
         ),
       ),

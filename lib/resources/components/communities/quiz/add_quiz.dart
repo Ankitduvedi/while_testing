@@ -57,6 +57,7 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
         'options': newQuestion.options,
         'correctAnswer': newQuestion.correctAnswer,
         'id': newQuestion.id,
+        'timeStamp': FieldValue.serverTimestamp()
       }).then((_) {
         _clearFields();
       });

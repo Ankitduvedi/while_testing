@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,17 +9,13 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class EasyQuestionsScreen extends StatefulWidget {
   final CommunityUser user;
-  final void Function(String answer, int life, int correctAnswers)
-      onSelectAnswer;
   int lives;
-  int correctAnswers;
 
-  EasyQuestionsScreen(
-      {super.key,
-      required this.user,
-      required this.onSelectAnswer,
-      required this.lives,
-      required this.correctAnswers});
+  EasyQuestionsScreen({
+    super.key,
+    required this.user,
+    required this.lives,
+  });
 
   @override
   _QuestionsScreenState createState() => _QuestionsScreenState();
@@ -26,6 +24,7 @@ class EasyQuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
+  int correctAnswers = 0;
 
   Future<List<Map<String, dynamic>>> _getQuestions() async {
     const category = 'Easy'; // Set the category as needed
@@ -35,8 +34,8 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
         .collection('quizzes')
         .doc(widget.user.id)
         .collection(category)
+        .orderBy('timeStamp', descending: false)
         .get();
-
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
 
@@ -64,7 +63,6 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
           seconds--;
         } else {
           setState(() {
-            timer!.cancel();
             answerQuestion(null, 'e');
 
             startTimer();
@@ -78,18 +76,25 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
   void answerQuestion(String? selectedAnswers, String correctAnswer) {
     setState(() {
       if (selectedAnswers == correctAnswer) {
-        //widget.lives++;
-        widget.correctAnswers++;
+        correctAnswers++;
       } else {
         widget.lives--;
       }
-      currentQuestionIndex = currentQuestionIndex + 1;
       timer!.cancel();
-      startTimer();
-      seconds = 45;
+
+      if ((questions.length - 1) > currentQuestionIndex) {
+        currentQuestionIndex = currentQuestionIndex + 1;
+        startTimer();
+        seconds = 45;
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ResultsScreen(
+            totalAnswers: currentQuestionIndex,
+            correctAnswers: correctAnswers,
+          ),
+        ));
+      }
     });
-    widget.onSelectAnswer(
-        selectedAnswers!, widget.lives, widget.correctAnswers);
   }
 
   @override
@@ -131,7 +136,9 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
 
           questions = snapshot.data!;
           final currentQuestion = questions[currentQuestionIndex];
-
+          if (questions.length <= currentQuestionIndex) {
+            log('navigated to resultscreen');
+          }
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
