@@ -66,6 +66,8 @@ dependencies:
   video_compress:
   percent_indicator: ^4.0.1
   get:
+  fl_chart:
+  syncfusion_flutter_charts: 
   image_cropper: ^4.0.1
   google_fonts: ^4.0.4
   uuid: ^4.0.0

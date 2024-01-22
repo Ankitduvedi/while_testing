@@ -1,3 +1,4 @@
+import 'package:com.example.while_app/view/profile/user_leaderboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
@@ -65,11 +66,7 @@ class ProfileScreen extends StatelessWidget {
                           child: CreatorProfile(
                         userID: APIs.me.id,
                       )),
-                      const Center(
-                          child: Text(
-                        "Become a Mentor",
-                        style: TextStyle(color: Colors.white),
-                      )),
+                      Center(child: LeaderboardScreen()),
                       const Center(
                           child: Text(
                         "Become a Freelancer",
