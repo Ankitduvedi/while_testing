@@ -3,8 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-
-//import 'package:video_player/video_player.dart';
 import 'package:com.example.while_app/resources/components/communities/resource_image_viewer.dart';
 //import 'package:while_app/resources/components/communities/resource_video_viewer.dart';
 

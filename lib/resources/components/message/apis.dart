@@ -7,7 +7,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-// import 'package:while_app/data/model/message.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
 import 'models/community_message.dart';
@@ -27,29 +26,7 @@ class APIs {
   static FirebaseStorage storage = FirebaseStorage.instance;
 
   // for storing self information
-  static ChatUser me = ChatUser(
-    lives: 0,
-    id: user.uid,
-    easyQuestions: 0,
-    hardQuestions: 0,
-    mediumQuestions: 0,
-    name: user.displayName.toString(),
-    email: user.email.toString(),
-    about: "Hey, I'm using While",
-    image: userImage,
-    createdAt: '',
-    isOnline: false,
-    lastActive: '',
-    pushToken: '',
-    dateOfBirth: '',
-    gender: '',
-    phoneNumber: '',
-    place: '',
-    profession: '',
-    designation: 'Member',
-    follower: 0,
-    following: 0,
-  );
+  static ChatUser me = ChatUser.empty();
 
   // to return current user
   static User get user => auth.currentUser!;
@@ -806,28 +783,12 @@ class APIs {
 
   //comunity participants info
   static getCommunityInfos(Community community) async {
-    Community ds;
     firestore
         .collection('communities')
         .doc(community.id)
         .snapshots()
         .map((event) {
-      return ds = Community(
-        image: event.data()!['image'],
-        about: event.data()!['about'],
-        name: event.data()!['name'],
-        createdAt: event.data()!['createdAt'],
-        id: event.data()!['id'],
-        email: event.data()!['email'],
-        type: event.data()!['type'],
-        noOfUsers: event.data()!['noOfUsers'],
-        domain: event.data()!['domain'],
-        timeStamp: event.data()!['timeStamp'],
-        admin: event.data()!['admin'],
-        easyQuestions: event.data()!['easyQuestions'],
-        mediumQuestions: event.data()!['mediumQuestions'],
-        hardQuestions: event.data()!['hardQuestions'],
-      );
+      return Community.fromJson(event.data()!);
     });
   }
 
