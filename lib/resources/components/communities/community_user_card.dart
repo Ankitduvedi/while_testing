@@ -13,7 +13,7 @@ import 'community_profile_dialog.dart';
 
 //card to represent a single user in home screen
 class ChatCommunityCard extends ConsumerStatefulWidget {
-  final CommunityUser user;
+  final Community user;
 
   const ChatCommunityCard({super.key, required this.user});
 

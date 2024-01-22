@@ -182,7 +182,7 @@ class AddCommunityScreen {
                             DateTime.now().millisecondsSinceEpoch.toString();
                         final String id = uuid.v4();
                         // final time = DateTime.now().millisecondsSinceEpoch.toString();
-                        final CommunityUser community = CommunityUser(
+                        final Community community = Community(
                             image: '',
                             about: about,
                             name: name,

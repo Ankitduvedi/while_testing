@@ -14,7 +14,7 @@ import '../message/models/community_user.dart';
 class CCommunityDetailScreen extends StatefulWidget {
   const CCommunityDetailScreen({Key? key, required this.user})
       : super(key: key);
-  final CommunityUser user;
+  final Community user;
   @override
   State<CCommunityDetailScreen> createState() => _CCommunityDetailScreenState();
 }

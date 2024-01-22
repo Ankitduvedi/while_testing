@@ -10,7 +10,7 @@ import 'package:com.example.while_app/resources/components/communities/quiz/answ
 import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
 class HardQuestionsScreen extends StatefulWidget {
-  final CommunityUser user;
+  final Community user;
   final int hardQuestions;
   final int attemptedHardQuestion;
 

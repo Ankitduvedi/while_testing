@@ -21,7 +21,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class OpportunitiesScreen extends StatefulWidget {
   const OpportunitiesScreen({super.key, required this.user});
-  final CommunityUser user;
+  final Community user;
   @override
   OpportunitiesScreenState createState() => OpportunitiesScreenState();
 }

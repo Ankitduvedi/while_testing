@@ -10,7 +10,7 @@ import '../apis.dart';
 import '../models/community_user.dart';
 
 class ProfileScreenParticipant extends StatefulWidget {
-  final CommunityUser user;
+  final Community user;
 
   const ProfileScreenParticipant({Key? key, required this.user})
       : super(key: key);

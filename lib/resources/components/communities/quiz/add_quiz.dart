@@ -11,7 +11,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class AddQuestionScreen extends StatefulWidget {
   const AddQuestionScreen({Key? key, required this.user}) : super(key: key);
-  final CommunityUser user;
+  final Community user;
 
   @override
   AddQuestionScreenState createState() => AddQuestionScreenState();

@@ -22,8 +22,8 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
   // for storing searched items
 
   // for storing search status
-  List<CommunityUser> _list = [];
-  final List<CommunityUser> _searchList = [];
+  List<Community> _list = [];
+  final List<Community> _searchList = [];
   @override
   void initState() {
     super.initState();
@@ -78,7 +78,10 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
               _addCommunityDialog();
             },
             backgroundColor: Colors.white,
-            child: const Icon(Icons.add_comment_rounded, color: Colors.black,)),
+            child: const Icon(
+              Icons.add_comment_rounded,
+              color: Colors.black,
+            )),
       ),
 
       //body
@@ -114,7 +117,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
                       final data = snapshot.data?.docs;
 
                       _list = data
-                              ?.map((e) => CommunityUser.fromJson(e.data()))
+                              ?.map((e) => Community.fromJson(e.data()))
                               .toList() ??
                           [];
                       log(_list.toString());
@@ -127,7 +130,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
                             itemCount:
                                 isSearching ? _searchList.length : _list.length,
                             //padding: EdgeInsets.only(top: mq.height * .01),
-                            
+
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               return Column(
@@ -136,9 +139,11 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
                                       user: isSearching
                                           ? _searchList[index]
                                           : _list[index]),
-                                          Divider(color: Colors.grey.shade800,
-                                          height: 0,
-                                          thickness: 1,)
+                                  Divider(
+                                    color: Colors.grey.shade800,
+                                    height: 0,
+                                    thickness: 1,
+                                  )
                                 ],
                               );
                             });
@@ -177,7 +182,9 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
               color: Colors.black,
               size: 28,
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Text('Add Community')
           ],
         ),
@@ -188,8 +195,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
           onChanged: (value) => name = value,
           decoration: InputDecoration(
               hintText: 'Community Name',
-              prefixIcon:
-                  const Icon(Icons.email, color: Colors.black),
+              prefixIcon: const Icon(Icons.email, color: Colors.black),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
         ),
@@ -203,8 +209,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
                 Navigator.pop(context);
               },
               child: const Text('Cancel',
-                  style:
-                      TextStyle(color: Colors.black, fontSize: 16))),
+                  style: TextStyle(color: Colors.black, fontSize: 16))),
 
           //add button
           MaterialButton(

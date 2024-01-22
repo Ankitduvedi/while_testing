@@ -7,7 +7,7 @@ import '../message/models/community_user.dart';
 class CommunityProfileDialog extends StatelessWidget {
   const CommunityProfileDialog({super.key, required this.user});
 
-  final CommunityUser user;
+  final Community user;
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
-class CommunityProviders extends StateNotifier<CommunityUser> {
+class CommunityProviders extends StateNotifier<Community> {
   CommunityProviders()
-      : super(CommunityUser(
+      : super(Community(
             easyQuestions: 0,
             hardQuestions: 0,
             mediumQuestions: 0,
@@ -22,10 +22,10 @@ class CommunityProviders extends StateNotifier<CommunityUser> {
             timeStamp: 'timeStamp',
             admin: 'admin'));
 
-  void changeName(CommunityUser community) {
+  void changeName(Community community) {
     var data = APIs.getCommunityInfos(community);
 
-    state = CommunityUser(
+    state = Community(
         easyQuestions: 0,
         hardQuestions: 0,
         mediumQuestions: 0,
@@ -45,8 +45,7 @@ class CommunityProviders extends StateNotifier<CommunityUser> {
   }
 }
 
-final communityProvider =
-    StateNotifierProvider<CommunityProviders, CommunityUser>(
+final communityProvider = StateNotifierProvider<CommunityProviders, Community>(
   (ref) {
     return CommunityProviders();
   },

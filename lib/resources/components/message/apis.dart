@@ -666,7 +666,7 @@ class APIs {
 
   //get only last message of a specific community chat
   static Stream<QuerySnapshot<Map<String, dynamic>>> getLastCommunityMessage(
-      CommunityUser user) {
+      Community user) {
     return firestore
         .collection('communities')
         .doc(user.id)
@@ -678,7 +678,7 @@ class APIs {
 
   // for getting all messages of a specific conversation of community from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCommunityMessages(
-      CommunityUser user) {
+      Community user) {
     return firestore
         .collection('communities')
         .doc(user.id)
@@ -689,7 +689,7 @@ class APIs {
 
   // for sending message
   static Future<void> sendCommunityMessage(
-      CommunityUser chatUser, String msg, Types type) async {
+      Community chatUser, String msg, Types type) async {
     //message sending time (also used as id)
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -717,7 +717,7 @@ class APIs {
   }
 
   ///////////////
-  static Future<void> addCommunities(CommunityUser chatUser, File file) async {
+  static Future<void> addCommunities(Community chatUser, File file) async {
     //getting image file extension
     final ext = file.path.split('.').last;
 
@@ -742,7 +742,7 @@ class APIs {
   }
 
   static Future<void> communitySendChatImage(
-      CommunityUser chatUser, File file) async {
+      Community chatUser, File file) async {
     //getting image file extension
     final ext = file.path.split('.').last;
 
@@ -785,7 +785,8 @@ class APIs {
   }
 
   ///// update community info
-  static Future<void> updateCommunityInfo(CommunityUser community) async {
+  static Future<void> updateCommunityInfo(Community community) async {
+    log('function called');
     await firestore.collection('communities').doc(community.id).update({
       'name': community.name,
       'about': community.about,
@@ -796,7 +797,7 @@ class APIs {
 
   //comunity participants info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getCommunityInfo(
-      CommunityUser community) {
+      Community community) {
     return firestore
         .collection('communities')
         .where('id', isEqualTo: community.id)
@@ -804,14 +805,14 @@ class APIs {
   }
 
   //comunity participants info
-  static getCommunityInfos(CommunityUser community) async {
-    CommunityUser ds;
+  static getCommunityInfos(Community community) async {
+    Community ds;
     firestore
         .collection('communities')
         .doc(community.id)
         .snapshots()
         .map((event) {
-      return ds = CommunityUser(
+      return ds = Community(
         image: event.data()!['image'],
         about: event.data()!['about'],
         name: event.data()!['name'],

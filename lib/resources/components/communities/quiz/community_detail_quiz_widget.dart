@@ -9,7 +9,7 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class QuizScreen extends StatefulWidget {
   QuizScreen({Key? key, required this.user}) : super(key: key);
-  final CommunityUser user;
+  final Community user;
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();

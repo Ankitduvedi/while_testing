@@ -8,7 +8,7 @@ const uuid = Uuid();
 
 class AddOpportunityScreen extends StatefulWidget {
   const AddOpportunityScreen({super.key, required this.user});
-  final CommunityUser user;
+  final Community user;
   @override
   AddOpportunityScreenState createState() => AddOpportunityScreenState();
 }

@@ -10,7 +10,7 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class Quiz extends StatefulWidget {
   const Quiz({super.key, required this.user, required this.category});
-  final CommunityUser user;
+  final Community user;
   final String category;
 
   @override

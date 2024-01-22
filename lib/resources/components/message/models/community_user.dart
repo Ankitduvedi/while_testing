@@ -1,5 +1,5 @@
-class CommunityUser {
-  CommunityUser({
+class Community {
+  Community({
     required this.image,
     required this.about,
     required this.name,
@@ -36,7 +36,7 @@ class CommunityUser {
   late int mediumQuestions;
   late int hardQuestions;
 
-  CommunityUser.fromJson(Map<String, dynamic> json) {
+  Community.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
@@ -76,5 +76,24 @@ class CommunityUser {
     data['mediumQuestions'] = mediumQuestions;
     data['hardQuestions'] = hardQuestions;
     return data;
+  }
+
+  factory Community.empty() {
+    return Community(
+      admin: '',
+      domain: '',
+      noOfUsers: '',
+      timeStamp: '',
+      type: '',
+      easyQuestions: 0,
+      image: '',
+      hardQuestions: 0,
+      about: '',
+      mediumQuestions: 0,
+      name: '',
+      createdAt: '',
+      id: '',
+      email: '',
+    );
   }
 }

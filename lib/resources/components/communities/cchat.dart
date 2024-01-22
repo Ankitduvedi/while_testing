@@ -10,7 +10,7 @@ import '../message/apis.dart';
 import '../message/models/community_user.dart';
 
 class CChatScreen extends StatefulWidget {
-  final CommunityUser user;
+  final Community user;
 
   const CChatScreen({super.key, required this.user});
 
