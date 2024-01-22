@@ -30,8 +30,19 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
   List<String> options = ['A', 'B', 'C', 'D'];
   List<String> categories = ['Easy', 'Medium', 'Hard'];
   String selectedCategory = 'Easy';
+  String typeOfQuestion = 'easyQuestions';
 
   void _saveQuestion() async {
+    int numberOfQuestions = widget.user.easyQuestions + 1;
+    if (selectedCategory == 'Medium') {
+      typeOfQuestion = 'mediumQuestions';
+      numberOfQuestions = widget.user.mediumQuestions + 1;
+    }
+    if (selectedCategory == 'Hard') {
+      typeOfQuestion = 'hardQuestions';
+      numberOfQuestions = widget.user.hardQuestions + 1;
+    }
+
     if (_validateFields()) {
       final newQuestion = Questions(
         id: uuid.v4(),
@@ -62,7 +73,7 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
         FirebaseFirestore.instance
             .collection('communities')
             .doc(widget.user.id)
-            .update({'easyQuestions': widget.user.easyQuestions + 1});
+            .update({typeOfQuestion: numberOfQuestions});
         _clearFields();
       });
       Navigator.pop(context);

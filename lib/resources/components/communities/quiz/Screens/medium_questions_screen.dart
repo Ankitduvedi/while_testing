@@ -22,10 +22,10 @@ class MediumQuestionsScreen extends StatefulWidget {
   });
 
   @override
-  _QuestionsScreenState createState() => _QuestionsScreenState();
+  QuestionsScreenState createState() => QuestionsScreenState();
 }
 
-class _QuestionsScreenState extends State<MediumQuestionsScreen> {
+class QuestionsScreenState extends State<MediumQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
   late int lives;
@@ -122,12 +122,6 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   title: const Text('Quiz Questions'),
-      //   actions: [
-      //     Icon(Icons.arrow_back_ios_new)
-      //   ],
-      // ),
       body: FutureBuilder(
         future: quizzz,
         builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
@@ -200,7 +194,7 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
                                 TextButton.icon(
                                   onPressed: () {},
                                   label: Text(
-                                    "${lives}",
+                                    "$lives",
                                     style: const TextStyle(
                                         color: Colors.red, fontSize: 20),
                                   ),

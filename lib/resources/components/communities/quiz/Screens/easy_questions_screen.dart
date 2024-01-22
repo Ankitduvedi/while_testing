@@ -14,7 +14,7 @@ class EasyQuestionsScreen extends StatefulWidget {
   final int easyQuestions;
   final int attemptedEasyQuestion;
 
-  EasyQuestionsScreen({
+  const EasyQuestionsScreen({
     super.key,
     required this.user,
     required this.attemptedEasyQuestion,
@@ -22,10 +22,10 @@ class EasyQuestionsScreen extends StatefulWidget {
   });
 
   @override
-  _QuestionsScreenState createState() => _QuestionsScreenState();
+  QuestionsScreenState createState() => QuestionsScreenState();
 }
 
-class _QuestionsScreenState extends State<EasyQuestionsScreen> {
+class QuestionsScreenState extends State<EasyQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
   late int lives;
@@ -122,12 +122,6 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
     log('easy question screen');
     return Scaffold(
       backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   title: const Text('Quiz Questions'),
-      //   actions: [
-      //     Icon(Icons.arrow_back_ios_new)
-      //   ],
-      // ),
       body: FutureBuilder(
         future: quizzz,
         builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {

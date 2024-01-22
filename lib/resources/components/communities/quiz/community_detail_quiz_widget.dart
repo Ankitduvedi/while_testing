@@ -148,6 +148,10 @@ class _QuizScreenState extends State<QuizScreen> {
               const Color.fromARGB(255, 238, 148, 142),
               const Color.fromARGB(255, 227, 16, 16),
             ]),
+            _buildQuizCard(context, 'Dashboard', [
+              const Color.fromARGB(255, 75, 0, 130),
+              const Color.fromARGB(255, 123, 104, 238),
+            ]),
           ],
         ),
       ),
