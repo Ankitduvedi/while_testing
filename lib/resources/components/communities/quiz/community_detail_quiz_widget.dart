@@ -1,27 +1,66 @@
+import 'dart:developer';
+
+import 'package:com.example.while_app/resources/components/communities/quiz/Screens/timer.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/quiz.dart';
 import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
-class QuizScreen extends StatelessWidget {
-  const QuizScreen({Key? key, required this.user}) : super(key: key);
-
+class QuizScreen extends StatefulWidget {
+  QuizScreen({Key? key, required this.user}) : super(key: key);
   final CommunityUser user;
+
+  @override
+  State<QuizScreen> createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  late int lives;
+
+  late DateTime? time;
+  late Duration timePassed;
+  renewLive() async {
+    lives = await LivesManager.getLives();
+    time = await LivesManager.getLastRenewalTime();
+    DateTime? lastRenewalTime = await LivesManager.getLastRenewalTime();
+    log('time');
+    log(lastRenewalTime.toString());
+    // Check if 24 hours have passed since the last renewal
+    if (lastRenewalTime != null) {
+      timePassed = DateTime.now().difference(lastRenewalTime);
+      log(timePassed.inSeconds.toString());
+
+      if (timePassed.inMinutes >= 5) {
+        await LivesManager.renewLives(); // Renew lives if 24 hours have passed
+      }
+    } else {
+      await LivesManager.renewLives();
+    }
+  }
+
+  @override
+  void initState() {
+    renewLive();
+    super.initState();
+  }
 
   void _createQuiz(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddQuestionScreen(user: user),
+        builder: (context) => AddQuestionScreen(user: widget.user),
       ),
     );
   }
 
   void _startQuiz(BuildContext context, String category) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => Quiz(user: user, category: category),
+        builder: (context) => lives > 0
+            ? Quiz(user: widget.user, category: category)
+            : TimerDialog(timePassed: timePassed),
       ),
     );
   }

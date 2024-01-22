@@ -119,6 +119,7 @@ class _QuestionsScreenState extends State<EasyQuestionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('easy question screen');
     return Scaffold(
       backgroundColor: Colors.black,
       // appBar: AppBar(

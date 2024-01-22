@@ -31,6 +31,7 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
   late int lives;
   getlive() async {
     lives = await LivesManager.getLives();
+    log('medium screen');
     setState(() {});
   }
 

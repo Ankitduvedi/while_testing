@@ -1,12 +1,10 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/easy_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/medium_questions_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/start_screen.dart';
 import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 
@@ -24,7 +22,6 @@ class Quiz extends StatefulWidget {
 class _QuizState extends State<Quiz> {
   List<String> selectedAnswers = [];
   Widget? activeScreeen;
-  // int lives = 3;
   int correctAnswers = 0;
   late int lives;
   late DateTime? time;
@@ -55,32 +52,10 @@ class _QuizState extends State<Quiz> {
     setState(() {});
   }
 
-  renewLive() async {
-    lives = await LivesManager.getLives();
-    time = await LivesManager.getLastRenewalTime();
-    DateTime? lastRenewalTime = await LivesManager.getLastRenewalTime();
-    print(lastRenewalTime);
-    log('time');
-
-    log(lastRenewalTime.toString());
-
-    // Check if 24 hours have passed since the last renewal
-    if (lastRenewalTime != null) {
-      Duration timePassed = DateTime.now().difference(lastRenewalTime);
-      if (timePassed.inMinutes >= 5) {
-        await LivesManager.renewLives(); // Renew lives if 24 hours have passed
-        print('Lives renewed!');
-      }
-    } else {
-      await LivesManager.renewLives();
-    }
-  }
-
   @override
   void initState() {
-    activeScreeen = StartScreen(switchScreen);
-    renewLive();
     participantsData();
+    activeScreeen = StartScreen(switchScreen);
     super.initState();
   }
 
@@ -88,53 +63,33 @@ class _QuizState extends State<Quiz> {
     setState(
       () {
         if (widget.category == 'Easy' &&
-            lives > 0 &&
             widget.user.easyQuestions > attemptedEasyQuestion) {
+          log('easy');
           activeScreeen = EasyQuestionsScreen(
             user: widget.user,
             attemptedEasyQuestion: attemptedEasyQuestion,
             easyQuestions: easyQuestions,
           );
         }
-        if (widget.category == 'Medium') {
+        if (widget.category == 'Medium' &&
+            widget.user.mediumQuestions > attemptedMediumQuestion) {
+          log('medium');
           activeScreeen = MediumQuestionsScreen(
             user: widget.user,
             attemptedMediumQuestion: attemptedMediumQuestion,
             mediumQuestions: mediumQuestions,
           );
         }
-        if (widget.category == 'Hard') {
+        if (widget.category == 'Hard' &&
+            widget.user.hardQuestions > attemptedHardQuestion) {
           activeScreeen = HardQuestionsScreen(
-            onSelectAnswer: chooseAnswer,
+            attemptedHardQuestion: attemptedHardQuestion,
+            hardQuestions: hardQuestions,
             user: widget.user,
-            correctAnswers: correctAnswers,
-            lives: lives,
           );
         }
       },
     );
-  }
-
-  void restartQuiz() {
-    setState(() {
-      Navigator.pop(context);
-      //activeScreeen = QuizScreen(user: widget.user);
-      selectedAnswers = [];
-    });
-  }
-
-  void chooseAnswer(String answer, int lives, int correctAnswers) {
-    selectedAnswers.add(answer);
-
-    if (selectedAnswers.length == 10 || lives == 0) {
-      setState(() {
-        activeScreeen = ResultsScreen(
-          level: '',
-          totalAnswers: 0,
-          correctAnswers: correctAnswers,
-        );
-      });
-    }
   }
 
   @override
