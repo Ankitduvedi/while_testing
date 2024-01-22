@@ -104,6 +104,7 @@ class QuestionsScreenState extends State<HardQuestionsScreen> {
             widget.user.id,
             'hardQuestions',
             correctAnswers + widget.hardQuestions,
+            correctAnswers + APIs.me.hardQuestions,
             'attemptedHardQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(

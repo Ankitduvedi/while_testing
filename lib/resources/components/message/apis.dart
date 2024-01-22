@@ -229,6 +229,7 @@ class APIs {
     String id,
     String scoredLevel,
     int score,
+    int usertotalScore,
     String attemptedLevel,
     int attempted,
   ) async {
@@ -242,7 +243,7 @@ class APIs {
       attemptedLevel: attempted,
     });
     firestore.collection('users').doc(APIs.me.id).update({
-      scoredLevel: score,
+      scoredLevel: usertotalScore,
     });
     return true;
   }

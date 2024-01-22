@@ -105,6 +105,7 @@ class QuestionsScreenState extends State<MediumQuestionsScreen> {
             widget.user.id,
             'mediumQuestions',
             correctAnswers + widget.mediumQuestions,
+            (correctAnswers + APIs.me.mediumQuestions),
             'attemptedMediumQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(

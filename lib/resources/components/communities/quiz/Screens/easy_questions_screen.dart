@@ -104,6 +104,7 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
             widget.user.id,
             'easyQuestions',
             correctAnswers + widget.easyQuestions,
+            correctAnswers + APIs.me.easyQuestions,
             'attemptedEasyQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(
