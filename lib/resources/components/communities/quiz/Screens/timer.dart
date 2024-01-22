@@ -8,10 +8,10 @@ class TimerDialog extends StatefulWidget {
   final Duration timePassed;
 
   @override
-  _TimerDialogState createState() => _TimerDialogState();
+  TimerDialogState createState() => TimerDialogState();
 }
 
-class _TimerDialogState extends State<TimerDialog> {
+class TimerDialogState extends State<TimerDialog> {
   late CountdownTimer _timer;
 
   @override
@@ -38,14 +38,13 @@ class _TimerDialogState extends State<TimerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Timer Dialog'),
-      content: Text('Time Remaining: ${_formatDuration(_timer.remaining)}'),
+      content: Text('Lives Renew in: ${_formatDuration(_timer.remaining)}'),
       actions: [
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Close'),
+          child: const Text('Close'),
         ),
       ],
     );
