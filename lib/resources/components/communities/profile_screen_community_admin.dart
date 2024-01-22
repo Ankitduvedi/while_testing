@@ -213,11 +213,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Align(
+
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Participants',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Participants',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 18),
+                          ),
+                          // Add participants
+                          TextButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(),
+                                minimumSize:
+                                    Size(mq.width * .2, mq.height * .02)),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                log(community.toJson().toString());
+                                APIs.updateCommunityInfo(community)
+                                    .then((value) {
+                                  Dialogs.showSnackbar(
+                                      context, 'Profile Updated Successfully!');
+                                });
+                              }
+                            },
+                            label: const Text('Add Participants',
+                                style: TextStyle(fontSize: 16)),
+                            icon: const Icon(CupertinoIcons.person_add_solid,
+                                size: 28),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
