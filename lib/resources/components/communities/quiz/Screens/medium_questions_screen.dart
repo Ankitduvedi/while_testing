@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
+import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,17 +11,15 @@ import 'package:com.example.while_app/resources/components/message/models/commun
 
 class MediumQuestionsScreen extends StatefulWidget {
   final CommunityUser user;
-  final void Function(String answer, int life, int correctAnswers)
-      onSelectAnswer;
-  int lives;
-  int correctAnswers;
+  final int mediumQuestions;
+  final int attemptedMediumQuestion;
 
-  MediumQuestionsScreen(
-      {super.key,
-      required this.user,
-      required this.onSelectAnswer,
-      required this.lives,
-      required this.correctAnswers});
+  const MediumQuestionsScreen({
+    super.key,
+    required this.user,
+    required this.attemptedMediumQuestion,
+    required this.mediumQuestions,
+  });
 
   @override
   _QuestionsScreenState createState() => _QuestionsScreenState();
@@ -26,7 +28,13 @@ class MediumQuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<MediumQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
+  late int lives;
+  getlive() async {
+    lives = await LivesManager.getLives();
+    setState(() {});
+  }
 
+  int correctAnswers = 0;
   Future<List<Map<String, dynamic>>> _getQuestions() async {
     const category = 'Medium'; // Set the category as needed
     final querySnapshot = await FirebaseFirestore.instance
@@ -35,14 +43,19 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
         .collection('quizzes')
         .doc(widget.user.id)
         .collection(category)
+        .orderBy('timeStamp', descending: false)
         .get();
-
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  late int currentQuestionIndex;
   @override
   void initState() {
+    currentQuestionIndex = widget.attemptedMediumQuestion;
     super.initState();
+    getlive();
+    log('//attempted questions');
+    log(widget.attemptedMediumQuestion.toString());
     quizzz = _getQuestions();
     startTimer();
   }
@@ -53,20 +66,17 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
     timer!.cancel();
   }
 
-  var currentQuestionIndex = 0;
   int seconds = 45;
   Timer? timer;
 
   startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (seconds > 0) {
           seconds--;
         } else {
           setState(() {
-            timer!.cancel();
             answerQuestion(null, 'e');
-
             startTimer();
             seconds = 45;
           });
@@ -78,18 +88,33 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
   void answerQuestion(String? selectedAnswers, String correctAnswer) {
     setState(() {
       if (selectedAnswers == correctAnswer) {
-        //widget.lives++;
-        widget.correctAnswers++;
+        correctAnswers++;
       } else {
-        widget.lives--;
+        lives--;
+        LivesManager.decrementLife();
       }
-      currentQuestionIndex = currentQuestionIndex + 1;
       timer!.cancel();
-      startTimer();
-      seconds = 45;
+
+      if ((questions.length - 1) > currentQuestionIndex && lives > 0) {
+        currentQuestionIndex = currentQuestionIndex + 1;
+        startTimer();
+        seconds = 45;
+      } else {
+        APIs.updateScore(
+            widget.user.id,
+            'mediumQuestions',
+            correctAnswers + widget.mediumQuestions,
+            'attemptedMediumQuestion',
+            (currentQuestionIndex + 1));
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ResultsScreen(
+            totalAnswers: currentQuestionIndex,
+            correctAnswers: correctAnswers,
+            level: 'mediumQuestions',
+          ),
+        ));
+      }
     });
-    widget.onSelectAnswer(
-        selectedAnswers!, widget.lives, widget.correctAnswers);
   }
 
   @override
@@ -115,7 +140,7 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
             return Center(
               child: Text(
                 'Error: ${snapshot.error}',
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             );
           }
@@ -131,7 +156,9 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
 
           questions = snapshot.data!;
           final currentQuestion = questions[currentQuestionIndex];
-
+          if (questions.length <= currentQuestionIndex) {
+            log('navigated to resultscreen');
+          }
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -141,7 +168,7 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
                     height: 60,
                     child: Container(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.black),
+                      decoration: const BoxDecoration(color: Colors.black),
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +177,7 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   CupertinoIcons.back,
                                   color: Colors.white,
                                   size: 40,
@@ -158,12 +185,12 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
                             Stack(alignment: Alignment.center, children: [
                               Text(
                                 "$seconds",
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                               CircularProgressIndicator(
                                 value: seconds / 45,
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.lightGreen),
+                                valueColor: const AlwaysStoppedAnimation(
+                                    Colors.lightGreen),
                               ),
                             ]),
                             SizedBox(
@@ -172,11 +199,11 @@ class _QuestionsScreenState extends State<MediumQuestionsScreen> {
                                 TextButton.icon(
                                   onPressed: () {},
                                   label: Text(
-                                    "${widget.lives}",
-                                    style: TextStyle(
+                                    "${lives}",
+                                    style: const TextStyle(
                                         color: Colors.red, fontSize: 20),
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     CupertinoIcons.heart_fill,
                                     color: Colors.red,
                                     size: 35,

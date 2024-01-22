@@ -264,6 +264,9 @@ class APIs {
       scoredLevel: score,
       attemptedLevel: attempted,
     });
+    firestore.collection('users').doc(APIs.me.id).update({
+      scoredLevel: score,
+    });
     return true;
   }
 

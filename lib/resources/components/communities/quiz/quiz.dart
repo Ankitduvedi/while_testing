@@ -30,6 +30,10 @@ class _QuizState extends State<Quiz> {
   late DateTime? time;
   late int easyQuestions;
   late int attemptedEasyQuestion;
+  late int mediumQuestions;
+  late int attemptedMediumQuestion;
+  late int hardQuestions;
+  late int attemptedHardQuestion;
 
   participantsData() async {
     final querySnapshot = await FirebaseFirestore.instance
@@ -41,6 +45,13 @@ class _QuizState extends State<Quiz> {
     easyQuestions = await querySnapshot.data()!['easyQuestions'];
     attemptedEasyQuestion =
         await querySnapshot.data()!['attemptedEasyQuestion'];
+    mediumQuestions = await querySnapshot.data()!['mediumQuestions'];
+    attemptedMediumQuestion =
+        await querySnapshot.data()!['attemptedMediumQuestion'];
+    hardQuestions = await querySnapshot.data()!['hardQuestions'];
+    attemptedHardQuestion =
+        await querySnapshot.data()!['attemptedHardQuestion'];
+
     setState(() {});
   }
 
@@ -87,10 +98,9 @@ class _QuizState extends State<Quiz> {
         }
         if (widget.category == 'Medium') {
           activeScreeen = MediumQuestionsScreen(
-            lives: lives,
-            onSelectAnswer: chooseAnswer,
             user: widget.user,
-            correctAnswers: correctAnswers,
+            attemptedMediumQuestion: attemptedMediumQuestion,
+            mediumQuestions: mediumQuestions,
           );
         }
         if (widget.category == 'Hard') {
