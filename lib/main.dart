@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +19,59 @@ import 'view/profile/user_profile_screen.dart';
 import 'package:get/get.dart';
 
 late Size mq;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  _initializeFirebase();
-  initDynamicLinks();
-  Provider.debugCheckInvalidValueType = null;
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _initializeFirebase();
   runApp(const river.ProviderScope(child: MyApp()));
+}
+
+Future<void> _initializeFirebase() async {
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+    description: 'For showing notification',
+    id: 'chats',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'WHILE',
+  );
+  // Optionally print the result
+  // print(result);
+  await initDynamicLinks();
+}
+
+Future<void> initDynamicLinks() async {
+  log('Initializing Dynamic Links');
+
+  // Handle dynamic links when the app is already running
+  FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+    _handleDynamicLink(dynamicLinkData);
+  });
+
+  // Handle dynamic links when the app is not running
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+  if (initialLink != null) {
+    APIs.getSelfInfo();
+    _handleDynamicLink(initialLink);
+  }
+}
+
+void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
+  final Uri deepLink = dynamicLinkData.link;
+  final route = deepLink.queryParameters['screen'];
+  final url = deepLink.queryParameters['url'];
+
+  if (route != null) {
+    log('Navigating to $route with parameter: $url');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.toNamed(
+        route,
+        //arguments: url ?? '', // Ensure you pass the parameters
+      );
+    });
+  } else {
+    log('Invalid dynamic link');
+  }
 }
 
 class MyApp extends river.ConsumerWidget {
@@ -42,7 +90,10 @@ class MyApp extends river.ConsumerWidget {
     return MultiProvider(
       providers: providersList,
       child: GetMaterialApp(
-        routes: {'/profile': (BuildContext context) => const ProfileScreen()},
+        routes: {
+          '/profile': (BuildContext context) => const HomeScreen(),
+          // Add other routes as needed
+        },
         title: 'While',
         debugShowCheckedModeBanner: false,
         initialRoute: RoutesName.splash,
@@ -51,35 +102,4 @@ class MyApp extends river.ConsumerWidget {
       ),
     );
   }
-}
-
-_initializeFirebase() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
-    description: 'For showing notification',
-    id: 'chats',
-    importance: NotificationImportance.IMPORTANCE_HIGH,
-    name: 'WHILE',
-  );
-  // print(result);
-}
-
-void initDynamicLinks() async {
-  log('////initDyanamic ');
-  FirebaseDynamicLinks.instance.onLink.listen(
-    (pendingDynamicLinkData) {
-      // Set up the `onLink` event listener next as it may be received here
-      final route =
-          pendingDynamicLinkData.link.queryParameters['screen'].toString();
-      final url = pendingDynamicLinkData.link.queryParameters['url'].toString();
-      if (route != null) {
-        log(route);
-        log(url);
-        log('////initDyanamic ');
-        // Example of using the dynamic link to push the user to a different screen
-        Get.toNamed(route);
-      }
-    },
-  );
 }

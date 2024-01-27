@@ -8,19 +8,15 @@ import 'package:share/share.dart';
 
 // import 'package:while_app/resources/components/videoPlayer/circle_animation.dart';
 
-class CreatorReelsScreen extends StatefulWidget {
-  const CreatorReelsScreen({
-    super.key,
-    required this.video,
-    required this.index,
-  });
-  final Video video;
-  final int index;
+class DynamicReelsScreen extends StatefulWidget {
+  const DynamicReelsScreen({super.key, required this.id});
+  final String id;
   @override
-  State<CreatorReelsScreen> createState() => CreatorReelsScreenState();
+  State<DynamicReelsScreen> createState() => DynamicReelsScreenState();
 }
 
-class CreatorReelsScreenState extends State<CreatorReelsScreen> {
+class DynamicReelsScreenState extends State<DynamicReelsScreen> {
+  late Video video;
   User? user = FirebaseAuth.instance.currentUser;
   late VideoPlayerController _controller;
   bool likeTapped = false;
@@ -30,9 +26,18 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
     super.dispose();
   }
 
+  videoDetails() async {
+    final data = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.id)
+        .get();
+    video = Video.fromMap(data.data()!);
+  }
+
   @override
   void initState() {
     likeTapped = false;
+    videoDetails();
     super.initState();
   }
 
@@ -40,20 +45,20 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
     // DocumentReference ref = widget.video.videoRef as DocumentReference<Object?>;
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('videos')
-        .doc(widget.video.videoRef)
+        .doc(widget.id)
         .get();
 
     if ((doc.data()! as dynamic)['likes'].contains(user!.uid)) {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video.videoRef)
+          .doc(widget.id)
           .update({
         'likes': FieldValue.arrayRemove([user!.uid])
       });
     } else {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video.videoRef)
+          .doc(widget.id)
           .update({
         'likes': FieldValue.arrayUnion([user!.uid])
       });
@@ -62,9 +67,8 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl))
-          ..initialize();
+    _controller = VideoPlayerController.networkUrl(Uri.parse(video.videoUrl))
+      ..initialize();
     _controller.play();
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -98,12 +102,12 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              widget.video.title,
+                              video.title,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 20),
                             ),
                             Text(
-                              widget.video.description,
+                              video.description,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 15),
                             ),
@@ -141,17 +145,16 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                                   },
                                   child: Icon(
                                     Icons.favorite,
-                                    color:
-                                        widget.video.likes.contains(user!.uid)
-                                            ? Colors.red
-                                            : Colors.white,
+                                    color: video.likes.contains(user!.uid)
+                                        ? Colors.red
+                                        : Colors.white,
                                     size: 30,
                                   )),
                               const SizedBox(
                                 height: 7,
                               ),
                               Text(
-                                widget.video.likes.length.toString(),
+                                video.likes.length.toString(),
                                 style: const TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
@@ -161,7 +164,7 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                               onTap: () async {
                                 //generate url
                                 final url = await APIs.shareDynamicLinks(
-                                    'profle', widget.video.videoRef);
+                                    'reel', widget.id);
                                 // Share text
                                 Share.share(url);
                               },
