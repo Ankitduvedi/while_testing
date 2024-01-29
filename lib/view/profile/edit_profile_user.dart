@@ -27,29 +27,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final users = ref.watch(userDataProvider).userData;
-    final ChatUser user = ChatUser(
-      lives: 0,
-      easyQuestions: 0,
-      hardQuestions: 0,
-      mediumQuestions: 0,
-      image: APIs.me.image,
-      about: '',
-      name: APIs.me.name,
-      createdAt: '',
-      id: APIs.me.id,
-      email: '',
-      isOnline: true,
-      lastActive: '',
-      pushToken: '',
-      dateOfBirth: '',
-      gender: '',
-      phoneNumber: '',
-      place: '',
-      profession: '',
-      designation: 'Member',
-      follower: 0,
-      following: 0,
-    );
+    final ChatUser user = users!;
     return GestureDetector(
       // for hiding keyboard
       onTap: () => FocusScope.of(context).unfocus(),
