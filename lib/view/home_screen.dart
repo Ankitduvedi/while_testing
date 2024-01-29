@@ -1,3 +1,5 @@
+import 'package:com.example.while_app/view/profile/demo.dart';
+import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
@@ -20,6 +22,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     // listUsersFollowers();
+    //final userDataProvider = Provider.of<UserDataProvider>(context);
+    //ref.watch(userDataProvider);
     APIs.getSelfInfo();
     super.initState();
     _controller = TabController(length: 5, vsync: this, initialIndex: 0);
@@ -32,8 +36,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return Scaffold(
       body: TabBarView(
         controller: _controller,
-        children: const [
-          FeedScreen(),
+        children: [
+          MyHomePagedemo(),
           CreateScreen(),
           ReelsScreen(),
           SocialScreen(),

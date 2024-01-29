@@ -1,23 +1,20 @@
+import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/profile/user_profile_follower_screen.dart';
 import 'package:com.example.while_app/view/profile/user_profile_following_screen.dart';
 import '../../main.dart';
 import '../../resources/components/bottom_options_sheet.dart';
 
-class ProfileDataWidget extends StatefulWidget {
+class ProfileDataWidget extends ConsumerWidget {
   const ProfileDataWidget({Key? key}) : super(key: key);
 
   @override
-  _ProfileDataWidgetState createState() => _ProfileDataWidgetState();
-}
-
-class _ProfileDataWidgetState extends State<ProfileDataWidget> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userDataProvider).userData;
     var nh = MediaQuery.of(context).viewPadding.top;
     return LiquidPullToRefresh(
       onRefresh: () async {
@@ -40,7 +37,7 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                     width: mq.height,
                     fit: BoxFit.cover,
                     height: mq.height * .13,
-                    imageUrl: APIs.me.image,
+                    imageUrl: user!.image,
                     errorWidget: (context, url, error) =>
                         const CircleAvatar(child: Icon(CupertinoIcons.person)),
                   ),
@@ -57,7 +54,7 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                   height: mq.height * .15,
                   filterQuality: FilterQuality.low,
                   fit: BoxFit.fill,
-                  imageUrl: APIs.me.image,
+                  imageUrl: user.image,
                   errorWidget: (context, url, error) =>
                       const CircleAvatar(child: Icon(CupertinoIcons.person)),
                 ),
@@ -71,13 +68,12 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          UserProfileFollowerScreen(chatUser: APIs.me),
+                      builder: (_) => UserProfileFollowerScreen(chatUser: user),
                     ),
                   );
                 },
                 child: Text(
-                  'Followers  ${APIs.me.follower}',
+                  'Followers  ${user.follower}',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -91,12 +87,12 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (_) =>
-                          UserProfileFollowingScreen(chatUser: APIs.me),
+                          UserProfileFollowingScreen(chatUser: user),
                     ),
                   );
                 },
                 child: Text(
-                  'Following  ${APIs.me.following}',
+                  'Following  ${user.following}',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -128,7 +124,7 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      APIs.me.name,
+                      user.name,
                       softWrap: true,
                       maxLines: 2,
                       style: const TextStyle(
@@ -138,7 +134,7 @@ class _ProfileDataWidgetState extends State<ProfileDataWidget> {
                       ),
                     ),
                     Text(
-                      APIs.me.about,
+                      user.about,
                       softWrap: true,
                       maxLines: 4,
                       style: const TextStyle(

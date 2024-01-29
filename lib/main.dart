@@ -15,7 +15,6 @@ import 'package:com.example.while_app/view_model/providers/providers_list.dart';
 import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
 import 'firebase_options.dart';
 import 'utils/routes/routes.dart';
-import 'view/profile/user_profile_screen.dart';
 import 'package:get/get.dart';
 
 late Size mq;
@@ -23,6 +22,7 @@ late Size mq;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Provider.debugCheckInvalidValueType = null;
   await _initializeFirebase();
   runApp(const river.ProviderScope(child: MyApp()));
 }

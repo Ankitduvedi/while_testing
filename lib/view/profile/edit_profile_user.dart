@@ -2,8 +2,10 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
@@ -12,19 +14,19 @@ import '../../resources/components/message/apis.dart';
 import '../../resources/components/message/helper/dialogs.dart';
 
 //profile screen -- to show signed in user info
-class EditUserProfileScreen extends StatefulWidget {
+class EditUserProfileScreen extends ConsumerStatefulWidget {
   const EditUserProfileScreen({super.key});
-
   @override
-  State<EditUserProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<EditUserProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<EditUserProfileScreen> {
+class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _image;
 
   @override
   Widget build(BuildContext context) {
+    final users = ref.watch(userDataProvider).userData;
     final ChatUser user = ChatUser(
       lives: 0,
       easyQuestions: 0,

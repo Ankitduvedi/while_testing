@@ -1,38 +1,48 @@
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:while_app/resources/components/message/models/chat_user.dart';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// class UserNotifier extends StateNotifier<ChatUser> {
-//   UserNotifier(super.state);
-//   // final user = FirebaseFirestore.instance
-//   //     .collection('user')
-//   //     .doc(APIs.me.id)
-//   //     .get()
-//   //     .then((value) =>  value.data()!.map((key, value) => state.));
-//   updateUserDetail(ChatUser user) {
-//     state = ChatUser(
-//         image: user.image,
-//         about: user.about,
-//         name: user.name,
-//         createdAt: user.createdAt,
-//         isOnline: user.isOnline,
-//         id: user.id,
-//         lastActive: user.lastActive,
-//         email: user.email,
-//         pushToken: user.pushToken);
-//   }
-// }
+class UserDataProvider with ChangeNotifier {
+  ChatUser _userData = ChatUser.empty();
+  final auth = FirebaseAuth.instance.currentUser!;
 
-// final communityProvider = StateNotifierProvider<UserNotifier, ChatUser>(
-//   (ref) {
-//     return UserNotifier(ChatUser(
-//         image: 'image',
-//         about: 'about',
-//         name: 'name',
-//         createdAt: 'createdAt',
-//         isOnline: false,
-//         id: 'id',
-//         lastActive: 'lastActive',
-//         email: 'email',
-//         pushToken: 'pushToken'));
-//   },
-// );
+  ChatUser? get userData => _userData;
+
+  UserDataProvider() {
+    _initData();
+  }
+
+  void _initData() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.uid)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        _userData = ChatUser.fromJson(snapshot.data()!);
+        notifyListeners();
+      }
+    });
+  }
+
+  Future<void> updateUserData(ChatUser updatedUser) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .set(updatedUser.toJson());
+      _userData = updatedUser; // Update local data
+      notifyListeners(); // Notify listeners of the change
+    } catch (e) {
+      log('Error updating user data: $e');
+      // Handle exceptions
+    }
+  }
+}
+
+final userDataProvider = ChangeNotifierProvider<UserDataProvider>((ref) {
+  return UserDataProvider();
+});

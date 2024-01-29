@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
-
 import '../../view/profile/edit_profile_user.dart';
 
 class MoreOptions extends StatelessWidget {
@@ -36,10 +34,8 @@ class MoreOptions extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
 
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const EditUserProfileScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => EditUserProfileScreen()));
               },
               leading: const Icon(
                 Icons.edit,
