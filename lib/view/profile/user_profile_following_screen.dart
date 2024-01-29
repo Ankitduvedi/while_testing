@@ -28,12 +28,6 @@ class UserProfileFollowingScreenState
   List<ChatUser> _list = [];
 
   @override
-  void initState() {
-    super.initState();
-    APIs.getSelfInfo();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
