@@ -393,20 +393,6 @@ class APIs {
         .set({}).then((value) => sendMessage(chatUser, msg, type));
   }
 
-  // for updating user information
-  static Future<void> updateUserInfo(ChatUser usersDetail) async {
-    await firestore.collection('users').doc(user.uid).update({
-      'name': usersDetail.name,
-      'about': usersDetail.about,
-      'email': usersDetail.email,
-      'gender': usersDetail.gender,
-      'place': usersDetail.place,
-      'phoneNumber': usersDetail.phoneNumber,
-      'profession': usersDetail.profession,
-      'dateOfBirth': usersDetail.dateOfBirth,
-    });
-  }
-
   // update profile picture of user
   static Future<void> updateProfilePicture(File file) async {
     //getting image file extension

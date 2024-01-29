@@ -21,9 +21,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   late TabController _controller;
   @override
   void initState() {
-    // listUsersFollowers();
-    //final userDataProvider = Provider.of<UserDataProvider>(context);
-    //ref.watch(userDataProvider);
     APIs.getSelfInfo();
     super.initState();
     _controller = TabController(length: 5, vsync: this, initialIndex: 0);
@@ -32,12 +29,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     //final currentTheme = ref.watch(themeNotifierProvider);
+    final userProvider = ref.watch(userDataProvider);
 
     return Scaffold(
       body: TabBarView(
         controller: _controller,
-        children: [
-          MyHomePagedemo(),
+        children: const [
+          FeedScreen(),
           CreateScreen(),
           ReelsScreen(),
           SocialScreen(),

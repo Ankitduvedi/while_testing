@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
-import 'package:com.example.while_app/view/home_screen.dart';
 import '../../resources/components/message/apis.dart';
 import '../../resources/components/message/helper/dialogs.dart';
 
@@ -256,21 +255,9 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          // log(community.toJson().toString());
                           userProvider.updateUserData(updatedUser);
-
                           Dialogs.showSnackbar(
                               context, 'Profile Updated Successfully!');
-                          // APIs.updateUserInfo(updatedUser).then((value) {
-                          //   Dialogs.showSnackbar(
-                          //       context, 'Profile Updated Successfully!');
-                          //   APIs.getSelfInfo().then((value) =>
-                          //       Navigator.of(context).pushAndRemoveUntil(
-                          //           MaterialPageRoute(
-                          //             builder: (_) => const HomeScreen(),
-                          //           ),
-                          //           (route) => false));
-                          // });
                         }
                       },
                       icon: const Icon(Icons.edit, size: 28),
