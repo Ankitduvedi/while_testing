@@ -34,8 +34,10 @@ class MoreOptions extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
 
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => EditUserProfileScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const EditUserProfileScreen()));
               },
               leading: const Icon(
                 Icons.edit,
