@@ -68,7 +68,7 @@ class ProfileDataWidget extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => UserProfileFollowerScreen(chatUser: user),
+                      builder: (_) => UserProfileFollowerScreen(),
                     ),
                   );
                 },

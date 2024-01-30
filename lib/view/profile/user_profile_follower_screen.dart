@@ -7,23 +7,17 @@ import 'package:com.example.while_app/resources/components/message/helper/dialog
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 
 //home screen -- where all available contacts are shown
-class UserProfileFollowerScreen extends StatefulWidget {
-  const UserProfileFollowerScreen({super.key, required this.chatUser});
-  final ChatUser chatUser;
+class UserProfileFollowerScreen extends ConsumerWidget {
+  UserProfileFollowerScreen({super.key});
 
-  @override
-  State<UserProfileFollowerScreen> createState() =>
-      UserProfileFollowingScreenState();
-}
-
-class UserProfileFollowingScreenState extends State<UserProfileFollowerScreen> {
   List<ChatUser> _list = [];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

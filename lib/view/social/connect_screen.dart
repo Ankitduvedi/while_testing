@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
-import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ConnectScreen extends StatefulWidget {
+class ConnectScreen extends ConsumerStatefulWidget {
   const ConnectScreen({Key? key}) : super(key: key);
 
   @override
   ConnectScreenState createState() => ConnectScreenState();
 }
 
-class ConnectScreenState extends State<ConnectScreen>
+class ConnectScreenState extends ConsumerState<ConnectScreen>
     with SingleTickerProviderStateMixin {
   late Stream<QuerySnapshot> peopleStream;
   late Stream<QuerySnapshot> pagesStream;
@@ -47,17 +46,17 @@ class ConnectScreenState extends State<ConnectScreen>
     super.dispose();
   }
 
-  _getBytes(imageUrl) async {
-    try {
-      final ByteData data =
-          await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl);
-      final bytes = data.buffer.asUint8List();
-      return base64Encode(bytes);
-    } catch (error) {
-      // print("Error getting bytes: $error");
-      return null;
-    }
-  }
+  // _getBytes(imageUrl) async {
+  //   try {
+  //     final ByteData data =
+  //         await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl);
+  //     final bytes = data.buffer.asUint8List();
+  //     return base64Encode(bytes);
+  //   } catch (error) {
+  //     // print("Error getting bytes: $error");
+  //     return null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
