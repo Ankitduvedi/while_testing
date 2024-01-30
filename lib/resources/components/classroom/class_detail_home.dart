@@ -1,8 +1,9 @@
 import 'dart:developer';
+import 'package:com.example.while_app/resources/components/communities/resources/community_detail_resources_widget%20.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/classroom/class_timetable.dart';
 import 'package:com.example.while_app/resources/components/classroom/profile_screen_class_admin.dart';
-import 'package:com.example.while_app/resources/components/communities/community_detail_resources_widget%20.dart';
+//import 'package:com.example.while_app/resources/components/communities/community_detail_resources_widget%20.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
 
