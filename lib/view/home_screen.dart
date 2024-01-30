@@ -35,7 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       body: TabBarView(
         controller: _controller,
         children: [
-          MyConsumerWidget(),
+          UsersListWidget(),
           CreateScreen(),
           ReelsScreen(),
           SocialScreen(),

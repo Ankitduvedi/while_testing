@@ -31,17 +31,12 @@ class ConnectUserDataProvider with ChangeNotifier {
     });
   }
 
-  Stream<ChatUser> userDataStream(String id) {
+  Stream<List<ChatUser>> usersDataStream() {
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(id)
         .snapshots()
         .map((snapshot) {
-      if (snapshot.exists && snapshot.data() != null) {
-        return ChatUser.fromJson(snapshot.data()!);
-      } else {
-        return ChatUser.empty();
-      }
+      return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
     });
   }
 
@@ -67,8 +62,8 @@ final connectUserDataProvider =
 });
 
 // StreamProvider for real-time updates
-final connectUserDataStreamProvider =
-    StreamProvider.family<ChatUser, String>((ref, id) {
-  final provider = ref.watch(connectUserDataProvider(id));
-  return provider.userDataStream(id);
+final usersDataStreamProvider = StreamProvider<List<ChatUser>>((ref) {
+  final provider =
+      ref.watch(connectUserDataProvider('')); // Dummy ID since it's not used
+  return provider.usersDataStream();
 });
