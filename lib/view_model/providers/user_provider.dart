@@ -26,6 +26,35 @@ class UserDataProvider with ChangeNotifier {
         notifyListeners();
       }
     });
+
+    // Listen to changes in the 'following' subcollection
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.uid)
+        .collection('following')
+        .snapshots()
+        .listen((snapshot) async {
+      // If there's a change in the count, update the user data
+      if (snapshot.docChanges.isNotEmpty) {
+        _userData.following = snapshot.docs.length;
+        log('updated following');
+        await updateUserData(_userData);
+      }
+    });
+
+    // Listen to changes in the 'follower' subcollection
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.uid)
+        .collection('follower')
+        .snapshots()
+        .listen((snapshot) async {
+      // If there's a change in the count, update the user data
+      if (snapshot.docChanges.isNotEmpty) {
+        _userData.follower = snapshot.docs.length;
+        await updateUserData(_userData);
+      }
+    });
   }
 
   Future<void> updateUserData(ChatUser updatedUser) async {

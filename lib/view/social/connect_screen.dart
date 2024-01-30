@@ -101,7 +101,7 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: peopleStream,
+            stream: FirebaseFirestore.instance.collection('users').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
