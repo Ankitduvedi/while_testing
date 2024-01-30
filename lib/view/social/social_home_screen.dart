@@ -1,10 +1,12 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
+import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
 import 'package:com.example.while_app/resources/components/message/home_screen.dart';
 import 'package:com.example.while_app/view/social/notification.dart';
 import 'package:com.example.while_app/view/social/status_screen.dart';
-import 'package:com.example.while_app/view/social/connect_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../resources/components/communities/community_home_screen.dart';
 
@@ -26,13 +28,81 @@ class _SocialScreenState extends State<SocialScreen>
   bool isSearchingHasValue = false;
   var value = '';
 
+  late final FirebaseMessaging _messaging;
+  late final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+
   @override
   void initState() {
     super.initState();
+    _messaging = FirebaseMessaging.instance;
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    _initializeNotification();
+    _requestPermission();
+    _handleForegroundNotifications();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+    // Navigate to desired screen based on message
+  });
+
+  _checkInitialMessage();
     // listUsersFollowers();
     // refreshFunc();
+    
     _controller = TabController(length: 4, vsync: this, initialIndex: 1);
   }
+
+  void _checkInitialMessage() async {
+  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+  if (initialMessage != null) {
+    // Navigate to desired screen based on initialMessage
+  }
+}
+
+  void _initializeNotification() async {
+    const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher'); // Set your app icon here
+    //const IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings();
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      //iOS: iosInitializationSettings,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _requestPermission() {
+    _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+    );
+  }
+
+  void _handleForegroundNotifications() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        _flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'channel_id',
+              'channel_name',
+              channelDescription: 'channel_description',
+              icon: android.smallIcon,
+              // other properties...
+            ),
+          ),
+        );
+      }
+    });
+  }
+
 
   // refreshFunc() async {
   //   DBHelper().readAllData();
@@ -74,7 +144,7 @@ class _SocialScreenState extends State<SocialScreen>
                       style: const TextStyle(
                           fontSize: 17,
                           letterSpacing: 0.5,
-                          color: Colors.black),
+                          color: Colors.white),
                       //when search text changes then updated search list
                       onChanged: (val) {
                         //search logic
@@ -109,7 +179,7 @@ class _SocialScreenState extends State<SocialScreen>
                 IconButton(
                     onPressed: () {
                       // Navigator.of(context)
-                      //     .push(MaterialPageRoute(builder: (ctx) => const Search()));
+                        //   .push(MaterialPageRoute(builder: (ctx) => SearchPage()));
                       setState(() {
                         isSearching = !isSearching;
                       });
@@ -183,7 +253,6 @@ class _SocialScreenState extends State<SocialScreen>
             body: TabBarView(
               controller: _controller,
               children: [
-                const ConnectScreen(),
                 HomeScreenFinal(
                   isSearching: isSearchingHasValue,
                   value: value,

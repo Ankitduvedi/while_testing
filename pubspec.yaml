@@ -92,6 +92,7 @@ dependencies:
   go_router: ^13.0.1
   riverpod: ^2.4.9
   syncfusion_flutter_pdfviewer: ^20.3.52
+  flutter_local_notifications: ^16.3.2
   
 
 dev_dependencies:

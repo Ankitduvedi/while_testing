@@ -3,6 +3,7 @@ import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
@@ -18,6 +19,11 @@ import 'utils/routes/routes.dart';
 import 'package:get/get.dart';
 
 late Size mq;
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message: ${message.messageId}');
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -103,3 +109,5 @@ class MyApp extends river.ConsumerWidget {
     );
   }
 }
+
+//30 jan
