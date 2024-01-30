@@ -7,20 +7,24 @@ import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MyConsumerWidget extends ConsumerWidget {
+class UsersListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<ChatUser> userAsyncValue =
-        ref.watch(connectUserDataStreamProvider(APIs.me.id));
+    AsyncValue<List<ChatUser>> usersAsyncValue =
+        ref.watch(usersDataStreamProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('User Data')),
-      body: Center(
-        child: userAsyncValue.when(
-          data: (chatUser) => Text('User Name: ${chatUser.name}'),
-          loading: () => CircularProgressIndicator(),
-          error: (e, _) => Text('Error: $e'),
+      appBar: AppBar(title: Text('Users List')),
+      body: usersAsyncValue.when(
+        data: (users) => ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final user = users[index];
+            return ListTile(title: Text(user.name));
+          },
         ),
+        loading: () => CircularProgressIndicator(),
+        error: (e, _) => Text('Error: $e'),
       ),
     );
   }
