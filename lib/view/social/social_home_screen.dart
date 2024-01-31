@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
 import 'package:com.example.while_app/resources/components/message/home_screen.dart';
+import 'package:com.example.while_app/view/social/connect_screen.dart';
 import 'package:com.example.while_app/view/social/notification.dart';
 import 'package:com.example.while_app/view/social/status_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -41,29 +42,33 @@ class _SocialScreenState extends State<SocialScreen>
     _handleForegroundNotifications();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print('A new onMessageOpenedApp event was published!');
-    // Navigate to desired screen based on message
-  });
+      print('A new onMessageOpenedApp event was published!');
+      // Navigate to desired screen based on message
+    });
 
-  _checkInitialMessage();
+    _checkInitialMessage();
     // listUsersFollowers();
     // refreshFunc();
-    
+
     _controller = TabController(length: 4, vsync: this, initialIndex: 1);
   }
 
   void _checkInitialMessage() async {
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
 
-  if (initialMessage != null) {
-    // Navigate to desired screen based on initialMessage
+    if (initialMessage != null) {
+      // Navigate to desired screen based on initialMessage
+    }
   }
-}
 
   void _initializeNotification() async {
-    const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher'); // Set your app icon here
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings(
+            '@mipmap/ic_launcher'); // Set your app icon here
     //const IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings();
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
       android: androidInitializationSettings,
       //iOS: iosInitializationSettings,
     );
@@ -102,7 +107,6 @@ class _SocialScreenState extends State<SocialScreen>
       }
     });
   }
-
 
   // refreshFunc() async {
   //   DBHelper().readAllData();
@@ -179,7 +183,7 @@ class _SocialScreenState extends State<SocialScreen>
                 IconButton(
                     onPressed: () {
                       // Navigator.of(context)
-                        //   .push(MaterialPageRoute(builder: (ctx) => SearchPage()));
+                      //   .push(MaterialPageRoute(builder: (ctx) => SearchPage()));
                       setState(() {
                         isSearching = !isSearching;
                       });
@@ -253,6 +257,7 @@ class _SocialScreenState extends State<SocialScreen>
             body: TabBarView(
               controller: _controller,
               children: [
+                const ConnectScreen(),
                 HomeScreenFinal(
                   isSearching: isSearchingHasValue,
                   value: value,
