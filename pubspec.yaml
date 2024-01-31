@@ -93,6 +93,7 @@ dependencies:
   riverpod: ^2.4.9
   syncfusion_flutter_pdfviewer: ^20.3.52
   flutter_local_notifications: ^16.3.2
+  smooth_page_indicator: ^1.1.0
   
 
 dev_dependencies:
@@ -124,6 +125,7 @@ flutter:
   assets:
     - assets/.
     - assets/quiz.png
+    - assets/Picture1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
