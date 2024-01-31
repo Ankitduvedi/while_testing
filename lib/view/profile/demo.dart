@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UsersListWidget extends ConsumerWidget {
-  const UsersListWidget({Key? key}) : super(key: key);
+class Connect extends ConsumerWidget {
+  const Connect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

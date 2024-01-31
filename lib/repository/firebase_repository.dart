@@ -13,33 +13,11 @@ class FirebaseAuthMethods {
   FirebaseAuthMethods(this._auth);
 
   User get user => _auth.currentUser!;
-  ChatUser newUser = ChatUser(
-    lives: 0,
-    easyQuestions: 0,
-    hardQuestions: 0,
-    image: 'image',
-    mediumQuestions: 0,
-    about: 'about',
-    name: 'name',
-    createdAt: 'createdAt',
-    isOnline: false,
-    id: 'id',
-    lastActive: 'lastActive',
-    email: 'email',
-    pushToken: 'pushToken',
-    dateOfBirth: '',
-    gender: '',
-    phoneNumber: '',
-    place: '',
-    profession: '',
-    designation: 'Member',
-    follower: 0,
-    following: 0,
-  );
+  ChatUser newUser = ChatUser.empty();
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
-  Future signInWithEmailAndPassword(
+  Future<bool> signInWithEmailAndPassword(
       String email, String password, String name, BuildContext context) async {
     try {
       await _auth
@@ -49,12 +27,15 @@ class FirebaseAuthMethods {
         newUser.name = name;
         newUser.about = 'Hey I My name is $name , connect me at $email';
         log('/////as////${_auth.currentUser!.uid}');
-        await _auth.currentUser!.sendEmailVerification();
-        Utils.snackBar("Verification mail sent", context);
-        APIs.createNewUser(newUser);
+        //await _auth.currentUser!.sendEmailVerification();
+        //Utils.snackBar("Verification mail sent", context);
+        await APIs.createNewUser(newUser);
+        return true;
       });
+      return true;
     } on FirebaseAuthException catch (e) {
       Utils.snackBar(e.message!, context);
+      return false;
     }
   }
 
@@ -65,7 +46,7 @@ class FirebaseAuthMethods {
 
       if (!_auth.currentUser!.emailVerified) {
         Utils.snackBar("User not verified mail", context);
-        await _auth.currentUser!.sendEmailVerification();
+        //await _auth.currentUser!.sendEmailVerification();
       }
     } on FirebaseAuthException catch (e) {
       Utils.snackBar(e.message!, context);
@@ -82,7 +63,7 @@ class FirebaseAuthMethods {
 
   Future<DocumentSnapshot> getSnapshot() async {
     DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection('Users')
+        .collection('users')
         .doc(_auth.currentUser?.uid)
         .get();
     return snapshot;

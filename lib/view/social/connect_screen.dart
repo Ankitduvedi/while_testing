@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.example.while_app/view/profile/demo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,7 +81,7 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildPeopleTab(),
+          const Connect(),
           _buildPagesTab(),
         ],
       ),

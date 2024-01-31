@@ -33,32 +33,19 @@ final followUserProvider = Provider((ref) {
           .doc(currentUserId)
           .collection('my_users')
           .doc(userIdToFollow)
-          .set({'followedAt': Timestamp.now()});
+          .set({'timeStamp': Timestamp.now()});
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserId)
           .collection('following')
           .doc(userIdToFollow)
-          .set({'followedAt': Timestamp.now()});
+          .set({'timeStamp': Timestamp.now()});
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userIdToFollow)
           .collection('follower')
           .doc(currentUserId)
-          .set({'followedAt': Timestamp.now()});
-
-      // Optionally, increment the follower count of the user being followed
-      // This is a transaction to ensure atomicity
-      // var userToFollowRef =
-      //     FirebaseFirestore.instance.collection('users').doc(userIdToFollow);
-      // FirebaseFirestore.instance.runTransaction((transaction) async {
-      //   var userSnapshot = await transaction.get(userToFollowRef);
-      //   if (!userSnapshot.exists) {
-      //     throw Exception("User does not exist!");
-      //   }
-      //   int newFollowerCount = userSnapshot.data()!['follower'] + 1;
-      //   transaction.update(userToFollowRef, {'follower': newFollowerCount});
-      // });
+          .set({'timeStamp': Timestamp.now()});
 
       return true; // Indicate the follow action was successful
     } catch (e) {
