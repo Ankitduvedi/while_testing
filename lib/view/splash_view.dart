@@ -62,7 +62,7 @@ class SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     // Start the timer to navigate to the next screen
-    Timer(const Duration(seconds: 3), navigationPage);
+    Timer(const Duration(seconds: 1), navigationPage);
 
     // Start animating letters
     animateLetters();

@@ -16,8 +16,6 @@ class VideoItem {
 }
 
 class FeedScreen extends ConsumerStatefulWidget {
-  const FeedScreen({Key? key}) : super(key: key);
-
   @override
   ConsumerState<FeedScreen> createState() => _FeedScreenState();
 }

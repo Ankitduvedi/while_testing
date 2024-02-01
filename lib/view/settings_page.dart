@@ -1,14 +1,16 @@
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:com.example.while_app/resources/components/text_button.dart';
 
 import '../repository/firebase_repository.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends ConsumerWidget {
   const Settings({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -64,9 +66,11 @@ class Settings extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Textbutton(
                           ontap: () {
+                            ref.read(toggleStateProvider.notifier).state = 0;
                             context
                                 .read<FirebaseAuthMethods>()
                                 .signout(context);
+
                             Navigator.of(context).pop();
                           },
                           text: "Logout"))

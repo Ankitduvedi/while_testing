@@ -1,21 +1,21 @@
-import 'package:com.example.while_app/resources/components/text_button.dart';
-import 'package:com.example.while_app/view/auth/login_screen.dart';
 import 'package:com.example.while_app/view/intro_screens/intro_page_1.dart';
 import 'package:com.example.while_app/view/intro_screens/intro_page_2.dart';
 import 'package:com.example.while_app/view/intro_screens/intro_page_3.dart';
 import 'package:com.example.while_app/view/intro_screens/intro_page_4.dart';
 import 'package:com.example.while_app/view/intro_screens/intro_page_5.dart';
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class OnBoardingScreen extends StatefulWidget {
+class OnBoardingScreen extends ConsumerStatefulWidget {
   const OnBoardingScreen({super.key});
 
   @override
-  _OnBoardingScreenState createState() => _OnBoardingScreenState();
+  OnBoardingScreenState createState() => OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
   final PageController _controller = PageController();
   int currentPage = 0;
 
@@ -69,11 +69,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 children: [
                   // Skip
                   GestureDetector(
-                    onTap: () {
-                      _controller.jumpToPage(4); // Jump to the last page
-                    },
-                    child: Text("Skip", style: TextStyle(fontSize: 20),)
-                  ),
+                      onTap: () {
+                        _controller.jumpToPage(4); // Jump to the last page
+                      },
+                      child: const Text(
+                        "Skip",
+                        style: TextStyle(fontSize: 20),
+                      )),
                   // Dot indicator
                   SmoothPageIndicator(
                     controller: _controller,
@@ -83,15 +85,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   GestureDetector(
                     onTap: () {
                       if (currentPage == 4) {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen(),),);
+                        ref.read(toggleStateProvider.notifier).state = 1;
                       } else {
                         _controller.nextPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.easeInOut,
                         );
                       }
                     },
-                    child: Text(currentPage == 4 ? 'Done' : 'Next', style: TextStyle(fontSize: 20),),
+                    child: Text(
+                      currentPage == 4 ? 'Done' : 'Next',
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   )
                 ],
               ),

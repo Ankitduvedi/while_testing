@@ -29,7 +29,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     //final currentTheme = ref.watch(themeNotifierProvider);
-    final userProvider = ref.watch(userDataProvider);
+    //final userProvider = ref.watch(userDataProvider);
 
     return Scaffold(
       body: TabBarView(
