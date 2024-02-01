@@ -1,63 +1,67 @@
+import 'dart:math';
+
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
-import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
+import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
+//import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Connect extends ConsumerWidget {
-  const Connect({Key? key}) : super(key: key);
+class CommunityConnect extends ConsumerWidget {
+  const CommunityConnect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = FirebaseAuth
         .instance.currentUser!.uid; // Assume the current user ID is available
-    final allUsersAsyncValue = ref.watch(allUsersProvider);
-    final followingUsersAsyncValue = ref.watch(followingUsersProvider(userId));
+    final allCommunitiesAsyncValue = ref.watch(allCommunitiesProvider);
+    final joinedCommunitiesAsyncValue = ref.watch(joinedCommuntiesProvider(userId));
 
     return Scaffold(
-      //appBar: AppBar(title: const Text('Discover Users')),
-      body: allUsersAsyncValue.when(
-        data: (allUsers) => followingUsersAsyncValue.when(
+      //appBar: AppBar(title: const Text('Discover Communities')),
+      body: allCommunitiesAsyncValue.when(
+        data: (allCommunities) => joinedCommunitiesAsyncValue.when(
           data: (followingUsers) {
-            final nonFollowingUsers = allUsers
+            final nonJoinedCommunities = allCommunities
                 .where((user) => !followingUsers.contains(user.id))
                 .toList();
 
             return ListView.builder(
-              itemCount: nonFollowingUsers.length,
+              itemCount: nonJoinedCommunities.length,
               itemBuilder: (context, index) {
-                final user = nonFollowingUsers[index];
+                final user = nonJoinedCommunities[index];
 
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.image),
                   ),
                   title: Text(user.name),
-                  subtitle: Text(user.email),
+                  subtitle: Text(user.about),
                   trailing: ElevatedButton(
                     onPressed: () async {
                       // Assuming 'user' is the ChatUser instance you want to follow
                       final userProvider = ref.watch(userDataProvider);
+                      log(699999999999);
 
                       // Use the provider to follow the user
-                      final didFollow = await ref.read(followUserProvider)(
+                      final didJoin = await ref.read(joinCommunityProvider)(
                           userProvider.auth.uid, user.id);
 
-                      if (didFollow) {
+                      if (didJoin) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content:
-                                  Text('You are now following ${user.name}')),
+                                  Text('You have joined ${user.name}')),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content: Text('Failed to follow ${user.name}')),
+                              content: Text('Failed to join ${user.name}')),
                         );
                       }
                     },
-                    child: const Text('Follow'),
+                    child: const Text('Join'),
                   ),
                 );
               },
