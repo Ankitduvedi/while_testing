@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../message/apis.dart';
 import '../message/chat_screen.dart';
@@ -14,15 +15,15 @@ import '../message/models/message.dart';
 import '../message/widgets/dialogs/profile_dialog.dart';
 
 //card to represent a single user in home screen
-class ChatUserCard extends StatefulWidget {
+class ChatUserCard extends ConsumerStatefulWidget {
   final ChatUser user;
   const ChatUserCard({super.key, required this.user});
 
   @override
-  State<ChatUserCard> createState() => _ChatUserCardState();
+  ConsumerState<ChatUserCard> createState() => _ChatUserCardState();
 }
 
-class _ChatUserCardState extends State<ChatUserCard> {
+class _ChatUserCardState extends ConsumerState<ChatUserCard> {
   // last message info (if null --> no message)
   Message? _message;
   Uint8List? bytes;
@@ -66,16 +67,6 @@ class _ChatUserCardState extends State<ChatUserCard> {
                     height: mq.height * .055,
                     width: mq.height * .055,
                   ),
-                  // child: bytes != null
-                  //     ? Image.memory(
-                  //         bytes!,
-                  //         width: mq.height * .055,
-                  //         fit: BoxFit.fill,
-                  //         height: mq.height * .055,
-                  //       )
-                  //     : const CircleAvatar(
-                  //         child: Icon(CupertinoIcons.person),
-                  //       ),
                 ),
               ),
               title: Text(
