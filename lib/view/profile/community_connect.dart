@@ -1,8 +1,5 @@
 import 'dart:math';
-
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
-//import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +13,8 @@ class CommunityConnect extends ConsumerWidget {
     final userId = FirebaseAuth
         .instance.currentUser!.uid; // Assume the current user ID is available
     final allCommunitiesAsyncValue = ref.watch(allCommunitiesProvider);
-    final joinedCommunitiesAsyncValue = ref.watch(joinedCommuntiesProvider(userId));
+    final joinedCommunitiesAsyncValue =
+        ref.watch(joinedCommuntiesProvider(userId));
 
     return Scaffold(
       //appBar: AppBar(title: const Text('Discover Communities')),
@@ -46,13 +44,12 @@ class CommunityConnect extends ConsumerWidget {
 
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          userProvider.auth.uid, user.id);
+                          userProvider.auth!.uid, user.id);
 
                       if (didJoin) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content:
-                                  Text('You have joined ${user.name}')),
+                              content: Text('You have joined ${user.name}')),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

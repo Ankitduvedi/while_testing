@@ -16,13 +16,7 @@ import '../message/widgets/dialogs/profile_dialog.dart';
 //card to represent a single user in home screen
 class ChatUserCard extends StatefulWidget {
   final ChatUser user;
-  final localdata;
-  final int locindex;
-  const ChatUserCard(
-      {super.key,
-      required this.user,
-      required this.localdata,
-      required this.locindex});
+  const ChatUserCard({super.key, required this.user});
 
   @override
   State<ChatUserCard> createState() => _ChatUserCardState();
@@ -32,26 +26,6 @@ class _ChatUserCardState extends State<ChatUserCard> {
   // last message info (if null --> no message)
   Message? _message;
   Uint8List? bytes;
-
-  @override
-  void initState() {
-    super.initState();
-    // _initImage();
-  }
-
-  // _initImage() async {
-  //   bytes = await getIMG();
-  //   setState(() {}); // Trigger a rebuild after obtaining the image bytes
-  // }
-
-  // Future<Uint8List?> getIMG() async {
-  //   try {
-  //     return await base64Decode(widget.localdata['image']);
-  //   } catch (error) {
-  //     print("Error decoding image: $error");
-  //     return null;
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

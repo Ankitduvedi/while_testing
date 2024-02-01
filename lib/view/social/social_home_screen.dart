@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
-import 'package:com.example.while_app/resources/components/message/home_screen.dart';
+import 'package:com.example.while_app/resources/components/message/message_home_screen.dart';
+import 'package:com.example.while_app/resources/components/message/message_home_widget.dart';
 import 'package:com.example.while_app/view/social/connect_screen.dart';
 import 'package:com.example.while_app/view/social/notification.dart';
 import 'package:com.example.while_app/view/social/status_screen.dart';
@@ -258,10 +259,7 @@ class _SocialScreenState extends State<SocialScreen>
               controller: _controller,
               children: [
                 const ConnectScreen(),
-                HomeScreenFinal(
-                  isSearching: isSearchingHasValue,
-                  value: value,
-                ),
+                const MessageHomeWidget(),
                 CommunityScreenFinal(
                   isSearching: isSearchingHasValue,
                   value: value,

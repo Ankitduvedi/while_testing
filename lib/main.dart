@@ -101,7 +101,7 @@ class MyApp extends river.ConsumerWidget {
         },
         title: 'While',
         debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.splash,
+        initialRoute: RoutesName.wrapper,
         onGenerateRoute: Routes.generateRoute,
         home: const Wrapper(),
       ),
