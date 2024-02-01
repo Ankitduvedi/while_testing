@@ -1,29 +1,29 @@
 import 'dart:developer';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
-import 'package:com.example.while_app/resources/components/message/message_home_screen.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/message_home_widget.dart';
 import 'package:com.example.while_app/view/social/connect_screen.dart';
 import 'package:com.example.while_app/view/social/notification.dart';
 import 'package:com.example.while_app/view/social/status_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../resources/components/communities/community_home_screen.dart';
 
-class SocialScreen extends StatefulWidget {
-  const SocialScreen({
-    super.key,
-  });
+class SocialScreen extends ConsumerStatefulWidget {
+  const SocialScreen({super.key});
 
   @override
-  State<SocialScreen> createState() {
+  ConsumerState<SocialScreen> createState() {
     return _SocialScreenState();
   }
 }
 
-class _SocialScreenState extends State<SocialScreen>
+class _SocialScreenState extends ConsumerState<SocialScreen>
     with SingleTickerProviderStateMixin {
   late TabController _controller;
   bool isSearching = false;
@@ -36,6 +36,20 @@ class _SocialScreenState extends State<SocialScreen>
   @override
   void initState() {
     super.initState();
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('Message: $message');
+
+      if (APIs.auth.currentUser != null) {
+        if (message.toString().contains('resume')) {
+          APIs.updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          APIs.updateActiveStatus(false);
+        }
+      }
+
+      return Future.value(message);
+    });
     _messaging = FirebaseMessaging.instance;
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _initializeNotification();
