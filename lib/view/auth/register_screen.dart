@@ -2,7 +2,9 @@ import 'package:com.example.while_app/data/model/auth_user.dart';
 import 'package:com.example.while_app/resources/components/header_widget.dart';
 import 'package:com.example.while_app/resources/components/password_container_widget.dart';
 import 'package:com.example.while_app/view/home_screen.dart';
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:com.example.while_app/resources/colors.dart';
 import 'package:com.example.while_app/resources/components/round_button.dart';
@@ -11,14 +13,14 @@ import 'package:com.example.while_app/utils/utils.dart';
 import 'package:com.example.while_app/view/auth/login_screen.dart';
 import '../../repository/firebase_repository.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
@@ -156,12 +158,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const LoginScreen(),
+                            //     ));
                             // Navigator.of(context).pop();
+                            ref.read(toggleStateProvider.notifier).state = 1;
                           },
                           child: const Text("Login",
                               style: TextStyle(

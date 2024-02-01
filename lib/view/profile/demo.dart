@@ -1,3 +1,4 @@
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
@@ -42,7 +43,7 @@ class Connect extends ConsumerWidget {
 
                       // Use the provider to follow the user
                       final didFollow = await ref.read(followUserProvider)(
-                          userProvider.auth.uid, user.id);
+                          APIs.me.id, user.id);
 
                       if (didFollow) {
                         ScaffoldMessenger.of(context).showSnackBar(
