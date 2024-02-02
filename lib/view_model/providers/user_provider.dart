@@ -77,5 +77,6 @@ class UserDataProvider with ChangeNotifier {
 }
 
 final userDataProvider = ChangeNotifierProvider<UserDataProvider>((ref) {
+  log('UserDataProvider');
   return UserDataProvider(ref);
 });

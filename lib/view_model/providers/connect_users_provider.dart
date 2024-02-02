@@ -1,19 +1,21 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
+  log('allUsersProvider');
   return FirebaseFirestore.instance
       .collection('users')
       .snapshots()
       .map((snapshot) {
-    return snapshot.docs
-        .map((doc) => ChatUser.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+    return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
   });
 });
 final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
+  log('myUsersUidsProvider');
   final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
@@ -25,9 +27,10 @@ final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
 });
 final followingUsersProvider =
     StreamProvider.family<Set<String>, String>((ref, userId) {
+  final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(userId)
+      .doc(user!.id)
       .collection('following')
       .snapshots()
       .map((snapshot) {

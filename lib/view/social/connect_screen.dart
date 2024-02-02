@@ -1,15 +1,9 @@
 import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.example.while_app/view/profile/community_connect.dart';
 import 'package:com.example.while_app/view/profile/demo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
-import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ConnectScreen extends ConsumerStatefulWidget {
@@ -48,18 +42,6 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
     super.dispose();
   }
 
-  // _getBytes(imageUrl) async {
-  //   try {
-  //     final ByteData data =
-  //         await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl);
-  //     final bytes = data.buffer.asUint8List();
-  //     return base64Encode(bytes);
-  //   } catch (error) {
-  //     // print("Error getting bytes: $error");
-  //     return null;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,15 +63,14 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          const Connect(),
-          const CommunityConnect(),
+        children: const [
+          Connect(),
+          CommunityConnect(),
           //_buildPagesTab(),
         ],
       ),
     );
   }
-  
 
   // Widget _buildPagesTab() {
   //   return Column(
@@ -201,4 +182,4 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
   //     ],
   //   );
   // }
-    }
+}
