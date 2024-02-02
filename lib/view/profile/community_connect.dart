@@ -46,7 +46,7 @@ class CommunityConnect extends ConsumerWidget {
 
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          userProvider.auth.uid, user.id);
+                          userProvider.auth!.uid, user.id);
 
                       if (didJoin) {
                         ScaffoldMessenger.of(context).showSnackBar(

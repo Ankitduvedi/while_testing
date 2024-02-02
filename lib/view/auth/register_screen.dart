@@ -29,156 +29,157 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double verticalPadding = screenSize.height * 0.02;
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: h,
-            width: w,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.theme1Color, AppColors.buttonColor],
-              ),
-            ),
-          ),
-          Container(
-            height: h / 1.2,
-            width: w,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black87,
-                  offset: Offset(0.0, 1.0),
-                  blurRadius: 6.0,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(screenSize.width * 0.05),
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: verticalPadding),
+                Text(
+                  'Welcome user!',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ],
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            child: SingleChildScrollView(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 22, vertical: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                SizedBox(height: verticalPadding * 1.2),
+                Image.asset(
+                  'assets/loginPicture1.png',
+                  width: screenSize.width * 0.9, // Dynamic width for the image
+                  height: screenSize.height * 0.3,
+                ), // Placeholder for the image
+                SizedBox(height: verticalPadding),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const HeaderWidget(title: 'Register'),
-                    Container(
-                      height: h / 6,
-                      width: w / 1.4,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/while_transparent.png"),
-                          fit: BoxFit.fill,
+                    //Textbutton(ontap: () {}, text: "signIn"),
+                    //Textbutton(ontap: () {}, text: "Register"),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(toggleStateProvider.notifier).state = 1;
+                      },
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: Colors.blue, // This changes the text color
                         ),
                       ),
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(150, 50),
+                      ),
                     ),
-                    const SizedBox(height: 15),
-                    TextContainerWidget(
-                      color: Colors.white,
-                      controller: _nameController,
-                      prefixIcon: Icons.person,
-                      hintText: 'Name',
-                    ),
-                    const SizedBox(height: 10),
-                    TextContainerWidget(
-                      color: Colors.white,
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailController,
-                      prefixIcon: Icons.email,
-                      hintText: 'Email',
-                    ),
-                    const SizedBox(height: 10),
-                    TextPasswordContainerWidget(
-                      keyboardType: TextInputType.visiblePassword,
-                      controller: _passwordController,
-                      prefixIcon: Icons.lock,
-                      hintText: 'Password',
-                    ),
-                    SizedBox(
-                      height: h * 0.045,
-                    ),
-                    RoundButton(
-                      loading: false,
-                      title: 'SignUp',
-                      onPress: () async {
-                        if (_emailController.text.isEmpty) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter email', context);
-                        } else if (_passwordController.text.isEmpty) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter password', context);
-                        } else if (_passwordController.text.length < 6) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter at least 6-digit password',
-                              context);
-                        } else {
-                          // Show loading indicator if needed
-                          final signUpSuccess = await context
-                              .read<FirebaseAuthMethods>()
-                              .signInWithEmailAndPassword(
-                                _emailController.text.trim(),
-                                _passwordController.text.trim(),
-                                _nameController.text.trim(),
-                                context,
-                              );
-                          // Hide loading indicator
-                          if (signUpSuccess) {
-                            //final firebaseUser = context.watch<User?>();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
-                            Utils.toastMessage('Sign up successful ');
-                            // Navigate to the next screen if needed
-                          } else {
-                            Utils.toastMessage('Sign up failed');
-                          }
-                        }
+                    TextButton(
+                      onPressed: () {
+                        // Implement your on-tap functionality here
                       },
-                    ),
-                    SizedBox(
-                      height: h * 0.02,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          "Already have an account? ",
-                          style: TextStyle(color: Colors.white),
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          color: Colors.blue, // This changes the text color
                         ),
-                        SizedBox(
-                          width: h * 0.01,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const LoginScreen(),
-                            //     ));
-                            // Navigator.of(context).pop();
-                            ref.read(toggleStateProvider.notifier).state = 1;
-                          },
-                          child: const Text("Login",
-                              style: TextStyle(
-                                color: AppColors.theme1Color,
-                              )),
-                        ),
-                      ],
+                      ),
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(150, 50),
+                      ),
                     )
                   ],
                 ),
-              ),
+                SizedBox(height: verticalPadding),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter Email',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailController,
+                ),
+                SizedBox(height: verticalPadding),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter Username',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  controller: _nameController,
+                ),
+                SizedBox(height: verticalPadding),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  //obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  controller: _passwordController,
+                ),
+                SizedBox(height: verticalPadding),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_emailController.text.isEmpty) {
+                            Utils.flushBarErrorMessage(
+                                'Please enter email', context);
+                          } else if (_passwordController.text.isEmpty) {
+                            Utils.flushBarErrorMessage(
+                                'Please enter password', context);
+                          } else if (_passwordController.text.length < 6) {
+                            Utils.flushBarErrorMessage(
+                                'Please enter at least 6-digit password',
+                                context);
+                          } else {
+                            // Show loading indicator if needed
+                            final signUpSuccess = await context
+                                .read<FirebaseAuthMethods>()
+                                .signInWithEmailAndPassword(
+                                  _emailController.text.trim(),
+                                  _passwordController.text.trim(),
+                                  _nameController.text.trim(),
+                                  context,
+                                );
+                            // Hide loading indicator
+                            if (signUpSuccess) {
+                              //final firebaseUser = context.watch<User?>();
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                              Utils.toastMessage('Sign up successful ');
+                              // Navigate to the next screen if needed
+                            } else {
+                              Utils.toastMessage('Sign up failed');
+                            }
+                          }
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
+                ),
+
+                SizedBox(height: verticalPadding * 1.2),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

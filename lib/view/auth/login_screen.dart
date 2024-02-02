@@ -47,184 +47,198 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
+    final Size screenSize = MediaQuery.of(context).size;
+    final double verticalPadding = screenSize.height * 0.02;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      //backgroundColor: Colors.grey.shade200,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Container(
-                height: 420,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 10,
-                      offset: Offset(-4, -4),
-                    ),
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(4, 4),
-                    ),
-                  ],
+          child: Padding(
+            padding: EdgeInsets.all(screenSize.width * 0.05),
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: verticalPadding),
+                Text(
+                  'Welcome user!',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                SizedBox(height: verticalPadding * 1.2),
+                Image.asset(
+                  'assets/loginPicture1.png',
+                  width: screenSize.width * 0.9, // Dynamic width for the image
+                  height: screenSize.height * 0.3,
+                ), // Placeholder for the image
+                SizedBox(height: verticalPadding),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      width: w / 2,
-                      height: h / 12,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/while_transparent.png"),
-                          fit: BoxFit.fitWidth,
+                    //Textbutton(ontap: () {}, text: "signIn"),
+                    //Textbutton(ontap: () {}, text: "Register"),
+                    TextButton(
+                      onPressed: () {
+                        // Implement your on-tap functionality here
+                      },
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: Colors.blue, // This changes the text color
                         ),
                       ),
-                    ),
-                    const SizedBox(),
-                    TextContainerWidget(
-                      hintText: 'Email',
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailController,
-                      prefixIcon: Icons.email,
-                    ),
-                    TextContainerWidget(
-                      hintText: 'Password',
-                      keyboardType: TextInputType.visiblePassword,
-                      controller: _passwordController,
-                      prefixIcon: Icons.lock,
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesName.forgot);
-                        },
-                        child: Text(
-                          "Forgot Password?",
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    color: AppColors.theme1Color,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                        ),
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(150, 50),
                       ),
                     ),
-                    RoundButton(
-                      loading: false,
-                      title: 'Login',
-                      onPress: () async {
-                        if (_emailController.text.isEmpty) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter email', context);
-                        } else if (_passwordController.text.isEmpty) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter password', context);
-                        } else if (_passwordController.text.length < 6) {
-                          Utils.flushBarErrorMessage(
-                              'Please enter at least 6-digit password',
-                              context);
-                        } else {
-                          context
-                              .read<FirebaseAuthMethods>()
-                              .loginInWithEmailAndPassword(
-                                _emailController.text.toString(),
-                                _passwordController.text.toString(),
-                                context,
-                              );
-                        }
+                    TextButton(
+                      onPressed: () {
+                        ref.read(toggleStateProvider.notifier).state = 2;
                       },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "OR",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      // color: AppColors.theme1Color,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                height: 164,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 10,
-                      offset: Offset(-4, -4),
-                    ),
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(4, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const SizedBox(height: 10),
-                    RoundButton(
-                      loading: false,
-                      title: 'Signup with Google',
-                      onPress: () {
-                        handleSignIn();
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account?",
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    // color: AppColors.theme1Color,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          color: Colors.blue, // This changes the text color
                         ),
-                        TextButton(
-                          onPressed: () {
-                            //Navigator.pushNamed(context, RoutesName.signUp);
-                            ref.read(toggleStateProvider.notifier).state = 2;
-                          },
-                          style: const ButtonStyle(
-                            padding: MaterialStatePropertyAll(EdgeInsets.zero),
-                          ),
-                          child: Text(
-                            "Signup",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                  color: AppColors.theme1Color,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                      ],
+                      ),
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(150, 50),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: verticalPadding),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter Email',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailController,
+                ),
+                SizedBox(height: verticalPadding),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                  ),
+                  //obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  controller: _passwordController,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, RoutesName.forgot);
+                    },
+                    child: Text(
+                      'Recover Password ?',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                SizedBox(height: verticalPadding),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_emailController.text.isEmpty) {
+                      Utils.flushBarErrorMessage('Please enter email', context);
+                    } else if (_passwordController.text.isEmpty) {
+                      Utils.flushBarErrorMessage(
+                          'Please enter password', context);
+                    } else if (_passwordController.text.length < 6) {
+                      Utils.flushBarErrorMessage(
+                          'Please enter at least 6-digit password', context);
+                    } else {
+                      context
+                          .read<FirebaseAuthMethods>()
+                          .loginInWithEmailAndPassword(
+                            _emailController.text.toString(),
+                            _passwordController.text.toString(),
+                            context,
+                          );
+                    }
+                  },
+                  child: Text(
+                    'Sign In',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      )),
+                ),
+
+                SizedBox(height: verticalPadding * 1.2),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Divider(
+                        thickness:
+                            1, // Set the thickness of the divider as needed
+                        color: Colors
+                            .grey, // Set the color of the divider as needed
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('OR'),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness:
+                            1, // Set the thickness of the divider as needed
+                        color: Colors
+                            .grey, // Set the color of the divider as needed
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                SizedBox(height: verticalPadding * 1.4),
+                ElevatedButton(
+                  onPressed: () {
+                    handleSignIn();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity,
+                          50), // ensures the button stretches to fill the width
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10.0), // rounded corners
+                      ),
+                      backgroundColor: Colors.grey.shade400),
+                  child: Row(
+                    mainAxisSize: MainAxisSize
+                        .min, // Use MainAxisSize.min to keep the row compact
+                    children: <Widget>[
+                      Image.asset('assets/google_logo2.png',
+                          width: 40, height: 40),
+                      SizedBox(
+                          width:
+                              30), // Increase width to increase the distance between the logo and the text
+                      Text('Login with Google', style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
+                ),
+
+                // RoundButton(
+
+                //   loading: false,
+                //   title: 'Signup with Google',
+                //   onPress: () {
+                //     handleSignIn();
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
       ),
