@@ -1,5 +1,4 @@
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +10,11 @@ class Connect extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userId = FirebaseAuth
-        .instance.currentUser!.uid; // Assume the current user ID is available
+    // final userId = FirebaseAuth
+    //     .instance.currentUser!.uid; // Assume the current user ID is available
     final allUsersAsyncValue = ref.watch(allUsersProvider);
-    final followingUsersAsyncValue = ref.watch(followingUsersProvider(userId));
+    final followingUsersAsyncValue =
+        ref.watch(followingUsersProvider('userId'));
 
     return Scaffold(
       //appBar: AppBar(title: const Text('Discover Users')),
