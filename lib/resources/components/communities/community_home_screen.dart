@@ -24,29 +24,6 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
   // for storing search status
   List<Community> _list = [];
   final List<Community> _searchList = [];
-  @override
-  void initState() {
-    super.initState();
-    // APIs.getSelfInfo();
-
-    //for updating user active status according to lifecycle events
-    //resume -- active or online
-    //pause  -- inactive or offline
-    // SystemChannels.lifecycle.setMessageHandler((message) {
-    //   log('Message: $message');
-
-    //   if (APIs.auth.currentUser != null) {
-    //     if (message.toString().contains('resume')) {
-    //       APIs.updateActiveStatus(true);
-    //     }
-    //     if (message.toString().contains('pause')) {
-    //       APIs.updateActiveStatus(false);
-    //     }
-    //   }
-
-    //   return Future.value(message);
-    // });
-  }
 
   @override
   Widget build(BuildContext context) {

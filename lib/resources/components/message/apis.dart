@@ -683,7 +683,7 @@ class APIs {
   ///////////////
   static Future<void> addCommunities(Community chatUser, File file) async {
     //getting image file extension
-    final ext = file.path.split('.').last;
+    /*  final ext = file.path.split('.').last;
 
     //storage file ref with path
     final ref = storage.ref().child(
@@ -698,7 +698,7 @@ class APIs {
 
     //updating image in firestore database
     final imageUrl = await ref.getDownloadURL();
-    chatUser.image = imageUrl;
+    chatUser.image = imageUrl;*/
     final refe = FirebaseFirestore.instance.collection('communities');
     await refe.doc(chatUser.id).set(chatUser.toJson()).then((value) {
       addUserToCommunity(chatUser.id);
