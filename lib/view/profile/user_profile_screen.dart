@@ -15,72 +15,74 @@ class ProfileScreen extends ConsumerWidget {
       Tab(
         icon: Icon(
           Icons.photo_outlined,
-          color: Colors.white,
+          color: Colors.blueGrey,
           size: 30,
         ),
       ),
       Tab(
         icon: Icon(
           Icons.person,
-          color: Colors.white,
+          color: Colors.blueGrey,
           size: 30,
         ),
       ),
       Tab(
         icon: Icon(
           Icons.brush,
-          color: Colors.white,
+          color: Colors.blueGrey,
           size: 30,
         ),
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: DefaultTabController(
-          length: 3,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) {
-              return [
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    const [ProfileDataWidget()],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: DefaultTabController(
+            length: 3,
+            child: NestedScrollView(
+              headerSliverBuilder: (context, _) {
+                return [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [ProfileDataWidget()],
+                    ),
                   ),
-                ),
-              ];
-            },
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Material(
-                  color: Colors.black,
-                  child: TabBar(
-                    padding: EdgeInsets.all(0),
-                    indicatorColor: Colors.white,
-                    tabs: tabBarIcons,
+                ];
+              },
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Material(
+                    color: Colors.white,
+                    child: TabBar(
+                      padding: EdgeInsets.all(0),
+                      indicatorColor: Colors.black,
+                      tabs: tabBarIcons,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      Consumer(builder: (context, ref, child) {
-                        final user = ref.watch(userDataProvider).userData;
-                        return Center(
-                            child: CreatorProfile(
-                          userID: user!.id,
-                        ));
-                      }),
-                      Center(child: LeaderboardScreen()),
-                      const Center(
-                          child: Text(
-                        "Become a Freelancer",
-                        style: TextStyle(color: Colors.white),
-                      )),
-                    ],
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Consumer(builder: (context, ref, child) {
+                          final user = ref.watch(userDataProvider).userData;
+                          return Center(
+                              child: CreatorProfile(
+                            userID: user!.id,
+                          ));
+                        }),
+                        Center(child: LeaderboardScreen()),
+                        const Center(
+                            child: Text(
+                          "Become a Freelancer",
+                          style: TextStyle(color: Colors.black),
+                        )),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

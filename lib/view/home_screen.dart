@@ -45,21 +45,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
           padding: const EdgeInsets.only(bottom: 2),
-          color: Colors.black,
+          color: Colors.white,
           height: 50,
           // shape: const CircularNotchedRectangle(),
           //color: currentTheme.primaryColor,
           child: TabBar(
             dividerColor: Colors.transparent,
             controller: _controller,
-            indicatorColor: Colors.white,
+            indicatorColor: Colors.black,
             indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Colors.white,
+            labelColor: Colors.black,
             tabs: const [
               Tab(
                 icon: Icon(
                   Icons.home,
                   size: 30,
+                  color: Colors.black,
                 ),
               ),
               Tab(

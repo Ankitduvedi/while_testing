@@ -18,7 +18,7 @@ class CreatorProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('videos')

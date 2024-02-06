@@ -20,6 +20,23 @@ import 'package:get/get.dart';
 
 late Size mq;
 
+// // Light Theme
+// final ThemeData lightTheme = ThemeData(
+//   brightness: Brightness.light,
+//   primaryColor: Colors.blue,
+//   // add other customizations for the light theme here
+//   // e.g., appBarTheme, buttonTheme, etc.
+// );
+
+// // Dark Theme
+// final ThemeData darkTheme = ThemeData(
+//   brightness: Brightness.dark,
+//   primaryColor: Colors.amber,
+//   // add other customizations for the dark theme here
+//   // e.g., appBarTheme, buttonTheme, etc.
+// );
+
+
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message: ${message.messageId}');
@@ -95,6 +112,9 @@ class MyApp extends river.ConsumerWidget {
     return MultiProvider(
       providers: providersList,
       child: GetMaterialApp(
+        //theme: lightTheme,                
+        //darkTheme: darkTheme,
+        //themeMode: ThemeMode.system,
         routes: {
           '/profile': (BuildContext context) => const HomeScreen(),
           // Add other routes as needed
