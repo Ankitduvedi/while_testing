@@ -1,17 +1,16 @@
 import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Connect extends ConsumerWidget {
   const Connect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final userId = FirebaseAuth
-    //     .instance.currentUser!.uid; // Assume the current user ID is available
+    final toggle = ref.watch(toggleSearchStateProvider);
     final allUsersAsyncValue = ref.watch(allUsersProvider);
     final followingUsersAsyncValue =
         ref.watch(followingUsersProvider('userId'));

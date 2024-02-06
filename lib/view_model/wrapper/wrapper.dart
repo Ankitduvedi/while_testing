@@ -16,7 +16,7 @@ class Wrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final firebaseUser = context.watch<User?>();
     final toggle = ref.watch(toggleStateProvider);
-
+    log('login // $toggle');
     if (firebaseUser != null) {
       log('home');
       return const HomeScreen();
@@ -26,7 +26,7 @@ class Wrapper extends ConsumerWidget {
       return toggle == 0
           ? const OnBoardingScreen()
           : toggle == 1
-              ?  LoginScreen()
+              ? const LoginScreen()
               : SignUpScreen();
       //return const OnBoardingScreen();
     }

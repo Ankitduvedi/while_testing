@@ -1,19 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
+import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allCommunitiesProvider = StreamProvider<List<Community>>((ref) {
+  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
+  final toggle = ref.watch(toggleSearchStateProvider);
   return FirebaseFirestore.instance
       .collection('communities')
       .snapshots()
       .map((snapshot) {
-    return snapshot.docs
-        .map((doc) => Community.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+    var communityList =
+        snapshot.docs.map((doc) => Community.fromJson(doc.data())).toList();
+    if (toggle == 100 && searchQuery != '') {
+      return communityList
+          .where(
+              (community) => community.name.toLowerCase().contains(searchQuery))
+          .toList();
+    } else {
+      return communityList;
+    }
   });
+});
+final myCommunityUidsProvider = StreamProvider<List<String>>((ref) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(APIs.me.id)
+      .collection('my_communities')
+      .orderBy('timeStamp', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
 });
 final joinedCommuntiesProvider =
     StreamProvider.family<Set<String>, String>((ref, userId) {
@@ -49,19 +68,19 @@ final joinCommunityProvider = Provider((ref) {
           .collection('participants')
           .doc(currentUserId)
           .set(APIs.me.toJson())
-        .then((value) => firestore
-                .collection('communities')
-                .doc(communityIdToJoin)
-                .collection('participants')
-                .doc(currentUserId)
-                .update({
-              'easyQuestions': 0,
-              'mediumQuestions': 0,
-              'hardQuestions': 0,
-              'attemptedEasyQuestion': 0,
-              'attemptedMediumQuestion': 0,
-              'attemptedHardQuestion': 0,
-            }));
+          .then((value) => firestore
+                  .collection('communities')
+                  .doc(communityIdToJoin)
+                  .collection('participants')
+                  .doc(currentUserId)
+                  .update({
+                'easyQuestions': 0,
+                'mediumQuestions': 0,
+                'hardQuestions': 0,
+                'attemptedEasyQuestion': 0,
+                'attemptedMediumQuestion': 0,
+                'attemptedHardQuestion': 0,
+              }));
 
       return true; // Indicate the follow action was successful
     } catch (e) {

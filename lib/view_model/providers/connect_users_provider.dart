@@ -1,25 +1,57 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
+import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
+  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
+  final toggle = ref.watch(toggleSearchStateProvider);
+
   log('allUsersProvider');
   return FirebaseFirestore.instance
       .collection('users')
       .snapshots()
       .map((snapshot) {
-    return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
+    // First, map all documents to ChatUser objects
+    var users =
+        snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
+    log('allUsersProvider user lengh ${users.length.toString()}');
+    // Then, if toggle is not 0, filter users based on the search query
+    if (toggle == 1 && searchQuery != '') {
+      return users
+          .where((user) => user.name.toLowerCase().contains(searchQuery))
+          .toList();
+    } else {
+      return users;
+    }
   });
 });
+// this provider is for search users
+final searchQueryProvider = StateProvider<String>((ref) {
+  return '';
+});
+
+final filteredUsersProvider = Provider<List<ChatUser>>((ref) {
+  // Get the current search query
+  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
+
+  // Get the list of all users
+  final allUsers = ref.watch(allUsersProvider).asData?.value ?? [];
+
+  // Filter users based on the search query
+  return allUsers.where((user) {
+    return user.name.toLowerCase().contains(searchQuery) ||
+        user.email.toLowerCase().contains(searchQuery);
+  }).toList();
+});
+
+///
 final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
-  log('myUsersUidsProvider');
-  final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(user!.id)
+      .doc(APIs.me.id)
       .collection('my_users')
       .orderBy('timeStamp', descending: true)
       .snapshots()
@@ -27,10 +59,10 @@ final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
 });
 final followingUsersProvider =
     StreamProvider.family<Set<String>, String>((ref, userId) {
-  final user = ref.watch(userDataProvider).userData;
+  // final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(user!.id)
+      .doc(APIs.me.id)
       .collection('following')
       .snapshots()
       .map((snapshot) {
