@@ -9,7 +9,7 @@ import 'package:com.example.while_app/resources/components/communities/profile_s
 import 'package:com.example.while_app/resources/components/message/widgets/profileCommunity_user.dart';
 import '../../../main.dart';
 import 'cchat.dart';
-import '../message/models/community_user.dart';
+import '../../../data/model/community_user.dart';
 
 class CCommunityDetailScreen extends StatefulWidget {
   const CCommunityDetailScreen({Key? key, required this.user})

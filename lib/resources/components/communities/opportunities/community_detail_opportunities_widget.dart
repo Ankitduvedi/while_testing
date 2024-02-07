@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/data/model/community_user.dart';
 import 'package:com.example.while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 

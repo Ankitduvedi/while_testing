@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../main.dart';
-import '../message/models/community_user.dart';
+import '../../../data/model/community_user.dart';
 
 class CommunityProfileDialog extends StatelessWidget {
   const CommunityProfileDialog({super.key, required this.user});

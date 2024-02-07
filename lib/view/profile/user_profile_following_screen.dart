@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
 import '../../main.dart';

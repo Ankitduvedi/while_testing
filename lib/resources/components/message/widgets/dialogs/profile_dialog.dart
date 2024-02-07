@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
 import '../../../../../main.dart';
-import '../../models/chat_user.dart';
+import '../../../../../data/model/chat_user.dart';
 
 class ProfileDialog extends StatelessWidget {
   const ProfileDialog({Key? key, required this.user});

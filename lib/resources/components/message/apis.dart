@@ -7,10 +7,10 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
-import 'models/community_message.dart';
-import 'models/community_user.dart';
-import 'models/message.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
+import '../../../data/model/community_message.dart';
+import '../../../data/model/community_user.dart';
+import '../../../data/model/message.dart';
 
 String userImage = '';
 

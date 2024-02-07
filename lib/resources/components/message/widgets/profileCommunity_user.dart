@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
 
 import 'dart:io';
 
 import '../../../../main.dart';
 import '../apis.dart';
-import '../models/community_user.dart';
+import '../../../../data/model/community_user.dart';
 
 class ProfileScreenParticipant extends StatefulWidget {
   final Community user;

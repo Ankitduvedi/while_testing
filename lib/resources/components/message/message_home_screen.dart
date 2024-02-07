@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../main.dart';
 import 'apis.dart';
 import 'helper/dialogs.dart';
-import 'models/chat_user.dart';
+import '../../../data/model/chat_user.dart';
 
 class MessagingHomeScreen extends ConsumerStatefulWidget {
   const MessagingHomeScreen({

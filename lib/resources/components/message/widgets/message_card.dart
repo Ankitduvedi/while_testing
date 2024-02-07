@@ -8,7 +8,7 @@ import 'package:com.example.while_app/main.dart';
 import '../apis.dart';
 import '../helper/dialogs.dart';
 import '../helper/my_date_util.dart';
-import '../models/message.dart';
+import '../../../../data/model/message.dart';
 
 // for showing single message details
 class MessageCard extends StatefulWidget {

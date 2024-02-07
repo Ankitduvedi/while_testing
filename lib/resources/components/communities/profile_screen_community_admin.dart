@@ -6,11 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
 import '../../../main.dart';
 import '../message/apis.dart';
 import '../message/helper/dialogs.dart';
-import '../message/models/community_user.dart';
+import '../../../data/model/community_user.dart';
 
 //profile screen -- to show signed in user info
 class ProfileScreen extends StatefulWidget {

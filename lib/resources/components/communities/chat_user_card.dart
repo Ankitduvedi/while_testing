@@ -9,8 +9,8 @@ import '../message/apis.dart';
 import '../message/chat_screen.dart';
 import '../message/helper/my_date_util.dart';
 
-import '../message/models/chat_user.dart';
-import '../message/models/message.dart';
+import '../../../data/model/chat_user.dart';
+import '../../../data/model/message.dart';
 
 import '../message/widgets/dialogs/profile_dialog.dart';
 
