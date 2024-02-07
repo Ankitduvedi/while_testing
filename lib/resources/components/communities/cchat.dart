@@ -125,9 +125,6 @@ class _CChatScreenState extends State<CChatScreen> {
 
   // bottom chat input field
   Widget _chatInput(BuildContext context) {
-    log('////height');
-
-    log(mq.height.toString());
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: mq.height * 0, horizontal: mq.width * .025),
@@ -219,7 +216,7 @@ class _CChatScreenState extends State<CChatScreen> {
             onPressed: () {
               if (_textController.text.isNotEmpty) {
                 APIs.sendCommunityMessage(
-                    widget.user, _textController.text, Types.text);
+                    widget.user.id, _textController.text, Types.text);
                 // }
                 _textController.text = '';
               }

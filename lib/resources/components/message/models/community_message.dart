@@ -21,8 +21,11 @@ class CommunityMessage {
     toId = json['toId'].toString();
     msg = json['msg'].toString();
     read = json['read'].toString();
-    types =
-        json['type'].toString() == Types.image.name ? Types.image : Types.text;
+    types = json['types'].toString() == Types.image.name
+        ? Types.image
+        : json['types'].toString() == Types.joined.name
+            ? Types.joined
+            : Types.text;
     fromId = json['fromId'].toString();
     sent = json['sent'].toString();
     senderName = json['senderName'].toString();
@@ -33,7 +36,7 @@ class CommunityMessage {
     data['toId'] = toId;
     data['msg'] = msg;
     data['read'] = read;
-    data['type'] = types.name;
+    data['types'] = types.name;
     data['fromId'] = fromId;
     data['sent'] = sent;
     data['senderName'] = senderName;
@@ -41,4 +44,4 @@ class CommunityMessage {
   }
 }
 
-enum Types { text, image }
+enum Types { text, image, joined }

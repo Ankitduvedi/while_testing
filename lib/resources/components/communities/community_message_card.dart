@@ -25,11 +25,18 @@ class _CommunityMessageCardState extends State<CommunityMessageCard> {
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
-    return InkWell(
-        onLongPress: () {
-          _showBottomSheet(isMe);
-        },
-        child: isMe ? _greenMessage() : _blueMessage());
+
+    return widget.message.types == Types.joined
+        ? Center(
+            child: Text(
+            widget.message.msg,
+            style: const TextStyle(color: Colors.white),
+          ))
+        : InkWell(
+            onLongPress: () {
+              _showBottomSheet(isMe);
+            },
+            child: isMe ? _greenMessage() : _blueMessage());
   }
 
   // sender or another user message
