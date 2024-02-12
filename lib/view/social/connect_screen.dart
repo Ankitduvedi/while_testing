@@ -31,10 +31,10 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: TabBar(
         controller: _tabController,
-        indicatorColor: Colors.white,
+        indicatorColor: Colors.black,
         tabs: const [
           Tab(
             text: 'People',
@@ -43,7 +43,7 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
             text: 'Communities',
           ),
         ],
-        labelColor: Colors.white, // Set the text color of the selected tab
+        labelColor: Colors.black, // Set the text color of the selected tab
         unselectedLabelColor:
             Colors.grey, // Set the text color of unselected tabs
       ),

@@ -17,7 +17,7 @@ class CommunityHomeWidget extends ConsumerWidget {
     var toogleSearch = ref.watch(toggleSearchStateProvider);
     final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: allCommunityAsyncValue.when(
         data: (allCommunities) => myCommunityAsyncValue.when(
           data: (joinedCommunity) {
@@ -48,7 +48,16 @@ class CommunityHomeWidget extends ConsumerWidget {
             return ListView.builder(
               itemCount: communityList.length,
               itemBuilder: (context, index) {
-                return ChatCommunityCard(user: communityList[index]);
+                return Column(
+                  children: [
+                    ChatCommunityCard(user: communityList[index]),
+                    Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                          height: 0,
+                        ),
+                  ],
+                );
               },
             );
           },

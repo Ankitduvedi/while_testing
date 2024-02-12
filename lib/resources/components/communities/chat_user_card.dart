@@ -32,7 +32,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0),
-      color: Colors.black,
+      color: Colors.white,
       elevation: 0,
       child: InkWell(
         onTap: () {
@@ -71,7 +71,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
               ),
               title: Text(
                 widget.user.name,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
               ),
               subtitle: Text(
                 _message != null
@@ -80,7 +80,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
                         : _message!.msg
                     : widget.user.about,
                 maxLines: 1,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black54),
               ),
               trailing: _message == null
                   ? null

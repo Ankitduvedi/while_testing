@@ -40,7 +40,7 @@ class StatusScreenState extends State<StatusScreenn> {
     mq = MediaQuery.of(context).size;
     log('////');
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: peopleStream,
         builder: (context, snapshot) {

@@ -150,7 +150,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 30,
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           title: toogleSearch != 0
               ? TextField(
                   onChanged: (value) => searchValue.state = value,
@@ -158,11 +158,11 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                     labelText: 'Search',
                     //suffixIcon: Icon(Icons.search),
                   ),
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                 )
               : const Text(
-                  'Social',
-                  style: TextStyle(color: Colors.white),
+                  '',
+                  style: TextStyle(color: Colors.black),
                 ),
           actions: [
             IconButton(
@@ -180,7 +180,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
               },
               icon: Icon(
                 toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             IconButton(
@@ -189,16 +189,16 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                 },
                 icon: const Icon(
                   Icons.group_add,
-                  color: Colors.white,
+                  color: Colors.black,
                 )),
           ],
           bottom: TabBar(
             dividerColor: Colors.transparent,
             controller: _controller,
             tabAlignment: TabAlignment.center,
-            indicatorColor: Colors.white,
+            indicatorColor: Colors.black,
             indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Colors.white,
+            labelColor: Colors.black,
             tabs: const [
               Tab(
                 text: 'Connect   ',
@@ -221,10 +221,6 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
             ConnectScreen(),
             MessageHomeWidget(),
             CommunityHomeWidget(),
-            CommunityScreenFinal(
-              isSearching: false,
-              value: 'value',
-            ),
             StatusScreenn(),
           ],
         ),

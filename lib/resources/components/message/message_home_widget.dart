@@ -17,7 +17,7 @@ class MessageHomeWidget extends ConsumerWidget {
     var toogleSearch = ref.watch(toggleSearchStateProvider);
     final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: allUsersAsyncValue.when(
         data: (allUsers) => myUsersAsyncValue.when(
           data: (followingUsers) {
@@ -41,14 +41,23 @@ class MessageHomeWidget extends ConsumerWidget {
               return const Center(
                 child: Text(
                   'No Data Found',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               );
             }
             return ListView.builder(
               itemCount: usersList.length,
               itemBuilder: (context, index) {
-                return ChatUserCard(user: usersList[index]);
+                return Column(
+                  children: [
+                    ChatUserCard(user: usersList[index]),
+                    Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                          height: 0,
+                        ),
+                  ],
+                );
               },
             );
           },
