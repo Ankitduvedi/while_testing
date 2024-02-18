@@ -1,5 +1,3 @@
-import 'package:com.example.while_app/view/profile/demo.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';

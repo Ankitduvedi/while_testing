@@ -12,15 +12,15 @@ import 'package:com.example.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.example.while_app/utils/utils.dart';
 
-class AddReel extends StatefulWidget {
+class AddVideo extends StatefulWidget {
   final String video;
-  const AddReel({Key? key, required this.video}) : super(key: key);
+  const AddVideo({Key? key, required this.video}) : super(key: key);
 
   @override
-  State<AddReel> createState() => _AddReelState();
+  State<AddVideo> createState() => AddVideoState();
 }
 
-class _AddReelState extends State<AddReel> {
+class AddVideoState extends State<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
 
@@ -136,7 +136,7 @@ class _AddReelState extends State<AddReel> {
             'thumbnail': data['assets']['thumbnail'],
           };
           FirebaseFirestore.instance
-              .collection('loops')
+              .collection('videos')
               .doc(id)
               .set(vid)
               .then((value) {
@@ -147,14 +147,6 @@ class _AddReelState extends State<AddReel> {
             Navigator.pop(context);
             return data['videoId'];
           });
-          // collectionReference.add(vid).then((value) {
-          //   // Utils.toastMessage('Your video is uploaded!');
-          //   setState(() {
-          //     isloading = false;
-          //   });
-          //   Navigator.pop(context);
-          //   return data['videoId'];
-          // });
         } else {
           // Handle upload failure
           Dialogs.showSnackbar(context, 'Failed');

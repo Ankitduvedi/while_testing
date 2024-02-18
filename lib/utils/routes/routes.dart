@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:com.example.while_app/view/create/add_video.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
 import 'package:com.example.while_app/view/auth/forgot_password_screen.dart';
@@ -67,6 +68,21 @@ class Routes {
         if (arguments is String) {
           return MaterialPageRoute(
               builder: (BuildContext context) => AddReel(
+                    video: arguments,
+                  ));
+        } else {
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
+        }
+      case RoutesName.addVideo:
+        if (arguments is String) {
+          return MaterialPageRoute(
+              builder: (BuildContext context) => AddVideo(
                     video: arguments,
                   ));
         } else {

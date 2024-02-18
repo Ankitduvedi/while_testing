@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:com.example.while_app/view/social/testScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:com.example.while_app/view/video_player_screen.dart';
 
 class VideoItem {
   final String videoUrl;
@@ -77,52 +77,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     //final currentTheme = ref.watch(themeNotifierProvider);
 
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
         ),
-        // appBar: AppBar(
-        //   //backgroundColor: currentTheme.scaffoldBackgroundColor,
-        //   backgroundColor: Colors.black,
-        //   elevation: 0.0,
-        //   actions: [
-        //     Switch.adaptive(
-        //       value: ref.watch(themeNotifierProvider.notifier).mode ==
-        //           ThemeMode.light,
-        //       onChanged: (value) => themeToggler(ref),
-        //     ),
-        //     // IconButton(
-        //     //   onPressed: () {
-        //     //     Navigator.of(context).push(
-        //     //       MaterialPageRoute(
-        //     //         builder: (context) => const ClassroomScreen(),
-        //     //       ),
-        //     //     );
-        //     //   },
-        //     //   icon: const Icon(
-        //     //     Icons.menu_book,
-        //     //     color: Colors.white,
-        //     //   ),
-        //     // ),
-        //     // IconButton(
-        //     //     onPressed: () {
-        //     //       Navigator.of(context).push(MaterialPageRoute(
-        //     //         builder: (context) => TestScreen(),
-        //     //       ));
-        //     //     },
-        //     //     icon: const Icon(
-        //     //       Icons.abc_outlined,
-        //     //       color: Colors.white,
-        //     //     ))
-        //   ],
-        // ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
-                //padding: EdgeInsets.all(15),
                 height: 230,
-                //color: Colors.amber,
                 child: CarouselSlider(
                   options: CarouselOptions(
                     height: 200.0,
@@ -165,7 +128,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        color: Colors.black),
                   ),
                   const Spacer(),
                   IconButton(
@@ -192,306 +155,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => VideoPlayerScreen(
-                              videoUrl: videoItems[index].videoUrl,
-                              videoTitle: videoItems[index].title,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        color: Colors.black,
-                        elevation: 4.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          videoItems[index].thumbnailUrl),
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                videoItems[index].title,
-                                style: const TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(5)),
-                  const Text(
-                    'Web Development',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                      ))
-                ],
-              ),
-              SizedBox(
-                height: 150,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 3.0,
-                    childAspectRatio: 9 / 12,
-                  ),
-                  itemCount: videoItems.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerScreen(
-                              videoUrl: videoItems[index].videoUrl,
-                              videoTitle: videoItems[index].title,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        color: Colors.black,
-                        elevation: 4.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          videoItems[index].thumbnailUrl),
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                videoItems[index].title,
-                                style: const TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(5)),
-                  const Text(
-                    'App Development',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                      ))
-                ],
-              ),
-              SizedBox(
-                height: 150,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 3.0,
-                    childAspectRatio: 9 / 12,
-                  ),
-                  itemCount: videoItems.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerScreen(
-                              videoUrl: videoItems[index].videoUrl,
-                              videoTitle: videoItems[index].title,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        color: Colors.black,
-                        elevation: 4.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          videoItems[index].thumbnailUrl),
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                videoItems[index].title,
-                                style: const TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(5)),
-                  const Text(
-                    'Machine Learning',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                      ))
-                ],
-              ),
-              SizedBox(
-                height: 150,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 3.0,
-                    childAspectRatio: 9 / 12,
-                  ),
-                  itemCount: videoItems.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerScreen(
-                              videoUrl: videoItems[index].videoUrl,
-                              videoTitle: videoItems[index].title,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        color: Colors.black,
-                        elevation: 4.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          videoItems[index].thumbnailUrl),
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                videoItems[index].title,
-                                style: const TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(5)),
-                  const Text(
-                    'Management',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                      ))
-                ],
-              ),
-              SizedBox(
-                height: 150,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 3.0,
-                    childAspectRatio: 9 / 12,
-                  ),
-                  itemCount: videoItems.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerScreen(
-                              videoUrl: videoItems[index].videoUrl,
-                              videoTitle: videoItems[index].title,
-                            ),
+                            builder: (context) => VideoScreen(),
                           ),
                         );
                       },
@@ -532,56 +196,3 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
         ));
   }
 }
-
-// class VideoPlayerScreen extends StatefulWidget {
-//   final String videoUrl;
-//   final String videoTitle;
-
-//   const VideoPlayerScreen({
-//     Key? key,
-//     required this.videoUrl,
-//     required this.videoTitle,
-//   }) : super(key: key);
-
-//   @override
-//   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
-// }
-
-// class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-//   late ChewieController _chewieController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     _chewieController = ChewieController(
-//       videoPlayerController: VideoPlayerController.networkUrl(
-//         Uri.parse(widget.videoUrl),
-//       ),
-//       autoPlay: true,
-//       looping: false,
-//       showControls: true,
-//       aspectRatio: 16 / 9,
-//       placeholder: Container(
-//         color: Colors.black,
-//       ),
-//       autoInitialize: true,
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-//     _chewieController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.videoTitle),
-//       ),
-//       body: Chewie(controller: _chewieController),
-//     );
-//   }
-// }

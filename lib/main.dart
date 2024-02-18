@@ -36,7 +36,6 @@ late Size mq;
 //   // e.g., appBarTheme, buttonTheme, etc.
 // );
 
-
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message: ${message.messageId}');
@@ -104,15 +103,15 @@ class MyApp extends river.ConsumerWidget {
     mq = MediaQuery.of(context).size;
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark,
         systemStatusBarContrastEnforced: false);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
     return MultiProvider(
       providers: providersList,
       child: GetMaterialApp(
-        //theme: lightTheme,                
+        //theme: lightTheme,
         //darkTheme: darkTheme,
         //themeMode: ThemeMode.system,
         routes: {

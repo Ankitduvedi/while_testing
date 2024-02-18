@@ -55,10 +55,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         title: Text(widget.videoTitle),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(onPressed: () {
-            Navigator.pop(context);
-            dispose();
-          }, icon: const Icon(Icons.arrow_back))
+          IconButton(
+              onPressed: () {
+                dispose();
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back))
         ],
       ),
       body: Chewie(controller: _chewieController),

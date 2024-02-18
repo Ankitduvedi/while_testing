@@ -27,12 +27,12 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
           CreateContainer(
               text: "Upload Video",
               function: () {
-                provider.selectVideo(context);
+                provider.selectVideo(context, 'Video');
               }),
           CreateContainer(
               text: "Upload Loops",
               function: () {
-                provider.selectVideo(context);
+                provider.selectVideo(context, 'Loop');
               }),
           CreateContainer(
               text: "Upload Post",
