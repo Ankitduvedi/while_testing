@@ -14,6 +14,7 @@ class VideoList {
           videoUrl: docu.get('videoUrl'),
           title: docu.get('title'),
           description: docu.get('description'),
+          thumbnail: docu.get('thumbnail'),
           likes: docu.get('likes'),
           views: docu.get('views'));
       videoList.add(video);

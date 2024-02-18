@@ -1,10 +1,12 @@
+import 'package:com.example.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoScreen extends StatefulWidget {
-  const VideoScreen({super.key});
+  const VideoScreen({super.key, required this.video});
+  final Video video;
   @override
   VideoScreenState createState() => VideoScreenState();
 }
@@ -21,8 +23,7 @@ class VideoScreenState extends State<VideoScreen> {
 
   Future<void> initializePlayer() async {
     _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse(
-          'https://vod.api.video/vod/vi1MrCljMIgTvvIfOI7FOGCG/hls/manifest.m3u8'),
+      Uri.parse(widget.video.videoUrl),
     );
     await _videoPlayerController.initialize();
     _chewieController = ChewieController(

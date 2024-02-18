@@ -23,6 +23,8 @@ class AddVideo extends StatefulWidget {
 class AddVideoState extends State<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
+  String selectedOption = 'App Development';
+  String _selectedItem = 'App Development';
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -55,54 +57,7 @@ class AddVideoState extends State<AddVideo> {
     });
     File vid = await compressVideo(path);
     Dialogs.showSnackbar(context, vid.path.split(".").last);
-    // DateTime now = DateTime.now();
-    // File video = _compressVideo(path);
-    File video = File(path);
-    // var stream = http.ByteStream(video.openRead().cast());
-    // var length = video.lengthSync();
-    // var uri = Uri.parse('http://13.233.151.213:3000/reels');
-    // var request = http.MultipartRequest('POST', uri)
-    //   ..files.add(http.MultipartFile('video', stream, length,
-    //       filename: basename(video.path)));
-    // // await request.send();
-    // try {
-    //   final response = await http.Response.fromStream(await request.send());
 
-    //   if (response.statusCode == 200) {
-    //     // Parse the URL from the response
-    //     // final Map<String, dynamic> jsonResponse =
-    //     String videoUrl = json.decode(response.body);
-    //     Dialogs.showSnackbar(context, videoUrl);
-    //     final CollectionReference collectionReference =
-    //         FirebaseFirestore.instance.collection('videos');
-    //     final Map<String, dynamic> vid = {
-    //       "uploadedBy": APIs.me.id,
-    //       'videoUrl': videoUrl,
-    //       'title': title,
-    //       'description': des,
-    //       'likes': [],
-    //       'views': 0
-    //     };
-    //     collectionReference.add(vid).then((value) {
-    //       // Utils.toastMessage('Your video is uploaded!');
-    //       setState(() {
-    //         isloading = false;
-    //       });
-    //       Navigator.pop(context);
-    //     }).onError((error, stackTrace) {
-    //       Utils.toastMessage(error.toString());
-    //     });
-    //     // Now you can use the videoUrl as needed, for example, storing it in a variable or database
-    //     print('Uploaded video URL: $videoUrl');
-
-    //     // You can use the videoUrl as needed, for example, store it in a variable, database, etc.
-    //     // You can then use this URL to display the video or perform other operations.
-    //   } else {
-    //     print('Failed to upload video. Status code: ${response.statusCode}');
-    //   }
-    // } catch (error) {
-    //   print('Error uploading video: $error');
-    // }
 // Api.video
     uploadVideo(File videoFile, String id) async {
       Dialogs.showSnackbar(context, 'Function called');
@@ -124,8 +79,8 @@ class AddVideoState extends State<AddVideo> {
           //Dialogs.showSnackbar(context, data['videoId']);
           Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
-          final CollectionReference collectionReference =
-              FirebaseFirestore.instance.collection('videos');
+          // final CollectionReference collectionReference =
+          //     FirebaseFirestore.instance.collection('videos');
           final Map<String, dynamic> vid = {
             "uploadedBy": APIs.me.id,
             'videoUrl': data['assets']['mp4'],
@@ -134,9 +89,12 @@ class AddVideoState extends State<AddVideo> {
             'likes': [],
             'views': 0,
             'thumbnail': data['assets']['thumbnail'],
+            'videoRef': id
           };
           FirebaseFirestore.instance
               .collection('videos')
+              .doc(_selectedItem)
+              .collection(_selectedItem)
               .doc(id)
               .set(vid)
               .then((value) {
@@ -190,25 +148,16 @@ class AddVideoState extends State<AddVideo> {
     createVideo(title, des);
 
     print(url);
-
-    // firebase_storage.Reference storageRef = firebase_storage
-    //     .FirebaseStorage.instance
-    //     .ref('content/${FirebaseSessionController().uid!}/video/$now');
-    // firebase_storage.UploadTask uploadTask =
-    //     storageRef.putFile(await _compressVideo(path));
-
-    // await Future.value(uploadTask);
-
-    // final newUrl = await storageRef.getDownloadURL();
   }
 
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height * 1;
     final w = MediaQuery.of(context).size.width * 1;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Reel"),
+        title: const Text("Add Video"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -239,6 +188,11 @@ class AddVideoState extends State<AddVideo> {
                 prefixIcon: Icons.description,
                 hintText: 'Description',
               ),
+              _buildDropDown('', '', dropdownItems, (String? value) {
+                setState(() {
+                  selectedOption = value!;
+                });
+              }),
               const SizedBox(
                 height: 10,
               ),
@@ -264,6 +218,52 @@ class AddVideoState extends State<AddVideo> {
                   })
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  List<String> dropdownItems = [
+    'App Development',
+    'Block Chain',
+    'Machine Learning',
+    'Web Development'
+  ];
+  Widget _buildDropDown(String label, String value, List<String> items,
+      Function(String?) onChanged) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedItem,
+          icon: const Icon(Icons.arrow_drop_down),
+          iconSize: 24,
+          elevation: 16,
+          style: const TextStyle(color: Colors.deepPurple, fontSize: 18),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedItem = newValue!;
+            });
+          },
+          items: dropdownItems.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          dropdownColor: Colors.white,
         ),
       ),
     );
