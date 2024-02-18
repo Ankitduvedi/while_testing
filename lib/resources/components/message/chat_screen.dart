@@ -9,8 +9,8 @@ import 'package:com.example.while_app/resources/components/message/widgets/messa
 import '../../../main.dart';
 import 'apis.dart';
 import 'helper/my_date_util.dart';
-import 'models/chat_user.dart';
-import 'models/message.dart';
+import '../../../data/model/chat_user.dart';
+import '../../../data/model/message.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/data/model/community_message.dart';
+import 'package:com.example.while_app/data/model/community_user.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ final allCommunitiesProvider = StreamProvider<List<Community>>((ref) {
   final toggle = ref.watch(toggleSearchStateProvider);
   return FirebaseFirestore.instance
       .collection('communities')
+      .orderBy('timeStamp', descending: true)
       .snapshots()
       .map((snapshot) {
     var communityList =
@@ -30,7 +32,6 @@ final myCommunityUidsProvider = StreamProvider<List<String>>((ref) {
       .collection('users')
       .doc(APIs.me.id)
       .collection('my_communities')
-      .orderBy('timeStamp', descending: true)
       .snapshots()
       .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
 });
@@ -56,12 +57,6 @@ final joinCommunityProvider = Provider((ref) {
           .collection('my_communities')
           .doc(communityIdToJoin)
           .set({'timeStamp': Timestamp.now()});
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(currentUserId)
-      //     .collection('following')
-      //     .doc(communityIdToJoin)
-      //     .set({'timeStamp': Timestamp.now()});
       await FirebaseFirestore.instance
           .collection('communities')
           .doc(communityIdToJoin)
@@ -81,7 +76,8 @@ final joinCommunityProvider = Provider((ref) {
                 'attemptedMediumQuestion': 0,
                 'attemptedHardQuestion': 0,
               }));
-
+      APIs.sendCommunityMessage(communityIdToJoin,
+          '${APIs.me.name} joined the community', Types.joined);
       return true; // Indicate the follow action was successful
     } catch (e) {
       // If there's an error, you can handle it here

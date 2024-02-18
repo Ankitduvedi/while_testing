@@ -1,11 +1,12 @@
-class Message {
-  Message({
+class CommunityMessage {
+  CommunityMessage({
     required this.toId,
     required this.msg,
     required this.read,
-    required this.type,
+    required this.types,
     required this.fromId,
     required this.sent,
+    required this.senderName,
   });
 
   late final String toId;
@@ -13,15 +14,21 @@ class Message {
   late final String read;
   late final String fromId;
   late final String sent;
-  late final Type type;
+  late final Types types;
+  late final String senderName;
 
-  Message.fromJson(Map<String, dynamic> json) {
+  CommunityMessage.fromJson(Map<String, dynamic> json) {
     toId = json['toId'].toString();
     msg = json['msg'].toString();
     read = json['read'].toString();
-    type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
+    types = json['types'].toString() == Types.image.name
+        ? Types.image
+        : json['types'].toString() == Types.joined.name
+            ? Types.joined
+            : Types.text;
     fromId = json['fromId'].toString();
     sent = json['sent'].toString();
+    senderName = json['senderName'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -29,11 +36,12 @@ class Message {
     data['toId'] = toId;
     data['msg'] = msg;
     data['read'] = read;
-    data['type'] = type.name;
+    data['types'] = types.name;
     data['fromId'] = fromId;
     data['sent'] = sent;
+    data['senderName'] = senderName;
     return data;
   }
 }
 
-enum Type { text, image }
+enum Types { text, image, joined }

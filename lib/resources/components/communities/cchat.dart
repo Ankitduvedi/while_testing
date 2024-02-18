@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_message.dart';
+import 'package:com.example.while_app/data/model/community_message.dart';
 import 'package:com.example.while_app/resources/components/communities/community_message_card.dart';
 import '../../../main.dart';
 import '../message/apis.dart';
-import '../message/models/community_user.dart';
+import '../../../data/model/community_user.dart';
 
 class CChatScreen extends StatefulWidget {
   final Community user;
@@ -125,9 +125,6 @@ class _CChatScreenState extends State<CChatScreen> {
 
   // bottom chat input field
   Widget _chatInput(BuildContext context) {
-    log('////height');
-
-    log(mq.height.toString());
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: mq.height * 0, horizontal: mq.width * .025),
@@ -219,7 +216,7 @@ class _CChatScreenState extends State<CChatScreen> {
             onPressed: () {
               if (_textController.text.isNotEmpty) {
                 APIs.sendCommunityMessage(
-                    widget.user, _textController.text, Types.text);
+                    widget.user.id, _textController.text, Types.text);
                 // }
                 _textController.text = '';
               }

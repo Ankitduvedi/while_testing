@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
 import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_data_widget.dart';
 

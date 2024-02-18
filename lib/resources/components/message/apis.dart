@@ -7,11 +7,10 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
-import 'package:com.example.while_app/resources/components/message/models/classroom_user.dart';
-import 'models/community_message.dart';
-import 'models/community_user.dart';
-import 'models/message.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
+import '../../../data/model/community_message.dart';
+import '../../../data/model/community_user.dart';
+import '../../../data/model/message.dart';
 
 String userImage = '';
 
@@ -150,7 +149,6 @@ class APIs {
 
   static Future<bool> deleteReel(String id) async {
     firestore.collection('videos').doc(id).delete();
-
     return true;
   }
 
@@ -653,13 +651,13 @@ class APIs {
 
   // for sending message
   static Future<void> sendCommunityMessage(
-      Community chatUser, String msg, Types type) async {
+      String id, String msg, Types type) async {
     //message sending time (also used as id)
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     //message to send
     final CommunityMessage message = CommunityMessage(
-      toId: chatUser.id,
+      toId: id,
       msg: msg,
       read: '',
       types: type,
@@ -669,11 +667,10 @@ class APIs {
     );
     log(me.name);
 
-    final ref =
-        firestore.collection('communities').doc(chatUser.id).collection('chat');
+    final ref = firestore.collection('communities').doc(id).collection('chat');
     await ref.doc(time).set(message.toJson()).then((value) {
       try {
-        log(message.toJson().toString());
+        firestore.collection('communities').doc(id).update({'timeStamp': time});
       } catch (error) {
         log(error.toString());
       }
@@ -700,7 +697,10 @@ class APIs {
     final imageUrl = await ref.getDownloadURL();
     chatUser.image = imageUrl;*/
     final refe = FirebaseFirestore.instance.collection('communities');
+    log('createCommunity function called');
+
     await refe.doc(chatUser.id).set(chatUser.toJson()).then((value) {
+      log('addUserToCommunity function called');
       addUserToCommunity(chatUser.id);
     });
   }
@@ -723,7 +723,7 @@ class APIs {
 
     //updating image in firestore database
     final imageUrl = await ref.getDownloadURL();
-    await sendCommunityMessage(chatUser, imageUrl, Types.image);
+    await sendCommunityMessage(chatUser.id, imageUrl, Types.image);
   }
 
   // update profile picture of community
@@ -789,74 +789,6 @@ class APIs {
         .snapshots();
   }
 
-  ////////////// classroom
-  static Future<void> addClassroom(Class chatUser) async {
-    final refe = FirebaseFirestore.instance.collection('classroom');
-    await refe.doc(chatUser.id).set(chatUser.toJson()).then((value) {
-      addUserToClassroom(chatUser.id);
-      log('sa');
-    });
-  }
-
-  // for getting id's of joined classroom from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getClassroomId() {
-    return firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('my_class')
-        .snapshots();
-  }
-
-  static Future<bool> addUserToClassroom(String id) async {
-    firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('my_class')
-        .doc(id)
-        .set({
-      'id': id,
-    });
-    firestore
-        .collection('classroom')
-        .doc(id)
-        .collection('participants')
-        .doc(user.uid)
-        .set(me.toJson());
-    // firestore
-    //     .collection('communities')
-    //     .doc(id)
-    //     .collection('participants')
-    //     .doc(user.uid)
-    //     .update({'designation': 'user'});
-    return true;
-  }
-
-  // for getting all user communities from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUserClass(
-      List<String> communityIds) {
-    log('\nCommunityIds: $communityIds');
-
-    return firestore
-        .collection('classroom')
-        .where('id',
-            whereIn: communityIds.isEmpty
-                ? ['']
-                : communityIds) //because empty list throws an error
-        // .where('id', isNotEqualTo: user.uid)
-        .snapshots();
-  }
-
-  // for getting all messages of a specific conversation of class from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllClassMessages(
-      Class clas) {
-    return firestore
-        .collection('classroom')
-        .doc(clas.id)
-        .collection('chat')
-        .orderBy('sent', descending: true)
-        .snapshots();
-  }
-
   //class participants info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getClassParticipantsInfo(
       String id) {
@@ -865,16 +797,6 @@ class APIs {
         .doc(id)
         .collection('participants')
         .snapshots();
-  }
-
-  ///// update class info
-  static Future<void> updateClassInfo(Class clas) async {
-    await firestore.collection('classroom').doc(clas.id).update({
-      'name': clas.name,
-      'about': clas.about,
-      'email': clas.email,
-      'domain': clas.about,
-    });
   }
 
   ///////////dynamic links

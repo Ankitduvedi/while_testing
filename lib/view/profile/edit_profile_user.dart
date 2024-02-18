@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/main.dart';
-import 'package:com.example.while_app/resources/components/message/models/chat_user.dart';
+import 'package:com.example.while_app/data/model/chat_user.dart';
 import '../../resources/components/message/apis.dart';
 import '../../resources/components/message/helper/dialogs.dart';
 

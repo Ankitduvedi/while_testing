@@ -7,8 +7,8 @@ import 'package:com.example.while_app/main.dart';
 import '../message/apis.dart';
 import 'cdetail.dart';
 import '../message/helper/my_date_util.dart';
-import '../message/models/community_message.dart';
-import '../message/models/community_user.dart';
+import '../../../data/model/community_message.dart';
+import '../../../data/model/community_user.dart';
 import 'community_profile_dialog.dart';
 
 //card to represent a single user in home screen

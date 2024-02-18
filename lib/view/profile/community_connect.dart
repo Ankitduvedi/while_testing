@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,7 +17,6 @@ class CommunityConnect extends ConsumerWidget {
         ref.watch(joinedCommuntiesProvider(userId));
 
     return Scaffold(
-      //appBar: AppBar(title: const Text('Discover Communities')),
       body: allCommunitiesAsyncValue.when(
         data: (allCommunities) => joinedCommunitiesAsyncValue.when(
           data: (followingUsers) {
@@ -39,10 +37,6 @@ class CommunityConnect extends ConsumerWidget {
                   subtitle: Text(user.about),
                   trailing: ElevatedButton(
                     onPressed: () async {
-                      // Assuming 'user' is the ChatUser instance you want to follow
-                      //final userProvider = ref.watch(userDataProvider);
-                      log(699999999999);
-
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
                           APIs.me.id, user.id);

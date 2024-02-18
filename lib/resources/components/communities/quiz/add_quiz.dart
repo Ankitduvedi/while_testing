@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/quiz_model.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/data/model/community_user.dart';
 
 const uuid = Uuid();
 

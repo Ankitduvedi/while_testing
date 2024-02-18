@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:com.example.while_app/resources/components/communities/community_user_card.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
@@ -21,12 +20,8 @@ class CommunityHomeWidget extends ConsumerWidget {
       body: allCommunityAsyncValue.when(
         data: (allCommunities) => myCommunityAsyncValue.when(
           data: (joinedCommunity) {
-            final notJoinedCommunity = joinedCommunity
-                .map((communityId) => allCommunities.firstWhere(
-                      (community) => community.id == communityId,
-                      orElse: () => Community
-                          .empty(), // Provide a fallback value to avoid the error
-                    ))
+            final notJoinedCommunity = allCommunities
+                .where((community) => joinedCommunity.contains(community.id))
                 .toList();
             var communityList = toogleSearch == 3
                 ? notJoinedCommunity

@@ -5,7 +5,7 @@ import 'package:com.example.while_app/resources/components/communities/quiz/live
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/quiz.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/data/model/community_user.dart';
 
 class QuizScreen extends StatefulWidget {
   QuizScreen({Key? key, required this.user}) : super(key: key);

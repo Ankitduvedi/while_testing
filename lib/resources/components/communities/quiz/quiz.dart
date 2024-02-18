@@ -6,7 +6,7 @@ import 'package:com.example.while_app/resources/components/communities/quiz/Scre
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/medium_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/start_screen.dart';
-import 'package:com.example.while_app/resources/components/message/models/community_user.dart';
+import 'package:com.example.while_app/data/model/community_user.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({super.key, required this.user, required this.category});

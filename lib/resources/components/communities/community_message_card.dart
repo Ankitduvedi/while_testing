@@ -9,7 +9,7 @@ import '../../../main.dart';
 import '../message/apis.dart';
 import '../message/helper/dialogs.dart';
 import '../message/helper/my_date_util.dart';
-import '../message/models/community_message.dart';
+import '../../../data/model/community_message.dart';
 
 // for showing single message details
 class CommunityMessageCard extends StatefulWidget {
@@ -25,11 +25,18 @@ class _CommunityMessageCardState extends State<CommunityMessageCard> {
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
-    return InkWell(
-        onLongPress: () {
-          _showBottomSheet(isMe);
-        },
-        child: isMe ? _greenMessage() : _blueMessage());
+
+    return widget.message.types == Types.joined
+        ? Center(
+            child: Text(
+            widget.message.msg,
+            style: const TextStyle(color: Colors.white),
+          ))
+        : InkWell(
+            onLongPress: () {
+              _showBottomSheet(isMe);
+            },
+            child: isMe ? _greenMessage() : _blueMessage());
   }
 
   // sender or another user message
