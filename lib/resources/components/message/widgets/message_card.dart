@@ -51,12 +51,12 @@ class _MessageCardState extends State<MessageCard> {
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.grey.shade800),
+                //border: Border.all(color: Colors.grey.shade800),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30))),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20))),
             child: widget.message.type == Type.text
                 ?
                 //show text
@@ -131,19 +131,19 @@ class _MessageCardState extends State<MessageCard> {
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.shade800),
+                color: Colors.blueAccent,
+                //border: Border.all(color: Colors.grey.shade800),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30))),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20))),
             child: widget.message.type == Type.text
                 ?
                 //show text
                 Text(
                     widget.message.msg,
-                    style: const TextStyle(fontSize: 15, color: Colors.black87),
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
                   )
                 :
                 //show image
