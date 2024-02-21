@@ -43,7 +43,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Categories'),
+        title: const Text('WHILE'),
       ),
       body: ListView.builder(
         controller: _scrollController,
@@ -61,7 +61,13 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(categoriesState.categories[index]),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
+                child: Text(
+                  categoriesState.categories[index],
+                  style: const TextStyle(fontSize: 17),
+                ),
+              ),
               FeedScreenWidget(category: categoriesState.categories[index]),
             ],
           );
