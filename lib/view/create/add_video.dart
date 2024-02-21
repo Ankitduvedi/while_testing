@@ -24,7 +24,7 @@ class AddVideoState extends State<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
   String selectedOption = 'App Development';
-  String _selectedItem = 'App Development';
+  String? _selectedItem = 'App Development';
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -94,7 +94,7 @@ class AddVideoState extends State<AddVideo> {
           FirebaseFirestore.instance
               .collection('videos')
               .doc(_selectedItem)
-              .collection(_selectedItem)
+              .collection(_selectedItem!)
               .doc(id)
               .set(vid)
               .then((value) {
@@ -188,11 +188,26 @@ class AddVideoState extends State<AddVideo> {
                 prefixIcon: Icons.description,
                 hintText: 'Description',
               ),
-              _buildDropDown('', '', dropdownItems, (String? value) {
-                setState(() {
-                  selectedOption = value!;
-                });
-              }),
+              FutureBuilder<List<String>>(
+                future: fetchCategoriesFromFirestore(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<String>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Show loading indicator while waiting for data
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // Once data is fetched, use it to build the dropdown
+                    return _buildDropDown(
+                        "Select Category", _selectedItem!, snapshot.data!,
+                        (String? newValue) {
+                      setState(() {
+                        _selectedItem = newValue;
+                      });
+                    });
+                  }
+                },
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -223,12 +238,18 @@ class AddVideoState extends State<AddVideo> {
     );
   }
 
-  List<String> dropdownItems = [
-    'App Development',
-    'Block Chain',
-    'Machine Learning',
-    'Web Development'
-  ];
+  Future<List<String>> fetchCategoriesFromFirestore() async {
+    var categoriesSnapshot =
+        await FirebaseFirestore.instance.collection('videosCategories').get();
+    List<String> categories = [];
+    for (var doc in categoriesSnapshot.docs) {
+      String categoryName =
+          doc.data()['category']; // Assuming each document has a 'name' field
+      categories.add(categoryName);
+    }
+    return categories;
+  }
+
   Widget _buildDropDown(String label, String value, List<String> items,
       Function(String?) onChanged) {
     return Container(
@@ -257,7 +278,7 @@ class AddVideoState extends State<AddVideo> {
               _selectedItem = newValue!;
             });
           },
-          items: dropdownItems.map<DropdownMenuItem<String>>((String value) {
+          items: items.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
