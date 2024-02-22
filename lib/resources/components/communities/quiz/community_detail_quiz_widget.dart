@@ -129,7 +129,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -156,6 +156,7 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlueAccent,
         onPressed: () => _createQuiz(context),
         child: const Icon(Icons.add),
       ),

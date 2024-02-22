@@ -149,7 +149,7 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: StreamBuilder(
         stream: _firestore
             .collection('communities')
@@ -171,8 +171,8 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
                 children: [
                   ListTile(
                     title: Text(resource['title'] ??
-                        'Resource $index',style: const TextStyle(color: Colors.white),), // Use the title if available
-                    subtitle: Text(resource['text'],style: const TextStyle(color: Colors.white),),
+                        'Resource $index',style: const TextStyle(color: Colors.black),), // Use the title if available
+                    subtitle: Text(resource['text'],style: const TextStyle(color: Colors.black),),
                     onTap: () {
                       // Handle the resource item click
                       // You can open or download the resource here
@@ -204,7 +204,7 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
         }
                     },
                   ),
-                  Divider(color: Colors.grey.shade800,
+                  Divider(color: Colors.grey.shade300,
                   thickness: 1,
                   height: 0,)
                 ],
@@ -214,12 +214,12 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.lightBlueAccent,
         onPressed: () {
           pickAndPreviewFile();
         },
         tooltip: 'Upload File',
-        child: const Icon(Icons.upload, color: Colors.black,),
+        child: const Icon(Icons.upload, color: Colors.white,),
       ),
     );
   }

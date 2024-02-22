@@ -47,11 +47,11 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
       ),
     ];
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
 
       /// APPBAR
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () {
@@ -73,7 +73,7 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
             children: [
               IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white)),
+                  icon: Icon(Icons.arrow_back, color: Colors.blue.shade300)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(
@@ -94,7 +94,7 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
               ),
               Text(widget.user.name,
                   style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w400)),
+                      color: Colors.black, fontWeight: FontWeight.w400)),
             ],
           ),
         ),

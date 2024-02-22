@@ -104,8 +104,10 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back, color: Colors.lightBlueAccent,)),
         backgroundColor: Colors.white,
-        title: const Text('Add Question'),
+        title: const Text('Add Question', style: TextStyle(color: Colors.black),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -146,10 +148,9 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     elevation: 4,
-                    backgroundColor: const Color.fromARGB(
-                        255, 243, 243, 243), // Change button color here
+                    backgroundColor:  Colors.lightBlueAccent, // Change button color here
                   ),
-                  child: const Text('Add Question'),
+                  child: const Text('Add Question', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),),
                 ),
               ),
             ],

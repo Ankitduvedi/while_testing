@@ -21,10 +21,20 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Add Opportunity'),
-        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.lightBlueAccent,
+            )),
+        title: const Text(
+          'Add Opportunity',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,24 +44,24 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
               controller: nameController,
               decoration: const InputDecoration(
                 labelText: 'Opportunity Name',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
+                labelStyle: TextStyle(color: Colors.black),
+                // focusedBorder: UnderlineInputBorder(
+                //   borderSide: BorderSide(color: Colors.blue),
+                // ),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
                 ),
-                hintStyle: TextStyle(color: Colors.yellow),
-                suffixStyle: TextStyle(color: Colors.yellow),
+                hintStyle: TextStyle(color: Colors.black),
+                suffixStyle: TextStyle(color: Colors.black),
               ),
             ),
             TextField(
               controller: descriptionController,
               decoration: const InputDecoration(
                 labelText: 'Opportunity Description',
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: Colors.black),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
                 ),
               ),
             ),
@@ -59,23 +69,23 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
               controller: urlController,
               decoration: const InputDecoration(
                 labelText: 'Opportunity URL',
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: Colors.black),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
                 ),
               ),
             ),
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white)),
+                      MaterialStateProperty.all<Color>(Colors.lightBlueAccent)),
               onPressed: () {
                 // Upload the new opportunity to Firestore
                 _uploadOpportunity();
                 Navigator.pop(context);
               },
               child: const Text('Add Opportunity',
-                  style: TextStyle(color: Colors.black)),
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
