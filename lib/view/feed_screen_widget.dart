@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer';
-import 'package:com.example.while_app/view/social/testScreen.dart';
+import 'package:com.example.while_app/view/social/feed_video_screen.dart';
 import 'package:com.example.while_app/view_model/providers/categories_test_provider.dart';
 import 'package:flutter/material.dart';
 
