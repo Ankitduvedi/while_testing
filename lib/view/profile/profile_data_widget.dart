@@ -67,6 +67,7 @@ class ProfileDataWidget extends ConsumerWidget {
               Positioned(
                 top: h * 0.02,
                 left: mq.width / 1.15,
+                //right: mq.width /290.15,
                 child: IconButton(
                   onPressed: () {
                     showModalBottomSheet(
