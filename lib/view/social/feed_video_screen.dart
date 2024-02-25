@@ -57,15 +57,35 @@ class VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          color: Colors.black,
-          height: 300,
-          child: _chewieController != null &&
-                  _chewieController!.videoPlayerController.value.isInitialized
-              ? Chewie(
-                  controller: _chewieController!,
-                )
-              : const Center(child: CircularProgressIndicator()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Colors.black,
+              height: 300,
+              child: _chewieController != null &&
+                      _chewieController!
+                          .videoPlayerController.value.isInitialized
+                  ? Chewie(
+                      controller: _chewieController!,
+                    )
+                  : const Center(child: CircularProgressIndicator()),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+              child: Text(
+                widget.video.title,
+                style: const TextStyle(fontSize: 17),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+              child: Text(
+                widget.video.description,
+                style: const TextStyle(fontSize: 17),
+              ),
+            )
+          ],
         ),
       ),
     );
