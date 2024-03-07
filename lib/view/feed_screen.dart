@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'package:com.example.while_app/view/feed_screen_widget.dart';
+import 'package:com.example.while_app/view/notifications/notification_view.dart';
 import 'package:com.example.while_app/view_model/providers/categories_test_provider.dart';
+import 'package:com.example.while_app/view_model/providers/notif_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -11,12 +14,17 @@ class FeedScreen extends ConsumerStatefulWidget {
   FeedScreenState createState() => FeedScreenState();
 }
 
+
 class FeedScreenState extends ConsumerState<FeedScreen> {
   final ScrollController _scrollController = ScrollController();
+  
+
 
   @override
   void initState() {
     super.initState();
+     ref.read(notificationsProvider.notifier).fetchNotifications();
+
     // Initial fetch
     Future.microtask(
         () => ref.read(categoryProvider.notifier).fetchCategories());
@@ -40,10 +48,27 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final categoriesState = ref.watch(categoryProvider);
+    final notificationsState = ref.watch(notificationsProvider);
 
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
         title: const Text('WHILE'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => NotificationsScreen()),
+                );
+                // Mark notifications as read when viewed
+                ref.read(notificationsProvider.notifier).markNotificationsAsRead();
+              },
+              // Dynamically choose the icon
+              child: Icon(notificationsState.hasNewNotifications ? Icons.notifications_active : Icons.notifications),
+            ),
+          ),
+        ],
       ),
       body: ListView.builder(
         controller: _scrollController,
