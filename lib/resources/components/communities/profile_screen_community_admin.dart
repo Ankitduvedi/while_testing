@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/utils/dialogs/avail_users_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +27,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   String? _image;
+
+  void _openUserListDialog(String id) {
+    log("community id$id");
+    showDialog(
+      context: context,
+      builder: (context) => UserListDialog(
+        commId: id,
+      ),
+    );
+  }
 
   // Initialize the TextEditingController in your state
   // final TextEditingController _textFieldController = TextEditingController();
@@ -231,6 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 minimumSize:
                                     Size(mq.width * .2, mq.height * .02)),
                             onPressed: () {
+                              _openUserListDialog(widget.user.id);
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
                                 log(community.toJson().toString());
