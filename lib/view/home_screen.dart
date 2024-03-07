@@ -1,3 +1,4 @@
+import 'package:com.example.while_app/view/reels_screen%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         children: const [
           FeedScreen(),
           CreateScreen(),
-          ReelsScreen(),
+          ReelsScreentest(),
           SocialScreen(),
           ProfileScreen()
         ],
