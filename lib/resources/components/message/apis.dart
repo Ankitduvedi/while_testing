@@ -223,6 +223,47 @@ class APIs {
     return true;
   }
 
+  static void addNotification(String notificationText, String userId) async {
+    await firestore
+        .collection('notifications')
+        .doc(userId)
+        .collection('notifs')
+        .add({
+      'timeStamp': DateTime.now().microsecondsSinceEpoch,
+      'notificationText': notificationText
+    });
+  }
+
+  static Future<bool> AdminAddUserToCommunity(
+      String commId, String userId, ChatUser user) async {
+    await firestore
+        .collection('communities')
+        .doc(commId) // Use commId as the document ID
+        .collection('participants')
+        .add({
+      'easyQuestions': 0,
+      'mediumQuestions': 0,
+      'hardQuestions': 0,
+      'attemptedEasyQuestion': 0,
+      'attemptedMediumQuestion': 0,
+      'attemptedHardQuestion': 0,
+      ...user.toJson(), // Add user details
+    });
+
+    await firestore
+        .collection('users')
+        .doc(userId) // Use userId as the document ID
+        .collection('my_communities')
+        .doc(commId) // Use commId as the document ID
+        .set({
+      'id': commId,
+    });
+
+    addNotification('You were addded to $commId community', user.id);
+
+    return true;
+  }
+
   static Future<bool> updateScore(
     String id,
     String scoredLevel,
