@@ -7,7 +7,7 @@ import 'package:com.example.while_app/view_model/current_user_provider.dart';
 import 'package:com.example.while_app/view_model/firebasedata.dart';
 import 'package:com.example.while_app/view_model/post_provider.dart';
 import 'package:com.example.while_app/view_model/profile_controller.dart';
-import 'package:com.example.while_app/utils/data_provider.dart';
+import 'package:com.example.while_app/view_model/providers/data_provider.dart';
 import 'package:com.example.while_app/view_model/reel_controller.dart';
 import 'package:provider/provider.dart';
 

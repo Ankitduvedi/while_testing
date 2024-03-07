@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:com.example.while_app/resources/colors.dart';
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
 import 'package:com.example.while_app/utils/utils.dart';
 import '../../repository/firebase_repository.dart';
@@ -59,7 +56,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(height: verticalPadding),
-                Text(
+                const Text(
                   'Welcome user!',
                   style: TextStyle(
                     fontSize: 26,
@@ -82,28 +79,28 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () {
                         // Implement your on-tap functionality here
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign In',
                         style: TextStyle(
                           color: Colors.blue, // This changes the text color
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        minimumSize: Size(150, 50),
+                        minimumSize: const Size(150, 50),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         ref.read(toggleStateProvider.notifier).state = 2;
                       },
-                      child: Text(
+                      child: const Text(
                         'Register',
                         style: TextStyle(
                           color: Colors.blue, // This changes the text color
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        minimumSize: Size(150, 50),
+                        minimumSize: const Size(150, 50),
                       ),
                     )
                   ],
@@ -112,8 +109,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter Email',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                   ),
@@ -124,8 +121,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                   ),
@@ -139,7 +136,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: () {
                       Navigator.pushNamed(context, RoutesName.forgot);
                     },
-                    child: Text(
+                    child: const Text(
                       'Recover Password ?',
                       style: TextStyle(color: Colors.grey),
                     ),
@@ -171,14 +168,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     style: TextStyle(fontSize: 20),
                   ),
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       )),
                 ),
 
                 SizedBox(height: verticalPadding * 1.2),
-                Row(
+                const Row(
                   children: <Widget>[
                     Expanded(
                       child: Divider(
@@ -208,7 +205,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     handleSignIn();
                   },
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity,
+                      minimumSize: const Size(double.infinity,
                           50), // ensures the button stretches to fill the width
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -221,10 +218,11 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     children: <Widget>[
                       Image.asset('assets/google_logo2.png',
                           width: 40, height: 40),
-                      SizedBox(
+                      const SizedBox(
                           width:
                               30), // Increase width to increase the distance between the logo and the text
-                      Text('Login with Google', style: TextStyle(fontSize: 20)),
+                      const Text('Login with Google',
+                          style: TextStyle(fontSize: 20)),
                     ],
                   ),
                 ),
