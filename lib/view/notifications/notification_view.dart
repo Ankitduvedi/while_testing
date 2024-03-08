@@ -1,15 +1,19 @@
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/user_notif_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NotificationsScreen extends ConsumerWidget {
+  const NotificationsScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsAsyncValue = ref.watch(myNotificationsProvider);
+    
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
       body: notificationsAsyncValue.when(
         data: (List<String> notifications) {
@@ -22,7 +26,7 @@ class NotificationsScreen extends ConsumerWidget {
             },
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, stack) => Center(child: Text('Error: $e')),
       ),
     );

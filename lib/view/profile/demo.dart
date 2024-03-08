@@ -1,4 +1,5 @@
 import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/view_model/firebasedata.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
@@ -45,6 +46,8 @@ class Connect extends ConsumerWidget {
                           APIs.me.id, user.id);
 
                       if (didFollow) {
+                        APIs.addNotification(
+                            '${APIs.me.name} started following you', user.id);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content:

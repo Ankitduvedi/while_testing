@@ -3,11 +3,12 @@ import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/notif_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NotificationsNotifier extends StateNotifier<NotificationsState> {
+ class NotificationsNotifier extends StateNotifier<NotificationsState> {
   NotificationsNotifier() : super(NotificationsState());
 
   Future<void> fetchNotifications() async {
-    // Fetch notifications from Firestore and update state
+    // Existing logic remains for fetching all notifications
+    // Assume 'isRead' field is used to determine new notifications
     final snapshot = await FirebaseFirestore.instance
         .collection('notifications')
         .doc(APIs.me.id)
@@ -16,19 +17,34 @@ class NotificationsNotifier extends StateNotifier<NotificationsState> {
         .limit(100)
         .get();
 
-    final notifications = snapshot.docs.map((doc) => doc.data()['notificationText'] as String).toList();
+    final notifications = snapshot.docs
+        .map((doc) => doc.data()['notificationText'] as String)
+        .toList();
 
-    // Update state with fetched notifications
-    // You could also set hasNewNotifications based on some logic here
-    state = NotificationsState(notifications: notifications, hasNewNotifications: true);
+    // Calculate if there are any new notifications
+    bool hasNew = snapshot.docs.any((doc) => !(doc.data()['isRead'] as bool));
+
+    state = NotificationsState(notifications: notifications, hasNewNotifications: hasNew);
   }
 
-  void markNotificationsAsRead() {
-    // When the user views notifications, mark them as read and update state
-    state = NotificationsState(notifications: state.notifications, hasNewNotifications: false);
+  Future<void> markNotificationsAsRead() async {
+    // Fetch all unread notifications
+    var collection = FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(APIs.me.id)
+        .collection('notifs')
+        .where('isRead', isEqualTo: false);
+    
+    var snapshots = await collection.get();
+
+    // Batch update to mark as read
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    for (var doc in snapshots.docs) {
+      batch.update(doc.reference, {'isRead': true});
+    }
+    await batch.commit();
+
+    // After marking as read, update state
+    await fetchNotifications(); // Refresh notifications state
   }
 }
-// Define a provider for the notifications logic
-final notificationsProvider = StateNotifierProvider<NotificationsNotifier, NotificationsState>((ref) {
-  return NotificationsNotifier();
-});

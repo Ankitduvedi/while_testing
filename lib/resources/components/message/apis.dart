@@ -230,9 +230,29 @@ class APIs {
         .collection('notifs')
         .add({
       'timeStamp': DateTime.now().microsecondsSinceEpoch,
+      'isRead' : false,
       'notificationText': notificationText
     });
   }
+
+  static Future<void> markAllNotificationsAsRead(String userId) async {
+  var collection = FirebaseFirestore.instance
+      .collection('notifications')
+      .doc(userId)
+      .collection('notifs');
+
+  // Get all unread notifications
+  var snapshots = await collection.where('isRead', isEqualTo: false).get();
+
+  // Write batch to update all documents as read
+  WriteBatch batch = FirebaseFirestore.instance.batch();
+  for (var doc in snapshots.docs) {
+    batch.update(doc.reference, {'isRead': true});
+  }
+  await batch.commit();
+}
+
+
 
   static Future<bool> AdminAddUserToCommunity(
       String commId, String userId, ChatUser user) async {
