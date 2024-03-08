@@ -20,21 +20,6 @@ import 'package:get/get.dart';
 
 late Size mq;
 
-// // Light Theme
-// final ThemeData lightTheme = ThemeData(
-//   brightness: Brightness.light,
-//   primaryColor: Colors.blue,
-//   // add other customizations for the light theme here
-//   // e.g., appBarTheme, buttonTheme, etc.
-// );
-
-// // Dark Theme
-// final ThemeData darkTheme = ThemeData(
-//   brightness: Brightness.dark,
-//   primaryColor: Colors.amber,
-//   // add other customizations for the dark theme here
-//   // e.g., appBarTheme, buttonTheme, etc.
-// );
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();

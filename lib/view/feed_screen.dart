@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/streams/notif_stream.dart';
 import 'package:com.example.while_app/view/feed_screen_widget.dart';
 import 'package:com.example.while_app/view/notifications/notification_view.dart';
 import 'package:com.example.while_app/view_model/providers/categories_test_provider.dart';
@@ -14,17 +16,12 @@ class FeedScreen extends ConsumerStatefulWidget {
   FeedScreenState createState() => FeedScreenState();
 }
 
-
 class FeedScreenState extends ConsumerState<FeedScreen> {
   final ScrollController _scrollController = ScrollController();
-  
-
 
   @override
   void initState() {
     super.initState();
-     ref.read(notificationsProvider.notifier).fetchNotifications();
-
     // Initial fetch
     Future.microtask(
         () => ref.read(categoryProvider.notifier).fetchCategories());
@@ -48,25 +45,55 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final categoriesState = ref.watch(categoryProvider);
-    final notificationsState = ref.watch(notificationsProvider);
+    final String userId =
+        APIs.me.id; // Adjust this to how you actually obtain the user ID
 
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         title: const Text('WHILE'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => NotificationsScreen()),
-                );
-                // Mark notifications as read when viewed
-                ref.read(notificationsProvider.notifier).markNotificationsAsRead();
-              },
-              // Dynamically choose the icon
-              child: Icon(notificationsState.hasNewNotifications ? Icons.notifications_active : Icons.notifications),
-            ),
+            child: userId.isNotEmpty
+                ? StreamBuilder<int>(
+                    stream: listenToUnreadNotifications(userId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Icon(Icons.error,
+                            color: Colors.black); // Error state
+                      }
+                      if (!snapshot.hasData || snapshot.data == 0) {
+                        // No unread notifications or loading state
+                        return IconButton(
+                          icon: const Icon(Icons.notifications_none,
+                              color: Colors.black),
+                          onPressed: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationsScreen()),
+                            );
+                          },
+                        );
+                      }
+                      // Unread notifications exist
+                      return IconButton(
+                        icon:
+                            const Icon(Icons.notifications_active_outlined, color: Colors.red),
+                        onPressed: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const NotificationsScreen()),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : const IconButton(
+                    icon: Icon(Icons.notifications_none, color: Colors.grey),
+                    onPressed: null, // Disabled state
+                  ),
           ),
         ],
       ),

@@ -27,14 +27,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   String? _image;
-
-  void _openUserListDialog(String id) {
+  late String commName;
+  void _openUserListDialog(String id, String communityName) {
     log("community id$id");
     showDialog(
       context: context,
-      builder: (context) => UserListDialog(
-        commId: id,
-      ),
+      builder: (context) => UserListDialog(commId: id, commName: communityName),
     );
   }
 
@@ -242,10 +240,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 minimumSize:
                                     Size(mq.width * .2, mq.height * .02)),
                             onPressed: () {
-                              _openUserListDialog(widget.user.id);
+                              // log("communtiy name is ${widget.user.name}");
+                              _openUserListDialog(
+                                  widget.user.id, widget.user.name);
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                log(community.toJson().toString());
+                                // log(community.toJson().toString());
                                 APIs.updateCommunityInfo(community)
                                     .then((value) {
                                   Dialogs.showSnackbar(

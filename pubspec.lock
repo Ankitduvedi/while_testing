@@ -1348,7 +1348,19 @@ packages:
       sha256: "75760ffd7786fffdfb9597c35c5b27eaeec82be8edfb6d71d32651128ed7aab8"
       url: "https://pub.dev"
     source: hosted
+
+    version: "0.6.1"
+  timeago:
+    dependency: "direct dev"
+    description:
+      name: timeago
+      sha256: "46c128312ab0ea144b146c0ac6426ddd96810efec2de3fccc425d00179cd8254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
+
     version: "0.6.0"
+
   timezone:
     dependency: transitive
     description:
