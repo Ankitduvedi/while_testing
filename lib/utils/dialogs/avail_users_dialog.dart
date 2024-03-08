@@ -8,8 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserListDialog extends ConsumerWidget {
   final String commId;
+  final String commName;
 
-  const UserListDialog({super.key, required this.commId});
+  const UserListDialog({super.key, required this.commId,required this.commName});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Consumer(builder: (context, watch, child) {
@@ -34,7 +35,7 @@ class UserListDialog extends ConsumerWidget {
                     subtitle: Text(user.id),
                     onTap: () async {
                       log("adding user to communtiy${user.id}");
-                      await APIs.AdminAddUserToCommunity(commId, user.id,user);
+                      await APIs.AdminAddUserToCommunity(commId, user.id, user,commName);
                       // Do something when a user is tapped
                     },
                   );

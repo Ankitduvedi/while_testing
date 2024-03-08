@@ -45,80 +45,86 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final categoriesState = ref.watch(categoryProvider);
+    final String userId =
+        APIs.me.id; // Adjust this to how you actually obtain the user ID
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('WHILE'),
-      //   actions: [
-      //     Padding(
-      //       padding: const EdgeInsets.only(right: 16.0),
-      //       child: StreamBuilder<int>(
-      //         stream: listenToUnreadNotifications(
-      //             APIs.me.id), // Replace 'yourUserId' with the actual user ID
-      //         builder: (context, snapshot) {
-      //           if (snapshot.hasError) {
-      //             return const Icon(Icons.error,
-      //                 color: Colors.black); // Error state
-      //           }
-      //           if (!snapshot.hasData || snapshot.data == 0) {
-      //             // No unread notifications or loading state
-      //             return IconButton(
-      //               icon: const Icon(Icons.notifications_none,
-      //                   color: Colors.black),
-      //               onPressed: () async {
-      //                 await Navigator.of(context).push(
-      //                   MaterialPageRoute(
-      //                       builder: (context) => NotificationsScreen()),
-      //                 );
-      //                 // Optional: Refresh notifications state after viewing
-      //               },
-      //             );
-      //           }
-      //           // Unread notifications exist
-      //           return IconButton(
-      //             icon: const Icon(Icons.notifications, color: Colors.red),
-      //             onPressed: () async {
-      //               await Navigator.of(context).push(
-      //                 MaterialPageRoute(
-      //                     builder: (context) => NotificationsScreen()),
-      //               );
-      //               // Optional: Refresh notifications state after viewing
-      //             },
-      //           );
-      //         },
-      //       ),
-      //     ),
-      //   ],
-      // ),
-      body: Text("feed"),
-      // body: ListView.builder(
-      //   controller: _scrollController,
-      //   itemCount: categoriesState.categories.length +
-      //       (categoriesState.isLoading ? 1 : 0),
-      //   itemBuilder: (BuildContext context, int index) {
-      //     // Check if we're at the last item
-      //     if (index >= categoriesState.categories.length) {
-      //       // Show a loading indicator at the bottom
-      //       return const Center(child: CircularProgressIndicator());
-      //     }
-      //     // Display category item
-      //     log('list of categories length is ${categoriesState.categories.length}');
+      appBar: AppBar(
+        title: const Text('WHILE'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: userId.isNotEmpty
+                ? StreamBuilder<int>(
+                    stream: listenToUnreadNotifications(userId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Icon(Icons.error,
+                            color: Colors.black); // Error state
+                      }
+                      if (!snapshot.hasData || snapshot.data == 0) {
+                        // No unread notifications or loading state
+                        return IconButton(
+                          icon: const Icon(Icons.notifications_none,
+                              color: Colors.black),
+                          onPressed: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationsScreen()),
+                            );
+                          },
+                        );
+                      }
+                      // Unread notifications exist
+                      return IconButton(
+                        icon:
+                            const Icon(Icons.notifications_active_outlined, color: Colors.red),
+                        onPressed: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const NotificationsScreen()),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : const IconButton(
+                    icon: Icon(Icons.notifications_none, color: Colors.grey),
+                    onPressed: null, // Disabled state
+                  ),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: categoriesState.categories.length +
+            (categoriesState.isLoading ? 1 : 0),
+        itemBuilder: (BuildContext context, int index) {
+          // Check if we're at the last item
+          if (index >= categoriesState.categories.length) {
+            // Show a loading indicator at the bottom
+            return const Center(child: CircularProgressIndicator());
+          }
+          // Display category item
+          log('list of categories length is ${categoriesState.categories.length}');
 
-      //     return Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [
-      //         Padding(
-      //           padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
-      //           child: Text(
-      //             categoriesState.categories[index],
-      //             style: const TextStyle(fontSize: 17),
-      //           ),
-      //         ),
-      //         FeedScreenWidget(category: categoriesState.categories[index]),
-      //       ],
-      //     );
-      //   },
-      // ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
+                child: Text(
+                  categoriesState.categories[index],
+                  style: const TextStyle(fontSize: 17),
+                ),
+              ),
+              FeedScreenWidget(category: categoriesState.categories[index]),
+            ],
+          );
+        },
+      ),
     );
   }
 }

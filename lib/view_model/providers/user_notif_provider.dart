@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
- final myNotificationsProvider = StreamProvider<List<String>>((ref) {
+final myNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
   return FirebaseFirestore.instance
       .collection('notifications')
       .doc(APIs.me.id)
@@ -11,7 +11,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
       .limit(100)
       .snapshots()
       .map((snapshot) {
-        return snapshot.docs.map((doc) => doc.data()['notificationText'] as String).toList();
+        return snapshot.docs.map((doc) {
+          return {
+            'notificationText': doc.data()['notificationText'] as String,
+            'timeStamp': doc.data()['timeStamp'] as Timestamp,
+          };
+        }).toList();
       });
 });
-
