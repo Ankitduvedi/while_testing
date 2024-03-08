@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,20 +10,27 @@ import 'package:com.example.while_app/data/model/video_model.dart';
 import '../view_model/providers/data_provider.dart';
 import 'package:provider/provider.dart' as provi;
 
-class ReelsScreen extends ConsumerStatefulWidget {
-  const ReelsScreen({super.key});
+class ReelsScreentest extends ConsumerStatefulWidget {
+  const ReelsScreentest({super.key});
 
   @override
-  ConsumerState<ReelsScreen> createState() => _ReelsScreenState();
+  ConsumerState<ReelsScreentest> createState() => _ReelsScreenState();
 }
 
-class _ReelsScreenState extends ConsumerState<ReelsScreen> {
+class _ReelsScreenState extends ConsumerState<ReelsScreentest> {
   int _currentPage = 0;
   int _lastPage = 0;
   final PageController _pageController = PageController(viewportFraction: 1.0);
   late VideoPlayerController _controller0;
   late VideoPlayerController _controller1;
   late VideoPlayerController _controller2;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initial fetch
+    Future.microtask(() => ref.watch(loopsProvider.notifier).fetchLoops());
+  }
 
   @override
   void dispose() {
@@ -56,6 +65,7 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loopsState = ref.watch(loopsProvider);
     List<VideoPlayerController> videoControllers = [];
     Stream<QuerySnapshot> str =
         provi.Provider.of<DataProvider>(context).videoStream;
@@ -76,10 +86,12 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
 
           final List<Video> videoList = VideoList.getVideoList(snapshot.data!);
           videoList.shuffle();
+          log("length of loops ${loopsState.loops.length + (loopsState.isLoading ? 1 : 0)}");
           return PageView.builder(
             controller: _pageController,
             scrollDirection: Axis.vertical,
-            itemCount: videoList.length,
+            itemCount: loopsState.loops.length + (loopsState.isLoading ? 1 : 0),
+            //itemCount: videoList.length,
             onPageChanged: (int newIndex) {
               videoControllers[_currentPage].dispose();
               setState(() {

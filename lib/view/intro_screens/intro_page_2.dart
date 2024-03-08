@@ -20,7 +20,7 @@ class IntroPage2 extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  'Lorem Ipsum',
+                  'Learn on the Go !',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -28,7 +28,7 @@ class IntroPage2 extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                  'Discover endless knowledge through short videos on LOOPS.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,

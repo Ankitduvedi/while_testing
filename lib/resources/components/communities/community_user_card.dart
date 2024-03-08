@@ -105,7 +105,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                             width: 15,
                             height: 15,
                             decoration: BoxDecoration(
-                                color: Colors.greenAccent.shade400,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(10)),
                           )
                         :

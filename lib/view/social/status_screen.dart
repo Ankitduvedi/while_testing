@@ -140,7 +140,7 @@ class StatusScreenState extends State<StatusScreenn> {
                           ),
                         ),
                         Divider(
-                          color: Colors.grey.shade800,
+                          color: Colors.grey.shade300,
                           thickness: 1,
                           height: 0,
                         )
