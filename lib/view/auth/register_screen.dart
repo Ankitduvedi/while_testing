@@ -27,6 +27,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   final TextEditingController _nameController = TextEditingController();
 
+  bool _obscureText = true; // Initially password is obscure
+
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -116,20 +119,30 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
                 SizedBox(height: verticalPadding),
                 TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                  ),
-                  //obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  controller: _passwordController,
-                ),
+      controller: _passwordController,
+      obscureText: _obscureText, // Toggle this boolean to show/hide password
+      keyboardType: TextInputType.visiblePassword,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+        // Added suffixIcon to toggle password visibility
+        suffixIcon: IconButton(
+          icon: Icon(
+            // Change the icon based on the state of _obscureText
+            _obscureText ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            // Update the state to toggle password visibility
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
+        ),
+      ),),
                 SizedBox(height: verticalPadding),
                 ElevatedButton(
-                  onPressed: () async {
+                onPressed: () async {
                     if (_emailController.text.isEmpty) {
                             Utils.flushBarErrorMessage(
                                 'Please enter email', context);

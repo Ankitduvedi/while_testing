@@ -96,6 +96,7 @@ dependencies:
   visibility_detector: ^0.3.3
 
   charts_flutter_new: ^0.12.0
+  timeago: ^3.6.1
 
   
 

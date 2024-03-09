@@ -57,7 +57,54 @@ class MoreOptions extends ConsumerWidget {
               onTap: () {
                 ref.read(toggleStateProvider.notifier).state = 0;
                 context.read<FirebaseAuthMethods>().signout(context);
-                SystemNavigator.pop();
+                Navigator.pop(context);
+                // SystemNavigator.pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_forever_outlined,
+                color: Colors.black,
+                size: 30,
+              ),
+              title: const Text("Delete Account"),
+              onTap: () async {
+                // Show a confirmation dialog
+                final shouldDelete = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Delete Account'),
+                        content: const Text(
+                            'Are you sure you want to delete your account? This action cannot be undone.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              // User cancels
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // User confirms deletion
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    ) ??
+                    false; // Default to false if null
+
+                // Proceed with deletion if confirmed
+                if (shouldDelete) {
+                  ref.read(toggleStateProvider.notifier).state = 0;
+                  await  context
+                      .read<FirebaseAuthMethods>()
+                      .deleteAccount(context);
+                  context.read<FirebaseAuthMethods>().signout(context);
+                  Navigator.pop(context);
+                }
               },
             ),
           ],

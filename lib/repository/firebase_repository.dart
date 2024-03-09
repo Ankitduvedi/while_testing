@@ -60,6 +60,15 @@ class FirebaseAuthMethods {
       Utils.snackBar(e.message!, context);
     }
   }
+  Future deleteAccount(BuildContext context) async
+  {
+    try {
+      await _auth.currentUser!.delete();
+    } catch (error) {
+      print("Error deleting account: $error");
+      
+    }
+  }
 
   Future<DocumentSnapshot> getSnapshot() async {
     DocumentSnapshot snapshot = await FirebaseFirestore.instance

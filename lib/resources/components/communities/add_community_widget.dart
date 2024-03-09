@@ -155,13 +155,18 @@ class AddCommunityScreen {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       elevation: 4,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
                     ),
                     onPressed: () {
                       //hide alert dialog
                       Navigator.pop(context);
                     },
                     child: const Text('Discard',
-                        style: TextStyle(color: Colors.black, fontSize: 16))),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ))),
               ),
               //create button
               const SizedBox(
@@ -175,6 +180,8 @@ class AddCommunityScreen {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       elevation: 4,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
                     ),
                     onPressed: () async {
                       if (type != '' && name != '') {
