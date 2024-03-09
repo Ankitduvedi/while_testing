@@ -55,9 +55,19 @@ class FirebaseAuthMethods {
 
   Future signout(BuildContext context) async {
     try {
+      await APIs.updateActiveStatus(false);
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
       Utils.snackBar(e.message!, context);
+    }
+  }
+
+  Future deleteAccount(BuildContext context) async {
+    try {
+      await APIs.updateActiveStatus(false);
+      await _auth.currentUser!.delete();
+    } catch (error) {
+      print("Error deleting account: $error");
     }
   }
 

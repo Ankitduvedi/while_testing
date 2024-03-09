@@ -229,14 +229,32 @@ class APIs {
         .doc(userId)
         .collection('notifs')
         .add({
-      'timeStamp': DateTime.now().microsecondsSinceEpoch,
+      'timeStamp': FieldValue.serverTimestamp(),
+      'isRead': false,
       'notificationText': notificationText
     });
   }
   
 
+  static Future<void> markAllNotificationsAsRead(String userId) async {
+    var collection = FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(userId)
+        .collection('notifs');
+
+    // Get all unread notifications
+    var snapshots = await collection.where('isRead', isEqualTo: false).get();
+
+    // Write batch to update all documents as read
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    for (var doc in snapshots.docs) {
+      batch.update(doc.reference, {'isRead': true});
+    }
+    await batch.commit();
+  }
+
   static Future<bool> AdminAddUserToCommunity(
-      String commId, String userId, ChatUser user) async {
+      String commId, String userId, ChatUser user, String commName) async {
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
@@ -259,8 +277,8 @@ class APIs {
         .set({
       'id': commId,
     });
-
-    addNotification('You were addded to $commId community', user.id);
+    log(commName);
+    addNotification('You were addded to $commName community', user.id);
 
     return true;
   }
@@ -477,7 +495,9 @@ class APIs {
 
   // update online or last active status of user
   static Future<void> updateActiveStatus(bool isOnline) async {
-    firestore.collection('users').doc(user.uid).update({
+    log("updating status of user");
+    log(user.uid);
+    await firestore.collection('users').doc(user.uid).update({
       'is_online': isOnline,
       'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
       'push_token': me.pushToken,

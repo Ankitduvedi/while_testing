@@ -63,18 +63,17 @@ class Settings extends ConsumerWidget {
                     height: 10,
                   ),
                   Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Textbutton(
-                          ontap: () {
-                            ref.read(toggleStateProvider.notifier).state = 0;
-                            context
-                                .read<FirebaseAuthMethods>()
-                                .signout(context);
-                            SystemNavigator.pop(); // Close the app
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Textbutton(
+                        ontap: () {
+                          ref.read(toggleStateProvider.notifier).state = 0;
+                          context.read<FirebaseAuthMethods>().signout(context);
+                          SystemNavigator.pop(); // Close the app
 
-                            //Navigator.of(context).pop();
-                          },
-                          text: "Logout"))
+                          //Navigator.of(context).pop();
+                        },
+                        text: "Logout"),
+                  )
                 ],
               ),
             )
