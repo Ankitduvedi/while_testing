@@ -34,20 +34,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
   @override
   void initState() {
     super.initState();
-    SystemChannels.lifecycle.setMessageHandler((message) {
-      log('Message: $message');
-
-      if (APIs.auth.currentUser != null) {
-        if (message.toString().contains('resume')) {
-          APIs.updateActiveStatus(true);
-        }
-        if (message.toString().contains('pause')) {
-          APIs.updateActiveStatus(false);
-        }
-      }
-
-      return Future.value(message);
-    });
+    
     _messaging = FirebaseMessaging.instance;
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _initializeNotification();
@@ -147,76 +134,75 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 30,
-            backgroundColor: Colors.white,
-            title: toogleSearch != 0
-                ? TextField(
-                    onChanged: (value) => searchValue.state = value,
-                    decoration: const InputDecoration(
-                      labelText: 'Search',
-                      //suffixIcon: Icon(Icons.search),
-                    ),
-                    style: const TextStyle(color: Colors.black),
-                  )
-                : const Text(
-                    '',
-                    style: TextStyle(color: Colors.black),
+        appBar: AppBar(
+          toolbarHeight: 45,
+          backgroundColor: Colors.white,
+          title: toogleSearch != 0
+              ? TextField(
+                  onChanged: (value) => searchValue.state = value,
+                  decoration: const InputDecoration(
+                    labelText: 'Search',
+                    //suffixIcon: Icon(Icons.search),
                   ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  final currentToggleSearch =
-                      ref.read(toggleSearchStateProvider);
-                  if (currentToggleSearch != 0) {
-                    ref.read(searchQueryProvider.notifier).state =
-                        ''; // Clear search query
-                    ref.read(toggleSearchStateProvider.notifier).state =
-                        0; // Disable search
-                  } else {
-                    ref.read(toggleSearchStateProvider.notifier).state =
-                        _controller.index + 1; // Enable search
-                  }
-                },
-                icon: Icon(
-                  toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search,
-                  color: Colors.black,
+                  style: const TextStyle(color: Colors.black),
+                )
+              : const Text(
+                  '',
+                  style: TextStyle(color: Colors.black),
                 ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                final currentToggleSearch = ref.read(toggleSearchStateProvider);
+                if (currentToggleSearch != 0) {
+                  ref.read(searchQueryProvider.notifier).state =
+                      ''; // Clear search query
+                  ref.read(toggleSearchStateProvider.notifier).state =
+                      0; // Disable search
+                } else {
+                  ref.read(toggleSearchStateProvider.notifier).state =
+                      _controller.index + 1; // Enable search
+                }
+              },
+              icon: Icon(
+                toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search,
+                color: Colors.black,
+              ),
+            ),
+          ],
+          bottom: TabBar(
+            dividerColor: Colors.transparent,
+            controller: _controller,
+            tabAlignment: TabAlignment.center,
+            indicatorColor: Colors.black,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelColor: Colors.black,
+            tabs: const [
+              Tab(
+                text: 'Connect   ',
+              ),
+              Tab(
+                text: 'Chats  ',
+              ),
+              Tab(
+                text: 'Community',
+              ),
+              Tab(
+                text: '    Status',
               ),
             ],
-            bottom: TabBar(
-              dividerColor: Colors.transparent,
-              controller: _controller,
-              tabAlignment: TabAlignment.center,
-              indicatorColor: Colors.black,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: Colors.black,
-              tabs: const [
-                Tab(
-                  text: 'Connect   ',
-                ),
-                Tab(
-                  text: 'Chats  ',
-                ),
-                Tab(
-                  text: 'Community',
-                ),
-                Tab(
-                  text: '    Status',
-                ),
-              ],
-            ),
           ),
-          body: TabBarView(
-            controller: _controller,
-            children: const [
-              ConnectScreen(),
-              MessageHomeWidget(),
-              CommunityHomeWidget(),
-              StatusScreenn(),
-            ],
-          ),
-          ),
+        ),
+        body: TabBarView(
+          controller: _controller,
+          children: const [
+            ConnectScreen(),
+            MessageHomeWidget(),
+            CommunityHomeWidget(),
+            StatusScreenn(),
+          ],
+        ),
+      ),
     );
   }
 }

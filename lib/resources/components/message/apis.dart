@@ -494,7 +494,9 @@ class APIs {
 
   // update online or last active status of user
   static Future<void> updateActiveStatus(bool isOnline) async {
-    firestore.collection('users').doc(user.uid).update({
+    log("updating status of user");
+    log(user.uid);
+    await firestore.collection('users').doc(user.uid).update({
       'is_online': isOnline,
       'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
       'push_token': me.pushToken,

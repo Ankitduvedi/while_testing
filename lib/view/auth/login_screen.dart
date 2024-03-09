@@ -26,6 +26,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late GoogleSignInAccount currentUser;
+  bool _obscureText = true; // Initially password is obscure
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +42,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> handleSignOut() => _googleSignIn.disconnect();
+  // Future<void> handleSignOut() => _googleSignIn.disconnect();
 
   @override
   Widget build(BuildContext context) {
@@ -118,18 +120,28 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: _emailController,
                 ),
                 SizedBox(height: verticalPadding),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                  ),
-                  //obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  controller: _passwordController,
-                ),
+                 TextField(
+      controller: _passwordController,
+      obscureText: _obscureText, // Toggle this boolean to show/hide password
+      keyboardType: TextInputType.visiblePassword,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+        // Added suffixIcon to toggle password visibility
+        suffixIcon: IconButton(
+          icon: Icon(
+            // Change the icon based on the state of _obscureText
+            _obscureText ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            // Update the state to toggle password visibility
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
+        ),
+      ),),
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(

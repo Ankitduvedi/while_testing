@@ -25,53 +25,59 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-      child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 32),
-          child: Column(
-            children: [
-              const HeaderWidget(title: "Forgot Password"),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                  "Don't worry! Just fill in your email and While App will send you a link to rest your password"),
-              const SizedBox(
-                height: 20,
-              ),
-              TextContainerWidget(
-                controller: _emailController,
-                prefixIcon: Icons.email,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              RoundButton(
-                loading: false,
-                title: "Send Password Reset Email",
-                onPress: resetPassword,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  const Text(
-                    "Remember the account information?",
-                  ),
-                  InkWell(
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: AppColors.theme1Color),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 32),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 25,
+                ),
+                const HeaderWidget(title: "Forgot Password"),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                    "Don't worry! Just fill in your email and While App will send you a link to rest your password"),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextContainerWidget(
+                  controller: _emailController,
+                  prefixIcon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                RoundButton(
+                  loading: false,
+                  title: "Send Password Reset Email",
+                  onPress: resetPassword,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Remember the account information?  ",
                     ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ),
-            ],
-          )),
+                    InkWell(
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(color: AppColors.theme1Color),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ],
+            )),
+      ),
     ));
   }
 
