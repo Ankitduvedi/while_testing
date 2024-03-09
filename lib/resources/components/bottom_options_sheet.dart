@@ -58,7 +58,7 @@ class MoreOptions extends ConsumerWidget {
                 ref.read(toggleStateProvider.notifier).state = 0;
                 context.read<FirebaseAuthMethods>().signout(context);
                 Navigator.pop(context);
-                // SystemNavigator.pop();
+                SystemNavigator.pop();
               },
             ),
             ListTile(
@@ -88,6 +88,7 @@ class MoreOptions extends ConsumerWidget {
                             onPressed: () {
                               // User confirms deletion
                               Navigator.of(context).pop(true);
+                              SystemNavigator.pop();
                             },
                             child: const Text('Delete'),
                           ),
@@ -99,7 +100,7 @@ class MoreOptions extends ConsumerWidget {
                 // Proceed with deletion if confirmed
                 if (shouldDelete) {
                   ref.read(toggleStateProvider.notifier).state = 0;
-                  await  context
+                  await context
                       .read<FirebaseAuthMethods>()
                       .deleteAccount(context);
                   context.read<FirebaseAuthMethods>().signout(context);
