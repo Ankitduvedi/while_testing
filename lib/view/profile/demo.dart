@@ -1,7 +1,6 @@
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,10 +40,6 @@ class Connect extends ConsumerWidget {
                   subtitle: Text(user.email, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
-                      // Assuming 'user' is the ChatUser instance you want to follow
-                      final userProvider = ref.watch(userDataProvider);
-
-                      // Use the provider to follow the user
                       final didFollow = await ref.read(followUserProvider)(
                           APIs.me.id, user.id);
 

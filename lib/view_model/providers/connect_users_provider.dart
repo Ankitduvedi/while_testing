@@ -69,6 +69,18 @@ final followingUsersProvider =
     return snapshot.docs.map((doc) => doc.id).toSet();
   });
 });
+final communityParticipantsProvider =
+    StreamProvider.family<List<String>, String>((ref, communityId) {
+  // final user = ref.watch(userDataProvider).userData;
+  return FirebaseFirestore.instance
+      .collection('communities')
+      .doc(communityId)
+      .collection('participants')
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs.map((doc) => doc.id).toList();
+  });
+});
 
 final followUserProvider = Provider((ref) {
   return (String currentUserId, String userIdToFollow) async {
