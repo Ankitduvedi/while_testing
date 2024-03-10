@@ -22,12 +22,22 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Text('Studio', style: TextStyle(color: Colors.lightBlueAccent), textAlign: TextAlign.center,),
-        //leading: Icon(Icons.arrow_back_ios, color: Colors.lightBlueAccent,),
-        actions: <Widget> [ IconButton(onPressed: () {}, icon: Icon(Icons.menu, color: Colors.lightBlueAccent,)) ]
-      ),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            'Studio',
+            style: TextStyle(color: Colors.lightBlueAccent),
+            textAlign: TextAlign.center,
+          ),
+          //leading: Icon(Icons.arrow_back_ios, color: Colors.lightBlueAccent,),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.lightBlueAccent,
+                ))
+          ]),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
@@ -36,8 +46,16 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
           children: <Widget>[
             Row(
               children: [
-                _buildCard(title: 'Dashboard', value: '63% ' , text : 'more views', view: 'View increased from yesterday'),
-                _buildCard(title: 'Revenue', value: '\$122.65 ',text : 'earned', view: 'Monthly'),
+                _buildCard(
+                    title: 'Dashboard',
+                    value: '63% ',
+                    text: 'more views',
+                    view: 'View increased from yesterday'),
+                _buildCard(
+                    title: 'Revenue',
+                    value: '\$122.65 ',
+                    text: 'earned',
+                    view: 'Monthly'),
               ],
             ),
             // Followers and Likes
@@ -51,8 +69,7 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: 200,
-                child: charts_new.LineChart(
-                  _createSampleData()),
+                child: charts_new.LineChart(_createSampleData()),
               ),
             ),
             CreateContainer(
@@ -75,8 +92,6 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
       ),
     );
   }
-
-  
 
   /// Create one series with sample hard-coded data.
   static List<charts_new.Series<MyNumericData, int>> _createSampleData() {
@@ -101,10 +116,11 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
     ];
   }
 
-
-
-
-  Widget _buildCard({required String title, required String value, String? view, String? text}) {
+  Widget _buildCard(
+      {required String title,
+      required String value,
+      String? view,
+      String? text}) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -114,26 +130,28 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Column(
               children: <Widget>[
-                Text(title,style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),),
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    
-                    Text(value , style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                if(text!= null)
-                Text(text),
+                    Text(value,
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    if (text != null) Text(text),
                   ],
                 ),
-                
-                
-                if (view != null) 
-                Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 120,
-                  child: charts_new.LineChart(_createSampleData()),
-                ),
-              ),
+
+                if (view != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 120,
+                      child: charts_new.LineChart(_createSampleData()),
+                    ),
+                  ),
                 //Text(view!),
               ],
             ),
@@ -151,4 +169,3 @@ class MyNumericData {
 
   MyNumericData(this.year, this.sales);
 }
-

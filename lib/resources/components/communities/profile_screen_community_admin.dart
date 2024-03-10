@@ -28,12 +28,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey2 = GlobalKey<FormState>();
   String? _image;
 
-  void _openUserListDialog(String id) {
+  void _openUserListDialog(String id, List<ChatUser> list) {
     log("community id$id");
     showDialog(
       context: context,
       builder: (context) => UserListDialog(
         commId: id,
+        list: list,
       ),
     );
   }
@@ -225,38 +226,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 20,
                     ),
 
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Participants',
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 18),
-                          ),
-                          // Add participants
-                          TextButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                shape: const StadiumBorder(),
-                                minimumSize:
-                                    Size(mq.width * .2, mq.height * .02)),
-                            onPressed: () {
-                              _openUserListDialog(widget.user.id);
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                log(community.toJson().toString());
-                                APIs.updateCommunityInfo(community)
-                                    .then((value) {
-                                  Dialogs.showSnackbar(
-                                      context, 'Profile Updated Successfully!');
-                                });
-                              }
-                            },
-                            label: const Text('Add Participants',
-                                style: TextStyle(fontSize: 16)),
-                            icon: const Icon(CupertinoIcons.person_add_solid,
-                                size: 28),
                           ),
                         ],
                       ),
@@ -288,174 +266,215 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                 if (list.isNotEmpty) {
                                   log(list.length.toString());
-                                  return ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data!.docs.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Card(
-                                            margin: const EdgeInsets.only(
-                                                left: 0, right: 0),
-                                            color: Colors.white,
-                                            elevation: 2,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: ListTile(
-                                              onLongPress: () {
-                                                // Show a dialog with the option to delete the user
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title: Text(
-                                                          list[index].name),
-                                                      content: Form(
-                                                        key: _formKey2,
-                                                        child: TextFormField(
-                                                          initialValue:
-                                                              list[index]
+                                  return Column(
+                                    children: [
+                                      // Add participants
+                                      TextButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: const StadiumBorder(),
+                                            minimumSize: Size(mq.width * .2,
+                                                mq.height * .02)),
+                                        onPressed: () {
+                                          _openUserListDialog(
+                                              widget.user.id, list);
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _formKey.currentState!.save();
+                                            log(community.toJson().toString());
+                                            APIs.updateCommunityInfo(community)
+                                                .then((value) {
+                                              Dialogs.showSnackbar(context,
+                                                  'Profile Updated Successfully!');
+                                            });
+                                          }
+                                        },
+                                        label: const Text('Add Participants',
+                                            style: TextStyle(fontSize: 16)),
+                                        icon: const Icon(
+                                            CupertinoIcons.person_add_solid,
+                                            size: 28),
+                                      ),
+                                      ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: snapshot.data!.docs.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
+                                            child: Card(
+                                                margin: const EdgeInsets.only(
+                                                    left: 0, right: 0),
+                                                color: Colors.white,
+                                                // elevation: 2,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: ListTile(
+                                                  subtitle:
+                                                      Text(list[index].email),
+                                                  onLongPress: () {
+                                                    // Show a dialog with the option to delete the user
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              list[index].name),
+                                                          content: Form(
+                                                            key: _formKey2,
+                                                            child:
+                                                                TextFormField(
+                                                              initialValue: list[
+                                                                      index]
                                                                   .designation,
-                                                          onSaved: (val) {
-                                                            setState(() {
-                                                              designation =
-                                                                  val!;
-                                                            });
-                                                          },
-                                                          validator: (val) => val !=
-                                                                      null &&
-                                                                  val.isNotEmpty
-                                                              ? null
-                                                              : 'Required Field',
-                                                          decoration: InputDecoration(
-                                                              prefixIcon: const Icon(
-                                                                  Icons
-                                                                      .info_outline,
-                                                                  color: Colors
-                                                                      .blue),
-                                                              border: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                              onSaved: (val) {
+                                                                setState(() {
+                                                                  designation =
+                                                                      val!;
+                                                                });
+                                                              },
+                                                              validator: (val) =>
+                                                                  val != null &&
+                                                                          val.isNotEmpty
+                                                                      ? null
+                                                                      : 'Required Field',
+                                                              decoration: InputDecoration(
+                                                                  prefixIcon: const Icon(
+                                                                      Icons
+                                                                          .info_outline,
+                                                                      color: Colors
+                                                                          .blue),
+                                                                  border: OutlineInputBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               12)),
-                                                              hintText:
-                                                                  'eg. Feeling Happy',
-                                                              label: const Text(
-                                                                  'Designation')),
-                                                        ),
-                                                      ),
-                                                      actions: [
-                                                        OutlinedButton(
-                                                          onPressed: () {
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'communities')
-                                                                .doc(community
-                                                                    .id)
-                                                                .collection(
-                                                                    'participants')
-                                                                .doc(list[index]
-                                                                    .id)
-                                                                .delete();
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'users')
-                                                                .doc(list[index]
-                                                                    .id)
-                                                                .collection(
-                                                                    'my_communities')
-                                                                .doc(community
-                                                                    .id)
-                                                                .delete();
-                                                            // Delete user logic here
-                                                            // You can call an API to delete the user from the community
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(); // Close the dialog
-                                                          },
-                                                          child: const Text(
-                                                              'Remove User'),
-                                                        ),
-                                                        //upddate button
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            if (_formKey2
-                                                                .currentState!
-                                                                .validate()) {
-                                                              _formKey2
-                                                                  .currentState!
-                                                                  .save();
+                                                                  hintText:
+                                                                      'eg. Feeling Happy',
+                                                                  label: const Text(
+                                                                      'Designation')),
+                                                            ),
+                                                          ),
+                                                          actions: [
+                                                            OutlinedButton(
+                                                              onPressed: () {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'communities')
+                                                                    .doc(
+                                                                        community
+                                                                            .id)
+                                                                    .collection(
+                                                                        'participants')
+                                                                    .doc(list[
+                                                                            index]
+                                                                        .id)
+                                                                    .delete();
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(list[
+                                                                            index]
+                                                                        .id)
+                                                                    .collection(
+                                                                        'my_communities')
+                                                                    .doc(
+                                                                        community
+                                                                            .id)
+                                                                    .delete();
+                                                                // Delete user logic here
+                                                                // You can call an API to delete the user from the community
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(); // Close the dialog
+                                                              },
+                                                              child: const Text(
+                                                                  'Remove User'),
+                                                            ),
+                                                            //upddate button
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                if (_formKey2
+                                                                    .currentState!
+                                                                    .validate()) {
+                                                                  _formKey2
+                                                                      .currentState!
+                                                                      .save();
 
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'communities')
-                                                                  .doc(community
-                                                                      .id)
-                                                                  .collection(
-                                                                      'participants')
-                                                                  .doc(list[
-                                                                          index]
-                                                                      .id)
-                                                                  .update({
-                                                                'designation':
-                                                                    designation
-                                                              });
-                                                              // Close the dialog
-                                                            }
-                                                          },
-                                                          child: const Text(
-                                                              'Update'),
-                                                        ),
-                                                      ],
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          'communities')
+                                                                      .doc(community
+                                                                          .id)
+                                                                      .collection(
+                                                                          'participants')
+                                                                      .doc(list[
+                                                                              index]
+                                                                          .id)
+                                                                      .update({
+                                                                    'designation':
+                                                                        designation
+                                                                  });
+                                                                  // Close the dialog
+                                                                }
+                                                              },
+                                                              child: const Text(
+                                                                  'Update'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
                                                     );
                                                   },
-                                                );
-                                              },
-                                              leading: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: CachedNetworkImage(
-                                                  width: 42,
-                                                  height: 42,
-                                                  imageUrl: list[index].image,
-                                                  fit: BoxFit.fill,
-                                                  placeholder: (context, url) =>
-                                                      const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                            strokeWidth: 2),
+                                                  leading: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: CachedNetworkImage(
+                                                      width: 42,
+                                                      height: 42,
+                                                      imageUrl:
+                                                          list[index].image,
+                                                      fit: BoxFit.fill,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                strokeWidth: 2),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(
+                                                              Icons.image,
+                                                              size: 70),
+                                                    ),
                                                   ),
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Icon(Icons.image,
-                                                          size: 70),
-                                                ),
-                                              ),
-                                              title: Text(list[index].name),
-                                              trailing: widget.user.email ==
-                                                      list[index].email
-                                                  ? const Text('Admin')
-                                                  : Text(
-                                                      list[index].designation),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            )),
-                                      );
-                                    },
+                                                  title: Text(list[index].name),
+                                                  trailing: widget.user.email ==
+                                                          list[index].email
+                                                      ? const Text('Admin')
+                                                      : Text(list[index]
+                                                          .designation),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                )),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   );
                                 } else {
                                   return const Text(

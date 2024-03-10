@@ -235,7 +235,7 @@ class APIs {
   }
 
   static Future<bool> AdminAddUserToCommunity(
-      String commId, String userId, ChatUser user) async {
+      String commId, ChatUser user) async {
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
@@ -252,7 +252,7 @@ class APIs {
 
     await firestore
         .collection('users')
-        .doc(userId) // Use userId as the document ID
+        .doc(user.id) // Use userId as the document ID
         .collection('my_communities')
         .doc(commId) // Use commId as the document ID
         .set({
