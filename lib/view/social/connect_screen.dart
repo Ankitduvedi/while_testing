@@ -2,6 +2,7 @@ import 'package:com.example.while_app/view/profile/community_connect.dart';
 import 'package:com.example.while_app/view/profile/demo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ConnectScreen extends ConsumerStatefulWidget {
   const ConnectScreen({Key? key}) : super(key: key);
@@ -43,7 +44,10 @@ class ConnectScreenState extends ConsumerState<ConnectScreen>
             text: 'Communities',
           ),
         ],
-        labelColor: Colors.black, // Set the text color of the selected tab
+        labelColor: Colors.black,
+        labelStyle: GoogleFonts.ptSans(
+            fontWeight:
+                FontWeight.w700), // Set the text color of the selected tab
         unselectedLabelColor:
             Colors.grey, // Set the text color of unselected tabs
       ),

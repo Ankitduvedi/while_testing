@@ -1,36 +1,33 @@
-import 'dart:developer';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/streams/notif_stream.dart';
+import 'package:com.example.while_app/theme/pallete.dart';
 import 'package:com.example.while_app/view/feed_screen_widget.dart';
 import 'package:com.example.while_app/view/notifications/notification_view.dart';
 import 'package:com.example.while_app/view_model/providers/categories_test_provider.dart';
-import 'package:com.example.while_app/view_model/providers/notif_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
+import 'package:google_fonts/google_fonts.dart';
 
-class FeedScreen extends ConsumerStatefulWidget {
+// Ensure you have the right paths for your imports.
+
+class FeedScreen extends river.ConsumerStatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
   @override
   FeedScreenState createState() => FeedScreenState();
 }
 
-class FeedScreenState extends ConsumerState<FeedScreen> {
+class FeedScreenState extends river.ConsumerState<FeedScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // Initial fetch
     Future.microtask(
         () => ref.read(categoryProvider.notifier).fetchCategories());
-
     _scrollController.addListener(() {
-      // Check if we're at the bottom of the list
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        // Trigger loading more categories
         ref.read(categoryProvider.notifier).fetchCategories();
       }
     });
@@ -47,10 +44,15 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
     final categoriesState = ref.watch(categoryProvider);
     final String userId =
         APIs.me.id; // Adjust this to how you actually obtain the user ID
+    // final isDarkTheme =
+    //     ref.watch(themeNotifierProvider) == Pallete.darkModeAppTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('WHILE'),
+        title:
+            Text('WHILE', style: GoogleFonts.ptSans(color: Colors.grey[800])),
+        elevation: 0,
+        backgroundColor: Colors.grey[200],
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -65,7 +67,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                       if (!snapshot.hasData || snapshot.data == 0) {
                         // No unread notifications or loading state
                         return IconButton(
-                          icon: const Icon(Icons.notifications_none,
+                          icon: const Icon(Icons.notifications_none_rounded,
                               color: Colors.black),
                           onPressed: () async {
                             await Navigator.of(context).push(
@@ -78,8 +80,8 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                       }
                       // Unread notifications exist
                       return IconButton(
-                        icon:
-                            const Icon(Icons.notifications_active_outlined, color: Colors.red),
+                        icon: const Icon(Icons.notifications_active_outlined,
+                            color: Colors.redAccent),
                         onPressed: () async {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
@@ -91,39 +93,83 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                     },
                   )
                 : const IconButton(
-                    icon: Icon(Icons.notifications_none, color: Colors.grey),
+                    icon: Icon(Icons.notifications_none_rounded,
+                        color: Colors.grey),
                     onPressed: null, // Disabled state
                   ),
           ),
+          // Theme toggle button
+          // IconButton(
+          //   icon: Icon(
+          //     isDarkTheme
+          //         ? Icons.dark_mode_rounded
+          //         : Icons.light_mode_rounded, // Adjust icons based on the theme
+          //     color: Colors.black,
+          //   ),
+          //   onPressed: () =>
+          //       ref.read(themeNotifierProvider.notifier).toggleTheme(),
+          // ),
         ],
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: categoriesState.categories.length +
-            (categoriesState.isLoading ? 1 : 0),
-        itemBuilder: (BuildContext context, int index) {
-          // Check if we're at the last item
-          if (index >= categoriesState.categories.length) {
-            // Show a loading indicator at the bottom
-            return const Center(child: CircularProgressIndicator());
-          }
-          // Display category item
-          log('list of categories length is ${categoriesState.categories.length}');
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: categoriesState.categories.length +
+              (categoriesState.isLoading ? 1 : 0),
+          itemBuilder: (BuildContext context, int index) {
+            if (index >= categoriesState.categories.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return _buildCategoryItem(categoriesState.categories[index]);
+          },
+        ),
+      ),
+    );
+  }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
-                child: Text(
-                  categoriesState.categories[index],
-                  style: const TextStyle(fontSize: 17),
-                ),
-              ),
-              FeedScreenWidget(category: categoriesState.categories[index]),
-            ],
-          );
-        },
+  Widget _buildCategoryItem(String category) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white, // Lightened the base color for a cleaner look
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color:
+                Colors.grey.shade300, // Lightened shadow for softer appearance
+            offset:
+                const Offset(2, 2), // Reduced shadow displacement for subtlety
+            blurRadius: 6, // Reduced blur radius for a more refined shadow
+            spreadRadius:
+                1, // Adjusted spread radius to match the lighter shadow
+          ),
+          const BoxShadow(
+            color:
+                Colors.white, // Maintained a white shadow for the lifted effect
+            offset: Offset(
+                -2, -2), // Adjusted for consistency with the lighter theme
+            blurRadius: 6, // Matching blur radius for the inner shadow
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            category,
+            style: GoogleFonts.ptSans(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[
+                  800], // Darkened text for better contrast on white background
+            ),
+          ),
+          const SizedBox(height: 8),
+          FeedScreenWidget(category: category),
+        ],
       ),
     );
   }

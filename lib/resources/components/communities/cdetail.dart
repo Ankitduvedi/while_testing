@@ -10,6 +10,7 @@ import 'package:com.example.while_app/resources/components/message/widgets/profi
 import '../../../main.dart';
 import 'cchat.dart';
 import '../../../data/model/community_user.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CCommunityDetailScreen extends StatefulWidget {
   const CCommunityDetailScreen({Key? key, required this.user})
@@ -85,15 +86,17 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
                     padding: EdgeInsets.all(8.0),
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.image, size: 70),
+                  errorWidget: (context, url, error) => const Icon(
+                      Icons.broken_image,
+                      size: 70,
+                      color: Colors.black12),
                 ),
               ),
               const SizedBox(
                 width: 15,
               ),
               Text(widget.user.name,
-                  style: const TextStyle(
+                  style: GoogleFonts.ptSans(
                       color: Colors.black, fontWeight: FontWeight.w400)),
             ],
           ),
@@ -138,6 +141,7 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
                           child: Center(
                             child: Text(
                               itemsName[index],
+                              style: GoogleFonts.ptSans(),
                               // style: GoogleFonts.laila(
                               //     fontWeight: FontWeight.w500,
                               //     color: current == index

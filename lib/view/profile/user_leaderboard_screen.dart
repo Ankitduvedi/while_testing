@@ -1,9 +1,9 @@
-import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
@@ -57,7 +57,8 @@ class LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         primaryYAxis: NumericAxis(
             edgeLabelPlacement: EdgeLabelPlacement.shift,
             numberFormat: NumberFormat.compact(),
-            title: AxisTitle(text: 'Number of questions ')),
+            title: AxisTitle(
+                text: 'Number of questions ', textStyle: GoogleFonts.ptSans())),
       ),
     ));
   }

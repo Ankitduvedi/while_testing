@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SocialScreen extends ConsumerStatefulWidget {
   const SocialScreen({super.key});
@@ -34,7 +35,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _messaging = FirebaseMessaging.instance;
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _initializeNotification();
@@ -140,15 +141,15 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
           title: toogleSearch != 0
               ? TextField(
                   onChanged: (value) => searchValue.state = value,
-                  decoration: const InputDecoration(
-                    labelText: 'Search',
-                    //suffixIcon: Icon(Icons.search),
-                  ),
-                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                      labelText: 'Search', labelStyle: GoogleFonts.ptSans()
+                      //suffixIcon: Icon(Icons.search),
+                      ),
+                  style: GoogleFonts.ptSans(color: Colors.black),
                 )
-              : const Text(
+              : Text(
                   '',
-                  style: TextStyle(color: Colors.black),
+                  style: GoogleFonts.ptSans(color: Colors.black),
                 ),
           actions: [
             IconButton(
@@ -165,7 +166,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                 }
               },
               icon: Icon(
-                toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search,
+                toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search_rounded,
                 color: Colors.black,
               ),
             ),
@@ -177,6 +178,8 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
             indicatorColor: Colors.black,
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Colors.black,
+            labelStyle:
+                GoogleFonts.ptSans(fontWeight: FontWeight.bold, fontSize: 15),
             tabs: const [
               Tab(
                 text: 'Connect   ',

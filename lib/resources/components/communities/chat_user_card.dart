@@ -13,7 +13,7 @@ import '../../../data/model/chat_user.dart';
 import '../../../data/model/message.dart';
 
 import '../message/widgets/dialogs/profile_dialog.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 //card to represent a single user in home screen
 class ChatUserCard extends ConsumerStatefulWidget {
   final ChatUser user;
@@ -71,7 +71,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
               ),
               title: Text(
                 widget.user.name,
-                style: const TextStyle(color: Colors.black),
+                style: GoogleFonts.ptSans(color: Colors.black),
               ),
               subtitle: Text(
                 _message != null
@@ -80,7 +80,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
                         : _message!.msg
                     : widget.user.about,
                 maxLines: 1,
-                style: const TextStyle(color: Colors.black54),
+                style: GoogleFonts.ptSans(color: Colors.black54),
               ),
               trailing: _message == null
                   ? null
@@ -98,7 +98,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
                             context: context,
                             time: _message!.sent,
                           ),
-                          style: const TextStyle(color: Colors.black54),
+                          style: GoogleFonts.ptSans(color: Colors.black54),
                         ),
             );
           },

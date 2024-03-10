@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/social/full_screen_status.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatusScreenn extends StatefulWidget {
   const StatusScreenn({super.key});
@@ -132,11 +133,11 @@ class StatusScreenState extends State<StatusScreenn> {
                           ),
                           title: Text(
                             person['userName'],
-                            style: const TextStyle(color: Colors.white),
+                            style: GoogleFonts.ptSans(color: Colors.black),
                           ),
                           subtitle: Text(
                             formattedDate,
-                            style: const TextStyle(color: Colors.white),
+                            style: GoogleFonts.ptSans(color: Colors.black),
                           ),
                         ),
                         Divider(
@@ -159,7 +160,7 @@ class StatusScreenState extends State<StatusScreenn> {
         },
         backgroundColor: Colors.white,
         child: const Icon(
-          Icons.add,
+          Icons.add_rounded,
           color: Colors.black,
         ),
       ),

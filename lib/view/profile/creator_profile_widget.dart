@@ -9,7 +9,7 @@ import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/profile/creators_reels_screen.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:google_fonts/google_fonts.dart';
 class CreatorProfile extends StatelessWidget {
   CreatorProfile({super.key, required this.userID});
   final String userID;

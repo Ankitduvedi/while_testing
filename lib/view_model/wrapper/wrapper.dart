@@ -27,7 +27,7 @@ class Wrapper extends ConsumerWidget {
           ? const OnBoardingScreen()
           : toggle == 1
               ? const LoginScreen()
-              : SignUpScreen();
+              : const SignUpScreen();
       //return const OnBoardingScreen();
     }
   }

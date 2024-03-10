@@ -18,8 +18,12 @@
 
 //   // Themes
 //   static var darkModeAppTheme = ThemeData.dark().copyWith(
-//     scaffoldBackgroundColor: blackColor,
+//     scaffoldBackgroundColor: greyColor,
 //     cardColor: greyColor,
+//     brightness: Brightness.dark,
+//     iconTheme: const IconThemeData(
+//       color: Colors.white,
+//     ),
 //     appBarTheme: const AppBarTheme(
 //       backgroundColor: drawerColor,
 //       iconTheme: IconThemeData(

@@ -17,13 +17,13 @@ import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
 import 'firebase_options.dart';
 import 'utils/routes/routes.dart';
 import 'package:get/get.dart';
+
 //commenty about this
 late Size mq;
 
-
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
+  log('Handling a background message: ${message.messageId}');
 }
 
 void main() async {
@@ -86,6 +86,8 @@ class MyApp extends river.ConsumerWidget {
   @override
   Widget build(BuildContext context, river.WidgetRef ref) {
     mq = MediaQuery.of(context).size;
+    // final theme = ref.watch(themeNotifierProvider);
+
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
@@ -96,7 +98,7 @@ class MyApp extends river.ConsumerWidget {
     return MultiProvider(
       providers: providersList,
       child: GetMaterialApp(
-        //theme: lightTheme,
+        // theme: theme,
         //darkTheme: darkTheme,
         //themeMode: ThemeMode.system,
         routes: {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class IntroPage2 extends StatelessWidget {
   @override
@@ -22,7 +23,7 @@ class IntroPage2 extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     'Learn on the Go !',
-                    style: TextStyle(
+                    style:  GoogleFonts.ptSans(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -31,7 +32,7 @@ class IntroPage2 extends StatelessWidget {
                   Text(
                     'Discover endless knowledge through short videos on LOOPS.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style:  GoogleFonts.ptSans(
                       fontSize: 18,
                     ),
                   ),

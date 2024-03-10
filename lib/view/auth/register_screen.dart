@@ -1,20 +1,14 @@
-import 'package:com.example.while_app/data/model/auth_user.dart';
-import 'package:com.example.while_app/resources/components/header_widget.dart';
-import 'package:com.example.while_app/resources/components/password_container_widget.dart';
 import 'package:com.example.while_app/view/home_screen.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:com.example.while_app/resources/colors.dart';
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
 import 'package:com.example.while_app/utils/utils.dart';
-import 'package:com.example.while_app/view/auth/login_screen.dart';
 import '../../repository/firebase_repository.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
@@ -28,7 +22,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   bool _obscureText = true; // Initially password is obscure
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +40,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 SizedBox(height: verticalPadding),
                 Text(
                   'Welcome user!',
-                  style: TextStyle(
+                  style: GoogleFonts.ptSans(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
@@ -68,28 +61,28 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       onPressed: () {
                         ref.read(toggleStateProvider.notifier).state = 1;
                       },
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(150, 50),
+                      ),
                       child: Text(
                         'Sign In',
-                        style: TextStyle(
+                        style: GoogleFonts.ptSans(
                           color: Colors.blue, // This changes the text color
                         ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size(150, 50),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         // Implement your on-tap functionality here
                       },
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(150, 50),
+                      ),
                       child: Text(
                         'Register',
-                        style: TextStyle(
+                        style: GoogleFonts.ptSans(
                           color: Colors.blue, // This changes the text color
                         ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size(150, 50),
                       ),
                     )
                   ],
@@ -98,8 +91,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter Email',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    labelStyle: GoogleFonts.ptSans(),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                   ),
@@ -110,8 +104,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter Username',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    labelStyle: GoogleFonts.ptSans(),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                   ),
@@ -119,73 +114,76 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
                 SizedBox(height: verticalPadding),
                 TextField(
-      controller: _passwordController,
-      obscureText: _obscureText, // Toggle this boolean to show/hide password
-      keyboardType: TextInputType.visiblePassword,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-        // Added suffixIcon to toggle password visibility
-        suffixIcon: IconButton(
-          icon: Icon(
-            // Change the icon based on the state of _obscureText
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-          ),
-          onPressed: () {
-            // Update the state to toggle password visibility
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-        ),
-      ),),
+                  controller: _passwordController,
+                  obscureText:
+                      _obscureText, // Toggle this boolean to show/hide password
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    labelStyle: GoogleFonts.ptSans(),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                    // Added suffixIcon to toggle password visibility
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Change the icon based on the state of _obscureText
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        // Update the state to toggle password visibility
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 SizedBox(height: verticalPadding),
                 ElevatedButton(
-                onPressed: () async {
+                  onPressed: () async {
                     if (_emailController.text.isEmpty) {
-                            Utils.flushBarErrorMessage(
-                                'Please enter email', context);
-                          } else if (_passwordController.text.isEmpty) {
-                            Utils.flushBarErrorMessage(
-                                'Please enter password', context);
-                          } else if (_passwordController.text.length < 6) {
-                            Utils.flushBarErrorMessage(
-                                'Please enter at least 6-digit password',
-                                context);
-                          } else {
-                            // Show loading indicator if needed
-                            final signUpSuccess = await context
-                                .read<FirebaseAuthMethods>()
-                                .signInWithEmailAndPassword(
-                                  _emailController.text.trim(),
-                                  _passwordController.text.trim(),
-                                  _nameController.text.trim(),
-                                  context,
-                                );
-                            // Hide loading indicator
-                            if (signUpSuccess) {
-                              //final firebaseUser = context.watch<User?>();
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                              Utils.toastMessage('Sign up successful ');
-                              // Navigate to the next screen if needed
-                            } else {
-                              Utils.toastMessage('Sign up failed');
-                            }
-                          }
+                      Utils.flushBarErrorMessage('Please enter email', context);
+                    } else if (_passwordController.text.isEmpty) {
+                      Utils.flushBarErrorMessage(
+                          'Please enter password', context);
+                    } else if (_passwordController.text.length < 6) {
+                      Utils.flushBarErrorMessage(
+                          'Please enter at least 6-digit password', context);
+                    } else {
+                      // Show loading indicator if needed
+                      final signUpSuccess = await context
+                          .read<FirebaseAuthMethods>()
+                          .signInWithEmailAndPassword(
+                            _emailController.text.trim(),
+                            _passwordController.text.trim(),
+                            _nameController.text.trim(),
+                            context,
+                          );
+                      // Hide loading indicator
+                      if (signUpSuccess) {
+                        //final firebaseUser = context.watch<User?>();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HomeScreen()));
+                        Utils.toastMessage('Sign up successful ');
+                        // Navigate to the next screen if needed
+                      } else {
+                        Utils.toastMessage('Sign up failed');
+                      }
+                    }
                   },
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 20),
-                  ),
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       )),
+                  child: Text(
+                    'Sign Up',
+                    style: GoogleFonts.ptSans(fontSize: 20),
+                  ),
                 ),
 
                 SizedBox(height: verticalPadding * 1.2),

@@ -4,6 +4,7 @@ import 'package:com.example.while_app/view_model/providers/connect_community_pro
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CommunityConnect extends ConsumerWidget {
   const CommunityConnect({Key? key}) : super(key: key);
@@ -33,8 +34,11 @@ class CommunityConnect extends ConsumerWidget {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.image),
                   ),
-                  title: Text(user.name),
-                  subtitle: Text(user.about),
+                  title: Text(
+                    user.name,
+                    style: GoogleFonts.ptSans(),
+                  ),
+                  subtitle: Text(user.about, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
                       // Use the provider to follow the user
@@ -53,7 +57,7 @@ class CommunityConnect extends ConsumerWidget {
                         );
                       }
                     },
-                    child: const Text('Join'),
+                    child: Text('Join', style: GoogleFonts.ptSans()),
                   ),
                 );
               },

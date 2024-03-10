@@ -11,6 +11,7 @@ import 'apis.dart';
 import 'helper/my_date_util.dart';
 import '../../../data/model/chat_user.dart';
 import '../../../data/model/message.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -95,9 +96,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                   return MessageCard(message: _list[index]);
                                 });
                           } else {
-                            return const Center(
+                            return Center(
                               child: Text('Say Hii! 👋',
-                                  style: TextStyle(fontSize: 20)),
+                                  style: GoogleFonts.ptSans(fontSize: 20)),
                             );
                           }
                       }
@@ -193,7 +194,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         //user name
                         Text(list.isNotEmpty ? list[0].name : widget.user.name,
-                            style: const TextStyle(
+                            style: GoogleFonts.ptSans(
                                 fontSize: 16,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500)),
@@ -212,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 : MyDateUtil.getLastActiveTime(
                                     context: context,
                                     lastActive: widget.user.lastActive),
-                            style: const TextStyle(
+                            style: GoogleFonts.ptSans(
                                 fontSize: 13, color: Colors.black45)),
                       ],
                     )
@@ -234,28 +235,27 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: [
               //pick image from gallery button
-                      IconButton(
-                          onPressed: () async {
-                            final ImagePicker picker = ImagePicker();
+              IconButton(
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
 
-                            // Picking multiple images
-                            final List<XFile> images =
-                                await picker.pickMultiImage(imageQuality: 70);
+                    // Picking multiple images
+                    final List<XFile> images =
+                        await picker.pickMultiImage(imageQuality: 70);
 
-                            // uploading & sending image one by one
-                            for (var i in images) {
-                              log('Image Path: ${i.path}');
-                              setState(() => _isUploading = true);
-                              await APIs.sendChatImage(
-                                  widget.user, File(i.path));
-                              setState(() => _isUploading = false);
-                            }
-                          },
-                          icon: const Icon(Icons.add,
-                              color: Colors.lightBlueAccent, size: 34)),
+                    // uploading & sending image one by one
+                    for (var i in images) {
+                      log('Image Path: ${i.path}');
+                      setState(() => _isUploading = true);
+                      await APIs.sendChatImage(widget.user, File(i.path));
+                      setState(() => _isUploading = false);
+                    }
+                  },
+                  icon: const Icon(Icons.add,
+                      color: Colors.lightBlueAccent, size: 34)),
               //input field & buttons
               Expanded(
-                child: Container(
+                child: SizedBox(
                   child: Card(
                     //shadowColor: Colors.blue,
                     color: Colors.white,
@@ -264,25 +264,24 @@ class _ChatScreenState extends State<ChatScreen> {
                         borderRadius: BorderRadius.circular(15)),
                     child: Row(
                       children: [
-                        
-                        
-                
                         Expanded(
                           child: TextField(
                             controller: _textController,
+                            style: GoogleFonts.ptSans(),
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             onTap: () {
                               if (_showEmoji)
                                 setState(() => _showEmoji = !_showEmoji);
                             },
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                                 //hintText: 'Type Something...',
-                                hintStyle: TextStyle(color: Colors.black),
+                                hintStyle:
+                                    GoogleFonts.ptSans(color: Colors.black),
                                 border: InputBorder.none),
                           ),
                         ),
-                
+
                         //emoji button
                         IconButton(
                             onPressed: () {
@@ -291,11 +290,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             },
                             icon: const Icon(Icons.emoji_emotions_outlined,
                                 color: Colors.lightBlueAccent, size: 28)),
-                
-                        
-                
-                        
-                
+
                         //adding some space
                         //SizedBox(width: mq.width * .005,),
                       ],
@@ -304,24 +299,23 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               //take image from camera button
-                      IconButton(
-                          onPressed: () async {
-                            final ImagePicker picker = ImagePicker();
+              IconButton(
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
 
-                            // Pick an image
-                            final XFile? image = await picker.pickImage(
-                                source: ImageSource.camera, imageQuality: 70);
-                            if (image != null) {
-                              log('Image Path: ${image.path}');
-                              setState(() => _isUploading = true);
+                    // Pick an image
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 70);
+                    if (image != null) {
+                      log('Image Path: ${image.path}');
+                      setState(() => _isUploading = true);
 
-                              await APIs.sendChatImage(
-                                  widget.user, File(image.path));
-                              setState(() => _isUploading = false);
-                            }
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined,
-                              color: Colors.lightBlueAccent, size: 32)),
+                      await APIs.sendChatImage(widget.user, File(image.path));
+                      setState(() => _isUploading = false);
+                    }
+                  },
+                  icon: const Icon(Icons.camera_alt_outlined,
+                      color: Colors.lightBlueAccent, size: 32)),
 
               //send message button
               MaterialButton(
@@ -340,8 +334,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                 },
                 minWidth: 0,
-                padding: const EdgeInsets.only(
-                    top: 8, bottom: 8, right: 4, left: 8),
+                padding:
+                    const EdgeInsets.only(top: 8, bottom: 8, right: 4, left: 8),
                 shape: const CircleBorder(),
                 color: Colors.lightBlueAccent,
                 child: const Icon(Icons.send, color: Colors.white, size: 25),

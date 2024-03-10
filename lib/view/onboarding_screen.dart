@@ -7,6 +7,7 @@ import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnBoardingScreen extends ConsumerStatefulWidget {
   const OnBoardingScreen({super.key});
@@ -49,7 +50,7 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
               IntroPage2(),
               IntroPage3(),
               IntroPage4(),
-              IntroPage5(),
+              const IntroPage5(),
             ],
             onPageChanged: (int page) {
               setState(() {
@@ -72,9 +73,9 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       onTap: () {
                         _controller.jumpToPage(4); // Jump to the last page
                       },
-                      child: const Text(
+                      child: Text(
                         "Skip",
-                        style: TextStyle(fontSize: 20),
+                        style: GoogleFonts.ptSans(fontSize: 20),
                       )),
                   // Dot indicator
                   SmoothPageIndicator(
@@ -95,7 +96,7 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                     },
                     child: Text(
                       currentPage == 4 ? 'Done' : 'Next',
-                      style: const TextStyle(fontSize: 20),
+                      style: GoogleFonts.ptSans(fontSize: 20),
                     ),
                   )
                 ],

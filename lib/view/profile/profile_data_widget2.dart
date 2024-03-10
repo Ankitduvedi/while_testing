@@ -1,4 +1,3 @@
-import 'package:com.example.while_app/resources/components/text_button.dart';
 import 'package:com.example.while_app/view_model/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:com.example.while_app/view/profile/user_profile_follower_screen.dart';
 import 'package:com.example.while_app/view/profile/user_profile_following_screen.dart';
-import '../../main.dart';
-import '../../resources/components/bottom_options_sheet.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileDataWidget extends ConsumerWidget {
-  ProfileDataWidget({Key? key}) : super(key: key);
+  const ProfileDataWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +31,7 @@ class ProfileDataWidget extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
+                SizedBox(
                   height: h * 0.12,
                   width: w * 0.27,
                   child: ClipOval(
@@ -42,8 +40,8 @@ class ProfileDataWidget extends ConsumerWidget {
                       imageUrl: user!.image,
                       fit: BoxFit.fill,
                       filterQuality: FilterQuality.low,
-                      errorWidget: (context, url, error) =>
-                          const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                          child: Icon(CupertinoIcons.person)),
                     ),
                   ),
                 ),
@@ -74,10 +72,13 @@ class ProfileDataWidget extends ConsumerWidget {
             const SizedBox(
               height: 8,
             ),
-            Container(
+            SizedBox(
               child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text("Hello Everyone! My name is ${user.name} and I am new to While.", style: TextStyle(fontSize: 16),)),
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Hello Everyone! My name is ${user.name} and I am new to While.",
+                    style: GoogleFonts.ptSans(fontSize: 16),
+                  )),
             ),
             const SizedBox(
               height: 16,
@@ -96,7 +97,7 @@ class ProfileDataWidget extends ConsumerWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(
+          style: GoogleFonts.ptSans(
             fontWeight: FontWeight.bold,
             fontSize: 26,
           ),
@@ -105,10 +106,7 @@ class ProfileDataWidget extends ConsumerWidget {
         Text(
           label,
           style: const TextStyle(
-            fontWeight: FontWeight.w400,
-            color: Colors.black54,
-            fontSize: 15
-          ),
+              fontWeight: FontWeight.w400, color: Colors.black54, fontSize: 15),
         ),
       ],
     );

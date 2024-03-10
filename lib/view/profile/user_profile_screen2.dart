@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
 import 'package:com.example.while_app/view/profile/profile_data_widget2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -40,29 +41,32 @@ class ProfileScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(user!.name, style: TextStyle(color: Colors.black),),
+          title: Text(
+            user!.name,
+            style: GoogleFonts.ptSans(color: Colors.black),
+          ),
           actions: [
-            Padding(padding: const EdgeInsets.only(right: 16.0),),
+            const Padding(
+              padding: EdgeInsets.only(right: 16.0),
+            ),
             IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return const MoreOptions();
-                      },
-                    );
+              iconSize: 12,
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return const MoreOptions();
                   },
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.black,
-                    size: 35,
-                  ),
-                ),
-            
+                );
+              },
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.black,
+                size: 35,
+              ),
+            ),
           ],
         ),
-
-
         backgroundColor: Colors.white,
         body: DefaultTabController(
           length: 3,
@@ -71,7 +75,7 @@ class ProfileScreen extends ConsumerWidget {
               return [
                 SliverList(
                   delegate: SliverChildListDelegate(
-                    [ProfileDataWidget()],
+                    [const ProfileDataWidget()],
                   ),
                 ),
               ];
@@ -98,10 +102,10 @@ class ProfileScreen extends ConsumerWidget {
                         ));
                       }),
                       const Center(child: LeaderboardScreen()),
-                      const Center(
+                      Center(
                           child: Text(
-                        "Become a Freelancerrr",
-                        style: TextStyle(color: Colors.black),
+                        "Become a Freelancer",
+                        style: GoogleFonts.ptSans(color: Colors.black),
                       )),
                     ],
                   ),

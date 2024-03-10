@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
 import 'package:com.example.while_app/utils/utils.dart';
 import '../../repository/firebase_repository.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
   'email',
   'https://www.googleapis.com/auth/contacts.readonly'
@@ -58,9 +58,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(height: verticalPadding),
-                const Text(
+                Text(
                   'Welcome user!',
-                  style: TextStyle(
+                  style: GoogleFonts.ptSans(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
@@ -81,9 +81,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () {
                         // Implement your on-tap functionality here
                       },
-                      child: const Text(
+                      child: Text(
                         'Sign In',
-                        style: TextStyle(
+                        style: GoogleFonts.ptSans(
                           color: Colors.blue, // This changes the text color
                         ),
                       ),
@@ -95,9 +95,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () {
                         ref.read(toggleStateProvider.notifier).state = 2;
                       },
-                      child: const Text(
+                      child: Text(
                         'Register',
-                        style: TextStyle(
+                        style: GoogleFonts.ptSans(
                           color: Colors.blue, // This changes the text color
                         ),
                       ),
@@ -111,6 +111,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter Email',
+                    labelStyle: GoogleFonts.ptSans(),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
@@ -126,6 +127,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       keyboardType: TextInputType.visiblePassword,
       decoration: InputDecoration(
         labelText: 'Password',
+        labelStyle: GoogleFonts.ptSans(),
         contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
         // Added suffixIcon to toggle password visibility
@@ -148,9 +150,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: () {
                       Navigator.pushNamed(context, RoutesName.forgot);
                     },
-                    child: const Text(
+                    child: Text(
                       'Recover Password ?',
-                      style: TextStyle(color: Colors.grey),
+                      style: GoogleFonts.ptSans(color: Colors.grey),
                     ),
                   ),
                 ),
@@ -177,7 +179,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   child: Text(
                     'Sign In',
-                    style: TextStyle(fontSize: 20),
+                    style: GoogleFonts.ptSans(fontSize: 20),
                   ),
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
@@ -187,9 +189,9 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
 
                 SizedBox(height: verticalPadding * 1.2),
-                const Row(
+                Row(
                   children: <Widget>[
-                    Expanded(
+                    const Expanded(
                       child: Divider(
                         thickness:
                             1, // Set the thickness of the divider as needed
@@ -198,10 +200,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('OR'),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('OR',style: GoogleFonts.ptSans(),),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Divider(
                         thickness:
                             1, // Set the thickness of the divider as needed
@@ -233,8 +235,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(
                           width:
                               30), // Increase width to increase the distance between the logo and the text
-                      const Text('Login with Google',
-                          style: TextStyle(fontSize: 20)),
+                      Text('Login with Google',
+                          style: GoogleFonts.ptSans(fontSize: 20)),
                     ],
                   ),
                 ),

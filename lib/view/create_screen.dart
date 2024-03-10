@@ -5,6 +5,7 @@ import 'package:com.example.while_app/resources/components/create_container.dart
 import 'package:com.example.while_app/view_model/post_provider.dart';
 import 'package:com.example.while_app/view_model/reel_controller.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts_new;
+import 'package:google_fonts/google_fonts.dart';
 
 class CreateScreen extends river.ConsumerStatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -24,9 +25,9 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text('Studio', style: TextStyle(color: Colors.lightBlueAccent), textAlign: TextAlign.center,),
+        title: Text('Studio', style: GoogleFonts.ptSans(color: Colors.lightBlueAccent), textAlign: TextAlign.center,),
         //leading: Icon(Icons.arrow_back_ios, color: Colors.lightBlueAccent,),
-        actions: <Widget> [ IconButton(onPressed: () {}, icon: Icon(Icons.menu, color: Colors.lightBlueAccent,)) ]
+        actions: <Widget> [ IconButton(onPressed: () {}, icon: const Icon(Icons.menu, color: Colors.lightBlueAccent,)) ]
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -49,7 +50,7 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
+              child: SizedBox(
                 height: 200,
                 child: charts_new.LineChart(
                   _createSampleData()),
@@ -81,17 +82,17 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
   /// Create one series with sample hard-coded data.
   static List<charts_new.Series<MyNumericData, int>> _createSampleData() {
     final data = [
-      new MyNumericData(0, 3),
-      new MyNumericData(2, 2),
-      new MyNumericData(4, 5),
-      new MyNumericData(6, 3),
-      new MyNumericData(8, 4),
-      new MyNumericData(9, 3),
-      new MyNumericData(11, 4),
+      MyNumericData(0, 3),
+      MyNumericData(2, 2),
+      MyNumericData(4, 5),
+      MyNumericData(6, 3),
+      MyNumericData(8, 4),
+      MyNumericData(9, 3),
+      MyNumericData(11, 4),
     ];
 
     return [
-      new charts_new.Series<MyNumericData, int>(
+      charts_new.Series<MyNumericData, int>(
         id: 'Performance',
         colorFn: (_, __) => charts_new.MaterialPalette.blue.shadeDefault,
         domainFn: (MyNumericData sales, _) => sales.year,
@@ -114,12 +115,12 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: Column(
               children: <Widget>[
-                Text(title,style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),),
+                Text(title,style: GoogleFonts.ptSans(fontSize: 18, fontWeight: FontWeight.w400),),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     
-                    Text(value , style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    Text(value , style: GoogleFonts.ptSans(fontSize: 24, fontWeight: FontWeight.bold)),
                 if(text!= null)
                 Text(text),
                   ],
@@ -129,7 +130,7 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
                 if (view != null) 
                 Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   height: 120,
                   child: charts_new.LineChart(_createSampleData()),
                 ),

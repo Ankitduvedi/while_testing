@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 class IntroPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class IntroPage1 extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Seize every second !',
-                  style: TextStyle(
+                  style: GoogleFonts.ptSans(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -30,7 +30,7 @@ class IntroPage1 extends StatelessWidget {
                 Text(
                   'Make your day count with our expert guided journey .',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style:  GoogleFonts.ptSans(
                     fontSize: 18,
                   ),
                 ),

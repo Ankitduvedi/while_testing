@@ -1,11 +1,11 @@
 import 'package:com.example.while_app/repository/firebase_repository.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/utils/routes/routes_name.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import '../../view/profile/edit_profile_user.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MoreOptions extends ConsumerWidget {
   const MoreOptions({super.key});
@@ -37,15 +37,18 @@ class MoreOptions extends ConsumerWidget {
                 color: Colors.black,
                 size: 30,
               ),
-              title: const Text("Edit Profile"),
+              title: Text(
+                "Edit Profile",
+                style: GoogleFonts.ptSans(),
+              ),
             ),
-            const ListTile(
-              leading: Icon(
+            ListTile(
+              leading: const Icon(
                 Icons.share_outlined,
                 color: Colors.black,
                 size: 30,
               ),
-              title: Text("Share"),
+              title: Text("Share", style: GoogleFonts.ptSans()),
             ),
             ListTile(
               leading: const Icon(
@@ -53,7 +56,7 @@ class MoreOptions extends ConsumerWidget {
                 color: Colors.black,
                 size: 30,
               ),
-              title: const Text("logout"),
+              title: Text("Logout", style: GoogleFonts.ptSans()),
               onTap: () {
                 ref.read(toggleStateProvider.notifier).state = 0;
                 context.read<FirebaseAuthMethods>().signout(context);
@@ -67,7 +70,7 @@ class MoreOptions extends ConsumerWidget {
                 color: Colors.black,
                 size: 30,
               ),
-              title: const Text("Delete Account"),
+              title: Text("Delete Account", style: GoogleFonts.ptSans()),
               onTap: () async {
                 // Show a confirmation dialog
                 final shouldDelete = await showDialog<bool>(

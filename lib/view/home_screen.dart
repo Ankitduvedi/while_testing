@@ -8,7 +8,6 @@ import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/create_screen.dart';
 import 'package:com.example.while_app/view/feed_screen.dart';
 import 'package:com.example.while_app/view/profile/user_profile_screen2.dart';
-import 'package:com.example.while_app/view/reels_screen.dart';
 import 'package:com.example.while_app/view/social/social_home_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -45,63 +44,75 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TabBarView(
-        controller: _controller,
-        children: const [
-          FeedScreen(),
-          CreateScreen(),
-          ReelsScreentest(),
-          SocialScreen(),
-          ProfileScreen()
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
+        body: TabBarView(
+          controller: _controller,
+          children: const [
+            FeedScreen(),
+            CreateScreen(),
+            ReelsScreentest(),
+            SocialScreen(),
+            ProfileScreen()
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomAppBar(
           padding: const EdgeInsets.only(bottom: 2),
           color: Colors.white,
           height: 50,
-          // shape: const CircularNotchedRectangle(),
-          //color: currentTheme.primaryColor,
           child: TabBar(
-            dividerColor: Colors.transparent,
             controller: _controller,
-            indicatorColor: Colors.black,
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Colors.black,
-            tabs: const [
+            indicatorColor: Colors.transparent,
+            onTap: (index) {
+              setState(() {}); // Refresh the UI on tab change
+            },
+            tabs: [
               Tab(
                 icon: Icon(
-                  Icons.home,
+                  _controller.index == 0
+                      ? Icons.home_rounded
+                      : Icons.home_outlined,
                   size: 30,
                   color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
-                  Icons.videocam_outlined,
+                  _controller.index == 1
+                      ? Icons.videocam_rounded
+                      : Icons.videocam_outlined,
                   size: 30,
+                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
-                  Icons.slow_motion_video_outlined,
+                  _controller.index == 2
+                      ? Icons.slow_motion_video_rounded
+                      : Icons.slow_motion_video_outlined,
                   size: 30,
+                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
-                  Icons.message_outlined,
+                  _controller.index == 3
+                      ? Icons.message_rounded
+                      : Icons.message_outlined,
                   size: 30,
+                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
-                  Icons.account_circle_outlined,
+                  _controller.index == 4
+                      ? Icons.account_circle_rounded
+                      : Icons.account_circle_outlined,
                   size: 30,
+                  color: Colors.black,
                 ),
               ),
             ],
-          )),
-    );
+          ),
+        ));
   }
 }

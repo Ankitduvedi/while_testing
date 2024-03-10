@@ -6,6 +6,7 @@ import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MessageHomeWidget extends ConsumerWidget {
   const MessageHomeWidget({Key? key}) : super(key: key);
@@ -38,10 +39,10 @@ class MessageHomeWidget extends ConsumerWidget {
             log(usersList.length.toString());
             log('usersList.length.toString()');
             if (usersList.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   'No Data Found',
-                  style: TextStyle(color: Colors.black),
+                  style: GoogleFonts.ptSans(color: Colors.black),
                 ),
               );
             }
@@ -52,10 +53,10 @@ class MessageHomeWidget extends ConsumerWidget {
                   children: [
                     ChatUserCard(user: usersList[index]),
                     Divider(
-                          color: Colors.grey.shade300,
-                          thickness: 1,
-                          height: 0,
-                        ),
+                      color: Colors.grey.shade300,
+                      thickness: 1,
+                      height: 0,
+                    ),
                   ],
                 );
               },

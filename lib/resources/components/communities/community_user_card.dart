@@ -10,6 +10,7 @@ import '../message/helper/my_date_util.dart';
 import '../../../data/model/community_message.dart';
 import '../../../data/model/community_user.dart';
 import 'community_profile_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //card to represent a single user in home screen
 class ChatCommunityCard extends ConsumerStatefulWidget {
@@ -80,7 +81,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 //user name
                 title: Text(
                   widget.user.name,
-                  style: const TextStyle(color: Colors.black),
+                  style: GoogleFonts.ptSans(color: Colors.black),
                 ),
 
                 //last message
@@ -91,7 +92,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                           : _message!.msg
                       : widget.user.about,
                   maxLines: 1,
-                  style: const TextStyle(color: Colors.black54),
+                  style: GoogleFonts.ptSans(color: Colors.black54),
                 ),
 
                 //last message time
@@ -105,7 +106,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                             width: 15,
                             height: 15,
                             decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.black12,
                                 borderRadius: BorderRadius.circular(10)),
                           )
                         :
@@ -113,7 +114,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                         Text(
                             MyDateUtil.getLastMessageTime(
                                 context: context, time: _message!.sent),
-                            style: const TextStyle(color: Colors.white),
+                            style: GoogleFonts.ptSans(color: Colors.black87),
                           ),
               );
             },

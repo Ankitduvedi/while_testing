@@ -1,12 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:developer';
-import 'package:com.example.while_app/view/social/feed_video_screen.dart';
 import 'package:com.example.while_app/view_model/providers/categories_test_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:com.example.while_app/view/social/feed_video_screen.dart';
+// Ensure your imports match your project structure.
 
 class FeedScreenWidget extends ConsumerStatefulWidget {
   const FeedScreenWidget({Key? key, required this.category}) : super(key: key);
   final String category;
+
   @override
   FeedScreenWidgetState createState() => FeedScreenWidgetState();
 }
@@ -17,16 +18,12 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
   @override
   void initState() {
     super.initState();
-    // Initial fetch
     Future.microtask(() => ref
         .read(allVideoProvider(widget.category).notifier)
         .fetchVideos(widget.category));
-
     _scrollController.addListener(() {
-      // Check if we're at the bottom of the list
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        // Trigger loading more categories
         ref
             .read(allVideoProvider(widget.category).notifier)
             .fetchVideos(widget.category);
@@ -43,7 +40,7 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(allVideoProvider(widget.category));
-    log('Total numbers of videos ${state.videos.length} category${widget.category}');
+
     return SizedBox(
       height: 150,
       child: GridView.builder(
@@ -53,14 +50,18 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
           crossAxisCount: 1,
           crossAxisSpacing: 4.0,
           mainAxisSpacing: 3.0,
-          childAspectRatio: 9 / 12,
+          childAspectRatio: 9 / 16,
         ),
         itemCount: state.videos.length + (state.isLoading ? 1 : 0),
         itemBuilder: (context, index) {
           if (index >= state.videos.length) {
-            // Show a loading indicator at the bottom
             return const Center(child: CircularProgressIndicator());
           }
+
+          String thumbnail = state.videos[index].thumbnail.isNotEmpty
+              ? state.videos[index].thumbnail
+              : 'path/to/default/thumbnail.jpg'; // Provide a default thumbnail path
+
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -69,28 +70,54 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                 ),
               );
             },
-            child: Card(
-              color: Colors.black,
-              elevation: 4.0,
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white, // Base color
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: const Offset(2, 2),
+                    blurRadius: 2,
+                    spreadRadius: 1,
+                  ),
+                  const BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(-2, -2),
+                    blurRadius: 2,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(state.videos[index].thumbnail),
-                            fit: BoxFit.cover,
-                          )),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        thumbnail,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Fallback for any error in loading the image
+                          return Center(
+                            child: Icon(Icons.broken_image,
+                                color: Colors.grey.shade400),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       state.videos[index].title,
-                      style:
-                          const TextStyle(fontSize: 16.0, color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey.shade800,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
