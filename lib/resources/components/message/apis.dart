@@ -254,7 +254,6 @@ class APIs {
 
   static Future<bool> AdminAddUserToCommunity(
       String commId, ChatUser user) async {
-
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
@@ -277,8 +276,8 @@ class APIs {
         .set({
       'id': commId,
     });
-    log(commName);
-    addNotification('You were addded to $commName community', user.id);
+    // log(commName);
+    // addNotification('You were addded to $commName community', user.id);
 
     return true;
   }
