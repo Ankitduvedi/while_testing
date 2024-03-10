@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
 import 'package:com.example.while_app/resources/components/communities/community_user_card.dart';
 import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
@@ -62,6 +63,16 @@ class CommunityHomeWidget extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
+      floatingActionButton: IconButton(
+            onPressed: () {
+              AddCommunityScreen().addCommunityDialog(context);
+            },
+            icon: const Icon(
+              Icons.group_add,
+              color: Colors.black,
+              size: 34,
+            ),
+          )
     );
   }
 }

@@ -28,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey2 = GlobalKey<FormState>();
   String? _image;
 
+
   void _openUserListDialog(String id, List<ChatUser> list) {
     log("community id$id");
     showDialog(
@@ -36,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         commId: id,
         list: list,
       ),
+
     );
   }
 
@@ -236,6 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 18),
                           ),
+
                         ],
                       ),
                     ),
