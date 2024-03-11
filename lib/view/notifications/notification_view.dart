@@ -35,7 +35,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ),
       body: notificationsAsyncValue.when(
         data: (List<Map<String, dynamic>> notifications) {
-          // Updated to expect List<Map<String, dynamic>>
+          if (notifications.isEmpty) {
+            return const Center(child: Text('No new notifications'));
+          }
           return ListView.builder(
             itemCount: notifications.length,
             itemBuilder: (context, index) {
@@ -65,8 +67,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                     ],
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // To separate text and timestamp
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                           child: Text(notificationText,

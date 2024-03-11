@@ -20,7 +20,11 @@ class ChatUser {
       required this.mediumQuestions,
       required this.hardQuestions,
       required this.lives,
-      required this.following});
+      required this.following,
+      required this.isContentCreator,
+      required this.isApproved
+
+      });
   late String image;
   late String about;
   late String name;
@@ -42,7 +46,10 @@ class ChatUser {
   late int mediumQuestions;
   late int hardQuestions;
   late int lives;
+  late bool isContentCreator;
+  late bool isApproved;
 
+  // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
     about = json['about'] ?? '';
@@ -65,8 +72,12 @@ class ChatUser {
     mediumQuestions = json['mediumQuestions'] ?? 0;
     hardQuestions = json['hardQuestions'] ?? 0;
     lives = json['lives'] ?? 0;
+    // Add the new field
+    isContentCreator = json['isContentCreator'] ?? false;
+    isApproved = json['isApproved'] ?? false;
   }
 
+  // Update toJson method to include the new field
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['image'] = image;
@@ -90,9 +101,13 @@ class ChatUser {
     data['mediumQuestions'] = mediumQuestions;
     data['hardQuestions'] = hardQuestions;
     data['lives'] = lives;
+    // Add the new field
+    data['isContentCreator'] = isContentCreator;
+      data['isApproved'] = isApproved;
     return data;
   }
 
+  // Similarly, update the toMap method if needed
   Map<String, dynamic> toMap() {
     return {
       'lives': lives,
@@ -116,31 +131,39 @@ class ChatUser {
       'easyQuestions': easyQuestions,
       'mediumQuestions': mediumQuestions,
       'hardQuestions': hardQuestions,
+      // Add the new field
+      'isContentCreator': isContentCreator,
+      'isApproved': isApproved,
     };
   }
 
+  // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
-        lives: 0,
-        easyQuestions: 0,
-        image: '',
-        hardQuestions: 0,
-        about: '',
-        mediumQuestions: 0,
-        name: '',
-        createdAt: '',
-        isOnline: false,
-        id: '',
-        lastActive: '',
-        email: '',
-        pushToken: '',
-        dateOfBirth: '',
-        gender: '',
-        phoneNumber: '',
-        place: '',
-        profession: '',
-        designation: '',
-        follower: 0,
-        following: 0);
+      lives: 0,
+      easyQuestions: 0,
+      image: '',
+      hardQuestions: 0,
+      about: '',
+      mediumQuestions: 0,
+      name: '',
+      createdAt: '',
+      isOnline: false,
+      id: '',
+      lastActive: '',
+      email: '',
+      pushToken: '',
+      dateOfBirth: '',
+      gender: '',
+      phoneNumber: '',
+      place: '',
+      profession: '',
+      designation: '',
+      follower: 0,
+      following: 0,
+      // Initialize the new field
+      isContentCreator: false,
+      isApproved: false
+    );
   }
 }

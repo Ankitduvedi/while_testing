@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
 import '../../../data/model/community_message.dart';
@@ -55,6 +56,53 @@ class APIs {
     //   }
     // });
   }
+
+  // adding content creator request
+
+   static Future<void> submitCreatorRequest({
+  required BuildContext context,
+  required String userId,
+  required String instagramLink,
+  required String youtubeLink,
+}) async {
+  // Get the current timestamp
+  Timestamp requestTime = Timestamp.fromDate(DateTime.now());
+
+  // Reference to Firestore instance
+  final firestoreInstance = FirebaseFirestore.instance;
+
+  // Create the request document in Firestore under 'requests' collection
+  await firestoreInstance.collection('requests').doc(userId).set({
+    'userId': userId,
+    'isContentCreator': false, // Assuming this means the request is pending
+    'timeStamp': requestTime,
+    'instagramLink': instagramLink,
+    'youtubeLink': youtubeLink,
+    'isApproved': true, // Initially, the request is not approved
+  }).then((_) async {
+    // Update 'isApproved' in the 'users' collection for the user
+    await firestoreInstance.collection('users').doc(userId).update({
+      'isApproved': true, // Update this field based on your logic, false if you're awaiting approval
+    }).then((_) {
+      log("User and request submitted successfully");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Your request to become a creator has been submitted and is pending approval.")),
+      );
+    }).catchError((error) {
+      // Handle errors in updating user document
+      log("Failed to update user: $error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to update user status. Please try again.")),
+      );
+    });
+  }).catchError((error) {
+    // Handle errors in creating request document
+    log("Failed to submit request: $error");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Failed to submit your request. Please try again.")),
+    );
+  });
+}
 
   // for sending push notification
   static Future<void> sendPushNotification(
@@ -234,7 +282,6 @@ class APIs {
       'notificationText': notificationText
     });
   }
-  
 
   static Future<void> markAllNotificationsAsRead(String userId) async {
     var collection = FirebaseFirestore.instance
@@ -326,29 +373,30 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-      lives: 0,
-      easyQuestions: 0,
-      id: user.uid,
-      hardQuestions: 0,
-      mediumQuestions: 0,
-      name: newUser.name.toString(),
-      email: newUser.email.toString(),
-      about: newUser.about,
-      image:
-          'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
-      createdAt: time,
-      isOnline: false,
-      lastActive: time,
-      pushToken: '',
-      dateOfBirth: '',
-      gender: '',
-      phoneNumber: '',
-      place: '',
-      profession: '',
-      designation: 'Member',
-      follower: 0,
-      following: 0,
-    );
+        lives: 0,
+        easyQuestions: 0,
+        id: user.uid,
+        hardQuestions: 0,
+        mediumQuestions: 0,
+        name: newUser.name.toString(),
+        email: newUser.email.toString(),
+        about: newUser.about,
+        image:
+            'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
+        createdAt: time,
+        isOnline: false,
+        lastActive: time,
+        pushToken: '',
+        dateOfBirth: '',
+        gender: '',
+        phoneNumber: '',
+        place: '',
+        profession: '',
+        designation: 'Member',
+        follower: 0,
+        following: 0,
+        isContentCreator: false,
+        isApproved: false);
     log(' users given id is ///// : ${newUser.name}');
     await firestore.collection('users').doc(user.uid).set(chatUser.toJson());
   }
@@ -358,6 +406,8 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      isContentCreator: false,
+      isApproved: false,
       lives: 0,
       easyQuestions: 0,
       hardQuestions: 0,
@@ -740,7 +790,7 @@ class APIs {
   }
 
   ///////////////
-  static Future<void> addCommunities(Community chatUser, File file) async {
+  static Future<void> addCommunities(Community chatUser, File? file) async {
     //getting image file extension
     /*  final ext = file.path.split('.').last;
 

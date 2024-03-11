@@ -29,13 +29,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _image;
 
 
-  void _openUserListDialog(String id, List<ChatUser> list) {
+  void _openUserListDialog(String id, List<ChatUser> listUsers) {
     log("community id$id");
     showDialog(
       context: context,
       builder: (context) => UserListDialog(
         commId: id,
-        list: list,
+        list: listUsers,
       ),
 
     );
