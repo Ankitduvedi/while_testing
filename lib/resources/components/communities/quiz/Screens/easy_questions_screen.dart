@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/answerButton.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EasyQuestionsScreen extends StatefulWidget {
+class EasyQuestionsScreen extends ConsumerStatefulWidget {
   final Community user;
   final int easyQuestions;
   final int attemptedEasyQuestion;
@@ -25,7 +26,7 @@ class EasyQuestionsScreen extends StatefulWidget {
   QuestionsScreenState createState() => QuestionsScreenState();
 }
 
-class QuestionsScreenState extends State<EasyQuestionsScreen> {
+class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
   late int lives;
@@ -76,7 +77,7 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
           seconds--;
         } else {
           setState(() {
-            answerQuestion(null, 'e');
+            answerQuestion(null, 'e',ref);
             startTimer();
             seconds = 45;
           });
@@ -85,7 +86,7 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
     });
   }
 
-  void answerQuestion(String? selectedAnswers, String correctAnswer) {
+  void answerQuestion(String? selectedAnswers, String correctAnswer,WidgetRef ref) {
     setState(() {
       if (selectedAnswers == correctAnswer) {
         correctAnswers++;
@@ -100,11 +101,11 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
         startTimer();
         seconds = 45;
       } else {
-        APIs.updateScore(
+        ref.read(apisProvider).updateScore(
             widget.user.id,
             'easyQuestions',
             correctAnswers + widget.easyQuestions,
-            correctAnswers + APIs.me.easyQuestions,
+            correctAnswers + ref.read(apisProvider).me.easyQuestions,
             'attemptedEasyQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(
@@ -118,6 +119,30 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
     });
   }
 
+  
+  List<Widget> _buildAnswerButtons(Map<String, dynamic> question,ref) {
+    final options = question['options'];
+    final correctAnswer = question['correctAnswer'];
+
+    if (options is Map<String, dynamic>) {
+      return options.keys.map((option) {
+        return AnswerButton(
+          onTap: () {
+            answerQuestion(option, correctAnswer,ref);
+          },
+          answerText: (options[option]),
+        );
+      }).toList();
+    } else {
+      return [
+        const Text(
+          'Error: Options not available',
+          style: TextStyle(color: Colors.white),
+        )
+      ];
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     log('easy question screen');
@@ -195,7 +220,7 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
                                 TextButton.icon(
                                   onPressed: () {},
                                   label: Text(
-                                    "${lives}",
+                                    "$lives",
                                     style: const TextStyle(
                                         color: Colors.red, fontSize: 20),
                                   ),
@@ -231,7 +256,7 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ..._buildAnswerButtons(currentQuestion),
+                  ..._buildAnswerButtons(currentQuestion,ref),
                 ],
               ),
             ),
@@ -241,26 +266,5 @@ class QuestionsScreenState extends State<EasyQuestionsScreen> {
     );
   }
 
-  List<Widget> _buildAnswerButtons(Map<String, dynamic> question) {
-    final options = question['options'];
-    final correctAnswer = question['correctAnswer'];
-
-    if (options is Map<String, dynamic>) {
-      return options.keys.map((option) {
-        return AnswerButton(
-          onTap: () {
-            answerQuestion(option, correctAnswer);
-          },
-          answerText: (options[option]),
-        );
-      }).toList();
-    } else {
-      return [
-        const Text(
-          'Error: Options not available',
-          style: TextStyle(color: Colors.white),
-        )
-      ];
-    }
   }
-}
+

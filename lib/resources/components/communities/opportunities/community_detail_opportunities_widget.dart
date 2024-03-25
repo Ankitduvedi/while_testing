@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
 import 'package:com.example.while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
@@ -10,24 +11,16 @@ class Opportunity {
   final String url;
   final String id;
 
-  Opportunity(
-      {required this.name,
-      required this.description,
-      required this.url,
-      required this.id});
+  Opportunity({required this.name, required this.description, required this.url, required this.id});
 }
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-class OpportunitiesScreen extends StatefulWidget {
-  const OpportunitiesScreen({super.key, required this.user});
+// Convert OpportunitiesScreen to a ConsumerWidget
+class OpportunitiesScreen extends ConsumerWidget {
+  const OpportunitiesScreen({Key? key, required this.user}) : super(key: key);
   final Community user;
-  @override
-  OpportunitiesScreenState createState() => OpportunitiesScreenState();
-}
-
-class OpportunitiesScreenState extends State<OpportunitiesScreen> {
-  Future<void> _showOpportunityDetails(Opportunity opportunity) async {
+  Future<void> _showOpportunityDetails(BuildContext context,Opportunity opportunity,WidgetRef ref) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -83,13 +76,13 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
                 Navigator.of(context).pop();
               },
             ),
-            (widget.user.email == APIs.me.email)
+            (user.email == ref.read(apisProvider).me.email)
                 ? TextButton(
                     child: const Text('Delete'),
                     onPressed: () {
                       FirebaseFirestore.instance
                           .collection('communities')
-                          .doc(widget.user.id)
+                          .doc(user.id)
                           .collection('opportunities')
                           .doc(opportunity.id)
                           .delete();
@@ -104,13 +97,13 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('communities')
-            .doc(widget.user.id)
+            .doc(user.id)
             .collection('opportunities')
             .snapshots(),
         builder: (context, snapshot) {
@@ -150,7 +143,7 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
                       style: const TextStyle(color: Colors.black),
                     ),
                     onTap: () {
-                      _showOpportunityDetails(opportunity);
+                      _showOpportunityDetails(context,opportunity,ref);
                     },
                   ),
                   Divider(
@@ -172,7 +165,7 @@ class OpportunitiesScreenState extends State<OpportunitiesScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddOpportunityScreen(
-                        user: widget.user,
+                        user: user,
                       )));
         },
         tooltip: 'Add Opportunity',

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:com.example.while_app/main.dart';
 import '../apis.dart';
@@ -11,31 +12,32 @@ import '../helper/my_date_util.dart';
 import '../../../../data/model/message.dart';
 
 // for showing single message details
-class MessageCard extends StatefulWidget {
+class MessageCard extends ConsumerStatefulWidget {
   const MessageCard({super.key, required this.message});
 
   final Message message;
 
   @override
-  State<MessageCard> createState() => _MessageCardState();
+  ConsumerState<MessageCard> createState() => _MessageCardState();
 }
 
-class _MessageCardState extends State<MessageCard> {
+class _MessageCardState extends ConsumerState<MessageCard> {
   @override
   Widget build(BuildContext context) {
-    bool isMe = APIs.user.uid == widget.message.fromId;
+    final fireService = ref.read(apisProvider);
+    bool isMe = fireService.user.uid == widget.message.fromId;
     return InkWell(
         onLongPress: () {
-          _showBottomSheet(isMe);
+          _showBottomSheet(isMe,fireService);
         },
-        child: isMe ? _greenMessage() : _blueMessage());
+        child: isMe ? _greenMessage() : _blueMessage(fireService));
   }
 
   // sender or another user message
-  Widget _blueMessage() {
+  Widget _blueMessage(fireservice) {
     //update last read message if sender and receiver are different
     if (widget.message.read.isEmpty) {
-      APIs.updateMessageReadStatus(widget.message);
+      fireservice.updateMessageReadStatus(widget.message);
     }
 
     return Row(
@@ -49,11 +51,11 @@ class _MessageCardState extends State<MessageCard> {
                 : mq.width * .04),
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 //border: Border.all(color: Colors.grey.shade800),
                 //making borders curved
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
@@ -130,11 +132,11 @@ class _MessageCardState extends State<MessageCard> {
                 : mq.width * .04),
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.blueAccent,
                 //border: Border.all(color: Colors.grey.shade800),
                 //making borders curved
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                     bottomLeft: Radius.circular(20))),
@@ -166,7 +168,7 @@ class _MessageCardState extends State<MessageCard> {
   }
 
   // bottom sheet for modifying message details
-  void _showBottomSheet(bool isMe) {
+  void _showBottomSheet(bool isMe,fireservice) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -243,7 +245,7 @@ class _MessageCardState extends State<MessageCard> {
                       //for hiding bottom sheet
                       Navigator.pop(context);
 
-                      _showMessageUpdateDialog();
+                      _showMessageUpdateDialog(fireservice);
                     }),
 
               //delete option
@@ -253,7 +255,7 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.red, size: 26),
                     name: 'Delete Message',
                     onTap: () async {
-                      await APIs.deleteMessage(widget.message).then((value) {
+                      await fireservice.deleteMessage(widget.message).then((value) {
                         //for hiding bottom sheet
                         Navigator.pop(context);
                       });
@@ -286,7 +288,7 @@ class _MessageCardState extends State<MessageCard> {
   }
 
   //dialog for updating message content
-  void _showMessageUpdateDialog() {
+  void _showMessageUpdateDialog(fireservice) {
     String updatedMsg = widget.message.msg;
 
     showDialog(
@@ -338,7 +340,7 @@ class _MessageCardState extends State<MessageCard> {
                     onPressed: () {
                       //hide alert dialog
                       Navigator.pop(context);
-                      APIs.updateMessage(widget.message, updatedMsg);
+                      fireservice.updateMessage(widget.message, updatedMsg);
                     },
                     child: const Text(
                       'Update',

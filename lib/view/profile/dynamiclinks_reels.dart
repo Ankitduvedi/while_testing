@@ -2,20 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 import 'package:com.example.while_app/data/model/video_model.dart';
 import 'package:share/share.dart';
 
 // import 'package:while_app/resources/components/videoPlayer/circle_animation.dart';
 
-class DynamicReelsScreen extends StatefulWidget {
+class DynamicReelsScreen extends ConsumerStatefulWidget {
   const DynamicReelsScreen({super.key, required this.id});
   final String id;
   @override
-  State<DynamicReelsScreen> createState() => DynamicReelsScreenState();
+  ConsumerState<DynamicReelsScreen> createState() => DynamicReelsScreenState();
 }
 
-class DynamicReelsScreenState extends State<DynamicReelsScreen> {
+class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
   late Video video;
   User? user = FirebaseAuth.instance.currentUser;
   late VideoPlayerController _controller;
@@ -163,7 +164,7 @@ class DynamicReelsScreenState extends State<DynamicReelsScreen> {
                           InkWell(
                               onTap: () async {
                                 //generate url
-                                final url = await APIs.shareDynamicLinks(
+                                final url = await ref.read(apisProvider).shareDynamicLinks(
                                     'reel', widget.id);
                                 // Share text
                                 Share.share(url);

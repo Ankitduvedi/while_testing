@@ -6,25 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_following_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FriendProfileDataWidget extends StatefulWidget {
+class FriendProfileDataWidget extends ConsumerStatefulWidget {
   const FriendProfileDataWidget({super.key, required this.chatUser});
   final ChatUser chatUser;
   @override
-  State<FriendProfileDataWidget> createState() =>
+  ConsumerState<FriendProfileDataWidget> createState() =>
       FriendProfileDataWidgetState();
 }
 
-class FriendProfileDataWidgetState extends State<FriendProfileDataWidget> {
+class FriendProfileDataWidgetState
+    extends ConsumerState<FriendProfileDataWidget> {
   String? _image;
 
   @override
   Widget build(BuildContext context) {
+    final fireService = ref.read(apisProvider);
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     var nh = MediaQuery.of(context).viewPadding.top;
     return StreamBuilder(
-        stream: APIs.getMyUsersId(),
+        stream: fireService.getMyUsersId(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             //if data is loading

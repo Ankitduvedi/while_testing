@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
@@ -51,7 +50,7 @@ final filteredUsersProvider = Provider<List<ChatUser>>((ref) {
 final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(APIs.me.id)
+      .doc(ref.read(userProvider)!.id)
       .collection('my_users')
       .orderBy('timeStamp', descending: true)
       .snapshots()
@@ -62,7 +61,7 @@ final followingUsersProvider =
   // final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(APIs.me.id)
+      .doc(ref.read(userProvider)!.id)
       .collection('following')
       .snapshots()
       .map((snapshot) {

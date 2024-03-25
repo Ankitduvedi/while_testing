@@ -8,7 +8,7 @@ import 'package:com.example.while_app/resources/components/communities/quiz/quiz
 import 'package:com.example.while_app/data/model/community_user.dart';
 
 class QuizScreen extends StatefulWidget {
-  QuizScreen({Key? key, required this.user}) : super(key: key);
+  const QuizScreen({Key? key, required this.user}) : super(key: key);
   final Community user;
 
   @override

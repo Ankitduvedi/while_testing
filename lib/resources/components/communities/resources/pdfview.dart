@@ -1,11 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class pdfview extends StatefulWidget {
-  String url;
+  final String url;
   pdfview({
+    Key? key,
     required this.url,
-  });
+  }) : super(key: key);
   @override
   State<pdfview> createState() => _pdfviewState(
         url: url,

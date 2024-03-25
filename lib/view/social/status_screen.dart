@@ -2,33 +2,46 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/social/full_screen_status.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StatusScreenn extends StatefulWidget {
-  const StatusScreenn({super.key});
+class StatusScreenState extends ConsumerStatefulWidget {
+  const StatusScreenState({super.key});
+
   @override
-  StatusScreenState createState() => StatusScreenState();
+  ConsumerState<StatusScreenState> createState() => _StatusScreenStateState();
 }
 
-class StatusScreenState extends State<StatusScreenn> {
+class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
   final TextEditingController _statusTextController = TextEditingController();
+
   List<String> friends = [];
+
   late String userId;
+
   late Stream<QuerySnapshot> peopleStream;
+
   int currentIndex = 0;
+
   Timer? statusTimer;
+  @override
+  void dispose() {
+    _statusTextController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
-    userId = APIs.me.id;
+    userId = ref.read(userProvider)!.id;
     peopleStream = FirebaseFirestore.instance
         .collection('statuses')
         .orderBy('userId')
@@ -176,11 +189,11 @@ class StatusScreenState extends State<StatusScreenn> {
       File imageFile = File(pickedFile.path);
 
       // Display the selected image in a dialog or store it for posting with status
-      _showImagePreviewDialog(imageFile);
+      _showImagePreviewDialog(imageFile, ref);
     }
   }
 
-  void _showImagePreviewDialog(File imageFile) {
+  void _showImagePreviewDialog(File imageFile, WidgetRef ref) {
     showDialog<void>(
       useSafeArea: true,
       context: context,
@@ -210,7 +223,10 @@ class StatusScreenState extends State<StatusScreenn> {
             TextButton(
               child: const Text('Post'),
               onPressed: () {
-                _postStatus(imageFile);
+                ref
+                    .read(apisProvider)
+                    .postStatus(imageFile, _statusTextController.text);
+                // _postStatus(imageFile);
                 Navigator.of(context).pop();
               },
             ),
@@ -218,36 +234,5 @@ class StatusScreenState extends State<StatusScreenn> {
         );
       },
     );
-  }
-
-  void _postStatus(File imageFile) async {
-    final statusText = _statusTextController.text;
-    final userId = APIs.me.id; // Replace with the actual user's ID
-
-    // Upload the image to Firebase Storage
-    final storageReference =
-        FirebaseStorage.instance.ref().child('$userId/${DateTime.now()}.png');
-    await storageReference.putFile(imageFile);
-
-    // Get the image URL from Firebase Storage
-    final imageUrl = await storageReference.getDownloadURL();
-
-    FirebaseFirestore.instance.collection('statuses').add({
-      'userId': userId,
-      'userName': APIs.me.name,
-      'profileImg': APIs.me.image,
-      'statusText': statusText,
-      'imageUrl': imageUrl, // Add the URL of the uploaded image
-      'timestamp': FieldValue.serverTimestamp(),
-      // Add other necessary fields like user name and profile image URL
-    });
-
-    _statusTextController.clear();
-  }
-
-  @override
-  void dispose() {
-    _statusTextController.dispose();
-    super.dispose();
   }
 }

@@ -2,14 +2,15 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/view/profile/controller/proflie_controller.dart';
+import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
-import '../../resources/components/message/apis.dart';
 import '../../resources/components/message/helper/dialogs.dart';
 
 //profile screen -- to show signed in user info
@@ -25,22 +26,23 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = ref.watch(userDataProvider);
-    final user = userProvider.userData;
+    log(" profile screen");
+    final userProv = ref.watch(userProvider);
+    final isUpdating = ref.watch(profilerControllerProvider);
+    final user = userProv;
     final ChatUser updatedUser = user!;
-    return GestureDetector(
-      // for hiding keyboard
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-          //app bar
-          appBar: AppBar(
-              title: Text(
-            user.name,
-            style: const TextStyle(color: Colors.black),
-          )),
+    return Scaffold(
+        //app bar
+        appBar: AppBar(
+            title: Text(
+          user.name,
+          style: const TextStyle(color: Colors.black),
+        )),
 
-          //body
-          body: Form(
+        //body
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Form(
             key: _formKey,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
@@ -248,22 +250,33 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                     SizedBox(height: mq.height * .05),
 
                     // update profile button
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          minimumSize: Size(mq.width * .5, mq.height * .06)),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          userProvider.updateUserData(updatedUser);
-                          Dialogs.showSnackbar(
-                              context, 'Profile Updated Successfully!');
-                        }
-                      },
-                      icon: const Icon(Icons.edit, size: 28),
-                      label:
-                          const Text('UPDATE', style: TextStyle(fontSize: 16)),
-                    ),
+                    isUpdating
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(),
+                                minimumSize:
+                                    Size(mq.width * .5, mq.height * .06)),
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                ref
+                                    .read(profilerControllerProvider.notifier)
+                                    .updateUserData(updatedUser, context);
+                                Dialogs.showSnackbar(
+                                    context, 'Profile Updated Successfully!');
+                                // ref.refresh(userProv as Refreshable);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Wrapper(),
+                                    ));
+                              }
+                            },
+                            icon: const Icon(Icons.edit, size: 28),
+                            label: const Text('UPDATE',
+                                style: TextStyle(fontSize: 16)),
+                          ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -279,8 +292,8 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                 ),
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   // bottom sheet for picking a profile picture for user
@@ -325,8 +338,9 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           setState(() {
                             _image = image.path;
                           });
-
-                          APIs.updateProfilePicture(File(_image!));
+                          ref
+                              .read(profilerControllerProvider.notifier)
+                              .updateProfilePicture(File(_image!), context);
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }
@@ -355,7 +369,9 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                             _image = image.path;
                           });
 
-                          APIs.updateProfilePicture(File(_image!));
+                          ref
+                              .read(profilerControllerProvider.notifier)
+                              .updateProfilePicture(File(_image!), context);
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }

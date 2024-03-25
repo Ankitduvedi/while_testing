@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.example.while_app/resources/components/communities/chat_user_card.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -8,11 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/route_manager.dart';
-import 'package:provider/provider.dart';
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
-import 'package:com.example.while_app/view_model/providers/providers_list.dart';
 import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
 import 'firebase_options.dart';
 import 'utils/routes/routes.dart';
@@ -29,9 +26,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Provider.debugCheckInvalidValueType = null;
   await _initializeFirebase();
-  runApp(const river.ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 Future<void> _initializeFirebase() async {
@@ -42,12 +38,11 @@ Future<void> _initializeFirebase() async {
     name: 'WHILE',
   );
   // Optionally print the result
-  // print(result);
   await initDynamicLinks();
 }
 
 Future<void> initDynamicLinks() async {
-  log('Initializing Dynamic Links');
+  log('Initializing Dynamic Links in main dart');
 
   // Handle dynamic links when the app is already running
   FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
@@ -58,7 +53,6 @@ Future<void> initDynamicLinks() async {
   final PendingDynamicLinkData? initialLink =
       await FirebaseDynamicLinks.instance.getInitialLink();
   if (initialLink != null) {
-    APIs.getSelfInfo();
     _handleDynamicLink(initialLink);
   }
 }
@@ -73,7 +67,6 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.toNamed(
         route,
-        //arguments: url ?? '', // Ensure you pass the parameters
       );
     });
   } else {
@@ -81,12 +74,11 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   }
 }
 
-class MyApp extends river.ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
-  Widget build(BuildContext context, river.WidgetRef ref) {
+  Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    // final theme = ref.watch(themeNotifierProvider);
 
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -95,22 +87,15 @@ class MyApp extends river.ConsumerWidget {
         systemStatusBarContrastEnforced: false);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
-    return MultiProvider(
-      providers: providersList,
-      child: GetMaterialApp(
-        // theme: theme,
-        //darkTheme: darkTheme,
-        //themeMode: ThemeMode.system,
-        routes: {
-          '/profile': (BuildContext context) => const HomeScreen(),
-          // Add other routes as needed
-        },
-        title: 'While',
-        debugShowCheckedModeBanner: false,
-        initialRoute: RoutesName.wrapper,
-        onGenerateRoute: Routes.generateRoute,
-        home: const Wrapper(),
-      ),
+    return MaterialApp(
+      routes: {
+        '/profile': (BuildContext context) => const HomeScreen(),
+      },
+      title: 'While',
+      debugShowCheckedModeBanner: false,
+      initialRoute: RoutesName.wrapper,
+      onGenerateRoute: Routes.generateRoute,
+      home: const Wrapper(),
     );
   }
 }

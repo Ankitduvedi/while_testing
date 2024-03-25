@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/utils/dialogs/avail_users_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
 import '../../../main.dart';
@@ -14,20 +15,19 @@ import '../message/helper/dialogs.dart';
 import '../../../data/model/community_user.dart';
 
 //profile screen -- to show signed in user info
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   final Community user;
 
   const ProfileScreen({super.key, required this.user});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   String? _image;
-
 
   void _openUserListDialog(String id, List<ChatUser> listUsers) {
     log("community id$id");
@@ -37,7 +37,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         commId: id,
         list: listUsers,
       ),
-
     );
   }
 
@@ -48,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fireService = ref.read(apisProvider);
     String designation = "";
     List<ChatUser> list = [];
     final Community community = Community.empty();
@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: MaterialButton(
                             elevation: 1,
                             onPressed: () {
-                              _showBottomSheet();
+                              _showBottomSheet(fireService);
                             },
                             shape: const CircleBorder(),
                             color: Colors.white,
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           log(community.toJson().toString());
-                          APIs.updateCommunityInfo(community).then((value) {
+                          fireService.updateCommunityInfo(community).then((value) {
                             Dialogs.showSnackbar(
                                 context, 'Profile Updated Successfully!');
                           });
@@ -238,7 +238,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 18),
                           ),
-
                         ],
                       ),
                     ),
@@ -249,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SingleChildScrollView(
                       child: StreamBuilder(
                           stream:
-                              APIs.getCommunityParticipantsInfo(widget.user.id),
+                              fireService.getCommunityParticipantsInfo(widget.user.id),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               //if data is loading
@@ -284,7 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               .validate()) {
                                             _formKey.currentState!.save();
                                             log(community.toJson().toString());
-                                            APIs.updateCommunityInfo(community)
+                                            fireService.updateCommunityInfo(community)
                                                 .then((value) {
                                               Dialogs.showSnackbar(context,
                                                   'Profile Updated Successfully!');
@@ -500,7 +499,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // bottom sheet for picking a profile picture for user
-  void _showBottomSheet() {
+  void _showBottomSheet(fireservice) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -542,7 +541,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             _image = image.path;
                           });
 
-                          APIs.updateProfilePictureCommunity(
+                          fireservice.updateProfilePictureCommunity(
                               File(_image!), widget.user.id);
                           // for hiding bottom sheet
                           Navigator.pop(context);
@@ -572,7 +571,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             _image = image.path;
                           });
 
-                          APIs.updateProfilePictureCommunity(
+                          fireservice.updateProfilePictureCommunity(
                               File(_image!), widget.user.id);
                           // for hiding bottom sheet
                           Navigator.pop(context);

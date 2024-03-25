@@ -6,8 +6,6 @@ import 'package:com.example.while_app/controller/feed_item.dart';
 import 'package:com.example.while_app/controller/videos_lists.dart';
 import 'package:com.example.while_app/data/model/video_model.dart';
 import '../view_model/providers/data_provider.dart';
-import 'package:provider/provider.dart' as provi;
-
 class ReelsScreen extends ConsumerStatefulWidget {
   const ReelsScreen({super.key});
 
@@ -57,10 +55,10 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   @override
   Widget build(BuildContext context) {
     List<VideoPlayerController> videoControllers = [];
-    Stream<QuerySnapshot> str =
-        provi.Provider.of<DataProvider>(context).videoStream;
-    return StreamBuilder<QuerySnapshot>(
-        stream: str,
+    final streamData = ref.read(videoStreamProvider.future);
+
+    return FutureBuilder<QuerySnapshot>(
+        future: streamData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

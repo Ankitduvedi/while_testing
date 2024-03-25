@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/answerButton.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MediumQuestionsScreen extends StatefulWidget {
+class MediumQuestionsScreen extends ConsumerStatefulWidget {
   final Community user;
   final int mediumQuestions;
   final int attemptedMediumQuestion;
@@ -25,7 +26,7 @@ class MediumQuestionsScreen extends StatefulWidget {
   QuestionsScreenState createState() => QuestionsScreenState();
 }
 
-class QuestionsScreenState extends State<MediumQuestionsScreen> {
+class QuestionsScreenState extends ConsumerState<MediumQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
   late int lives;
@@ -101,11 +102,11 @@ class QuestionsScreenState extends State<MediumQuestionsScreen> {
         startTimer();
         seconds = 45;
       } else {
-        APIs.updateScore(
+        ref.read(apisProvider).updateScore(
             widget.user.id,
             'mediumQuestions',
             correctAnswers + widget.mediumQuestions,
-            (correctAnswers + APIs.me.mediumQuestions),
+            (correctAnswers + ref.read(apisProvider).me.mediumQuestions),
             'attemptedMediumQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(

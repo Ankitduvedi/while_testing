@@ -1,41 +1,42 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/data/model/community_message.dart';
 import 'package:com.example.while_app/resources/components/communities/community_message_card.dart';
 import '../../../main.dart';
 import '../message/apis.dart';
 import '../../../data/model/community_user.dart';
-
-class CChatScreen extends StatefulWidget {
+// Convert to ConsumerStatefulWidget
+class CChatScreen extends ConsumerStatefulWidget {
   final Community user;
 
   const CChatScreen({super.key, required this.user});
 
   @override
-  State<CChatScreen> createState() => _CChatScreenState();
+  ConsumerState<CChatScreen> createState() => _CChatScreenState();
 }
 
-class _CChatScreenState extends State<CChatScreen> {
-  //for storing all messages
+// Extend from ConsumerState
+class _CChatScreenState extends ConsumerState<CChatScreen> {
   List<CommunityMessage> _list = [];
-
-  //for handling message text changes
   final _textController = TextEditingController();
-
-  //showEmoji -- for storing value of showing or hiding emoji
-  //isUploading -- for checking if image is uploading or not?
   bool _showEmoji = false, _isUploading = false;
 
   @override
   Widget build(BuildContext context) {
+    // MediaQueryData instance for responsive UI
+    final mq = MediaQuery.of(context).size;
+
+    // Using 'ref.watch' or 'ref.read' directly in the build method.
+    // For example: final apiService = ref.watch(apisProvider);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: WillPopScope(
-        //if emojis are shown & back button is pressed then hide emojis
-        //or else simple close current screen on back button click
         onWillPop: () {
           if (_showEmoji) {
             setState(() => _showEmoji = !_showEmoji);
@@ -46,72 +47,74 @@ class _CChatScreenState extends State<CChatScreen> {
         },
         child: Scaffold(
           backgroundColor: Colors.white,
-
-          //body
           body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/comm_bg.png'),
-                    fit: BoxFit.cover)),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/comm_bg.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Column(
               children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: APIs.getAllCommunityMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        //if data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                          return const SizedBox();
-          
-                        //if some or all data is loaded then show it
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          _list = data
-                                  ?.map(
-                                      (e) => CommunityMessage.fromJson(e.data()))
-                                  .toList() ??
-                              [];
-          
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                                reverse: true,
-                                itemCount: _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return CommunityMessageCard(
-                                      message: _list[index]);
-                                });
-                          } else {
-                            return const Center(
-                              child: Text('Say Hii! 👋',
-                                  style: TextStyle(fontSize: 20)),
-                            );
-                          }
-                      }
-                    },
-                  ),
-                ),
-          
-                //progress indicator for showing uploading
+                 Expanded(
+  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+    stream: ref.read(apisProvider).getAllCommunityMessages(widget.user),
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        // Handle any errors that occur during fetching data
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+
+      switch (snapshot.connectionState) {
+        case ConnectionState.waiting:
+          // Show a loading spinner while waiting for the data
+          return const Center(child: CircularProgressIndicator());
+        case ConnectionState.active:
+        case ConnectionState.done:
+          // Once the data is available, convert your snapshots into a list of messages
+          if (snapshot.hasData) {
+            final data = snapshot.data!.docs;
+            _list = data.map((doc) => CommunityMessage.fromJson(doc.data())).toList();
+            
+            // Check if the list is empty
+            if (_list.isEmpty) {
+              return const Center(
+                child: Text('Say Hi! 👋', style: TextStyle(fontSize: 20)),
+              );
+            }
+
+            // Return a ListView to display the messages
+            return ListView.builder(
+              reverse: true,
+              itemCount: _list.length,
+              itemBuilder: (context, index) => CommunityMessageCard(message: _list[index]),
+            );
+          } else {
+            // Handle the case when there's no data
+            return const Center(
+              child: Text('Start the conversation!'),
+            );
+          }
+        default:
+          // By default, show a loading spinner
+          return const Center(child: CircularProgressIndicator());
+      }
+    },
+  ),
+),
+
                 if (_isUploading)
                   const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                          child: CircularProgressIndicator(strokeWidth: 2))),
-          
-                //chat input filed
-                _chatInput(context),
-          
-                //show emojis on keyboard emoji button click & vice versa
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                _chatInput(context, ref), // Pass 'mq' as an argument
                 if (_showEmoji)
                   SizedBox(
-                    height: mq.height * .35,
+                    height: mq.height * .35, // Use 'mq' for responsive design
                     child: EmojiPicker(
                       textEditingController: _textController,
                       config: Config(
@@ -130,7 +133,7 @@ class _CChatScreenState extends State<CChatScreen> {
   }
 
   // bottom chat input field
-  Widget _chatInput(BuildContext context) {
+  Widget _chatInput(BuildContext context,WidgetRef ref) {
     return Material(
       //elevation: 25,
       child: Container(
@@ -156,7 +159,7 @@ class _CChatScreenState extends State<CChatScreen> {
                             for (var i in images) {
                               log('Image Path: ${i.path}');
                               setState(() => _isUploading = true);
-                              await APIs.communitySendChatImage(
+                              ref.read(apisProvider).communitySendChatImage(
                                   widget.user, File(i.path));
                               setState(() => _isUploading = false);
                             }
@@ -195,13 +198,7 @@ class _CChatScreenState extends State<CChatScreen> {
                             hintText: 'Type Something...',
                             hintStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none),
-                      )),
-      
-                      
-      
-                      
-      
-                      //adding some space
+                      )),    
                       SizedBox(width: mq.width * .02),
                     ],
                   ),
@@ -220,7 +217,7 @@ class _CChatScreenState extends State<CChatScreen> {
                               log('Image Path: ${image.path}');
                               setState(() => _isUploading = true);
       
-                              await APIs.communitySendChatImage(
+                              ref.read(apisProvider).communitySendChatImage(
                                   widget.user, File(image.path));
                               setState(() => _isUploading = false);
                             }
@@ -232,7 +229,7 @@ class _CChatScreenState extends State<CChatScreen> {
               MaterialButton(
                 onPressed: () {
                   if (_textController.text.isNotEmpty) {
-                    APIs.sendCommunityMessage(
+                    ref.read(apisProvider).sendCommunityMessage(
                         widget.user.id, _textController.text, Types.text);
                     // }
                     _textController.text = '';

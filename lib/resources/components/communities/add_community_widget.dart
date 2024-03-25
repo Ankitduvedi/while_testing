@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:com.example.while_app/data/model/community_user.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,7 +12,7 @@ const uuid = Uuid();
 class AddCommunityScreen {
   XFile? image;
 
-  void addCommunityDialog(BuildContext context) {
+  void addCommunityDialog(BuildContext context, WidgetRef ref) {
     String name = '';
     String type = '';
     String domain = '';
@@ -123,14 +124,14 @@ class AddCommunityScreen {
                 if (type != '' && name != '') {
                   final time = DateTime.now().millisecondsSinceEpoch.toString();
                   final String id = uuid.v4();
-           
+
                   final Community community = Community(
                       image: '',
                       about: about,
                       name: name,
                       createdAt: time,
                       id: id,
-                      email: APIs.me.email,
+                      email: ref.read(apisProvider).me.email,
                       type: type,
                       noOfUsers: '1',
                       domain: domain,
@@ -138,9 +139,12 @@ class AddCommunityScreen {
                       easyQuestions: 0,
                       hardQuestions: 0,
                       mediumQuestions: 0,
-                      admin: APIs.me.name);
+                      admin: ref.read(apisProvider).me.name);
                   log("creating");
-                  APIs.addCommunities(community, File(image!.path));
+                  ref
+                      .read(apisProvider)
+                      .addCommunities(community, File(image!.path));
+                  // APIs.addCommunities(community, File(image!.path));
                   log("created");
                   Navigator.pop(context);
                 }

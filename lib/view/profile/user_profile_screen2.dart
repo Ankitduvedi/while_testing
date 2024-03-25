@@ -1,18 +1,26 @@
-import 'package:com.example.while_app/resources/components/bottom_options_sheet.dart';
-import 'package:com.example.while_app/view/profile/user_leaderboard_screen.dart';
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
-import 'package:com.example.while_app/view/profile/profile_data_widget2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/resources/components/bottom_options_sheet.dart';
+import 'package:com.example.while_app/view/profile/user_leaderboard_screen.dart';
+import 'package:com.example.while_app/view/profile/creator_profile_widget.dart';
+import 'package:com.example.while_app/view/profile/profile_data_widget2.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userDataProvider).userData;
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    log(user!.name);
+
     const tabBarIcons = [
       Tab(
         icon: Icon(
@@ -37,81 +45,69 @@ class ProfileScreen extends ConsumerWidget {
       ),
     ];
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            user!.name,
-            style: GoogleFonts.ptSans(color: Colors.black),
-          ),
-          actions: [
-            const Padding(
-              padding: EdgeInsets.only(right: 16.0),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: Text(
+          user.name,
+          style: GoogleFonts.ptSans(color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            iconSize: 35,
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return const MoreOptions();
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.black,
             ),
-            IconButton(
-              iconSize: 12,
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return const MoreOptions();
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.black,
-                size: 35,
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: DefaultTabController(
+        length: 3,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, _) => [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [const ProfileDataWidget()],
               ),
             ),
           ],
-        ),
-        backgroundColor: Colors.white,
-        body: DefaultTabController(
-          length: 3,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) {
-              return [
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [const ProfileDataWidget()],
-                  ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Material(
+                color: Colors.white,
+                child: TabBar(
+                  padding: EdgeInsets.all(0),
+                  indicatorColor: Colors.black,
+                  tabs: tabBarIcons,
                 ),
-              ];
-            },
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Material(
-                  color: Colors.white,
-                  child: TabBar(
-                    padding: EdgeInsets.all(0),
-                    indicatorColor: Colors.black,
-                    tabs: tabBarIcons,
-                  ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      Consumer(builder: (context, ref, child) {
-                        final user = ref.watch(userDataProvider).userData;
-                        return Center(
-                            child: CreatorProfile(
-                          userID: user!.id,
-                        ));
-                      }),
-                      const Center(child: LeaderboardScreen()),
-                      Center(
-                          child: Text(
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    const Center(child: CreatorProfile()),
+                    const Center(child: LeaderboardScreen()),
+                    Center(
+                      child: Text(
                         "Become a Freelancer",
                         style: GoogleFonts.ptSans(color: Colors.black),
-                      )),
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

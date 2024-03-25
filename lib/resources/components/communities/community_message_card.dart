@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
 import '../../../main.dart';
@@ -12,19 +13,21 @@ import '../message/helper/my_date_util.dart';
 import '../../../data/model/community_message.dart';
 
 // for showing single message details
-class CommunityMessageCard extends StatefulWidget {
+class CommunityMessageCard extends ConsumerStatefulWidget {
   const CommunityMessageCard({super.key, required this.message});
 
   final CommunityMessage message;
 
   @override
-  State<CommunityMessageCard> createState() => _CommunityMessageCardState();
+  ConsumerState<CommunityMessageCard> createState() =>
+      _CommunityMessageCardState();
 }
 
-class _CommunityMessageCardState extends State<CommunityMessageCard> {
+class _CommunityMessageCardState extends ConsumerState<CommunityMessageCard> {
   @override
   Widget build(BuildContext context) {
-    bool isMe = APIs.user.uid == widget.message.fromId;
+    final fireService = ref.read(apisProvider);
+    bool isMe = fireService.user.uid == widget.message.fromId;
 
     return widget.message.types == Types.joined
         ? Center(

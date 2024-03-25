@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
  class NotificationsNotifier extends StateNotifier<NotificationsState> {
   NotificationsNotifier() : super(NotificationsState());
 
-  Future<void> fetchNotifications() async {
+  Future<void> fetchNotifications(Ref ref) async {
     // Existing logic remains for fetching all notifications
     // Assume 'isRead' field is used to determine new notifications
     final snapshot = await FirebaseFirestore.instance
         .collection('notifications')
-        .doc(APIs.me.id)
+        .doc(ref.read(apisProvider).me.id)
         .collection('notifs')
         .orderBy('timeStamp', descending: true)
         .limit(100)
@@ -27,11 +27,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
     state = NotificationsState(notifications: notifications, hasNewNotifications: hasNew);
   }
 
-  Future<void> markNotificationsAsRead() async {
+  Future<void> markNotificationsAsRead(Ref ref) async {
     // Fetch all unread notifications
     var collection = FirebaseFirestore.instance
         .collection('notifications')
-        .doc(APIs.me.id)
+        .doc(ref.read(apisProvider).me.id)
         .collection('notifs')
         .where('isRead', isEqualTo: false);
     
@@ -45,6 +45,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
     await batch.commit();
 
     // After marking as read, update state
-    await fetchNotifications(); // Refresh notifications state
+    await fetchNotifications(ref); // Refresh notifications state
   }
 }

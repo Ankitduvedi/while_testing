@@ -1,13 +1,14 @@
-import 'package:com.example.while_app/view/intro_screens/intro_page_1.dart';
-import 'package:com.example.while_app/view/intro_screens/intro_page_2.dart';
-import 'package:com.example.while_app/view/intro_screens/intro_page_3.dart';
-import 'package:com.example.while_app/view/intro_screens/intro_page_4.dart';
-import 'package:com.example.while_app/view/intro_screens/intro_page_5.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/feature/intro_screens/intro_page_1.dart';
+import 'package:com.example.while_app/feature/intro_screens/intro_page_2.dart';
+import 'package:com.example.while_app/feature/intro_screens/intro_page_3.dart';
+import 'package:com.example.while_app/feature/intro_screens/intro_page_4.dart';
+import 'package:com.example.while_app/feature/intro_screens/intro_page_5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:developer';
 
 class OnBoardingScreen extends ConsumerStatefulWidget {
   const OnBoardingScreen({super.key});
@@ -40,17 +41,18 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("onBoarding Screens");
     return Scaffold(
       body: Stack(
         children: [
           PageView(
             controller: _controller,
-            children: [
+            children: const [
               IntroPage1(),
               IntroPage2(),
               IntroPage3(),
               IntroPage4(),
-              const IntroPage5(),
+              IntroPage5(),
             ],
             onPageChanged: (int page) {
               setState(() {

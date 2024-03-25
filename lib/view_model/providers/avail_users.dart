@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final myUsersProvider = StreamProvider<List<ChatUser>>((ref) {
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(APIs.me.id)
+      .doc(ref.read(apisProvider).me.id)
       .collection('my_users')
       .snapshots()
       .asyncMap((snapshot) async {

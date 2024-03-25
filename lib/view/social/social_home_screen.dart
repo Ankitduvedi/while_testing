@@ -1,17 +1,14 @@
 import 'dart:developer';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.example.while_app/main.dart';
-import 'package:com.example.while_app/resources/components/communities/add_community_widget.dart';
 import 'package:com.example.while_app/resources/components/communities/community_home_widget.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/message_home_widget.dart';
 import 'package:com.example.while_app/view/social/connect_screen.dart';
 import 'package:com.example.while_app/view/social/status_screen.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +40,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     _handleForegroundNotifications();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
+      log('A new onMessageOpenedApp event was published!');
       // Navigate to desired screen based on message
     });
 
@@ -136,6 +133,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: 45,
           backgroundColor: Colors.white,
           title: toogleSearch != 0
@@ -202,7 +200,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
             ConnectScreen(),
             MessageHomeWidget(),
             CommunityHomeWidget(),
-            StatusScreenn(),
+            StatusScreenState(),
           ],
         ),
       ),

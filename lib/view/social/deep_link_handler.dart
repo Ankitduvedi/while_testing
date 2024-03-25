@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:uni_links/uni_links.dart';
 
 class DeepLinkHandler {
@@ -19,7 +20,7 @@ class DeepLinkHandler {
         _linkStreamController.add(initialLink.toString());
       }
     } on Exception catch (e) {
-      print('Error initializing deep link handler: $e');
+      log('Error initializing deep link handler: $e');
     }
 
     uriLinkStream.listen((Uri? link) {

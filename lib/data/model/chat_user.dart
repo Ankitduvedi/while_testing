@@ -166,4 +166,85 @@ class ChatUser {
       isApproved: false
     );
   }
+  factory ChatUser.fromMap(Map<String, dynamic> map) {
+    return ChatUser(
+      image: map['image'] ?? '',
+      about: map['about'] ?? '',
+      name: map['name'] ?? '',
+      createdAt: map['created_at'] ?? '',
+      isOnline: map['is_online'] ?? false,
+      id: map['id'] ?? '',
+      lastActive: map['last_active'] ?? '',
+      email: map['email'] ?? '',
+      pushToken: map['push_token'] ?? '',
+      dateOfBirth: map['dateOfBirth'] ?? '',
+      gender: map['gender'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+      place: map['place'] ?? '',
+      profession: map['profession'] ?? '',
+      designation: map['designation'] ?? '',
+      follower: map['follower'] ?? 0,
+      following: map['following'] ?? 0,
+      easyQuestions: map['easyQuestions'] ?? 0,
+      mediumQuestions: map['mediumQuestions'] ?? 0,
+      hardQuestions: map['hardQuestions'] ?? 0,
+      lives: map['lives'] ?? 0,
+      isContentCreator: map['isContentCreator'] ?? false,
+      isApproved: map['isApproved'] ?? false,
+    );
+  }
+
+  // Add a copyWith method
+  ChatUser copyWith({
+    String? image,
+    String? about,
+    String? name,
+    String? createdAt,
+    bool? isOnline,
+    String? id,
+    String? lastActive,
+    String? email,
+    String? pushToken,
+    String? phoneNumber,
+    String? dateOfBirth,
+    String? gender,
+    String? profession,
+    String? place,
+    String? designation,
+    int? following,
+    int? follower,
+    int? easyQuestions,
+    int? mediumQuestions,
+    int? hardQuestions,
+    int? lives,
+    bool? isContentCreator,
+    bool? isApproved,
+  }) {
+    return ChatUser(
+      image: image ?? this.image,
+      about: about ?? this.about,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      isOnline: isOnline ?? this.isOnline,
+      id: id ?? this.id,
+      lastActive: lastActive ?? this.lastActive,
+      email: email ?? this.email,
+      pushToken: pushToken ?? this.pushToken,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      gender: gender ?? this.gender,
+      profession: profession ?? this.profession,
+      place: place ?? this.place,
+      designation: designation ?? this.designation,
+      following: following ?? this.following,
+      follower: follower ?? this.follower,
+      easyQuestions: easyQuestions ?? this.easyQuestions,
+      mediumQuestions: mediumQuestions ?? this.mediumQuestions,
+      hardQuestions: hardQuestions ?? this.hardQuestions,
+      lives: lives ?? this.lives,
+      isContentCreator: isContentCreator ?? this.isContentCreator,
+      isApproved: isApproved ?? this.isApproved,
+    );
+  }
+
 }

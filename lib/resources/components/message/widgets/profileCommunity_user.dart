@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'dart:io';
 
@@ -9,17 +10,17 @@ import '../../../../main.dart';
 import '../apis.dart';
 import '../../../../data/model/community_user.dart';
 
-class ProfileScreenParticipant extends StatefulWidget {
+class ProfileScreenParticipant extends ConsumerStatefulWidget {
   final Community user;
 
   const ProfileScreenParticipant({Key? key, required this.user})
       : super(key: key);
 
   @override
-  State<ProfileScreenParticipant> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreenParticipant> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreenParticipant> {
+class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
   final _formKey = GlobalKey<FormState>();
   String? _image;
 
@@ -145,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreenParticipant> {
                   ),
                   SingleChildScrollView(
                     child: StreamBuilder(
-                      stream: APIs.getCommunityParticipantsInfo(widget.user.id),
+                      stream: ref.read(apisProvider).getCommunityParticipantsInfo(widget.user.id),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:

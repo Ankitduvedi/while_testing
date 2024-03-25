@@ -4,12 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.example.while_app/utils/routes/routes_name.dart';
 import 'package:com.example.while_app/view_model/session_controller.dart';
-
-class PostProvider extends ChangeNotifier {
+final postProvider = Provider<PostProvider>((ref) {
+  return PostProvider();
+});
+class PostProvider  {
   final databaseReference = FirebaseDatabase.instance.ref();
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('Users');
   firebase_storage.FirebaseStorage storage =
@@ -23,7 +26,7 @@ class PostProvider extends ChangeNotifier {
 
   LoadValue(bool value) {
     _isLoading = value;
-    notifyListeners();
+  
   }
 
   selectPost(BuildContext context) async {
@@ -66,7 +69,7 @@ class PostProvider extends ChangeNotifier {
         );
         if (croppedFile != null) {
           _post = File(croppedFile.path);
-          notifyListeners();
+  
           if (context.mounted) {
             Navigator.pushNamed(context, RoutesName.postPreview,
                 arguments: File(croppedFile.path));

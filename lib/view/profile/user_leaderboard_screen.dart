@@ -1,4 +1,4 @@
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userDataProvider).userData;
+    final user = ref.watch(userProvider);
     List<GDPData> getChartData() {
       final List<GDPData> chartData = [
         //GDPData('Oceania', 1600),

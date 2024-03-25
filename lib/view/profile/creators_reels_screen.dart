@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 import 'package:com.example.while_app/data/model/video_model.dart';
 import 'package:share/share.dart';
 
-// import 'package:while_app/resources/components/videoPlayer/circle_animation.dart';
-
-class CreatorReelsScreen extends StatefulWidget {
+class CreatorReelsScreen extends ConsumerStatefulWidget {
   const CreatorReelsScreen({
     super.key,
     required this.video,
@@ -17,10 +16,10 @@ class CreatorReelsScreen extends StatefulWidget {
   final Video video;
   final int index;
   @override
-  State<CreatorReelsScreen> createState() => CreatorReelsScreenState();
+  ConsumerState<CreatorReelsScreen> createState() => CreatorReelsScreenState();
 }
 
-class CreatorReelsScreenState extends State<CreatorReelsScreen> {
+class CreatorReelsScreenState extends ConsumerState<CreatorReelsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   late VideoPlayerController _controller;
   bool likeTapped = false;
@@ -160,8 +159,12 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
                           InkWell(
                               onTap: () async {
                                 //generate url
-                                final url = await APIs.shareDynamicLinks(
-                                    'profle', widget.video.videoRef);
+                                final url = await ref
+                                    .read(apisProvider)
+                                    .shareDynamicLinks(
+                                        'profile', widget.video.videoRef);
+                                // final url = await APIs.shareDynamicLinks(
+                                //     'profle', widget.video.videoRef);
                                 // Share text
                                 Share.share(url);
                               },
@@ -188,36 +191,6 @@ class CreatorReelsScreenState extends State<CreatorReelsScreen> {
       ),
     );
   }
-
-  // buildProfile(String profilePhoto) {
-  //   return SizedBox(
-  //     width: 60,
-  //     height: 60,
-  //     child: Stack(
-  //       children: [
-  //         Positioned(
-  //             left: 5,
-  //             child: Container(
-  //               width: 50,
-  //               height: 50,
-  //               padding: const EdgeInsets.all(11),
-  //               decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.circular(25.0),
-  //               ),
-  //               child: ClipRRect(
-  //                   borderRadius: BorderRadius.circular(25.0),
-  //                   child: const Image(
-  //                     image: NetworkImage(
-  //                       "https://images.unsplash.com/photo-1682685797498-3bad2c6e161a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-  //                     ),
-  //                     fit: BoxFit.cover,
-  //                   )),
-  //             ))
-  //       ],
-  //     ),
-  //   );
-  // }
 
   buildMusicAlbum(String profilePhoto) {
     return SizedBox(

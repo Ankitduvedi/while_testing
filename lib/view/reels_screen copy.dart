@@ -8,7 +8,6 @@ import 'package:com.example.while_app/controller/feed_item.dart';
 import 'package:com.example.while_app/controller/videos_lists.dart';
 import 'package:com.example.while_app/data/model/video_model.dart';
 import '../view_model/providers/data_provider.dart';
-import 'package:provider/provider.dart' as provi;
 
 class ReelsScreentest extends ConsumerStatefulWidget {
   const ReelsScreentest({super.key});
@@ -62,15 +61,17 @@ class _ReelsScreenState extends ConsumerState<ReelsScreentest> {
     });
     return FeedItem(video: video[index], index: index, controller: controller2);
   }
+  //*********************************************************************************** */
+  // replace the future builder with streamprovider or asyncalue with .when ()
 
   @override
   Widget build(BuildContext context) {
     final loopsState = ref.watch(loopsProvider);
     List<VideoPlayerController> videoControllers = [];
-    Stream<QuerySnapshot> str =
-        provi.Provider.of<DataProvider>(context).videoStream;
-    return StreamBuilder<QuerySnapshot>(
-        stream: str,
+    final streamData = ref.watch(videoStreamProvider.future);
+    return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        future: streamData,
+        // stream: FirebaseFirestore.instance.collection('loops').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

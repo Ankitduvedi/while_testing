@@ -26,7 +26,7 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
         automaticallyImplyLeading: false,
         leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.lightBlueAccent,
             )),

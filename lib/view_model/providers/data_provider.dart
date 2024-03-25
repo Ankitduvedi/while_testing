@@ -4,26 +4,10 @@ import 'package:com.example.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DataProvider extends ChangeNotifier {
-  // Your Firestore stream
-  final Stream<QuerySnapshot> _videoStream =
-      FirebaseFirestore.instance.collection('loops').snapshots();
-  Stream<QuerySnapshot> get videoStream => _videoStream;
-  // Private constructor to prevent instantiation from outside
-  DataProvider._();
-  static final DataProvider _instance = DataProvider._();
-  factory DataProvider() => _instance;
-}
+final videoStreamProvider = StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+  return FirebaseFirestore.instance.collection('loops').snapshots();
+});
 
-final videoStreamProvider = StreamProvider<QuerySnapshot>(
-  (ref) => FirebaseFirestore.instance.collection('loops').snapshots(),
-);
-
-class DataProviders {
-  static final videoStreamProvider = StreamProvider<QuerySnapshot>(
-    (ref) => FirebaseFirestore.instance.collection('loops').snapshots(),
-  );
-}
 
 ///////
 ///
@@ -97,7 +81,7 @@ class DataProviderss extends ChangeNotifier {
   DocumentSnapshot? _lastDocument;
   List<DocumentSnapshot> _allDocuments = [];
   bool _hasMore = true;
-  int _limit = 10; // Adjust based on your preference
+  final int _limit = 10; // Adjust based on your preference
 
   Stream<List<Video>> get videoStream => _firestore
           .collection('loops')

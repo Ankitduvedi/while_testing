@@ -1,10 +1,8 @@
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import 'package:com.example.while_app/resources/components/text_button.dart';
-import '../repository/firebase_repository.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});
@@ -67,7 +65,7 @@ class Settings extends ConsumerWidget {
                     child: Textbutton(
                         ontap: () {
                           ref.read(toggleStateProvider.notifier).state = 0;
-                          context.read<FirebaseAuthMethods>().signout(context);
+                          ref.read(authControllerProvider);
                           SystemNavigator.pop(); // Close the app
 
                           //Navigator.of(context).pop();

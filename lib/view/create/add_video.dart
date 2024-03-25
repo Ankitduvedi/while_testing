@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
@@ -12,15 +14,15 @@ import 'package:com.example.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.example.while_app/utils/utils.dart';
 
-class AddVideo extends StatefulWidget {
+class AddVideo extends ConsumerStatefulWidget {
   final String video;
   const AddVideo({Key? key, required this.video}) : super(key: key);
 
   @override
-  State<AddVideo> createState() => AddVideoState();
+  ConsumerState<AddVideo> createState() => AddVideoState();
 }
 
-class AddVideoState extends State<AddVideo> {
+class AddVideoState extends ConsumerState<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
   String selectedOption = 'App Development';
@@ -56,7 +58,7 @@ class AddVideoState extends State<AddVideo> {
       isloading = true;
     });
     File vid = await compressVideo(path);
-    Dialogs.showSnackbar(context, vid.path.split(".").last);
+    // Dialogs.showSnackbar(context, vid.path.split(".").last);
 
 // Api.video
     uploadVideo(File videoFile, String id) async {
@@ -71,18 +73,18 @@ class AddVideoState extends State<AddVideo> {
 
       try {
         var response = await request.send();
-        Dialogs.showSnackbar(context, 'Trying');
+        // Dialogs.showSnackbar(context, 'Trying');
         if (response.statusCode == 201) {
           // Video uploaded successfully
           final Map<String, dynamic> data =
               json.decode(await response.stream.bytesToString());
           //Dialogs.showSnackbar(context, data['videoId']);
-          Dialogs.showSnackbar(context, data['assets']['thumbnail']);
+          // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
           // final CollectionReference collectionReference =
           //     FirebaseFirestore.instance.collection('videos');
           final Map<String, dynamic> vid = {
-            "uploadedBy": APIs.me.id,
+            "uploadedBy": ref.read(apisProvider).me.id,
             'videoUrl': data['assets']['mp4'],
             'title': title,
             'description': des,
@@ -107,13 +109,13 @@ class AddVideoState extends State<AddVideo> {
           });
         } else {
           // Handle upload failure
-          Dialogs.showSnackbar(context, 'Failed');
+          // Dialogs.showSnackbar(context, 'Failed');
           throw Exception('Failed to upload video');
         }
       } catch (e) {
         // Handle exceptions
-        Dialogs.showSnackbar(context, e.toString());
-        print('Error uploading video: $e');
+        // Dialogs.showSnackbar(context, e.toString());
+        // print('Error uploading video: $e');
         throw Exception('Failed to upload video');
       }
     }
@@ -140,14 +142,15 @@ class AddVideoState extends State<AddVideo> {
         final Map<String, dynamic> data = jsonDecode(response.body);
         uploadVideo(vid, data['videoId']);
       } else {
-        Dialogs.showSnackbar(context, 'Failed');
+        log("failed to upload video");
+        // Dialogs.showSnackbar(context, 'Failed');
         throw Exception('Failed to create video');
       }
     }
 
     createVideo(title, des);
-
-    print(url);
+    log(url.toString());
+    // print(url);
   }
 
   @override

@@ -1,156 +1,115 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
-import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../main.dart';
 
-//home screen -- where all available contacts are shown
 class UserProfileFollowerScreen extends ConsumerWidget {
-  UserProfileFollowerScreen({super.key});
-
-  List<ChatUser> _list = [];
+  const UserProfileFollowerScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final fireService = ref.read(apisProvider);
+    final user = ref.watch(userProvider);
+    if (user == null) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text('Follower', style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.white,
+        ),
+        body: const Center(child: Text('User not found')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Follower',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Follower', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
       ),
-
-      //body
       body: SafeArea(
-        child: StreamBuilder(
+        child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('users')
-              .doc(APIs.me.id)
+              .doc(user.id)
               .collection('follower')
               .snapshots(),
+          builder: (context, followerSnapshot) {
+            if (followerSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!followerSnapshot.hasData) {
+              return const Center(child: Text('No followers found.'));
+            }
+            final followerIds =
+                followerSnapshot.data!.docs.map((doc) => doc.id).toList();
+            return StreamBuilder<QuerySnapshot>(
+              stream: fireService.getAllUsers(followerIds),
+              builder: (context, usersSnapshot) {
+                if (usersSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!usersSnapshot.hasData) {
+                  return const Center(child: Text('No users found.'));
+                }
 
-          //get id of only known users
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              //if data is loading
-              case ConnectionState.waiting:
-              case ConnectionState.none:
-                return const Center(child: CircularProgressIndicator());
+                final users = usersSnapshot.data!.docs
+                    .map((doc) =>
+                        ChatUser.fromJson(doc.data() as Map<String, dynamic>))
+                    .toList();
 
-              //if some or all data is loaded then show it
-              case ConnectionState.active:
-              case ConnectionState.done:
-                return StreamBuilder(
-                  stream: APIs.getAllUsers(
-                      snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                if (users.isEmpty) {
+                  return const Center(child: Text('No Connections Found!'));
+                }
 
-                  //get only those user, who's ids are provided
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      //if data is loading
-                      case ConnectionState.waiting:
-                      case ConnectionState.none:
-                      // return const Center(
-                      //     child: CircularProgressIndicator());
-
-                      //if some or all data is loaded then show it
-                      case ConnectionState.active:
-                      case ConnectionState.done:
-                        final data = snapshot.data?.docs;
-                        _list = data
-                                ?.map((e) => ChatUser.fromJson(e.data()))
-                                .toList() ??
-                            [];
-
-                        if (_list.isNotEmpty) {
-                          return ListView.builder(
-                            itemCount: _list.length,
-                            itemBuilder: (context, index) {
-                              final person = _list[index];
-
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => FriendProfileScreen(
-                                                chatUser: person,
-                                              )));
-                                },
-                                child: ListTile(
-                                  leading: InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              ProfileDialog(user: person));
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          mq.height * .03),
-                                      child: CachedNetworkImage(
-                                        width: mq.height * .055,
-                                        fit: BoxFit.fill,
-                                        height: mq.height * .055,
-                                        imageUrl: person.image,
-                                        errorWidget: (context, url, error) =>
-                                            const CircleAvatar(
-                                                child: Icon(
-                                                    CupertinoIcons.person)),
-                                      ),
-                                    ),
-                                  ),
-                                  title: Text(person.name),
-                                  subtitle: Text(person.email),
-                                  trailing: ElevatedButton(
-                                    style: TextButton.styleFrom(
-                                        elevation: 2,
-                                        backgroundColor: Colors.white),
-                                    onPressed: () async {
-                                      await APIs.addChatUser(person.email)
-                                          .then((value) {
-                                        if (value) {
-                                          Dialogs.showSnackbar(
-                                              context, 'User Added');
-                                        }
-                                      });
-                                    },
-                                    child: const Text(
-                                      'Remove',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          return const Center(
-                            child: Text('No Connections Found!',
-                                style: TextStyle(fontSize: 20)),
-                          );
-                        }
-                    }
+                return ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final person = users[index];
+                    return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            50), // Adjust based on your layout needs
+                        child: CachedNetworkImage(
+                          imageUrl: person.image,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
+                      ),
+                      title: Text(person.name),
+                      subtitle: Text(person.email),
+                      trailing: ElevatedButton(
+                        onPressed: () async {
+                          // await fireService.removeFollower(user.id, person.id); // Assuming you have this functionality
+                          Dialogs.showSnackbar(context, 'Follower Removed');
+                        },
+                        child: const Text('Remove',
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                    );
                   },
                 );
-            }
+              },
+            );
           },
         ),
       ),

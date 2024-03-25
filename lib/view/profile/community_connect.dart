@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:developer';
+
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
 import 'package:flutter/material.dart';
@@ -43,18 +44,20 @@ class CommunityConnect extends ConsumerWidget {
                     onPressed: () async {
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          APIs.me.id, user.id);
+                          ref.read(apisProvider).me.id, user.id);
 
                       if (didJoin) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('You have joined ${user.name}')),
-                        );
+                        log("joined community");
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //       content: Text('You have joined ${user.name}')),
+                        // );
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Failed to join ${user.name}')),
-                        );
+                        log("failed to join");
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //       content: Text('Failed to join ${user.name}')),
+                        // );
                       }
                     },
                     child: Text('Join', style: GoogleFonts.ptSans()),

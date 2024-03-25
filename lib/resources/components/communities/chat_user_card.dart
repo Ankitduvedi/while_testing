@@ -14,6 +14,7 @@ import '../../../data/model/message.dart';
 
 import '../message/widgets/dialogs/profile_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 //card to represent a single user in home screen
 class ChatUserCard extends ConsumerStatefulWidget {
   final ChatUser user;
@@ -30,6 +31,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
 
   @override
   Widget build(BuildContext context) {
+    final fireService = ref.read(apisProvider);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0),
       color: Colors.white,
@@ -45,7 +47,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
           );
         },
         child: StreamBuilder(
-          stream: APIs.getLastMessage(widget.user),
+          stream: fireService.getLastMessage(widget.user),
           builder: (context, snapshot) {
             final data = snapshot.data?.docs;
             final list =
@@ -84,7 +86,7 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
               ),
               trailing: _message == null
                   ? null
-                  : _message!.read.isEmpty && _message!.fromId != APIs.user.uid
+                  : _message!.read.isEmpty && _message!.fromId != fireService.user.uid
                       ? Container(
                           width: 15,
                           height: 15,

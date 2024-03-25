@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class videoplay extends StatefulWidget {
-  String url;
-  videoplay({
+  final String url;
+  const videoplay({super.key, 
     required this.url,
   });
 
@@ -50,17 +50,17 @@ class _videoplayState extends State<videoplay> {
                   height: 400,
                   child: VideoPlayer(_controller!),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 VideoProgressIndicator(
                   _controller!,
                   allowScrubbing: true,
-                  padding: EdgeInsets.only(top: 5.0),
+                  padding: const EdgeInsets.only(top: 5.0),
                 )
               ],
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(
                 color: Colors.black,
               ),

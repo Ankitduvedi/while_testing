@@ -5,28 +5,30 @@ import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:com.example.while_app/data/model/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
 
 //home screen -- where all available contacts are shown
-class FriendProfileFollowingScreen extends StatefulWidget {
+class FriendProfileFollowingScreen extends ConsumerStatefulWidget {
   const FriendProfileFollowingScreen(
       {super.key, required this.chatUser, required this.userIds});
   final ChatUser chatUser;
   final List<String> userIds;
 
   @override
-  State<FriendProfileFollowingScreen> createState() =>
+  ConsumerState<FriendProfileFollowingScreen> createState() =>
       FriendProfileFollowingScreenState();
 }
 
 class FriendProfileFollowingScreenState
-    extends State<FriendProfileFollowingScreen> {
+    extends ConsumerState<FriendProfileFollowingScreen> {
   // for storing all users
   List<ChatUser> _list = [];
 
   @override
   Widget build(BuildContext context) {
+    final fireService = ref.read(apisProvider);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -48,7 +50,7 @@ class FriendProfileFollowingScreenState
 
       //body
       body: StreamBuilder(
-        stream: APIs.getFriendsUsersId(widget.chatUser),
+        stream: fireService.getFriendsUsersId(widget.chatUser),
 
         //get id of only known users
         builder: (context, snapshot) {
@@ -62,7 +64,7 @@ class FriendProfileFollowingScreenState
             case ConnectionState.active:
             case ConnectionState.done:
               return StreamBuilder(
-                stream: APIs.getAllUsers(
+                stream: fireService.getAllUsers(
                     snapshot.data?.docs.map((e) => e.id).toList() ?? []),
 
                 //get only those user, who's ids are provided
@@ -119,7 +121,7 @@ class FriendProfileFollowingScreenState
                                     elevation: 4,
                                     backgroundColor: Colors.white),
                                 onPressed: () async {
-                                  await APIs.addChatUser(person.email)
+                                  await fireService.addChatUser(person.email)
                                       .then((value) {
                                     if (value) {
                                       Dialogs.showSnackbar(

@@ -6,29 +6,27 @@ import 'package:com.example.while_app/resources/components/message/helper/dialog
 import 'package:com.example.while_app/data/model/chat_user.dart';
 import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 import 'package:com.example.while_app/view/profile/friend_profile_screen%20copy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 
 //home screen -- where all available contacts are shown
-class UserProfileFollowingScreen extends StatefulWidget {
+class UserProfileFollowingScreen extends ConsumerStatefulWidget {
   const UserProfileFollowingScreen({super.key, required this.chatUser});
   final ChatUser chatUser;
 
   @override
-  State<UserProfileFollowingScreen> createState() =>
+  ConsumerState<UserProfileFollowingScreen> createState() =>
       UserProfileFollowingScreenState();
 }
 
 class UserProfileFollowingScreenState
-    extends State<UserProfileFollowingScreen> {
-  // for storing all users
-
-  // for storing searched items
-
+    extends ConsumerState<UserProfileFollowingScreen> {
   // for storing search status
   List<ChatUser> _list = [];
 
   @override
   Widget build(BuildContext context) {
+    final fireService = ref.read(apisProvider);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -52,7 +50,8 @@ class UserProfileFollowingScreenState
       //body
       body: SafeArea(
         child: StreamBuilder(
-          stream: APIs.getFriendsUsersId(widget.chatUser),
+          // stream: APIs.getFriendsUsersId(widget.chatUser),
+          stream: fireService.getFriendsUsersId(widget.chatUser),
 
           //get id of only known users
           builder: (context, snapshot) {
@@ -66,7 +65,7 @@ class UserProfileFollowingScreenState
               case ConnectionState.active:
               case ConnectionState.done:
                 return StreamBuilder(
-                  stream: APIs.getAllUsers(
+                  stream: fireService.getAllUsers(
                       snapshot.data?.docs.map((e) => e.id).toList() ?? []),
 
                   //get only those user, who's ids are provided
@@ -144,7 +143,7 @@ class UserProfileFollowingScreenState
                                       ),
                                     ),
                                     onPressed: () async {
-                                      await APIs.unfollow(person.id)
+                                      await fireService.unfollow(person.id)
                                           .then((value) {
                                         if (value) {
                                           Dialogs.showSnackbar(

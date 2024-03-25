@@ -1,26 +1,27 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:video_compress/video_compress.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:video_compress/video_compress.dart';
+
 import 'package:com.example.while_app/resources/components/round_button.dart';
 import 'package:com.example.while_app/resources/components/text_container_widget.dart';
 import 'package:com.example.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.example.while_app/utils/utils.dart';
 
-class AddReel extends StatefulWidget {
-  final String video;
-  const AddReel({Key? key, required this.video}) : super(key: key);
+class AddReel extends ConsumerStatefulWidget {
+  final String _video;
+  const AddReel({super.key, required String video}) :_video = video;
 
   @override
-  State<AddReel> createState() => _AddReelState();
+  ConsumerState<AddReel> createState() => _AddReelState();
 }
 
-class _AddReelState extends State<AddReel> {
+class _AddReelState extends ConsumerState<AddReel> {
   late Subscription _subscription;
   bool isloading = false;
 
@@ -48,16 +49,16 @@ class _AddReelState extends State<AddReel> {
     return compressedVideo?.file;
   }
 
-  void uploadVideo(BuildContext context, String title, String des, String path,
+  void uploadVideo(String title, String des, String path,
       List likes, int shares) async {
     setState(() {
       isloading = true;
     });
     File vid = await compressVideo(path);
-    Dialogs.showSnackbar(context, vid.path.split(".").last);
+    // Dialogs.showSnackbar(context, vid.path.split(".").last);
     // DateTime now = DateTime.now();
     // File video = _compressVideo(path);
-    File video = File(path);
+    // File video = File(path);
     // var stream = http.ByteStream(video.openRead().cast());
     // var length = video.lengthSync();
     // var uri = Uri.parse('http://13.233.151.213:3000/reels');
@@ -105,7 +106,7 @@ class _AddReelState extends State<AddReel> {
     // }
 // Api.video
     uploadVideo(File videoFile, String id) async {
-      Dialogs.showSnackbar(context, 'Function called');
+      // Dialogs.showSnackbar(context, 'Function called');
       const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
       const apiUrl = 'https://sandbox.api.video/videos';
 
@@ -116,18 +117,18 @@ class _AddReelState extends State<AddReel> {
 
       try {
         var response = await request.send();
-        Dialogs.showSnackbar(context, 'Trying');
+        // Dialogs.showSnackbar(context, 'Trying');
         if (response.statusCode == 201) {
           // Video uploaded successfully
           final Map<String, dynamic> data =
               json.decode(await response.stream.bytesToString());
           //Dialogs.showSnackbar(context, data['videoId']);
-          Dialogs.showSnackbar(context, data['assets']['thumbnail']);
+          // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
-          final CollectionReference collectionReference =
-              FirebaseFirestore.instance.collection('videos');
+          // final CollectionReference collectionReference =
+          //     FirebaseFirestore.instance.collection('videos');
           final Map<String, dynamic> vid = {
-            "uploadedBy": APIs.me.id,
+            "uploadedBy": ref.read(apisProvider).me.id,
             'videoUrl': data['assets']['mp4'],
             'title': title,
             'description': des,
@@ -144,32 +145,23 @@ class _AddReelState extends State<AddReel> {
             setState(() {
               isloading = false;
             });
-            Navigator.pop(context);
+            // Navigator.pop(context);
             return data['videoId'];
           });
-          // collectionReference.add(vid).then((value) {
-          //   // Utils.toastMessage('Your video is uploaded!');
-          //   setState(() {
-          //     isloading = false;
-          //   });
-          //   Navigator.pop(context);
-          //   return data['videoId'];
-          // });
         } else {
           // Handle upload failure
-          Dialogs.showSnackbar(context, 'Failed');
+          // Dialogs.showSnackbar(context, 'Failed');
           throw Exception('Failed to upload video');
         }
       } catch (e) {
         // Handle exceptions
-        Dialogs.showSnackbar(context, e.toString());
-        print('Error uploading video: $e');
+        // Dialogs.showSnackbar(context, e.toString());
         throw Exception('Failed to upload video');
       }
     }
 
     createVideo(String title, String description) async {
-      Dialogs.showSnackbar(context, 'Called');
+      // Dialogs.showSnackbar(context, 'Called');
       const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
       const apiUrl = 'https://sandbox.api.video';
       final response = await http.post(
@@ -190,14 +182,14 @@ class _AddReelState extends State<AddReel> {
         final Map<String, dynamic> data = jsonDecode(response.body);
         uploadVideo(vid, data['videoId']);
       } else {
-        Dialogs.showSnackbar(context, 'Failed');
+        // Dialogs.showSnackbar(context, 'Failed');
         throw Exception('Failed to create video');
       }
     }
 
     createVideo(title, des);
 
-    print(url);
+    // print(url);
 
     // firebase_storage.Reference storageRef = firebase_storage
     //     .FirebaseStorage.instance
@@ -230,7 +222,7 @@ class _AddReelState extends State<AddReel> {
                 child: SizedBox(
                   width: w,
                   height: h / 2,
-                  child: VideoPlayerWidget(videoPath: widget.video),
+                  child: VideoPlayerWidget(videoPath: widget._video),
                 ),
               ),
               const SizedBox(height: 15),
@@ -262,10 +254,9 @@ class _AddReelState extends State<AddReel> {
                     } else {
                       FocusManager.instance.primaryFocus?.unfocus();
                       uploadVideo(
-                          context,
                           _titleController.text.toString(),
                           _descriptionController.text.toString(),
-                          widget.video.toString(),
+                          widget._video.toString(),
                           [], // initally the likes list shall be holding an empty list to be precise
                           0);
                     }
@@ -273,7 +264,7 @@ class _AddReelState extends State<AddReel> {
             ],
           ),
         ),
-      ),
+    ),
     );
   }
 }

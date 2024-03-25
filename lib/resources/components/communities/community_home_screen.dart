@@ -1,22 +1,23 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../message/apis.dart';
 import '../message/helper/dialogs.dart';
 import '../../../data/model/community_user.dart';
 import 'community_user_card.dart';
 
 //home screen -- where all available contacts are shown
-class CommunityScreenFinal extends StatefulWidget {
+class CommunityScreenFinal extends ConsumerStatefulWidget {
   const CommunityScreenFinal(
       {super.key, required this.isSearching, required this.value});
   final bool isSearching;
   final String value;
 
   @override
-  State<CommunityScreenFinal> createState() => _CommunityScreenFinalState();
+  ConsumerState<CommunityScreenFinal> createState() => _CommunityScreenFinalState();
 }
 
-class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
+class _CommunityScreenFinalState extends ConsumerState<CommunityScreenFinal> {
   // for storing all users
 
   // for storing searched items
@@ -28,6 +29,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
   @override
   Widget build(BuildContext context) {
     bool isSearching = widget.isSearching;
+    final fireService = ref.read(apisProvider);
 
     if (widget.value != '') {
       log(widget.value);
@@ -52,7 +54,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton(
             onPressed: () {
-              _addCommunityDialog();
+              _addCommunityDialog(fireService);
             },
             backgroundColor: Colors.white,
             child: const Icon(
@@ -63,7 +65,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
 
       //body
       body: StreamBuilder(
-        stream: APIs.getCommunityId(),
+        stream: fireService.getCommunityId(),
 
         //get id of only known users
         builder: (context, snapshot) {
@@ -77,7 +79,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
             case ConnectionState.active:
             case ConnectionState.done:
               return StreamBuilder(
-                stream: APIs.getAllUserCommunities(
+                stream: fireService.getAllUserCommunities(
                     snapshot.data?.docs.map((e) => e.id).toList() ?? []),
 
                 //get only those communities, who's ids are provided
@@ -140,7 +142,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
   }
 
   // for adding new chat user
-  void _addCommunityDialog() {
+  void _addCommunityDialog(fireservice) {
     String name = '';
 
     showDialog(
@@ -194,7 +196,7 @@ class _CommunityScreenFinalState extends State<CommunityScreenFinal> {
                 //hide alert dialog
                 Navigator.pop(context);
                 if (name.isNotEmpty) {
-                  await APIs.addUserToCommunity(name).then((value) {
+                  await fireservice.addUserToCommunity(name).then((value) {
                     if (!value) {
                       Dialogs.showSnackbar(
                           context, 'Community does not Exists!');

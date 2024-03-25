@@ -1,5 +1,7 @@
+import 'dart:developer';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,8 +17,10 @@ class Connect extends ConsumerWidget {
     final followingUsersAsyncValue =
         ref.watch(followingUsersProvider('userId'));
 
+    final fireService = ref.read(userProvider);
+    final notifService = ref.read(notifControllerProvider.notifier);
+
     return Scaffold(
-      //appBar: AppBar(title: const Text('Discover Users')),
       body: allUsersAsyncValue.when(
         data: (allUsers) => followingUsersAsyncValue.when(
           data: (followingUsers) {
@@ -41,21 +45,16 @@ class Connect extends ConsumerWidget {
                   trailing: ElevatedButton(
                     onPressed: () async {
                       final didFollow = await ref.read(followUserProvider)(
-                          APIs.me.id, user.id);
+                          fireService!.id, user.id);
 
                       if (didFollow) {
-                        APIs.addNotification(
-                            '${APIs.me.name} started following you', user.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('You are now following ${user.name}')),
-                        );
+                        notifService.addNotification(
+                            '${fireService.name} started following you',
+                            user.id);
+                        log("now following");
+                       
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Failed to follow ${user.name}')),
-                        );
+                        log("failed to follow");
                       }
                     },
                     child: Text('Follow', style: GoogleFonts.ptSans()),

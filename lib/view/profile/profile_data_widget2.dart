@@ -1,4 +1,4 @@
-import 'package:com.example.while_app/view_model/providers/user_provider.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,7 +16,7 @@ class ProfileDataWidget extends ConsumerWidget {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    final user = ref.watch(userDataProvider).userData;
+    final user = ref.watch(userProvider);
     return SafeArea(
         child: LiquidPullToRefresh(
       onRefresh: () async {
@@ -25,10 +25,14 @@ class ProfileDataWidget extends ConsumerWidget {
         // Update the UI after refreshing
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 14),
+        padding: const EdgeInsets.only(
+          top: 14,
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
@@ -51,7 +55,7 @@ class ProfileDataWidget extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => UserProfileFollowerScreen(),
+                          builder: (_) => const UserProfileFollowerScreen(),
                         ),
                       );
                     },
@@ -74,9 +78,9 @@ class ProfileDataWidget extends ConsumerWidget {
             ),
             SizedBox(
               child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(left: 56),
                   child: Text(
-                    "Hello Everyone! My name is ${user.name} and I am new to While.",
+                    user.about,
                     style: GoogleFonts.ptSans(fontSize: 16),
                   )),
             ),

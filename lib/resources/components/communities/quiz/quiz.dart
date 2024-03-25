@@ -7,19 +7,21 @@ import 'package:com.example.while_app/resources/components/communities/quiz/Scre
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/medium_questions_screen.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/Screens/start_screen.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Quiz extends StatefulWidget {
+class Quiz extends ConsumerStatefulWidget {
   const Quiz({super.key, required this.user, required this.category});
   final Community user;
   final String category;
 
   @override
-  State<Quiz> createState() {
+  ConsumerState<Quiz> createState() {
     return _QuizState();
   }
 }
 
-class _QuizState extends State<Quiz> {
+
+class _QuizState extends ConsumerState<Quiz> {
   List<String> selectedAnswers = [];
   Widget? activeScreeen;
   int correctAnswers = 0;
@@ -37,7 +39,7 @@ class _QuizState extends State<Quiz> {
         .collection('communities')
         .doc(widget.user.id)
         .collection('participants')
-        .doc(APIs.me.id)
+        .doc(ref.read(apisProvider).me.id)
         .get();
     easyQuestions = await querySnapshot.data()!['easyQuestions'];
     attemptedEasyQuestion =

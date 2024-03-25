@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserSearch extends StatefulWidget {
+class UserSearch extends ConsumerStatefulWidget {
   const UserSearch({Key? key}) : super(key: key);
 
   @override
-  State<UserSearch> createState() => _MyAppState();
+  ConsumerState<UserSearch> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<UserSearch> {
+class _MyAppState extends ConsumerState<UserSearch> {
   String name = "";
 
   @override
@@ -28,7 +29,7 @@ class _MyAppState extends State<UserSearch> {
           ),
         )),
         body: StreamBuilder<QuerySnapshot>(
-          stream: APIs.getMyUsersId(),
+          stream: ref.read(apisProvider).getMyUsersId(),
           builder: (context, snapshots) {
             return (snapshots.connectionState == ConnectionState.waiting)
                 ? const Center(

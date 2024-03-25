@@ -29,6 +29,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
   @override
   Widget build(BuildContext context) {
     log(widget.user.name);
+    final fireService = ref.read(apisProvider);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0),
       color: Colors.white,
@@ -44,7 +45,8 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                     builder: (_) => CCommunityDetailScreen(user: widget.user)));
           },
           child: StreamBuilder(
-            stream: APIs.getLastCommunityMessage(widget.user),
+            stream: fireService
+          .getLastCommunityMessage(widget.user),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
               final list = data
@@ -99,7 +101,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 trailing: _message == null
                     ? null //show nothing when no message is sent
                     : _message!.read.isEmpty &&
-                            _message!.fromId != APIs.user.uid
+                            _message!.fromId !=  fireService.user.uid
                         ?
                         //show for unread message
                         Container(

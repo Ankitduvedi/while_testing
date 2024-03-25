@@ -7,20 +7,21 @@ import 'package:com.example.while_app/resources/components/communities/quiz/comm
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/resources/components/communities/profile_screen_community_admin.dart';
 import 'package:com.example.while_app/resources/components/message/widgets/profileCommunity_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../main.dart';
 import 'cchat.dart';
 import '../../../data/model/community_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CCommunityDetailScreen extends StatefulWidget {
+class CCommunityDetailScreen extends ConsumerStatefulWidget {
   const CCommunityDetailScreen({Key? key, required this.user})
       : super(key: key);
   final Community user;
   @override
-  State<CCommunityDetailScreen> createState() => _CCommunityDetailScreenState();
+  ConsumerState<CCommunityDetailScreen> createState() => _CCommunityDetailScreenState();
 }
 
-class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
+class _CCommunityDetailScreenState extends ConsumerState<CCommunityDetailScreen> {
   /// List of Tab Bar Item
 
   List<String> itemsName = const [
@@ -56,7 +57,7 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
         automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () {
-            if (widget.user.email == APIs.me.email) {
+            if (widget.user.email == ref.read(apisProvider).me.email) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -151,15 +152,6 @@ class _CCommunityDetailScreenState extends State<CCommunityDetailScreen> {
                           ),
                         ),
                       ),
-                      // Visibility(
-                      //     visible: current == index,
-                      //     child: Container(
-                      //       width: 5,
-                      //       height: 5,
-                      //       decoration: const BoxDecoration(
-                      //           color: Colors.red,
-                      //           shape: BoxShape.circle),
-                      //     ))
                     ],
                   );
                 }),

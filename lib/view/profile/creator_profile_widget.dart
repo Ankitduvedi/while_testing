@@ -1,28 +1,39 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.example.while_app/controller/videos_lists.dart';
+import 'package:com.example.while_app/view/profile/creators_reels_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/controller/videos_lists.dart';
-import 'package:com.example.while_app/data/model/video_model.dart';
-import 'package:com.example.while_app/main.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/view/profile/creators_reels_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:google_fonts/google_fonts.dart';
-class CreatorProfile extends StatelessWidget {
-  CreatorProfile({super.key, required this.userID});
-  final String userID;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+import 'package:com.example.while_app/data/model/video_model.dart';
+// Ensure this import is correct
+
+class CreatorProfile extends ConsumerStatefulWidget {
+  const CreatorProfile({
+    Key? key,
+  }) : super(key: key);
 
   @override
+  ConsumerState<CreatorProfile> createState() => _CreatorProfileState();
+}
+
+class _CreatorProfileState extends ConsumerState<CreatorProfile> {
+  late final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late Size mq;
+  @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.of(context).size;
+    final user = ref.watch(userProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('videos')
-            .where('uploadedBy', isEqualTo: userID)
+            .where('uploadedBy', isEqualTo: user!.id)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -62,7 +73,7 @@ class CreatorProfile extends StatelessWidget {
                       child: InkWell(
                           onLongPress: () {
                             final String id = snapshot.data!.docs[index].id;
-                            _showOptionsDialog(context, id);
+                            _showOptionsDialog(context, id, ref);
                           },
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -94,7 +105,7 @@ class CreatorProfile extends StatelessWidget {
     );
   }
 
-  void _showOptionsDialog(BuildContext context, String id) {
+  void _showOptionsDialog(BuildContext context, String id, WidgetRef ref) {
     final Uri uri =
         Uri.parse('https://sandbox.api.video/videos/vi1n0cJIAJLommOiqmqPGvhm');
     const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
@@ -132,7 +143,8 @@ class CreatorProfile extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                APIs.deleteReel(id);
+                ref.read(apisProvider).deleteReel(id);
+                // APIs.deleteReel(id);
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
@@ -233,7 +245,8 @@ class CreatorProfile extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      APIs.deleteReel(id);
+                      ref.read(apisProvider).deleteReel(id);
+                      // APIs.deleteReel(id);
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.red,

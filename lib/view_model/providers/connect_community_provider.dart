@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
 import 'package:com.example.while_app/resources/components/message/apis.dart';
 import 'package:com.example.while_app/data/model/community_message.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
 import 'package:com.example.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +30,7 @@ final allCommunitiesProvider = StreamProvider<List<Community>>((ref) {
 final myCommunityUidsProvider = StreamProvider<List<String>>((ref) {
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(APIs.me.id)
+      .doc(ref.read(userProvider)!.id)
       .collection('my_communities')
       .snapshots()
       .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
@@ -62,7 +62,7 @@ final joinCommunityProvider = Provider((ref) {
           .doc(communityIdToJoin)
           .collection('participants')
           .doc(currentUserId)
-          .set(APIs.me.toJson())
+          .set(ref.read(apisProvider).me.toJson())
           .then((value) => firestore
                   .collection('communities')
                   .doc(communityIdToJoin)
@@ -76,8 +76,10 @@ final joinCommunityProvider = Provider((ref) {
                 'attemptedMediumQuestion': 0,
                 'attemptedHardQuestion': 0,
               }));
-      APIs.sendCommunityMessage(communityIdToJoin,
-          '${APIs.me.name} joined the community', Types.joined);
+      ref.read(apisProvider).sendCommunityMessage(
+          communityIdToJoin,
+          '${ref.read(apisProvider).me.name} joined the community',
+          Types.joined);
       return true; // Indicate the follow action was successful
     } catch (e) {
       // If there's an error, you can handle it here

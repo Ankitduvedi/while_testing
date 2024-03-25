@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/resources/components/communities/quiz/answerButton.dart';
 import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HardQuestionsScreen extends StatefulWidget {
+class HardQuestionsScreen extends ConsumerStatefulWidget {
   final Community user;
   final int hardQuestions;
   final int attemptedHardQuestion;
@@ -25,7 +26,7 @@ class HardQuestionsScreen extends StatefulWidget {
   QuestionsScreenState createState() => QuestionsScreenState();
 }
 
-class QuestionsScreenState extends State<HardQuestionsScreen> {
+class QuestionsScreenState extends ConsumerState<HardQuestionsScreen> {
   late List<Map<String, dynamic>> questions;
   late Future<List<Map<String, dynamic>>> quizzz;
   late int lives;
@@ -76,7 +77,7 @@ class QuestionsScreenState extends State<HardQuestionsScreen> {
           seconds--;
         } else {
           setState(() {
-            answerQuestion(null, 'e');
+            answerQuestion(null, 'e',ref);
             startTimer();
             seconds = 45;
           });
@@ -85,7 +86,7 @@ class QuestionsScreenState extends State<HardQuestionsScreen> {
     });
   }
 
-  void answerQuestion(String? selectedAnswers, String correctAnswer) {
+  void answerQuestion(String? selectedAnswers, String correctAnswer,ref) {
     setState(() {
       if (selectedAnswers == correctAnswer) {
         correctAnswers++;
@@ -100,11 +101,11 @@ class QuestionsScreenState extends State<HardQuestionsScreen> {
         startTimer();
         seconds = 45;
       } else {
-        APIs.updateScore(
+        ref.read(apisProvider).updateScore(
             widget.user.id,
             'hardQuestions',
             correctAnswers + widget.hardQuestions,
-            correctAnswers + APIs.me.hardQuestions,
+            correctAnswers + ref.read(apisProvider).me.hardQuestions,
             'attemptedHardQuestion',
             (currentQuestionIndex + 1));
         Navigator.of(context).push(MaterialPageRoute(
@@ -248,7 +249,7 @@ class QuestionsScreenState extends State<HardQuestionsScreen> {
       return options.keys.map((option) {
         return AnswerButton(
           onTap: () {
-            answerQuestion(option, correctAnswer);
+            answerQuestion(option, correctAnswer,ref);
           },
           answerText: (options[option]),
         );

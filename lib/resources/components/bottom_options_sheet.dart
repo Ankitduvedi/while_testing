@@ -1,9 +1,8 @@
-import 'package:com.example.while_app/repository/firebase_repository.dart';
-import 'package:com.example.while_app/view_model/providers/auth_provider.dart';
+import 'dart:developer';
+
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import '../../view/profile/edit_profile_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -57,11 +56,12 @@ class MoreOptions extends ConsumerWidget {
                 size: 30,
               ),
               title: Text("Logout", style: GoogleFonts.ptSans()),
-              onTap: () {
-                ref.read(toggleStateProvider.notifier).state = 0;
-                context.read<FirebaseAuthMethods>().signout(context);
+              onTap: () async {
+                log("logging out user");
+                ref.read(toggleStateProvider.notifier).state = 1;
+                ref.read(authControllerProvider.notifier).signOut();
                 Navigator.pop(context);
-                SystemNavigator.pop();
+                // SystemNavigator.pop();
               },
             ),
             ListTile(
@@ -91,7 +91,7 @@ class MoreOptions extends ConsumerWidget {
                             onPressed: () {
                               // User confirms deletion
                               Navigator.of(context).pop(true);
-                              SystemNavigator.pop();
+                              // SystemNavigator.pop();
                             },
                             child: const Text('Delete'),
                           ),
@@ -103,10 +103,8 @@ class MoreOptions extends ConsumerWidget {
                 // Proceed with deletion if confirmed
                 if (shouldDelete) {
                   ref.read(toggleStateProvider.notifier).state = 0;
-                  await context
-                      .read<FirebaseAuthMethods>()
-                      .deleteAccount(context);
-                  context.read<FirebaseAuthMethods>().signout(context);
+                  ref.read(authControllerProvider.notifier).deleteAccount();
+                  ref.read(authControllerProvider.notifier).signOut();
                   Navigator.pop(context);
                 }
               },
