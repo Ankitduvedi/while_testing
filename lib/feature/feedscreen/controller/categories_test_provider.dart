@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.example.while_app/core/enums/firebase_providers.dart';
 import 'package:com.example.while_app/data/model/video_model.dart';
@@ -11,7 +14,14 @@ final allVideoProvider = StateNotifierProvider.family<VideoPaginationNotifier,
     VideoPaginationState, String>(
   (ref, collectionPath) => VideoPaginationNotifier(),
 );
-
+final categoryStreamProvider = StreamProvider<List<String>>((ref) {
+  final firestore = ref.read(fireStoreProvider);
+  return firestore
+      .collection('videosCategories')
+      .orderBy('category')
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
+});
 
 // Define a state class that includes a list of categories and pagination control variables
 class CategoriesState {
@@ -106,12 +116,12 @@ class VideoPaginationNotifier extends StateNotifier<VideoPaginationState> {
   Future<void> fetchVideos(String collectionPath) async {
     if (state.isLoading) return; // Prevent multiple simultaneous fetches
     state = state.copyWith(isLoading: true);
-
+    log(collectionPath);
     Query query = FirebaseFirestore.instance
         .collection('videos')
         .doc(collectionPath)
         .collection(collectionPath)
-        .orderBy('title') // Adjust based on your document fields
+        // .orderBy('title') // Adjust based on your document fields
         .limit(_limit);
 
     if (state.lastDoc != null) {
@@ -120,7 +130,7 @@ class VideoPaginationNotifier extends StateNotifier<VideoPaginationState> {
 
     try {
       final snapshot = await query.get();
-
+      log("snapsjhot is ${snapshot.docs.first.id}");
       var docs = snapshot.docs;
       if (docs.isNotEmpty) {
         var newCategories = docs

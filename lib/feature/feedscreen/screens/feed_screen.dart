@@ -5,7 +5,6 @@ import 'package:com.example.while_app/feature/notifications/screens/notification
 import 'package:com.example.while_app/feature/feedscreen/controller/categories_test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
@@ -21,7 +20,8 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   void initState() {
     super.initState();
-   
+    Future.microtask(
+        () => ref.read(categoryProvider.notifier).fetchCategories(ref));
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -41,7 +41,8 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   Widget build(BuildContext context) {
     log("feedscreen");
     final unreadNotifsAsyncValue = ref.watch(listenUnreadNotifsProvider);
-    final categoriesState = ref.read(categoryProvider);
+    final categoriesState = ref.watch(categoryProvider);
+    // log(categoriesState.categories.toString());
 
     return Scaffold(
       appBar: AppBar(

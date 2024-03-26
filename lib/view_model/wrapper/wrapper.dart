@@ -5,7 +5,6 @@ import 'package:com.example.while_app/feature/auth/screens/login_screen.dart';
 import 'package:com.example.while_app/feature/auth/screens/register_screen.dart';
 import 'package:com.example.while_app/view/home_screen.dart';
 import 'package:com.example.while_app/view/onboarding_screen.dart';
-import 'package:com.example.while_app/feature/feedscreen/controller/categories_test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,19 +18,11 @@ class Wrapper extends ConsumerStatefulWidget {
 }
 
 class _WrapperState extends ConsumerState<Wrapper> {
-  @override
-  void initState() {
-    Future.microtask(
-        () => ref.read(categoryProvider.notifier).fetchCategories(ref));
-    super.initState();
-    // or put this function into initState of FeedScreen
-  }
-
   ChatUser? userModel;
 
   void getData(User data) async {
     userModel = await ref
-        .watch(authControllerProvider.notifier)
+        .read(authControllerProvider.notifier)
         .getUserData(data.uid)
         .first;
     log(userModel!.email);

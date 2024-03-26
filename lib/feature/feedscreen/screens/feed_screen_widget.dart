@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:com.example.while_app/feature/feedscreen/controller/categories_test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,9 +19,10 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
   @override
   void initState() {
     super.initState();
-    ref
+    Future.microtask(() => ref
         .read(allVideoProvider(widget.category).notifier)
-        .fetchVideos(widget.category);
+        .fetchVideos(widget.category));
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -39,6 +42,7 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(allVideoProvider(widget.category));
+    log(state.videos.toString());
 
     return SizedBox(
       height: 150,
