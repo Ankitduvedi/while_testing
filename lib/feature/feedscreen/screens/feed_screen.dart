@@ -84,65 +84,33 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: categoriesState.categories.length +
-              (categoriesState.isLoading ? 1 : 0),
-          itemBuilder: (BuildContext context, int index) {
-            if (index >= categoriesState.categories.length) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return _buildCategoryItem(categoriesState.categories[index]);
-          },
-        ),
-      ),
-    );
-  }
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: categoriesState.categories.length +
+            (categoriesState.isLoading ? 1 : 0),
+        itemBuilder: (BuildContext context, int index) {
+          // Check if we're at the last item
+          if (index >= categoriesState.categories.length) {
+            // Show a loading indicator at the bottom
+            return const Center(child: CircularProgressIndicator());
+          }
+          // Display category item
+          log('list of categories length is ${categoriesState.categories.length}');
 
-  Widget _buildCategoryItem(String category) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white, // Lightened the base color for a cleaner look
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color:
-                Colors.grey.shade300, // Lightened shadow for softer appearance
-            offset:
-                const Offset(2, 2), // Reduced shadow displacement for subtlety
-            blurRadius: 6, // Reduced blur radius for a more refined shadow
-            spreadRadius:
-                1, // Adjusted spread radius to match the lighter shadow
-          ),
-          const BoxShadow(
-            color:
-                Colors.white, // Maintained a white shadow for the lifted effect
-            offset: Offset(
-                -2, -2), // Adjusted for consistency with the lighter theme
-            blurRadius: 6, // Matching blur radius for the inner shadow
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            category,
-            style: GoogleFonts.ptSans(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[
-                  800], // Darkened text for better contrast on white background
-            ),
-          ),
-          const SizedBox(height: 8),
-          FeedScreenWidget(category: category),
-        ],
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
+                child: Text(
+                  categoriesState.categories[index],
+                  style: const TextStyle(fontSize: 17),
+                ),
+              ),
+              FeedScreenWidget(category: categoriesState.categories[index]),
+            ],
+          );
+        },
       ),
     );
   }
