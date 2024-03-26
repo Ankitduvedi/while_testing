@@ -1,10 +1,47 @@
 {
   "project_info": {
     "project_number": "759556546667",
+    "firebase_url": "https://while-2-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "while-2",
     "storage_bucket": "while-2.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759556546667:android:d570617f3b0c9cc0e3912e",
+        "android_client_info": {
+          "package_name": "com.example.while_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759556546667-2r6uceigpaj3imq1avid8ea4qs92n16h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYUsLcgtaEnKKzXNYMhpzP7zkVZFmh_rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759556546667-2r6uceigpaj3imq1avid8ea4qs92n16h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759556546667-8khagoe9n7ho2qh7dh0af4v25qgl88r0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.whileApp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:759556546667:android:cf2a8c2620d5569fe3912e",
@@ -18,6 +55,66 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.while_app",
+            "certificate_hash": "639380563c8e411c544edf0258b623a2c0ede402"
+          }
+        },
+        {
+          "client_id": "759556546667-qggtt514t7a99psc00lecpjcgqa9clro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.while_app",
+            "certificate_hash": "9e26c86e5ce95208a579a8a7c7709af7b2348302"
+          }
+        },
+        {
+          "client_id": "759556546667-2r6uceigpaj3imq1avid8ea4qs92n16h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYUsLcgtaEnKKzXNYMhpzP7zkVZFmh_rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759556546667-2r6uceigpaj3imq1avid8ea4qs92n16h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "759556546667-8khagoe9n7ho2qh7dh0af4v25qgl88r0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.whileApp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759556546667:android:ebb6954a628592f3e3912e",
+        "android_client_info": {
+          "package_name": "com.while.while_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759556546667-8ajud01q6mh133picdkfh0tfoi7lt9bn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
+            "certificate_hash": "9e26c86e5ce95208a579a8a7c7709af7b2348302"
+          }
+        },
+        {
+          "client_id": "759556546667-f58uj1cd365f2jj8h8d1v69qus1kgrbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
             "certificate_hash": "639380563c8e411c544edf0258b623a2c0ede402"
           }
         },
