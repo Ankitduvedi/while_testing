@@ -50,59 +50,14 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                   padding: EdgeInsets.all(screenSize.width * 0.05),
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: verticalPadding),
-                      Text(
-                        'Welcome user!',
-                        style: GoogleFonts.ptSans(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: verticalPadding * 1.2),
                       Image.asset(
-                        'assets/loginPicture1.png',
+                        'assets/while_transparent.png',
                         width: screenSize.width *
                             0.9, // Dynamic width for the image
                         height: screenSize.height * 0.3,
                       ), // Placeholder for the image
                       SizedBox(height: verticalPadding),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              ref.read(toggleStateProvider.notifier).state = 1;
-                              // Implement your on-tap functionality here
-                            },
-                            style: TextButton.styleFrom(
-                              minimumSize: const Size(150, 50),
-                            ),
-                            child: Text(
-                              'Sign In',
-                              style: GoogleFonts.ptSans(
-                                color:
-                                    Colors.blue, // This changes the text color
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              ref.read(toggleStateProvider.notifier).state = 2;
-                            },
-                            style: TextButton.styleFrom(
-                              minimumSize: const Size(150, 50),
-                            ),
-                            child: Text(
-                              'Register',
-                              style: GoogleFonts.ptSans(
-                                color:
-                                    Colors.blue, // This changes the text color
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: verticalPadding),
+
                       TextField(
                         decoration: InputDecoration(
                           labelText: 'Enter Email',
@@ -158,6 +113,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: verticalPadding),
+
                       ElevatedButton(
                         onPressed: () async {
                           if (_emailController.text.isEmpty) {
@@ -183,14 +139,48 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            )),
+                          foregroundColor: Colors.blue[800],
+                          backgroundColor:
+                              Colors.white, // Icon color taken from the logo
+                          minimumSize:
+                              const Size(double.infinity, 50), // Button size
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12), // Inner padding
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                24), // Rounded corners to match logo style
+                            side: BorderSide(
+                                color: Colors.blue[
+                                    800]!), // Border color taken from the logo
+                          ),
+                          elevation:
+                              0, // No shadow for a flat design similar to the logo
+                        ),
                         child: Text(
                           'Sign In',
                           style: GoogleFonts.ptSans(fontSize: 20),
                         ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Don't have an account?"),
+                          TextButton(
+                            onPressed: () {
+                              ref.read(toggleStateProvider.notifier).state = 2;
+                            },
+                            style: TextButton.styleFrom(
+                              minimumSize: const Size(150, 50),
+                            ),
+                            child: Text(
+                              'Sign up',
+                              style: GoogleFonts.ptSans(
+                                color:
+                                    Colors.blue, // This changes the text color
+                              ),
+                            ),
+                          )
+                        ],
                       ),
 
                       SizedBox(height: verticalPadding * 1.2),
@@ -223,18 +213,25 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         ],
                       ),
                       SizedBox(height: verticalPadding * 1.4),
+
                       ElevatedButton(
                         onPressed: () {
                           handleSignIn(ref);
                         },
                         style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity,
-                                50), // ensures the button stretches to fill the width
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // rounded corners
-                            ),
-                            backgroundColor: Colors.grey.shade400),
+                          foregroundColor: Colors.grey[700],
+                          backgroundColor: Colors.white, // Text and icon color
+                          minimumSize:
+                              const Size(double.infinity, 50), // Button size
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12), // Inner padding
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(24), // Rounded corners
+                          ),
+                          side: BorderSide(
+                              color: Colors.grey.shade300), // Border color
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize
                               .min, // Use MainAxisSize.min to keep the row compact
