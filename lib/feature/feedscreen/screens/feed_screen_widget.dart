@@ -44,62 +44,67 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
   Widget build(BuildContext context) {
     final state = ref.watch(allVideoProvider(widget.category));
     log('Total numbers of videos ${state.videos.length} category${widget.category}');
-    return SizedBox(
-      height: 160,
-      child: GridView.builder(
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          crossAxisSpacing: 4.0,
-          mainAxisSpacing: 3.0,
-          childAspectRatio: 9 / 14,
-        ),
-        itemCount: state.videos.length + (state.isLoading ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= state.videos.length) {
-            // Show a loading indicator at the bottom
-            return const Center(child: CircularProgressIndicator());
-          }
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => VideoScreen(video: state.videos[index]),
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: SizedBox(
+        height: 160,
+        child: GridView.builder(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            crossAxisSpacing: 4.0,
+            mainAxisSpacing: 3.0,
+            childAspectRatio: 9 / 14,
+          ),
+          itemCount: state.videos.length + (state.isLoading ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index >= state.videos.length) {
+              // Show a loading indicator at the bottom
+              return const Center(child: CircularProgressIndicator());
+            }
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        VideoScreen(video: state.videos[index]),
+                  ),
+                );
+              },
+              child: Card(
+                color: Colors.black,
+                elevation: 4.0,
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomStart,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image:
+                                  NetworkImage(state.videos[index].thumbnail),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        state.videos[index].title,
+                        maxLines: 1,
+                        style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Color.fromARGB(255, 145, 145, 145)),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-            child: Card(
-              color: Colors.black,
-              elevation: 4.0,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomStart,
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(state.videos[index].thumbnail),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      state.videos[index].title,
-                      maxLines: 1,
-                      style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Color.fromARGB(255, 145, 145, 145)),
-                    ),
-                  ),
-                ],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

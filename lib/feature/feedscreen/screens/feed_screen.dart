@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
-
   @override
   FeedScreenState createState() => FeedScreenState();
 }
@@ -104,7 +103,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 7, 7, 0),
+                        padding: const EdgeInsets.fromLTRB(11, 7, 7, 0),
                         child: Text(
                           categoriesState.categories[index],
                           style: const TextStyle(fontSize: 17),
