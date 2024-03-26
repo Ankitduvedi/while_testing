@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/core/enums/firebase_providers.dart';
-import 'package:com.example.while_app/core/failure.dart';
+import 'package:com.while.while_app/core/enums/firebase_providers.dart';
+import 'package:com.while.while_app/core/failure.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -42,8 +42,7 @@ class CreatorRepository {
       });
       log("User and request submitted successfully");
       return right(true);
-    } 
-    catch (e) {
+    } catch (e) {
       return left(Failure(message: e.toString()));
     }
   }

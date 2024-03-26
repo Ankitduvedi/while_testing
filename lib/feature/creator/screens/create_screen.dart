@@ -1,8 +1,8 @@
-import 'package:com.example.while_app/feature/creator/controller/creator_contoller.dart';
-import 'package:com.example.while_app/feature/creator/screens/become_creator_screen.dart';
-import 'package:com.example.while_app/feature/creator/screens/main_creator_screen.dart';
-import 'package:com.example.while_app/feature/creator/screens/under_review_screen.dart';
-import 'package:com.example.while_app/feature/upload/controller/upload_controller.dart';
+import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
+import 'package:com.while.while_app/feature/creator/screens/become_creator_screen.dart';
+import 'package:com.while.while_app/feature/creator/screens/main_creator_screen.dart';
+import 'package:com.while.while_app/feature/creator/screens/under_review_screen.dart';
+import 'package:com.while.while_app/feature/upload/controller/upload_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,8 +56,7 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
             } else if (!isContentCreator && isApproved) {
               return const UnderReviewScreen();
             } else {
-              return const MainCreatorScreen(
-                );
+              return const MainCreatorScreen();
             }
           },
           error: (error, stackTrace) => Text(error.toString()),

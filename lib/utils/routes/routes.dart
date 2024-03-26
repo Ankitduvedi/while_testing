@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:com.example.while_app/feature/auth/screens/register_screen.dart';
-import 'package:com.example.while_app/view/create/add_video.dart';
+import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
+import 'package:com.while.while_app/view/create/add_video.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/utils/routes/routes_name.dart';
-import 'package:com.example.while_app/feature/auth/screens/forgot_password_screen.dart';
-import 'package:com.example.while_app/view/create/add_reel.dart';
-import 'package:com.example.while_app/view/home_screen.dart';
-import 'package:com.example.while_app/view/post_preview.dart';
-import 'package:com.example.while_app/view/social/create_menu_screen.dart';
-import 'package:com.example.while_app/view/splash_view.dart';
-import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
+import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/feature/auth/screens/forgot_password_screen.dart';
+import 'package:com.while.while_app/view/create/add_reel.dart';
+import 'package:com.while.while_app/view/home_screen.dart';
+import 'package:com.while.while_app/view/post_preview.dart';
+import 'package:com.while.while_app/view/social/create_menu_screen.dart';
+import 'package:com.while.while_app/view/splash_view.dart';
+import 'package:com.while.while_app/view_model/wrapper/wrapper.dart';
 import '../../feature/auth/screens/login_screen.dart';
 import '../../view/profile/user_profile_screen2.dart';
 import '../../view/settings_page.dart';
@@ -27,7 +27,7 @@ class Routes {
             builder: (BuildContext context) => const LoginScreen());
       case RoutesName.signUp:
         return MaterialPageRoute(
-            builder: (BuildContext context) =>const  SignUpScreen());
+            builder: (BuildContext context) => const SignUpScreen());
       case RoutesName.splash:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SplashScreen());

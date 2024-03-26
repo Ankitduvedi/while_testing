@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserSearch extends ConsumerStatefulWidget {

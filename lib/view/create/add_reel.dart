@@ -1,21 +1,21 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:video_compress/video_compress.dart';
 
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
-import 'package:com.example.while_app/resources/components/video_player.dart';
+import 'package:com.while.while_app/resources/components/round_button.dart';
+import 'package:com.while.while_app/resources/components/text_container_widget.dart';
+import 'package:com.while.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
-import 'package:com.example.while_app/utils/utils.dart';
+import 'package:com.while.while_app/utils/utils.dart';
 
 class AddReel extends ConsumerStatefulWidget {
   final String _video;
-  const AddReel({super.key, required String video}) :_video = video;
+  const AddReel({super.key, required String video}) : _video = video;
 
   @override
   ConsumerState<AddReel> createState() => _AddReelState();
@@ -49,8 +49,8 @@ class _AddReelState extends ConsumerState<AddReel> {
     return compressedVideo?.file;
   }
 
-  void uploadVideo(String title, String des, String path,
-      List likes, int shares) async {
+  void uploadVideo(
+      String title, String des, String path, List likes, int shares) async {
     setState(() {
       isloading = true;
     });
@@ -264,7 +264,7 @@ class _AddReelState extends ConsumerState<AddReel> {
             ],
           ),
         ),
-    ),
+      ),
     );
   }
 }

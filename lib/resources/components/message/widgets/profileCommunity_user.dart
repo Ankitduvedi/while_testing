@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'dart:io';
@@ -17,7 +17,8 @@ class ProfileScreenParticipant extends ConsumerStatefulWidget {
       : super(key: key);
 
   @override
-  ConsumerState<ProfileScreenParticipant> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreenParticipant> createState() =>
+      _ProfileScreenState();
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
@@ -146,7 +147,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                   ),
                   SingleChildScrollView(
                     child: StreamBuilder(
-                      stream: ref.read(apisProvider).getCommunityParticipantsInfo(widget.user.id),
+                      stream: ref
+                          .read(apisProvider)
+                          .getCommunityParticipantsInfo(widget.user.id),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:

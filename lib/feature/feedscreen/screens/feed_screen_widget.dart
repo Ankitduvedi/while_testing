@@ -1,5 +1,5 @@
-import 'package:com.example.while_app/feature/feedscreen/controller/categories_test_provider.dart';
-import 'package:com.example.while_app/feature/feedscreen/screens/feed_video_screen.dart';
+import 'package:com.while.while_app/feature/feedscreen/controller/categories_test_provider.dart';
+import 'package:com.while.while_app/feature/feedscreen/screens/feed_video_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer';
 import 'package:flutter/material.dart';

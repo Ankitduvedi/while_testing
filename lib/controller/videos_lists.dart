@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 
 class VideoList {
   // Static method to get the list of video URLs

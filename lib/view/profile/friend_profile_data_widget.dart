@@ -3,9 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/view/profile/friend_profile_following_screen.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/view/profile/friend_profile_following_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FriendProfileDataWidget extends ConsumerStatefulWidget {

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/main.dart';
+import 'package:com.while.while_app/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../message/apis.dart';
@@ -86,7 +86,8 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
               ),
               trailing: _message == null
                   ? null
-                  : _message!.read.isEmpty && _message!.fromId != fireService.user.uid
+                  : _message!.read.isEmpty &&
+                          _message!.fromId != fireService.user.uid
                       ? Container(
                           width: 15,
                           height: 15,

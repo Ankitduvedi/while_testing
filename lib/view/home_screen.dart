@@ -1,14 +1,14 @@
 import 'dart:developer';
 
-import 'package:com.example.while_app/view/reels_screen%20copy.dart';
+import 'package:com.while.while_app/view/reels_screen%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/feature/creator/screens/create_screen.dart';
-import 'package:com.example.while_app/feature/feedscreen/screens/feed_screen.dart';
-import 'package:com.example.while_app/view/profile/user_profile_screen2.dart';
-import 'package:com.example.while_app/view/social/social_home_screen.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/feature/creator/screens/create_screen.dart';
+import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen.dart';
+import 'package:com.while.while_app/view/profile/user_profile_screen2.dart';
+import 'package:com.while.while_app/view/social/social_home_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

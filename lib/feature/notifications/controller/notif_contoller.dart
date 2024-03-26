@@ -1,9 +1,9 @@
 // ignore_for_file: unused_field
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/core/enums/firebase_providers.dart';
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/feature/notifications/repository/notif_repo.dart';
+import 'package:com.while.while_app/core/enums/firebase_providers.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/feature/notifications/repository/notif_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -38,8 +38,10 @@ final myNotificationsProvider =
   });
 });
 
-final notifControllerProvider = StateNotifierProvider<NotifController,bool>((ref) {
-  return NotifController(ref: ref, notifRepository: ref.read(notifRepositoryProvider));
+final notifControllerProvider =
+    StateNotifierProvider<NotifController, bool>((ref) {
+  return NotifController(
+      ref: ref, notifRepository: ref.read(notifRepositoryProvider));
 });
 
 class NotifController extends StateNotifier<bool> {

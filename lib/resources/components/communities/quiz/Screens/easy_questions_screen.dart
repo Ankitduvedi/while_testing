@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/lives.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/answerButton.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/answerButton.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EasyQuestionsScreen extends ConsumerStatefulWidget {
@@ -77,7 +77,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
           seconds--;
         } else {
           setState(() {
-            answerQuestion(null, 'e',ref);
+            answerQuestion(null, 'e', ref);
             startTimer();
             seconds = 45;
           });
@@ -86,7 +86,8 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
     });
   }
 
-  void answerQuestion(String? selectedAnswers, String correctAnswer,WidgetRef ref) {
+  void answerQuestion(
+      String? selectedAnswers, String correctAnswer, WidgetRef ref) {
     setState(() {
       if (selectedAnswers == correctAnswer) {
         correctAnswers++;
@@ -119,8 +120,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
     });
   }
 
-  
-  List<Widget> _buildAnswerButtons(Map<String, dynamic> question,ref) {
+  List<Widget> _buildAnswerButtons(Map<String, dynamic> question, ref) {
     final options = question['options'];
     final correctAnswer = question['correctAnswer'];
 
@@ -128,7 +128,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
       return options.keys.map((option) {
         return AnswerButton(
           onTap: () {
-            answerQuestion(option, correctAnswer,ref);
+            answerQuestion(option, correctAnswer, ref);
           },
           answerText: (options[option]),
         );
@@ -142,7 +142,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
       ];
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     log('easy question screen');
@@ -256,7 +256,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ..._buildAnswerButtons(currentQuestion,ref),
+                  ..._buildAnswerButtons(currentQuestion, ref),
                 ],
               ),
             ),
@@ -265,6 +265,4 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
       ),
     );
   }
-
-  }
-
+}

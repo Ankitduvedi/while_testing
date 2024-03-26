@@ -1,9 +1,9 @@
-import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.while.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/quiz_model.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/quiz_model.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 
 const uuid = Uuid();
 
@@ -105,9 +105,17 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back, color: Colors.lightBlueAccent,)),
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.lightBlueAccent,
+            )),
         backgroundColor: Colors.white,
-        title: const Text('Add Question', style: TextStyle(color: Colors.black),),
+        title: const Text(
+          'Add Question',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -148,9 +156,16 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     elevation: 4,
-                    backgroundColor:  Colors.lightBlueAccent, // Change button color here
+                    backgroundColor:
+                        Colors.lightBlueAccent, // Change button color here
                   ),
-                  child: const Text('Add Question', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),),
+                  child: const Text(
+                    'Add Question',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                  ),
                 ),
               ),
             ],

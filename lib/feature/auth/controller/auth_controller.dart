@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/feature/auth/repository/firebase_repository.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/auth/repository/firebase_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

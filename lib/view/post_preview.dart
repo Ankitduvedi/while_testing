@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
-import 'package:com.example.while_app/utils/utils.dart';
-import 'package:com.example.while_app/view_model/post_provider.dart';
+import 'package:com.while.while_app/resources/components/round_button.dart';
+import 'package:com.while.while_app/resources/components/text_container_widget.dart';
+import 'package:com.while.while_app/utils/utils.dart';
+import 'package:com.while.while_app/view_model/post_provider.dart';
 
 import '../view_model/session_controller.dart';
 

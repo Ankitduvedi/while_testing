@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:share/share.dart';
 
 class CreatorReelsScreen extends ConsumerStatefulWidget {
