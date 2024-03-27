@@ -63,13 +63,6 @@ class _MainCreatorScreenState extends ConsumerState<MainCreatorScreen> {
             function: () {
               upload.selectVideo(context, 'Loop');
             }),
-        CreateContainer(
-            text: "Upload Post",
-            function: () {
-              //***************************************************************/
-              // yet to be implemented
-              // postwidget.reelController.selectPost(context);
-            }),
       ],
     );
   }

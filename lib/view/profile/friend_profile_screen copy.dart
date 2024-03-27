@@ -50,9 +50,9 @@ class FriendProfileScreen extends StatelessWidget {
               ),
             ];
           },
-          body: const Column(
+          body: Column(
             children: [
-              Material(
+              const Material(
                 child: TabBar(
                   padding: EdgeInsets.all(0),
                   indicatorColor: Colors.black,
@@ -62,9 +62,12 @@ class FriendProfileScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: CreatorProfile()),
-                    Center(child: Text("Become a Mentor")),
-                    Center(child: Text("Become a Freelancer")),
+                    Center(
+                        child: CreatorProfile(
+                      user: chatUser,
+                    )),
+                    const Center(child: Text("Become a Mentor")),
+                    const Center(child: Text("Become a Freelancer")),
                   ],
                 ),
               ),

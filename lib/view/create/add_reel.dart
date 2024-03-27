@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:com.while.while_app/resources/components/round_button.dart';
 import 'package:com.while.while_app/resources/components/text_container_widget.dart';
@@ -9,7 +9,6 @@ import 'package:com.while.while_app/resources/components/video_player.dart';
 import 'package:com.while.while_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,54 +55,6 @@ class _AddReelState extends ConsumerState<AddReel> {
     });
     File vid = await compressVideo(path);
     Dialogs.showSnackbar(context, vid.path.split(".").last);
-    // DateTime now = DateTime.now();
-    // File video = _compressVideo(path);
-    //File video = File(path);
-    // var stream = http.ByteStream(video.openRead().cast());
-    // var length = video.lengthSync();
-    // var uri = Uri.parse('http://13.233.151.213:3000/reels');
-    // var request = http.MultipartRequest('POST', uri)
-    //   ..files.add(http.MultipartFile('video', stream, length,
-    //       filename: basename(video.path)));
-    // // await request.send();
-    // try {
-    //   final response = await http.Response.fromStream(await request.send());
-
-    //   if (response.statusCode == 200) {
-    //     // Parse the URL from the response
-    //     // final Map<String, dynamic> jsonResponse =
-    //     String videoUrl = json.decode(response.body);
-    //     Dialogs.showSnackbar(context, videoUrl);
-    //     final CollectionReference collectionReference =
-    //         FirebaseFirestore.instance.collection('videos');
-    //     final Map<String, dynamic> vid = {
-    //       "uploadedBy": APIs.me.id,
-    //       'videoUrl': videoUrl,
-    //       'title': title,
-    //       'description': des,
-    //       'likes': [],
-    //       'views': 0
-    //     };
-    //     collectionReference.add(vid).then((value) {
-    //       // Utils.toastMessage('Your video is uploaded!');
-    //       setState(() {
-    //         isloading = false;
-    //       });
-    //       Navigator.pop(context);
-    //     }).onError((error, stackTrace) {
-    //       Utils.toastMessage(error.toString());
-    //     });
-    //     // Now you can use the videoUrl as needed, for example, storing it in a variable or database
-    //     print('Uploaded video URL: $videoUrl');
-
-    //     // You can use the videoUrl as needed, for example, store it in a variable, database, etc.
-    //     // You can then use this URL to display the video or perform other operations.
-    //   } else {
-    //     print('Failed to upload video. Status code: ${response.statusCode}');
-    //   }
-    // } catch (error) {
-    //   print('Error uploading video: $error');
-    // }
 // Api.video
     uploadVideo(File videoFile, String id) async {
       //Dialogs.showSnackbar(context, 'Function called');
@@ -126,7 +77,7 @@ class _AddReelState extends ConsumerState<AddReel> {
           //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
           final Map<String, dynamic> vid = {
-            "uploadedBy": ref.read(apisProvider).me.id,
+            "uploadedBy": ref.read(userProvider)!.id,
             'videoUrl': data['assets']['mp4'],
             'title': title,
             'description': des,
@@ -139,21 +90,19 @@ class _AddReelState extends ConsumerState<AddReel> {
               .doc(id)
               .set(vid)
               .then((value) {
-            // Utils.toastMessage('Your video is uploaded!');
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(ref.read(userProvider)!.id)
+                .collection('loops')
+                .doc(id)
+                .set(vid);
+            Utils.toastMessage('Your video is uploaded!');
             setState(() {
               isloading = false;
             });
             Navigator.pop(context);
             return data['videoId'];
           });
-          // collectionReference.add(vid).then((value) {
-          //   // Utils.toastMessage('Your video is uploaded!');
-          //   setState(() {
-          //     isloading = false;
-          //   });
-          //   Navigator.pop(context);
-          //   return data['videoId'];
-          // });
         } else {
           // Handle upload failure
           //Dialogs.showSnackbar(context, 'Failed');
@@ -195,18 +144,6 @@ class _AddReelState extends ConsumerState<AddReel> {
     }
 
     createVideo(title, des);
-
-    print(url);
-
-    // firebase_storage.Reference storageRef = firebase_storage
-    //     .FirebaseStorage.instance
-    //     .ref('content/${FirebaseSessionController().uid!}/video/$now');
-    // firebase_storage.UploadTask uploadTask =
-    //     storageRef.putFile(await _compressVideo(path));
-
-    // await Future.value(uploadTask);
-
-    // final newUrl = await storageRef.getDownloadURL();
   }
 
   @override

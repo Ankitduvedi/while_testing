@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/view/profile/creator_profile_widget%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,14 +97,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    const Center(child: CreatorProfile()),
-                    const Center(child: LeaderboardScreen()),
                     Center(
-                      child: Text(
-                        "Become a Freelancer",
-                        style: GoogleFonts.ptSans(color: Colors.black),
-                      ),
-                    ),
+                        child: CreatorProfile(
+                      user: user,
+                    )),
+                    Center(
+                        child: CreatorProfileVideo(
+                      user: user,
+                    )),
+                    const Center(child: LeaderboardScreen()),
                   ],
                 ),
               ),

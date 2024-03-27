@@ -14,6 +14,8 @@ import 'package:com.while.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/utils/utils.dart';
 
+import '../../feature/auth/controller/auth_controller.dart';
+
 class AddVideo extends ConsumerStatefulWidget {
   final String video;
   const AddVideo({Key? key, required this.video}) : super(key: key);
@@ -100,7 +102,13 @@ class AddVideoState extends ConsumerState<AddVideo> {
               .doc(id)
               .set(vid)
               .then((value) {
-            // Utils.toastMessage('Your video is uploaded!');
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(ref.read(userProvider)!.id)
+                .collection('videos')
+                .doc(id)
+                .set(vid);
+            Utils.toastMessage('Your video is uploaded!');
             setState(() {
               isloading = false;
             });
