@@ -27,108 +27,90 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore
-            .collection('users')
-            .doc(widget.user.id)
-            .collection('videos')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        backgroundColor: Colors.white,
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _firestore
+              .collection('users')
+              .doc(widget.user.id)
+              .collection('videos')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          final List<Video> videoList = VideoList.getVideoList(snapshot.data!);
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            final List<Video> videoList =
+                VideoList.getVideoList(snapshot.data!);
 
-          return ListView.builder(
-            scrollDirection: Axis.vertical, // Make the list scroll horizontally
-            itemCount:
-                (videoList.length / 2).ceil(), // Calculate the number of rows
-            itemBuilder: (context, rowIndex) {
-              int startIndex = rowIndex * 2;
-              int endIndex = startIndex + 2;
-
-              // Ensure endIndex is within bounds
-              if (endIndex > videoList.length) {
-                endIndex = videoList.length;
-              }
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: List.generate(
-                  endIndex - startIndex,
-                  (index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InkWell(
-                          onLongPress: () {
-                            final String id = snapshot.data!.docs[index].id;
-                            _showOptionsDialog(context, id, ref);
-                          },
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CreatorReelsScreen(
-                                      video: videoList[startIndex + index],
-                                      index: 0,
-                                    )));
-                          },
-                          child: Row(
-                            //mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  // borderRadius: BorderRadius.circular(mq.height * .13),
-                                  child: CachedNetworkImage(
-                                    height: mq.width / 3,
-                                    fit: BoxFit.cover,
-                                    width: mq.width / 2,
-                                    imageUrl:
-                                        videoList[startIndex + index].thumbnail,
-                                    errorWidget: (context, url, error) =>
-                                        const CircleAvatar(
-                                            child: Icon(CupertinoIcons.person)),
-                                  ),
-                                ),
+            return ListView.builder(
+              scrollDirection:
+                  Axis.vertical, // Make the list scroll horizontally
+              itemCount: videoList.length, // Calculate the number of rows
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: InkWell(
+                      onLongPress: () {
+                        final String id = snapshot.data!.docs[index].id;
+                        _showOptionsDialog(context, id, ref);
+                      },
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CreatorReelsScreen(
+                                  video: videoList[index],
+                                  index: 0,
+                                )));
+                      },
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              // borderRadius: BorderRadius.circular(mq.height * .13),
+                              child: CachedNetworkImage(
+                                height: mq.width / 3,
+                                fit: BoxFit.cover,
+                                width: mq.width / 2,
+                                imageUrl: videoList[index].thumbnail,
+                                errorWidget: (context, url, error) =>
+                                    const CircleAvatar(
+                                        child: Icon(CupertinoIcons.person)),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      videoList[startIndex + index].title,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      videoList[startIndex + index].description,
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 78, 78, 78)),
-                                    )
-                                  ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  videoList[index].title,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              )
-                            ],
-                          )),
-                    );
-                  },
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
+                                Text(
+                                  videoList[index].description,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 78, 78, 78)),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      )),
+                );
+              },
+            );
+          },
+        ));
   }
 
   void _showOptionsDialog(BuildContext context, String id, WidgetRef ref) {
