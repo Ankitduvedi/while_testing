@@ -1,7 +1,7 @@
 import 'dart:developer';
-import 'package:com.example.while_app/feature/upload/repository/upload_repository.dart';
-import 'package:com.example.while_app/view/create/add_reel.dart';
-import 'package:com.example.while_app/view/create/add_video.dart';
+import 'package:com.while.while_app/feature/upload/repository/upload_repository.dart';
+import 'package:com.while.while_app/view/create/add_reel.dart';
+import 'package:com.while.while_app/view/create/add_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
