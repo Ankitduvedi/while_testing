@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:com.while.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +11,6 @@ class Connect extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final toggle = ref.watch(toggleSearchStateProvider);
     final allUsersAsyncValue = ref.watch(allUsersProvider);
     final followingUsersAsyncValue =
         ref.watch(followingUsersProvider('userId'));

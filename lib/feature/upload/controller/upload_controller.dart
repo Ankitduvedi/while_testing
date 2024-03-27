@@ -4,7 +4,6 @@ import 'package:com.while.while_app/view/create/add_reel.dart';
 import 'package:com.while.while_app/view/create/add_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart';
 
 final uploadControllerProvider = Provider<UploadController>((ref) {
   return UploadController(uploadRepository: ref.read(uploadRepositoryProvider));

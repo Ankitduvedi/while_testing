@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
 import 'package:com.while.while_app/view/create/add_video.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:com.while.while_app/utils/routes/routes_name.dart';
 import 'package:com.while.while_app/feature/auth/screens/forgot_password_screen.dart';
 import 'package:com.while.while_app/view/create/add_reel.dart';
 import 'package:com.while.while_app/view/home_screen.dart';
-import 'package:com.while.while_app/view/post_preview.dart';
 import 'package:com.while.while_app/view/social/create_menu_screen.dart';
 import 'package:com.while.while_app/view/splash_view.dart';
 import 'package:com.while.while_app/view_model/wrapper/wrapper.dart';
@@ -42,28 +39,12 @@ class Routes {
           builder: (BuildContext context) => const ProfileScreen(),
         );
       case RoutesName.verify:
-      // return MaterialPageRoute(
-      //   builder: (BuildContext context) =>  MyVerify(),
-      // );
       case RoutesName.settings:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Settings());
       case RoutesName.createMenu:
         return MaterialPageRoute(
             builder: (BuildContext context) => const CreateMenuScreen());
-      case RoutesName.postPreview:
-        if (arguments is File) {
-          return MaterialPageRoute(
-              builder: (BuildContext context) => PostPreview(file: arguments));
-        } else {
-          return MaterialPageRoute(builder: (_) {
-            return const Scaffold(
-              body: Center(
-                child: Text('No route defined'),
-              ),
-            );
-          });
-        }
       case RoutesName.addReel:
         if (arguments is String) {
           return MaterialPageRoute(
