@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,7 +15,7 @@ import 'package:com.example.while_app/utils/utils.dart';
 
 class AddReel extends ConsumerStatefulWidget {
   final String _video;
-  const AddReel({super.key, required String video}) :_video = video;
+  const AddReel({super.key, required String video}) : _video = video;
 
   @override
   ConsumerState<AddReel> createState() => _AddReelState();
@@ -49,8 +49,8 @@ class _AddReelState extends ConsumerState<AddReel> {
     return compressedVideo?.file;
   }
 
-  void uploadVideo(String title, String des, String path,
-      List likes, int shares) async {
+  Future<void> uploadVideo(
+      String title, String des, String path, List likes, int shares) async {
     setState(() {
       isloading = true;
     });
@@ -105,7 +105,7 @@ class _AddReelState extends ConsumerState<AddReel> {
     //   print('Error uploading video: $error');
     // }
 // Api.video
-    uploadVideo(File videoFile, String id) async {
+    Future<void> uploadVideo(File videoFile, String id) async {
       // Dialogs.showSnackbar(context, 'Function called');
       const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
       const apiUrl = 'https://sandbox.api.video/videos';
@@ -128,7 +128,7 @@ class _AddReelState extends ConsumerState<AddReel> {
           // final CollectionReference collectionReference =
           //     FirebaseFirestore.instance.collection('videos');
           final Map<String, dynamic> vid = {
-            "uploadedBy": ref.read(apisProvider).me.id,
+            "uploadedBy": ref.read(userProvider)!.id,
             'videoUrl': data['assets']['mp4'],
             'title': title,
             'description': des,
@@ -245,7 +245,7 @@ class _AddReelState extends ConsumerState<AddReel> {
               RoundButton(
                   title: "Add Reel",
                   loading: isloading,
-                  onPress: () {
+                  onPress: () async {
                     if (_titleController.text.isEmpty) {
                       Utils.flushBarErrorMessage('Please enter title', context);
                     } else if (_descriptionController.text.isEmpty) {
@@ -253,18 +253,19 @@ class _AddReelState extends ConsumerState<AddReel> {
                           'Please enter description', context);
                     } else {
                       FocusManager.instance.primaryFocus?.unfocus();
-                      uploadVideo(
+                      await uploadVideo(
                           _titleController.text.toString(),
                           _descriptionController.text.toString(),
                           widget._video.toString(),
                           [], // initally the likes list shall be holding an empty list to be precise
                           0);
+                      Navigator.of(context).pop();
                     }
                   })
             ],
           ),
         ),
-    ),
+      ),
     );
   }
 }

@@ -22,21 +22,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   late TabController _controller;
   @override
   void initState() {
-    // final fireSevice = ref.read(apisProvider);
+    final fireSevice = ref.read(apisProvider);
     log("initState called");
-    // SystemChannels.lifecycle.setMessageHandler((message) {
-    //   log('Message: $message');
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('Message: $message');
 
-    //   if (fireSevice.auth.currentUser != null) {
-    //     if (message.toString().contains('resume')) {
-    //       fireSevice.updateActiveStatus(true);
-    //     }
-    //     if (message.toString().contains('pause')) {
-    //       fireSevice.updateActiveStatus(false);
-    //     }
-    //   }
-    //   return Future.value(message);
-    // });
+      if (fireSevice.auth.currentUser != null) {
+        if (message.toString().contains('resume')) {
+          fireSevice.updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          fireSevice.updateActiveStatus(false);
+        }
+      }
+      return Future.value(message);
+    });
     super.initState();
     _controller = TabController(length: 5, vsync: this, initialIndex: 0);
   }

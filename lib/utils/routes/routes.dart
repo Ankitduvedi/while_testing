@@ -28,9 +28,9 @@ class Routes {
       case RoutesName.signUp:
         return MaterialPageRoute(
             builder: (BuildContext context) =>const  SignUpScreen());
-      case RoutesName.splash:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const SplashScreen());
+      // case RoutesName.splash:
+      //   return MaterialPageRoute(
+      //       builder: (BuildContext context) => const SplashScreen());
       case RoutesName.wrapper:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Wrapper());
