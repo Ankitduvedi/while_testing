@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/view_model/providers/notif_state.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/view_model/providers/notif_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
- class NotificationsNotifier extends StateNotifier<NotificationsState> {
+class NotificationsNotifier extends StateNotifier<NotificationsState> {
   NotificationsNotifier() : super(NotificationsState());
 
   Future<void> fetchNotifications(Ref ref) async {
@@ -24,7 +24,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
     // Calculate if there are any new notifications
     bool hasNew = snapshot.docs.any((doc) => !(doc.data()['isRead'] as bool));
 
-    state = NotificationsState(notifications: notifications, hasNewNotifications: hasNew);
+    state = NotificationsState(
+        notifications: notifications, hasNewNotifications: hasNew);
   }
 
   Future<void> markNotificationsAsRead(Ref ref) async {
@@ -34,7 +35,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
         .doc(ref.read(apisProvider).me.id)
         .collection('notifs')
         .where('isRead', isEqualTo: false);
-    
+
     var snapshots = await collection.get();
 
     // Batch update to mark as read

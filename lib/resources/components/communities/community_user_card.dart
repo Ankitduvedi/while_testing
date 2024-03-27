@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:com.example.while_app/main.dart';
+import 'package:com.while.while_app/main.dart';
 import '../message/apis.dart';
 import 'cdetail.dart';
 import '../message/helper/my_date_util.dart';
@@ -45,8 +45,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                     builder: (_) => CCommunityDetailScreen(user: widget.user)));
           },
           child: StreamBuilder(
-            stream: fireService
-          .getLastCommunityMessage(widget.user),
+            stream: fireService.getLastCommunityMessage(widget.user),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
               final list = data
@@ -101,7 +100,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 trailing: _message == null
                     ? null //show nothing when no message is sent
                     : _message!.read.isEmpty &&
-                            _message!.fromId !=  fireService.user.uid
+                            _message!.fromId != fireService.user.uid
                         ?
                         //show for unread message
                         Container(

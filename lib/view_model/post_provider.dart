@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/utils/routes/routes_name.dart';
-import 'package:com.example.while_app/view_model/session_controller.dart';
+import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/view_model/session_controller.dart';
+
 final postProvider = Provider<PostProvider>((ref) {
   return PostProvider();
 });
-class PostProvider  {
+
+class PostProvider {
   final databaseReference = FirebaseDatabase.instance.ref();
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('Users');
   firebase_storage.FirebaseStorage storage =
@@ -26,7 +28,6 @@ class PostProvider  {
 
   LoadValue(bool value) {
     _isLoading = value;
-  
   }
 
   selectPost(BuildContext context) async {
@@ -69,7 +70,7 @@ class PostProvider  {
         );
         if (croppedFile != null) {
           _post = File(croppedFile.path);
-  
+
           if (context.mounted) {
             Navigator.pushNamed(context, RoutesName.postPreview,
                 arguments: File(croppedFile.path));

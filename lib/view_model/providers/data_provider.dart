@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final videoStreamProvider = StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+final videoStreamProvider =
+    StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
   return FirebaseFirestore.instance.collection('loops').snapshots();
 });
-
 
 ///////
 ///

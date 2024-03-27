@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/view/profile/friend_profile_data_widget%20.dart';
-import 'package:com.example.while_app/view/uploaded_screen.dart';
+import 'package:com.while.while_app/view/profile/friend_profile_data_widget%20.dart';
+import 'package:com.while.while_app/view/uploaded_screen.dart';
 
 // ignore: must_be_immutable
 class FriendProfileScreen extends StatelessWidget {

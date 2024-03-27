@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/core/enums/firebase_providers.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/core/enums/firebase_providers.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,8 +26,6 @@ final userDataProviderMain = StreamProvider.family((ref, String uid) {
   final apiController = ref.watch(apisProvider);
   return apiController.getSelfData(uid);
 });
-
-
 
 class APIs {
   // for authentication
@@ -79,7 +77,6 @@ class APIs {
     });
   }
 
-  
   // for sending push notification
   Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
     try {
@@ -242,9 +239,6 @@ class APIs {
     return true;
   }
 
- 
-
- 
   Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     await firestore
         .collection('communities')
@@ -419,7 +413,6 @@ class APIs {
 
   // update profile picture of user
 
-  
   // for getting specific user info
 
   Stream<ChatUser> getUserInfo(String uid) {

@@ -1,11 +1,11 @@
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:com.example.while_app/view/profile/user_profile_follower_screen.dart';
-import 'package:com.example.while_app/view/profile/user_profile_following_screen.dart';
+import 'package:com.while.while_app/view/profile/user_profile_follower_screen.dart';
+import 'package:com.while.while_app/view/profile/user_profile_following_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileDataWidget extends ConsumerWidget {

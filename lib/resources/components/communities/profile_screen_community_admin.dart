@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/utils/dialogs/avail_users_dialog.dart';
+import 'package:com.while.while_app/utils/dialogs/avail_users_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import '../../../main.dart';
 import '../message/apis.dart';
 import '../message/helper/dialogs.dart';
@@ -214,7 +214,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           log(community.toJson().toString());
-                          fireService.updateCommunityInfo(community).then((value) {
+                          fireService
+                              .updateCommunityInfo(community)
+                              .then((value) {
                             Dialogs.showSnackbar(
                                 context, 'Profile Updated Successfully!');
                           });
@@ -247,8 +249,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     SingleChildScrollView(
                       child: StreamBuilder(
-                          stream:
-                              fireService.getCommunityParticipantsInfo(widget.user.id),
+                          stream: fireService
+                              .getCommunityParticipantsInfo(widget.user.id),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               //if data is loading
@@ -283,7 +285,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                               .validate()) {
                                             _formKey.currentState!.save();
                                             log(community.toJson().toString());
-                                            fireService.updateCommunityInfo(community)
+                                            fireService
+                                                .updateCommunityInfo(community)
                                                 .then((value) {
                                               Dialogs.showSnackbar(context,
                                                   'Profile Updated Successfully!');

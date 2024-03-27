@@ -1,4 +1,4 @@
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';

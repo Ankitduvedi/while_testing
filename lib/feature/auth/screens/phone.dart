@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:com.example.while_app/feature/auth/screens/verify.dart';
+import 'package:com.while.while_app/feature/auth/screens/verify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/utils/utils.dart';
-
+import 'package:com.while.while_app/utils/utils.dart';
 
 class MyPhone extends StatefulWidget {
   const MyPhone({Key? key}) : super(key: key);

@@ -1,8 +1,8 @@
 import 'dart:developer';
-import 'package:com.example.while_app/feature/notifications/controller/notif_contoller.dart';
-import 'package:com.example.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
-import 'package:com.example.while_app/feature/notifications/screens/notification_view.dart';
-import 'package:com.example.while_app/feature/feedscreen/controller/categories_test_provider.dart';
+import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
+import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
+import 'package:com.while.while_app/feature/notifications/screens/notification_view.dart';
+import 'package:com.while.while_app/feature/feedscreen/controller/categories_test_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

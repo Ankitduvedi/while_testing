@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:com.example.while_app/data/model/community_user.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

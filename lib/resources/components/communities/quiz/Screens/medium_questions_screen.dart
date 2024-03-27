@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/results_screen.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/lives.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/answerButton.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/answerButton.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MediumQuestionsScreen extends ConsumerStatefulWidget {

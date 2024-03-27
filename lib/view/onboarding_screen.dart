@@ -1,9 +1,9 @@
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/feature/intro_screens/intro_page_1.dart';
-import 'package:com.example.while_app/feature/intro_screens/intro_page_2.dart';
-import 'package:com.example.while_app/feature/intro_screens/intro_page_3.dart';
-import 'package:com.example.while_app/feature/intro_screens/intro_page_4.dart';
-import 'package:com.example.while_app/feature/intro_screens/intro_page_5.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/feature/intro_screens/intro_page_1.dart';
+import 'package:com.while.while_app/feature/intro_screens/intro_page_2.dart';
+import 'package:com.while.while_app/feature/intro_screens/intro_page_3.dart';
+import 'package:com.while.while_app/feature/intro_screens/intro_page_4.dart';
+import 'package:com.while.while_app/feature/intro_screens/intro_page_5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

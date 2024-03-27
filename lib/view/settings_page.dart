@@ -1,8 +1,8 @@
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:com.example.while_app/resources/components/text_button.dart';
+import 'package:com.while.while_app/resources/components/text_button.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});

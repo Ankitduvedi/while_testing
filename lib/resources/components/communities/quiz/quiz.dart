@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/easy_questions_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/medium_questions_screen.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/start_screen.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/easy_questions_screen.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/hard_questions_screen.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/medium_questions_screen.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/start_screen.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Quiz extends ConsumerStatefulWidget {
@@ -19,7 +19,6 @@ class Quiz extends ConsumerStatefulWidget {
     return _QuizState();
   }
 }
-
 
 class _QuizState extends ConsumerState<Quiz> {
   List<String> selectedAnswers = [];
