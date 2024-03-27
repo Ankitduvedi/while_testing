@@ -259,6 +259,7 @@ class _AddReelState extends ConsumerState<AddReel> {
                           widget._video.toString(),
                           [], // initally the likes list shall be holding an empty list to be precise
                           0);
+                      const SnackBar(content: Text("Video Uploaded"));
                       Navigator.of(context).pop();
                     }
                   })
