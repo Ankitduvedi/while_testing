@@ -2,14 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/view/social/full_screen_status.dart';
+import 'package:com.while.while_app/view/social/full_screen_status.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 

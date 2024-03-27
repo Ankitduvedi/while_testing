@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/feature/notifications/controller/notif_contoller.dart';
+import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -15,9 +15,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    ref
-        .read(notifControllerProvider.notifier)
-        .markAllNotificationsRead();
+    ref.read(notifControllerProvider.notifier).markAllNotificationsRead();
   }
 
   @override

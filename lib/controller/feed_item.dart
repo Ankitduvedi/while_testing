@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 
 class FeedItem extends StatefulWidget {
   const FeedItem(

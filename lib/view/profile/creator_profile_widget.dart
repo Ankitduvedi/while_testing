@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/controller/videos_lists.dart';
-import 'package:com.example.while_app/view/profile/creators_reels_screen.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/controller/videos_lists.dart';
+import 'package:com.while.while_app/view/profile/creators_reels_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:com.example.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 // Ensure this import is correct
 
 class CreatorProfile extends ConsumerStatefulWidget {

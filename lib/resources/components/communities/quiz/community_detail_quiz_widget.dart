@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:com.example.while_app/resources/components/communities/quiz/Screens/timer.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/lives.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/Screens/timer.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/lives.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/add_quiz.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/quiz.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/add_quiz.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/quiz.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({Key? key, required this.user}) : super(key: key);

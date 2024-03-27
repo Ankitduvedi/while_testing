@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/core/enums/firebase_providers.dart';
+import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

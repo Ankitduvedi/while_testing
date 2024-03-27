@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:com.example.while_app/main.dart';
+import 'package:com.while.while_app/main.dart';
 import '../apis.dart';
 import '../helper/dialogs.dart';
 import '../helper/my_date_util.dart';
@@ -28,7 +28,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
     bool isMe = fireService.user.uid == widget.message.fromId;
     return InkWell(
         onLongPress: () {
-          _showBottomSheet(isMe,fireService);
+          _showBottomSheet(isMe, fireService);
         },
         child: isMe ? _greenMessage() : _blueMessage(fireService));
   }
@@ -168,7 +168,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
   }
 
   // bottom sheet for modifying message details
-  void _showBottomSheet(bool isMe,fireservice) {
+  void _showBottomSheet(bool isMe, fireservice) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -255,7 +255,9 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                         color: Colors.red, size: 26),
                     name: 'Delete Message',
                     onTap: () async {
-                      await fireservice.deleteMessage(widget.message).then((value) {
+                      await fireservice
+                          .deleteMessage(widget.message)
+                          .then((value) {
                         //for hiding bottom sheet
                         Navigator.pop(context);
                       });

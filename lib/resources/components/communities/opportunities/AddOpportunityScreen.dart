@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
-import 'package:com.example.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();

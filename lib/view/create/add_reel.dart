@@ -7,11 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:video_compress/video_compress.dart';
 
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
-import 'package:com.example.while_app/resources/components/video_player.dart';
+import 'package:com.while.while_app/resources/components/round_button.dart';
+import 'package:com.while.while_app/resources/components/text_container_widget.dart';
+import 'package:com.while.while_app/resources/components/video_player.dart';
 import 'package:http/http.dart' as http;
-import 'package:com.example.while_app/utils/utils.dart';
+import 'package:com.while.while_app/utils/utils.dart';
 
 class AddReel extends ConsumerStatefulWidget {
   final String _video;
@@ -48,6 +48,7 @@ class _AddReelState extends ConsumerState<AddReel> {
         quality: VideoQuality.MediumQuality, deleteOrigin: false);
     return compressedVideo?.file;
   }
+
 
   Future<void> uploadVideo(
       String title, String des, String path, List likes, int shares) async {

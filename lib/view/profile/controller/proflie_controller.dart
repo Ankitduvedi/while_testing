@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:com.example.while_app/core/failure.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.example.while_app/view/profile/repository/profile_repo.dart';
+import 'package:com.while.while_app/core/failure.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/view/profile/repository/profile_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/resources/components/message/widgets/message_card.dart';
+import 'package:com.while.while_app/resources/components/message/widgets/message_card.dart';
 import '../../../main.dart';
 import 'apis.dart';
 import 'helper/my_date_util.dart';
@@ -252,7 +252,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     for (var i in images) {
                       log('Image Path: ${i.path}');
                       setState(() => _isUploading = true);
-                      await fireservice.sendChatImage(widget.user, File(i.path));
+                      await fireservice.sendChatImage(
+                          widget.user, File(i.path));
                       setState(() => _isUploading = false);
                     }
                   },
@@ -316,7 +317,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       log('Image Path: ${image.path}');
                       setState(() => _isUploading = true);
 
-                      await fireservice.sendChatImage(widget.user, File(image.path));
+                      await fireservice.sendChatImage(
+                          widget.user, File(image.path));
                       setState(() => _isUploading = false);
                     }
                   },

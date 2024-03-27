@@ -1,9 +1,9 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
-import 'package:com.example.while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/resources/components/communities/opportunities/AddOpportunityScreen.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 
 class Opportunity {
   final String name;
@@ -11,7 +11,11 @@ class Opportunity {
   final String url;
   final String id;
 
-  Opportunity({required this.name, required this.description, required this.url, required this.id});
+  Opportunity(
+      {required this.name,
+      required this.description,
+      required this.url,
+      required this.id});
 }
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -20,7 +24,8 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 class OpportunitiesScreen extends ConsumerWidget {
   const OpportunitiesScreen({Key? key, required this.user}) : super(key: key);
   final Community user;
-  Future<void> _showOpportunityDetails(BuildContext context,Opportunity opportunity,WidgetRef ref) async {
+  Future<void> _showOpportunityDetails(
+      BuildContext context, Opportunity opportunity, WidgetRef ref) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -97,7 +102,7 @@ class OpportunitiesScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
@@ -143,7 +148,7 @@ class OpportunitiesScreen extends ConsumerWidget {
                       style: const TextStyle(color: Colors.black),
                     ),
                     onTap: () {
-                      _showOpportunityDetails(context,opportunity,ref);
+                      _showOpportunityDetails(context, opportunity, ref);
                     },
                   ),
                   Divider(

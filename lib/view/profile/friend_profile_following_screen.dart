@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/message/helper/dialogs.dart';
-import 'package:com.example.while_app/data/model/chat_user.dart';
-import 'package:com.example.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/helper/dialogs.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../main.dart';
@@ -121,7 +121,8 @@ class FriendProfileFollowingScreenState
                                     elevation: 4,
                                     backgroundColor: Colors.white),
                                 onPressed: () async {
-                                  await fireService.addChatUser(person.email)
+                                  await fireService
+                                      .addChatUser(person.email)
                                       .then((value) {
                                     if (value) {
                                       Dialogs.showSnackbar(

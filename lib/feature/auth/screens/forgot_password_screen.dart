@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/colors.dart';
-import 'package:com.example.while_app/resources/components/header_widget.dart';
-import 'package:com.example.while_app/resources/components/round_button.dart';
-import 'package:com.example.while_app/resources/components/text_container_widget.dart';
-import 'package:com.example.while_app/utils/utils.dart';
+import 'package:com.while.while_app/resources/colors.dart';
+import 'package:com.while.while_app/resources/components/header_widget.dart';
+import 'package:com.while.while_app/resources/components/round_button.dart';
+import 'package:com.while.while_app/resources/components/text_container_widget.dart';
+import 'package:com.while.while_app/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -16,8 +16,7 @@ class ForgotPasswordPage extends ConsumerStatefulWidget {
   ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class CosumerStatefulWidget {
-}
+class CosumerStatefulWidget {}
 
 class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();

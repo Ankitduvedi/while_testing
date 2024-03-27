@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.example.while_app/resources/components/communities/resources/community_detail_resources_widget%20.dart';
+import 'package:com.while.while_app/resources/components/communities/resources/community_detail_resources_widget%20.dart';
 import 'package:flutter/material.dart';
-import 'package:com.example.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
-import 'package:com.example.while_app/resources/components/communities/quiz/community_detail_quiz_widget.dart';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/resources/components/communities/profile_screen_community_admin.dart';
-import 'package:com.example.while_app/resources/components/message/widgets/profileCommunity_user.dart';
+import 'package:com.while.while_app/resources/components/communities/opportunities/community_detail_opportunities_widget.dart';
+import 'package:com.while.while_app/resources/components/communities/quiz/community_detail_quiz_widget.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/communities/profile_screen_community_admin.dart';
+import 'package:com.while.while_app/resources/components/message/widgets/profileCommunity_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../main.dart';
 import 'cchat.dart';
@@ -18,10 +18,12 @@ class CCommunityDetailScreen extends ConsumerStatefulWidget {
       : super(key: key);
   final Community user;
   @override
-  ConsumerState<CCommunityDetailScreen> createState() => _CCommunityDetailScreenState();
+  ConsumerState<CCommunityDetailScreen> createState() =>
+      _CCommunityDetailScreenState();
 }
 
-class _CCommunityDetailScreenState extends ConsumerState<CCommunityDetailScreen> {
+class _CCommunityDetailScreenState
+    extends ConsumerState<CCommunityDetailScreen> {
   /// List of Tab Bar Item
 
   List<String> itemsName = const [

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:com.example.while_app/resources/components/message/apis.dart';
-import 'package:com.example.while_app/view_model/providers/connect_community_provider.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/view_model/providers/connect_community_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';

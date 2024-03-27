@@ -1,7 +1,7 @@
 import 'dart:developer';
-import 'package:com.example.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:com.example.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/data/model/community_user.dart';
 
 class CommunityProviders extends StateNotifier<Community> {
   CommunityProviders()
@@ -21,7 +21,7 @@ class CommunityProviders extends StateNotifier<Community> {
             timeStamp: 'timeStamp',
             admin: 'admin'));
 
-  void changeName(Community community,Ref ref) {
+  void changeName(Community community, Ref ref) {
     var data = ref.read(apisProvider).getCommunityInfos(community);
 
     state = Community(

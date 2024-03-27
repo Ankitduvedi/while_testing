@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:com.example.while_app/view/home_screen.dart';
+import 'package:com.while.while_app/view/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,8 +9,8 @@ import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/route_manager.dart';
-import 'package:com.example.while_app/utils/routes/routes_name.dart';
-import 'package:com.example.while_app/view_model/wrapper/wrapper.dart';
+import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/view_model/wrapper/wrapper.dart';
 import 'firebase_options.dart';
 import 'utils/routes/routes.dart';
 import 'package:get/get.dart';

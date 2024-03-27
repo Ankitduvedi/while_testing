@@ -5,11 +5,12 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.example.while_app/data/model/community_message.dart';
-import 'package:com.example.while_app/resources/components/communities/community_message_card.dart';
+import 'package:com.while.while_app/data/model/community_message.dart';
+import 'package:com.while.while_app/resources/components/communities/community_message_card.dart';
 import '../../../main.dart';
 import '../message/apis.dart';
 import '../../../data/model/community_user.dart';
+
 // Convert to ConsumerStatefulWidget
 class CChatScreen extends ConsumerStatefulWidget {
   final Community user;
@@ -56,58 +57,68 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
             ),
             child: Column(
               children: [
-                 Expanded(
-  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-    stream: ref.read(apisProvider).getAllCommunityMessages(widget.user),
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        // Handle any errors that occur during fetching data
-        return Center(child: Text('Error: ${snapshot.error}'));
-      }
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: ref
+                        .read(apisProvider)
+                        .getAllCommunityMessages(widget.user),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        // Handle any errors that occur during fetching data
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
 
-      switch (snapshot.connectionState) {
-        case ConnectionState.waiting:
-          // Show a loading spinner while waiting for the data
-          return const Center(child: CircularProgressIndicator());
-        case ConnectionState.active:
-        case ConnectionState.done:
-          // Once the data is available, convert your snapshots into a list of messages
-          if (snapshot.hasData) {
-            final data = snapshot.data!.docs;
-            _list = data.map((doc) => CommunityMessage.fromJson(doc.data())).toList();
-            
-            // Check if the list is empty
-            if (_list.isEmpty) {
-              return const Center(
-                child: Text('Say Hi! 👋', style: TextStyle(fontSize: 20)),
-              );
-            }
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          // Show a loading spinner while waiting for the data
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          // Once the data is available, convert your snapshots into a list of messages
+                          if (snapshot.hasData) {
+                            final data = snapshot.data!.docs;
+                            _list = data
+                                .map((doc) =>
+                                    CommunityMessage.fromJson(doc.data()))
+                                .toList();
 
-            // Return a ListView to display the messages
-            return ListView.builder(
-              reverse: true,
-              itemCount: _list.length,
-              itemBuilder: (context, index) => CommunityMessageCard(message: _list[index]),
-            );
-          } else {
-            // Handle the case when there's no data
-            return const Center(
-              child: Text('Start the conversation!'),
-            );
-          }
-        default:
-          // By default, show a loading spinner
-          return const Center(child: CircularProgressIndicator());
-      }
-    },
-  ),
-),
+                            // Check if the list is empty
+                            if (_list.isEmpty) {
+                              return const Center(
+                                child: Text('Say Hi! 👋',
+                                    style: TextStyle(fontSize: 20)),
+                              );
+                            }
+
+                            // Return a ListView to display the messages
+                            return ListView.builder(
+                              reverse: true,
+                              itemCount: _list.length,
+                              itemBuilder: (context, index) =>
+                                  CommunityMessageCard(message: _list[index]),
+                            );
+                          } else {
+                            // Handle the case when there's no data
+                            return const Center(
+                              child: Text('Start the conversation!'),
+                            );
+                          }
+                        default:
+                          // By default, show a loading spinner
+                          return const Center(
+                              child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
 
                 if (_isUploading)
                   const Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
@@ -133,39 +144,40 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   }
 
   // bottom chat input field
-  Widget _chatInput(BuildContext context,WidgetRef ref) {
+  Widget _chatInput(BuildContext context, WidgetRef ref) {
     return Material(
       //elevation: 25,
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(mq.width * .005 , mq.height * .01, mq.width * .005, 0
+          padding: EdgeInsets.fromLTRB(
+              mq.width * .005, mq.height * .01, mq.width * .005, 0
 
               //vertical: mq.height * 0, horizontal: mq.width * .01
               ),
           child: Row(
             children: [
-
               //pick image from gallery button
-                      IconButton(
-                          onPressed: () async {
-                            final ImagePicker picker = ImagePicker();
-      
-                            // Picking multiple images
-                            final List<XFile> images =
-                                await picker.pickMultiImage(imageQuality: 70);
-      
-                            // uploading & sending image one by one
-                            for (var i in images) {
-                              log('Image Path: ${i.path}');
-                              setState(() => _isUploading = true);
-                              ref.read(apisProvider).communitySendChatImage(
-                                  widget.user, File(i.path));
-                              setState(() => _isUploading = false);
-                            }
-                          },
-                          icon: const Icon(Icons.add,
-                              color: Colors.lightBlueAccent, size: 34)),
+              IconButton(
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+
+                    // Picking multiple images
+                    final List<XFile> images =
+                        await picker.pickMultiImage(imageQuality: 70);
+
+                    // uploading & sending image one by one
+                    for (var i in images) {
+                      log('Image Path: ${i.path}');
+                      setState(() => _isUploading = true);
+                      ref
+                          .read(apisProvider)
+                          .communitySendChatImage(widget.user, File(i.path));
+                      setState(() => _isUploading = false);
+                    }
+                  },
+                  icon: const Icon(Icons.add,
+                      color: Colors.lightBlueAccent, size: 34)),
 
               //input field & buttons
               Expanded(
@@ -182,7 +194,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                           },
                           icon: const Icon(Icons.emoji_emotions_outlined,
                               color: Colors.lightBlueAccent, size: 28)),
-      
+
                       Expanded(
                           child: TextField(
                         controller: _textController,
@@ -190,7 +202,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                         style: const TextStyle(color: Colors.black),
                         maxLines: null,
                         onTap: () {
-                          if (_showEmoji) setState(() => _showEmoji = !_showEmoji);
+                          if (_showEmoji)
+                            setState(() => _showEmoji = !_showEmoji);
                         },
                         decoration: const InputDecoration(
                             counterStyle: TextStyle(color: Colors.black),
@@ -198,7 +211,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                             hintText: 'Type Something...',
                             hintStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none),
-                      )),    
+                      )),
                       SizedBox(width: mq.width * .02),
                     ],
                   ),
@@ -206,25 +219,25 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
               ),
 
               //take image from camera button
-                      IconButton(
-                          onPressed: () async {
-                            final ImagePicker picker = ImagePicker();
-      
-                            // Pick an image
-                            final XFile? image = await picker.pickImage(
-                                source: ImageSource.camera, imageQuality: 70);
-                            if (image != null) {
-                              log('Image Path: ${image.path}');
-                              setState(() => _isUploading = true);
-      
-                              ref.read(apisProvider).communitySendChatImage(
-                                  widget.user, File(image.path));
-                              setState(() => _isUploading = false);
-                            }
-                          },
-                          icon: const Icon(Icons.camera_alt_outlined,
-                              color: Colors.lightBlueAccent, size: 32)),
-      
+              IconButton(
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+
+                    // Pick an image
+                    final XFile? image = await picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 70);
+                    if (image != null) {
+                      log('Image Path: ${image.path}');
+                      setState(() => _isUploading = true);
+
+                      ref.read(apisProvider).communitySendChatImage(
+                          widget.user, File(image.path));
+                      setState(() => _isUploading = false);
+                    }
+                  },
+                  icon: const Icon(Icons.camera_alt_outlined,
+                      color: Colors.lightBlueAccent, size: 32)),
+
               //send message button
               MaterialButton(
                 onPressed: () {
