@@ -28,13 +28,13 @@ class UserProfileFollowingScreenState
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color: Colors.black,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -42,9 +42,9 @@ class UserProfileFollowingScreenState
         ),
         title: const Text(
           'Following',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
       ),
 
       //body
@@ -126,17 +126,17 @@ class UserProfileFollowingScreenState
                                   ),
                                   title: Text(
                                     person.name,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.black),
                                   ),
                                   subtitle: Text(
                                     person.email,
                                     style: const TextStyle(
                                         color:
-                                            Color.fromARGB(255, 186, 186, 186)),
+                                            Colors.black38),
                                   ),
                                   trailing: TextButton(
                                     style: TextButton.styleFrom(
-                                      backgroundColor: Colors.white,
+                                      backgroundColor: Colors.blueAccent,
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -155,7 +155,7 @@ class UserProfileFollowingScreenState
                                     child: const Text(
                                       'Unfollow',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight
                                             .bold, // Adjust the font weight as needed
                                       ),
