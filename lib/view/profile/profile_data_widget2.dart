@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class ProfileDataWidget extends ConsumerWidget {
     double h = MediaQuery.of(context).size.height;
 
     final user = ref.watch(userProvider);
+
     return SafeArea(
         child: LiquidPullToRefresh(
       onRefresh: () async {
@@ -51,26 +53,152 @@ class ProfileDataWidget extends ConsumerWidget {
                 ),
                 _buildStatItem("0", 'Posts'),
                 GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const UserProfileFollowerScreen(),
-                        ),
-                      );
-                    },
-                    child: _buildStatItem("${user.follower}", 'Followers')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const UserProfileFollowerScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.id)
+                            .collection('follower')
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          // Check for errors
+                          if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: GoogleFonts.ptSans(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26,
+                              ),
+                            );
+                          }
+
+                          // Check for connection state before attempting to access the data
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              // Show a loading indicator while waiting for the data
+                              return CircularProgressIndicator();
+
+                            default:
+                              // Ensure data is not null before accessing it
+                              if (snapshot.data != null) {
+                                return Text(
+                                  snapshot.data!.docs.length.toString(),
+                                  style: GoogleFonts.ptSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26,
+                                  ),
+                                );
+                              } else {
+                                // Handle the case where data is null
+                                return Text(
+                                  '0',
+                                  style: GoogleFonts.ptSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26,
+                                  ),
+                                );
+                              }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 3.0),
+                      const Text(
+                        "Followers",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black54,
+                            fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
                 GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              UserProfileFollowingScreen(chatUser: user),
-                        ),
-                      );
-                    },
-                    child: _buildStatItem("${user.following}", 'Followings')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            UserProfileFollowingScreen(chatUser: user),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.id)
+                            .collection('following')
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          // Check for errors
+                          if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: GoogleFonts.ptSans(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26,
+                              ),
+                            );
+                          }
+
+                          // Check for connection state before attempting to access the data
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              // Show a loading indicator while waiting for the data
+                              return CircularProgressIndicator();
+
+                            default:
+                              // Ensure data is not null before accessing it
+                              if (snapshot.data != null) {
+                                return Text(
+                                  snapshot.data!.docs.length.toString(),
+                                  style: GoogleFonts.ptSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26,
+                                  ),
+                                );
+                              } else {
+                                // Handle the case where data is null
+                                return Text(
+                                  '0',
+                                  style: GoogleFonts.ptSans(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26,
+                                  ),
+                                );
+                              }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 3.0),
+                      const Text(
+                        "Following",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black54,
+                            fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             const SizedBox(
@@ -78,15 +206,16 @@ class ProfileDataWidget extends ConsumerWidget {
             ),
             SizedBox(
               child: Padding(
-                  padding: const EdgeInsets.only(left: 56),
+                  padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     user.about,
                     style: GoogleFonts.ptSans(fontSize: 16),
                   )),
             ),
-            const SizedBox(
-              height: 16,
-            ),
+            // const SizedBox(
+            //   height: 16,
+            // ),
+            
           ],
         ),
       ),

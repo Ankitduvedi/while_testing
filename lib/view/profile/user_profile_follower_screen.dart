@@ -7,6 +7,7 @@ import 'package:com.while.while_app/resources/components/message/apis.dart';
 import 'package:com.while.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class UserProfileFollowerScreen extends ConsumerWidget {
   const UserProfileFollowerScreen({super.key});
@@ -50,6 +51,9 @@ class UserProfileFollowerScreen extends ConsumerWidget {
           builder: (context, followerSnapshot) {
             if (followerSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
+            }
+            if (!followerSnapshot.isNull) {
+              return const Center(child: Text('No followers found.'));
             }
             if (!followerSnapshot.hasData) {
               return const Center(child: Text('No followers found.'));
