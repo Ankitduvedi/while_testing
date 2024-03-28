@@ -55,12 +55,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         },
         child: Scaffold(
           //app bar
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: _appBar(fireService),
-            backgroundColor: Colors.white,
-            toolbarHeight: 60,
-          ),
+          // appBar: AppBar(
+          //   automaticallyImplyLeading: false,
+          //   flexibleSpace: _appBar(fireService),
+          //   backgroundColor: Colors.white,
+          //   toolbarHeight: 60,
+          // ),
 
           backgroundColor: Colors.white,
 
@@ -156,7 +156,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             //         builder: (_) => ViewProfileScreen(user: widget.user)));
           },
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: fireservice.getUserInfo(widget.user),
+              stream: fireservice.getUserInfo(widget.user.id),
               builder: (context, snapshot) {
                 final data = snapshot.data?.docs;
                 final list =
