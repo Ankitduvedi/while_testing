@@ -93,7 +93,7 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                         maxLines: 1,
                         style: const TextStyle(
                             fontSize: 16.0,
-                            color: Color.fromARGB(255, 145, 145, 145)),
+                            color: Color.fromARGB(255, 255, 255, 255)),
                       ),
                     ),
                   ],
