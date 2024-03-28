@@ -20,11 +20,6 @@ class _FeedItemState extends State<FeedItem> {
   User? user = FirebaseAuth.instance.currentUser;
   late VideoPlayerController _controller;
   bool likeTapped = false;
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {

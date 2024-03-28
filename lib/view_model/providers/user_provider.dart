@@ -1,108 +1,109 @@
-// import 'dart:async';
-// import 'dart:developer';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:com.example.while_app/data/model/chat_user.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// class UserDataProvider with ChangeNotifier {
-//   final Ref ref;
-//   late final StreamSubscription<DocumentSnapshot> _userSubscription;
-//   late final StreamSubscription<QuerySnapshot> _followingSubscription;
-//   late final StreamSubscription<QuerySnapshot> _followerSubscription;
-//   bool _isDisposed = false;
+import '../../data/model/chat_user.dart';
 
-//   UserDataProvider(this.ref) {
-//     _initData();
-//   }
+class UserDataProvider with ChangeNotifier {
+  final Ref ref;
+  late final StreamSubscription<DocumentSnapshot> _userSubscription;
+  late final StreamSubscription<QuerySnapshot> _followingSubscription;
+  late final StreamSubscription<QuerySnapshot> _followerSubscription;
+  bool _isDisposed = false;
 
-//   ChatUser _userData = ChatUser.empty();
-//   ChatUser? get userData => _userData;
+  UserDataProvider(this.ref) {
+    _initData();
+  }
 
-//   void _initData() {
-//     final auth = FirebaseAuth.instance.currentUser;
-//     if (auth != null) {
-//       // User data subscription
-//       _userSubscription = FirebaseFirestore.instance
-//           .collection('users')
-//           .doc(auth.uid)
-//           .snapshots()
-//           .listen((snapshot) {
-//         _userUpdateListener(snapshot);
-//       });
+  ChatUser _userData = ChatUser.empty();
+  ChatUser? get userData => _userData;
 
-//       // Following subscription
-//       _followingSubscription = FirebaseFirestore.instance
-//           .collection('users')
-//           .doc(auth.uid)
-//           .collection('following')
-//           .snapshots()
-//           .listen(_followingUpdateListener);
+  void _initData() {
+    final auth = FirebaseAuth.instance.currentUser;
+    if (auth != null) {
+      // User data subscription
+      _userSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .snapshots()
+          .listen((snapshot) {
+        _userUpdateListener(snapshot);
+      });
 
-//       // Follower subscription
-//       _followerSubscription = FirebaseFirestore.instance
-//           .collection('users')
-//           .doc(auth.uid)
-//           .collection('follower')
-//           .snapshots()
-//           .listen(_followerUpdateListener);
-//     }
-//   }
+      // Following subscription
+      _followingSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .collection('following')
+          .snapshots()
+          .listen(_followingUpdateListener);
 
-//   void _userUpdateListener(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-//     if (snapshot.exists && !_isDisposed) {
-//       _userData = ChatUser.fromJson(snapshot.data()!);
-//       _safeNotifyListeners();
-//     }
-//   }
+      // Follower subscription
+      _followerSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .collection('follower')
+          .snapshots()
+          .listen(_followerUpdateListener);
+    }
+  }
 
-//   void _followingUpdateListener(QuerySnapshot snapshot) {
-//     if (!_isDisposed) {
-//       _userData.following = snapshot.docs.length;
-//       _safeNotifyListeners();
-//     }
-//   }
+  void _userUpdateListener(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    if (snapshot.exists && !_isDisposed) {
+      _userData = ChatUser.fromJson(snapshot.data()!);
+      _safeNotifyListeners();
+    }
+  }
 
-//   void _followerUpdateListener(QuerySnapshot snapshot) {
-//     if (!_isDisposed) {
-//       _userData.follower = snapshot.docs.length;
-//       _safeNotifyListeners();
-//     }
-//   }
+  void _followingUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.following = snapshot.docs.length;
+      _safeNotifyListeners();
+    }
+  }
 
-//   void _safeNotifyListeners() {
-//     if (!_isDisposed) notifyListeners();
-//   }
+  void _followerUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.follower = snapshot.docs.length;
+      _safeNotifyListeners();
+    }
+  }
 
-//   @override
-//   void dispose() {
-//     _isDisposed = true;
-//     _userSubscription.cancel();
-//     _followingSubscription.cancel();
-//     _followerSubscription.cancel();
-//     super.dispose();
-//   }
+  void _safeNotifyListeners() {
+    if (!_isDisposed) notifyListeners();
+  }
 
-//   Future<void> updateUserData(ChatUser updatedUser) async {
-//     final auth = FirebaseAuth.instance.currentUser;
-//     if (auth != null) {
-//       try {
-//         await FirebaseFirestore.instance
-//             .collection('users')
-//             .doc(auth.uid)
-//             .set(updatedUser.toJson());
-//         _userData = updatedUser;
-//         _safeNotifyListeners();
-//       } catch (e) {
-//         log('Error updating user data: $e');
-//       }
-//     }
-//   }
-// }
+  @override
+  void dispose() {
+    _isDisposed = true;
+    _userSubscription.cancel();
+    _followingSubscription.cancel();
+    _followerSubscription.cancel();
+    super.dispose();
+  }
 
-// final userDataProvider =
-//     ChangeNotifierProvider.autoDispose<UserDataProvider>((ref) {
-//   log('userDataProvider');
-//   return UserDataProvider(ref);
-// });
+  Future<void> updateUserData(ChatUser updatedUser) async {
+    final auth = FirebaseAuth.instance.currentUser;
+    if (auth != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.uid)
+            .set(updatedUser.toJson());
+        _userData = updatedUser;
+        _safeNotifyListeners();
+      } catch (e) {
+        log('Error updating user data: $e');
+      }
+    }
+  }
+}
+
+final userDataProvider =
+    ChangeNotifierProvider.autoDispose<UserDataProvider>((ref) {
+  log('userDataProvider');
+  return UserDataProvider(ref);
+});

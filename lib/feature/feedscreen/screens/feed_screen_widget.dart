@@ -78,16 +78,13 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                 child: Stack(
                   alignment: AlignmentDirectional.bottomStart,
                   children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image:
-                                  NetworkImage(state.videos[index].thumbnail),
-                              fit: BoxFit.cover,
-                            )),
-                      ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(state.videos[index].thumbnail),
+                            fit: BoxFit.cover,
+                          )),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
