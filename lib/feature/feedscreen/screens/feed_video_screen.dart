@@ -31,6 +31,11 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   void initState() {
     super.initState();
     initializePlayer();
+    // Set the status bar color to black
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.black, // Status bar color
+      statusBarIconBrightness: Brightness.light, // Status bar icons' color
+    ));
   }
 
   Future<void> initializePlayer() async {
