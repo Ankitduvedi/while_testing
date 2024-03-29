@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
-
 import 'creator_feed_screen_widget.dart';
 
 class VideoScreen extends ConsumerStatefulWidget {
@@ -101,7 +99,8 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                 padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                 child: Text(
                   widget.video.description,
-                  style: const TextStyle(fontSize: 17),
+                  style: const TextStyle(
+                      fontSize: 15, color: Color.fromARGB(255, 39, 39, 39)),
                 ),
               ),
               StreamBuilder(
@@ -201,23 +200,26 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                 },
               ),
               const Padding(
-                padding: EdgeInsets.fromLTRB(15, 15, 7, 0),
+                padding: EdgeInsets.fromLTRB(15, 10, 17, 10),
                 child: Text(
                   'Similar videos',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                 ),
               ),
               FeedScreenWidget(category: widget.video.category),
               const Padding(
-                padding: EdgeInsets.fromLTRB(15, 15, 7, 0),
+                padding: EdgeInsets.fromLTRB(15, 10, 17, 10),
                 child: Text(
                   'More videos from the creator',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                 ),
               ),
               CreatorFeedScreenWidget(
                 id: widget.video.uploadedBy,
               ),
+              const SizedBox(
+                height: 15,
+              )
             ],
           ),
         ),
