@@ -7,7 +7,7 @@ import '../../../../../main.dart';
 import '../../../../../data/model/chat_user.dart';
 
 class ProfileDialog extends StatelessWidget {
-  const ProfileDialog({Key? key, required this.user});
+  const ProfileDialog({super.key, required this.user});
 
   final ChatUser user;
 

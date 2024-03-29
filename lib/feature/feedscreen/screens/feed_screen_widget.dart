@@ -86,6 +86,23 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                             fit: BoxFit.cover,
                           )),
                     ),
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            begin: Alignment.center,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.2),
+                              Colors.black.withOpacity(0.4),
+                              Colors.black.withOpacity(0.9),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
