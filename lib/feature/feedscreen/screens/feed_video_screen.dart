@@ -16,7 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
-import 'feed_screen_widget copy.dart';
+import 'creator_feed_screen_widget.dart';
 
 class VideoScreen extends ConsumerStatefulWidget {
   const VideoScreen({super.key, required this.video});
