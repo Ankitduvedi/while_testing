@@ -418,16 +418,6 @@ class APIs {
         .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
   }
 
-  // for getting specific user info
-
-  // Stream<ChatUser> getSelfData(String uid) {
-  //   return firestore
-  //       .collection('users')
-  //       .doc(uid)
-  //       .snapshots()
-  //       .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
-  // }
-
   // update online or last active status of user
 
   Future<void> updateActiveStatus(bool isOnline) async {
