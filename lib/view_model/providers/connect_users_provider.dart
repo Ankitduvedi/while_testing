@@ -57,7 +57,7 @@ final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
       .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
 });
 final followingUsersProvider =
-    StreamProvider.family<Set<String>, String>((ref, userId) {
+    StreamProvider.family<List<String>, String>((ref, userId) {
   // final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
@@ -65,7 +65,7 @@ final followingUsersProvider =
       .collection('following')
       .snapshots()
       .map((snapshot) {
-    return snapshot.docs.map((doc) => doc.id).toSet();
+    return snapshot.docs.map((doc) => doc.id).toList();
   });
 });
 final communityParticipantsProvider =
@@ -82,7 +82,8 @@ final communityParticipantsProvider =
 });
 
 final followUserProvider = Provider((ref) {
-  return (String currentUserId, String userIdToFollow) async {
+  return (String userIdToFollow) async {
+    final String currentUserId = ref.read(userProvider)!.id;
     try {
       // Add the user to the 'my_users' subcollection of the current user
       await FirebaseFirestore.instance

@@ -9,7 +9,8 @@ class VideoList {
     for (QueryDocumentSnapshot docu in snapshot.docs) {
       // Create a Video object using the data and add it to the list
       Video video = Video(
-          videoRef: docu.id,
+          category: docu.get('category'),
+          id: docu.id,
           uploadedBy: docu.get('uploadedBy'),
           videoUrl: docu.get('videoUrl'),
           title: docu.get('title'),
@@ -17,6 +18,7 @@ class VideoList {
           thumbnail: docu.get('thumbnail'),
           likes: docu.get('likes'),
           views: docu.get('views'));
+      //Video video = Video.fromMap(docu.data() as Map<String, dynamic>);
       videoList.add(video);
     }
     return videoList;

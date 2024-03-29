@@ -44,20 +44,20 @@ class _FeedItem2State extends State<FeedItem2> {
     // DocumentReference ref = widget.video.videoRef as DocumentReference<Object?>;
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('videos')
-        .doc(widget.video[widget.index].videoRef)
+        .doc(widget.video[widget.index].id)
         .get();
 
     if ((doc.data()! as dynamic)['likes'].contains(user!.uid)) {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video[widget.index].videoRef)
+          .doc(widget.video[widget.index].id)
           .update({
         'likes': FieldValue.arrayRemove([user!.uid])
       });
     } else {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video[widget.index].videoRef)
+          .doc(widget.video[widget.index].id)
           .update({
         'likes': FieldValue.arrayUnion([user!.uid])
       });

@@ -39,20 +39,20 @@ class CreatorReelsScreenState extends ConsumerState<CreatorReelsScreen> {
     // DocumentReference ref = widget.video.videoRef as DocumentReference<Object?>;
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('videos')
-        .doc(widget.video.videoRef)
+        .doc(widget.video.id)
         .get();
 
     if ((doc.data()! as dynamic)['likes'].contains(user!.uid)) {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video.videoRef)
+          .doc(widget.video.id)
           .update({
         'likes': FieldValue.arrayRemove([user!.uid])
       });
     } else {
       await FirebaseFirestore.instance
           .collection('videos')
-          .doc(widget.video.videoRef)
+          .doc(widget.video.id)
           .update({
         'likes': FieldValue.arrayUnion([user!.uid])
       });
@@ -162,7 +162,7 @@ class CreatorReelsScreenState extends ConsumerState<CreatorReelsScreen> {
                                 final url = await ref
                                     .read(apisProvider)
                                     .shareDynamicLinks(
-                                        'profile', widget.video.videoRef);
+                                        'profile', widget.video.id);
                                 // final url = await APIs.shareDynamicLinks(
                                 //     'profle', widget.video.videoRef);
                                 // Share text

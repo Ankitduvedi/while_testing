@@ -1,37 +1,49 @@
-class Reels {
-  Reels({
-    required this.uploadedBy,
-    required this.videoUrl,
-    required this.title,
-    required this.likes,
-    required this.description,
-    // required this.views,
-  });
+class Loops {
+  final String id;
+  final String uploadedBy;
+  final String videoUrl;
+  final String thumbnail;
+  final String title;
+  final String description;
+  final List likes;
+  final int views;
+  final String category;
 
-  late final String uploadedBy;
-  late final String videoUrl;
-  late final String title;
-  late final String description;
-  // late final int views;
-  late final List likes;
+  Loops(
+      {required this.id,
+      required this.uploadedBy,
+      required this.videoUrl,
+      required this.thumbnail,
+      required this.title,
+      required this.description,
+      required this.likes,
+      required this.views,
+      required this.category});
 
-  Reels.fromJson(Map<String, dynamic> json) {
-    uploadedBy = json['uploadedBy'].toString();
-    videoUrl = json['videoUrl'].toString();
-    title = json['title'].toString();
-    likes = json['likes'] ?? [];
-    description = json['description'].toString();
-    // views = json['views'];
+  factory Loops.fromMap(Map<String, dynamic> map) {
+    return Loops(
+      thumbnail: map['thumbnail'] as String,
+      description: map['description'] as String,
+      likes: List.from(map['likes']),
+      title: map['title'] as String,
+      uploadedBy: map['uploadedBy'] as String,
+      videoUrl: map['videoUrl'] as String,
+      id: map['id'] as String,
+      views: map['views'] as int,
+      category: map['category'] as String,
+    );
   }
-
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['uploadedBy'] = uploadedBy;
-    data['videoUrl'] = videoUrl;
-    data['title'] = title;
-    data['likes'] = likes;
-    data['description'] = description;
-    // data['views'] = views;
-    return data;
+    final map = <String, dynamic>{};
+    map['thumbnail'] = thumbnail;
+    map['description'] = description;
+    map['likes'] = likes;
+    map['title'] = title;
+    map['uploadedBy'] = uploadedBy;
+    map['videoUrl'] = videoUrl;
+    map['id'] = id;
+    map['views'] = views;
+    map['category'] = category;
+    return map;
   }
 }

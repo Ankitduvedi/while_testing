@@ -35,11 +35,11 @@ class Connect extends ConsumerWidget {
                 return ListTile(
                   leading: InkWell(
                     onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => ProfileDialog(user: user),
-                  );
-                },
+                      showDialog(
+                        context: context,
+                        builder: (_) => ProfileDialog(user: user),
+                      );
+                    },
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(user.image),
                     ),
@@ -51,12 +51,12 @@ class Connect extends ConsumerWidget {
                   subtitle: Text(user.email, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
-                      final didFollow = await ref.read(followUserProvider)(
-                          fireService!.id, user.id);
+                      final didFollow =
+                          await ref.read(followUserProvider)(user.id);
 
                       if (didFollow) {
                         notifService.addNotification(
-                            '${fireService.name} started following you',
+                            '${fireService!.name} started following you',
                             user.id);
                         log("now following");
                       } else {

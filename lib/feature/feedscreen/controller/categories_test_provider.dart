@@ -151,3 +151,53 @@ class VideoPaginationNotifier extends StateNotifier<VideoPaginationState> {
     }
   }
 }
+
+//
+final creatorAllVideoProvider = StateNotifierProvider.family<
+    CreatorVideoPaginationNotifier, VideoPaginationState, String>(
+  (ref, id) => CreatorVideoPaginationNotifier(),
+);
+
+class CreatorVideoPaginationNotifier
+    extends StateNotifier<VideoPaginationState> {
+  CreatorVideoPaginationNotifier() : super(VideoPaginationState());
+
+  final int _limit = 3; // Number of documents to fetch per batch
+
+  Future<void> fetchVideos(String id) async {
+    if (state.isLoading) return; // Prevent multiple simultaneous fetches
+    state = state.copyWith(isLoading: true);
+    Query query = FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .collection('videos')
+        .orderBy('title') // Adjust based on your document fields
+        .limit(_limit);
+
+    if (state.lastDoc != null) {
+      query = query.startAfterDocument(state.lastDoc!);
+    }
+
+    try {
+      final snapshot = await query.get();
+      log("snapsjhot is ${snapshot.docs.first.id}");
+      var docs = snapshot.docs;
+      if (docs.isNotEmpty) {
+        var newCategories = docs
+            .map((doc) => Video.fromMap(doc.data() as Map<String, dynamic>))
+            .toList();
+        state = state.copyWith(
+          videos: List.from(state.videos)..addAll(newCategories),
+          lastDoc: docs.last,
+          isLoading: false,
+        );
+      } else {
+        state = state.copyWith(isLoading: false); // No more data to fetch
+      }
+    } catch (e) {
+      // Handle errors, e.g., by logging or setting an error state
+      state = VideoPaginationState(
+          videos: state.videos, isLoading: false, lastDoc: state.lastDoc);
+    }
+  }
+}

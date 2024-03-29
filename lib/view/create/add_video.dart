@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
@@ -83,31 +84,30 @@ class AddVideoState extends ConsumerState<AddVideo> {
           //Dialogs.showSnackbar(context, data['videoId']);
           // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
-          // final CollectionReference collectionReference =
-          //     FirebaseFirestore.instance.collection('videos');
-          final Map<String, dynamic> vid = {
-            "uploadedBy": ref.read(apisProvider).me.id,
-            'videoUrl': data['assets']['mp4'],
-            'title': title,
-            'description': des,
-            'likes': [],
-            'views': 0,
-            'thumbnail': data['assets']['thumbnail'],
-            'videoRef': id
-          };
+          final Video vid = Video(
+              id: id,
+              uploadedBy: ref.read(userProvider)!.id,
+              videoUrl: data['assets']['mp4'],
+              thumbnail: data['assets']['thumbnail'],
+              title: title,
+              description: des,
+              likes: likes,
+              views: 0,
+              category: _selectedItem ?? "App Development");
+
           FirebaseFirestore.instance
               .collection('videos')
               .doc(_selectedItem)
               .collection(_selectedItem!)
               .doc(id)
-              .set(vid)
+              .set(vid.toJson())
               .then((value) {
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(ref.read(userProvider)!.id)
                 .collection('videos')
                 .doc(id)
-                .set(vid);
+                .set(vid.toJson());
             Utils.toastMessage('Your video is uploaded!');
             setState(() {
               isloading = false;

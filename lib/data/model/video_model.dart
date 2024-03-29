@@ -1,5 +1,5 @@
 class Video {
-  final String videoRef;
+  final String id;
   final String uploadedBy;
   final String videoUrl;
   final String thumbnail;
@@ -7,17 +7,18 @@ class Video {
   final String description;
   final List likes;
   final int views;
+  final String category;
 
-  Video({
-    required this.videoRef,
-    required this.uploadedBy,
-    required this.videoUrl,
-    required this.thumbnail,
-    required this.title,
-    required this.description,
-    required this.likes,
-    required this.views,
-  });
+  Video(
+      {required this.id,
+      required this.uploadedBy,
+      required this.videoUrl,
+      required this.thumbnail,
+      required this.title,
+      required this.description,
+      required this.likes,
+      required this.views,
+      required this.category});
 
   factory Video.fromMap(Map<String, dynamic> map) {
     return Video(
@@ -27,8 +28,22 @@ class Video {
       title: map['title'] as String,
       uploadedBy: map['uploadedBy'] as String,
       videoUrl: map['videoUrl'] as String,
-      videoRef: map['videoRef'] as String,
+      id: map['id'] as String,
       views: map['views'] as int,
+      category: map['category'] as String,
     );
+  }
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['thumbnail'] = thumbnail;
+    map['description'] = description;
+    map['likes'] = likes;
+    map['title'] = title;
+    map['uploadedBy'] = uploadedBy;
+    map['videoUrl'] = videoUrl;
+    map['id'] = id;
+    map['views'] = views;
+    map['category'] = category;
+    return map;
   }
 }

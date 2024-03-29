@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import '../../../data/model/community_message.dart';
@@ -24,7 +22,7 @@ final apisProvider = Provider<APIs>((ref) {
 
 final userDataProviderMain = StreamProvider.family((ref, String uid) {
   final apiController = ref.watch(apisProvider);
-  return apiController.getSelfData(uid);
+  return apiController.getUserInfo(uid);
 });
 
 class APIs {
@@ -135,18 +133,6 @@ class APIs {
         .set({'timeStamp': FieldValue.serverTimestamp()});
     following(id);
     follower(id);
-    //  firestore
-    //   .collection('users')
-    //   .doc(id)
-    //   .collection('following')
-    //   .doc(user.uid)
-    //   .set({})
-    //   .then((value) => firestore
-    //       .collection('users')
-    //       .doc(user.uid)
-    //       .update({'followers': APIs.me.following + 1}))
-    //   .then((value) => APIs.getSelfInfo());
-
     return true;
   }
 
@@ -434,13 +420,13 @@ class APIs {
 
   // for getting specific user info
 
-  Stream<ChatUser> getSelfData(String uid) {
-    return firestore
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
-  }
+  // Stream<ChatUser> getSelfData(String uid) {
+  //   return firestore
+  //       .collection('users')
+  //       .doc(uid)
+  //       .snapshots()
+  //       .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
+  // }
 
   // update online or last active status of user
 

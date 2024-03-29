@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/data/model/reels_models.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/resources/components/message/helper/dialogs.dart';
 import 'package:com.while.while_app/resources/components/round_button.dart';
@@ -75,27 +76,28 @@ class _AddReelState extends ConsumerState<AddReel> {
               json.decode(await response.stream.bytesToString());
           //Dialogs.showSnackbar(context, data['videoId']);
           //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
+          final Loops loop = Loops(
+              id: id,
+              uploadedBy: ref.read(userProvider)!.id,
+              videoUrl: data['assets']['mp4'],
+              thumbnail: data['assets']['thumbnail'],
+              title: title,
+              description: des,
+              likes: likes,
+              views: 0,
+              category: 'category');
 
-          final Map<String, dynamic> vid = {
-            "uploadedBy": ref.read(userProvider)!.id,
-            'videoUrl': data['assets']['mp4'],
-            'title': title,
-            'description': des,
-            'likes': [],
-            'views': 0,
-            'thumbnail': data['assets']['thumbnail'],
-          };
           FirebaseFirestore.instance
               .collection('loops')
               .doc(id)
-              .set(vid)
+              .set(loop.toJson())
               .then((value) {
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(ref.read(userProvider)!.id)
                 .collection('loops')
                 .doc(id)
-                .set(vid);
+                .set(loop.toJson());
             Utils.toastMessage('Your video is uploaded!');
             setState(() {
               isloading = false;
