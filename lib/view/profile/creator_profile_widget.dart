@@ -108,57 +108,16 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
 
   void _showOptionsDialog(
       BuildContext context, String id, WidgetRef ref, Video video) {
-    final Uri uri = Uri.parse(video.videoUrl);
     const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
+    const apiUrl = 'https://sandbox.api.video';
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // Define the initial dialog content with predefined buttons
-        Widget initialDialogContent = AlertDialog(
-          title: const Text('Choose an Option'),
-          content: const SizedBox(
-            height: 45,
-            width: 0,
-            child: Center(
-              child: CircularProgressIndicator(
-                value: null,
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // Perform the action for Option 1
-              },
-              child: const Text('Option 1'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // Perform the action for Option 2
-              },
-              child: const Text('Option 2'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                ref.read(apisProvider).deleteReel(id);
-                // APIs.deleteReel(id);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-
         // Use a FutureBuilder to fetch data in the background
         return FutureBuilder(
           future: http.get(
-            uri,
+            Uri.parse('$apiUrl/videos/$id'),
             headers: {
               'Authorization': 'Bearer $apiKey',
               // Add other headers if needed
@@ -166,8 +125,9 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              // Data is still being fetched, show the initial dialog content
-              return initialDialogContent;
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (snapshot.hasError) {
               // Error while fetching data, show an error dialog
               return AlertDialog(
