@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/controller/videos_lists.dart';
 import 'package:com.while.while_app/view/profile/creators_reels_screen.dart';
+import 'package:com.while.while_app/view/profile/update_thumbnail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -147,6 +148,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
               String description = data['description'] ?? "No Description";
               int views = data['views'] ?? 1000;
               DateTime uploadedAt = DateTime.parse(data['createdAt']);
+              String thumbnail = data['assets']['thumbnail'] ?? "No Title";
 
               return AlertDialog(
                 title: const Hero(
@@ -191,14 +193,23 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelectThumbnailScreen(
+                                    videoId: id,
+                                    initialThumbnailUrl: thumbnail,
+                                  )));
                       // Perform the action for Option 1
                     },
-                    child: const Text('Option 1'),
+                    child: const Text('Update thumbnail'),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => SelectThumbnailScreen()));
                       // Perform the action for Option 2
                     },
                     child: const Text('Option 2'),
