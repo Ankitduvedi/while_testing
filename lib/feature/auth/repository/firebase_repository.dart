@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
-import 'package:com.while.while_app/core/failure.dart';
+import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -212,7 +212,7 @@ class AuthRepository {
 
   Future<void> createNewUser(ChatUser newUser) async {
     log(' users given id is /: ${newUser.name}');
-    print(newUser.id);
+    log(newUser.id);
     await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
   }
 

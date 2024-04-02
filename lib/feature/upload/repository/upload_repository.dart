@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:com.while.while_app/core/failure.dart';
+import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/feature/upload/screens/upload_screen.dart';
-import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/core/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
