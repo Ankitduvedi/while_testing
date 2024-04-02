@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/components/bottom_options_sheet.dart';
+import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';

@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.while.while_app/feature/profile/screens/friend_profile_screen%20copy.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/components/message/apis.dart';
-import 'package:com.while.while_app/components/message/helper/dialogs.dart';
+import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/components/message/widgets/dialogs/profile_dialog.dart';
-import 'package:com.while.while_app/view/profile/friend_profile_screen%20copy.dart';
+import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //home screen -- where all available contacts are shown

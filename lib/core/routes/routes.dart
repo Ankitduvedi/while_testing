@@ -1,16 +1,16 @@
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
-import 'package:com.while.while_app/view/create/add_video.dart';
+import 'package:com.while.while_app/feature/others/create_menu_screen.dart';
+import 'package:com.while.while_app/feature/upload/screens/add_video.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
 import 'package:com.while.while_app/feature/auth/screens/forgot_password_screen.dart';
-import 'package:com.while.while_app/view/create/add_reel.dart';
+import 'package:com.while.while_app/feature/upload/screens/add_reel.dart';
 import 'package:com.while.while_app/home_screen.dart';
-import 'package:com.while.while_app/view/social/create_menu_screen.dart';
-import 'package:com.while.while_app/view/splash_view.dart';
-import 'package:com.while.while_app/view_model/wrapper/wrapper.dart';
+import 'package:com.while.while_app/feature/splash/screens/splash_view.dart';
+import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
 import '../../feature/auth/screens/login_screen.dart';
 import '../../feature/profile/screens/user_profile_screen2.dart';
-import '../../view/settings_page.dart';
+import '../../feature/settings/settings_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {

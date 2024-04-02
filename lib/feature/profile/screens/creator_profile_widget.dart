@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/controller/videos_lists.dart';
-import 'package:com.while.while_app/view/profile/creators_reels_screen.dart';
-import 'package:com.while.while_app/view/profile/update_thumbnail.dart';
+import 'package:com.while.while_app/feature/profile/repository/videos_lists.dart';
+import 'package:com.while.while_app/feature/profile/screens/creators_reels_screen.dart';
+import 'package:com.while.while_app/feature/profile/screens/update_thumbnail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/components/message/apis.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/data/model/video_model.dart';

@@ -1,11 +1,13 @@
+// ignore_for_file: unused_element
+
 import 'dart:developer';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/utils/loader.dart';
+import 'package:com.while.while_app/core/utils/loaders/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
-import 'package:com.while.while_app/utils/utils.dart';
+import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
