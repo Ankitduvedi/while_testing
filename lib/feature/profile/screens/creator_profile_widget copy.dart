@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/feature/profile/repository/videos_lists.dart';
+import 'package:com.while.while_app/feature/profile/controller/video_list_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/creators_reels_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
             final List<Video> videoList =
-                VideoList.getVideoList(snapshot.data!);
+                ref.read(videoListControllerProvider.notifier).videoList(snapshot.data);
 
             return ListView.builder(
               scrollDirection:

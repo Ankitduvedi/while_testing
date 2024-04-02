@@ -1,3 +1,4 @@
+import 'package:com.while.while_app/feature/profile/controller/video_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,8 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   late VideoPlayerController _controller0;
   late VideoPlayerController _controller1;
   late VideoPlayerController _controller2;
+
+  
 
   @override
   void dispose() {
@@ -57,10 +60,9 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   Widget build(BuildContext context) {
     List<VideoPlayerController> videoControllers = [];
     final streamData = ref.read(videoStreamProvider.future);
-
     return FutureBuilder<QuerySnapshot>(
         future: streamData,
-        builder: (context, snapshot) {
+        builder: (context, snapshot)  {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -72,8 +74,9 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
               child: Text('Error: ${snapshot.error}'),
             );
           }
+          final videoList = ref.read(videoListControllerProvider.notifier).videoList(snapshot.data);
 
-          final List<Video> videoList = VideoList.getVideoList(snapshot.data!);
+
           videoList.shuffle();
           return PageView.builder(
             controller: _pageController,

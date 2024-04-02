@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ImageDekhlo extends StatefulWidget {
-  String url;
+  final String url;
   
-  ImageDekhlo({
+  const ImageDekhlo({
     Key? key,
     required this.url,
   }) : super(key: key);
