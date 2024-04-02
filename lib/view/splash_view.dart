@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/core/routes/routes_name.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/components/message/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

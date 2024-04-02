@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/components/message/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 

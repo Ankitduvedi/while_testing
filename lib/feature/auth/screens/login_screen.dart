@@ -4,7 +4,7 @@ import 'package:com.while.while_app/utils/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:com.while.while_app/utils/routes/routes_name.dart';
+import 'package:com.while.while_app/core/routes/routes_name.dart';
 import 'package:com.while.while_app/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 

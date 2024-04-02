@@ -105,6 +105,8 @@ final followUserProvider = Provider((ref) {
           .doc(currentUserId)
           .set({'timeStamp': Timestamp.now()});
 
+
+
       return true; // Indicate the follow action was successful
     } catch (e) {
       // If there's an error, you can handle it here

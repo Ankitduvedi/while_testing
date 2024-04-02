@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/resources/components/communities/community_home_widget.dart';
-import 'package:com.while.while_app/resources/components/message/message_home_widget.dart';
+import 'package:com.while.while_app/components/communities/community_home_widget.dart';
+import 'package:com.while.while_app/components/message/message_home_widget.dart';
 import 'package:com.while.while_app/view/social/connect_screen.dart';
 import 'package:com.while.while_app/view/social/status_screen.dart';
 import 'package:com.while.while_app/view_model/providers/connect_users_provider.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
-import 'package:com.while.while_app/resources/components/message/widgets/dialogs/profile_dialog.dart';
+import 'package:com.while.while_app/components/message/widgets/dialogs/profile_dialog.dart';
 import 'package:com.while.while_app/view_model/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,11 +54,14 @@ class Connect extends ConsumerWidget {
                       final didFollow =
                           await ref.read(followUserProvider)(user.id);
 
+                      final currentUser = ref.read(userProvider.notifier).state;
+
                       if (didFollow) {
                         notifService.addNotification(
                             '${fireService!.name} started following you',
                             user.id);
                         log("now following");
+                        ref.read(userProvider.notifier).state!.copyWith(follower: currentUser!.follower + 1);
                       } else {
                         log("failed to follow");
                       }

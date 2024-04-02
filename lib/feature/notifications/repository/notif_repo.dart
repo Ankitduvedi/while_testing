@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
-import 'package:com.while.while_app/core/failure.dart';
+import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';

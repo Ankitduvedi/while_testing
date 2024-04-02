@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/view/profile/controller/proflie_controller.dart';
+import 'package:com.while.while_app/feature/profile/controller/proflie_controller.dart';
 import 'package:com.while.while_app/view_model/wrapper/wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import '../../resources/components/message/helper/dialogs.dart';
+import '../../components/message/helper/dialogs.dart';
 
 //profile screen -- to show signed in user info
 class EditUserProfileScreen extends ConsumerStatefulWidget {

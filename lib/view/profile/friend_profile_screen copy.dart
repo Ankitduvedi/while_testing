@@ -1,7 +1,6 @@
-import 'package:com.while.while_app/resources/components/bottom_options_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/view/profile/creator_profile_widget.dart';
+import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/view/profile/friend_profile_data_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -38,7 +37,7 @@ class FriendProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: Icon(Icons.arrow_back, color: Colors.black,)),
+        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(Icons.arrow_back, color: Colors.black,)),
         backgroundColor: Colors.white,
         title: Text(
           chatUser.name,

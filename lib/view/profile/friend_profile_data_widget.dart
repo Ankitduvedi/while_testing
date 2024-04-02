@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/view/profile/friend_profile_follower_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/components/message/apis.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/view/profile/friend_profile_following_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,7 +68,7 @@ class FriendProfileDataWidgetState
                       MaterialPageRoute(
                         builder: (_) => (FriendProfileFollowerScreen(
                                          chatUser: widget.chatUser,
-                                         userIds: [],
+                                         userIds: const [],
                                        )),
                       ),
                     );
@@ -102,7 +101,7 @@ class FriendProfileDataWidgetState
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               // Show a loading indicator while waiting for the data
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
 
                             default:
                               // Ensure data is not null before accessing it
@@ -146,7 +145,7 @@ class FriendProfileDataWidgetState
                         builder: (_) =>
                             (FriendProfileFollowingScreen(
                                          chatUser: widget.chatUser,
-                                         userIds: [],
+                                         userIds: const [],
                                        )),
                       ),
                     );
@@ -179,7 +178,7 @@ class FriendProfileDataWidgetState
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               // Show a loading indicator while waiting for the data
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
 
                             default:
                               // Ensure data is not null before accessing it
@@ -224,7 +223,7 @@ class FriendProfileDataWidgetState
               child: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    "${widget.chatUser.about}",
+                    widget.chatUser.about,
                     style: GoogleFonts.ptSans(fontSize: 16),
                   )),
             ),

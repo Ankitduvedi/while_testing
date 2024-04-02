@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/resources/components/communities/quiz/add_quiz.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/components/communities/quiz/add_quiz.dart';
+import 'package:com.while.while_app/components/message/apis.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/view_model/providers/connect_users_provider.dart';

@@ -1,4 +1,4 @@
-import 'package:com.while.while_app/core/failure.dart';
+import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
 typedef FutureEither<T> = Future<Either<Failure, T>>;

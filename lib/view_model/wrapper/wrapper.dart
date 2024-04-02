@@ -3,8 +3,8 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/screens/login_screen.dart';
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
-import 'package:com.while.while_app/view/home_screen.dart';
-import 'package:com.while.while_app/view/onboarding_screen.dart';
+import 'package:com.while.while_app/home_screen.dart';
+import 'package:com.while.while_app/feature/intro_screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';

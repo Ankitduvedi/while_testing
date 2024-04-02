@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/resources/components/message/apis.dart';
+import 'package:com.while.while_app/components/message/apis.dart';
 import 'package:com.while.while_app/view_model/providers/notif_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
