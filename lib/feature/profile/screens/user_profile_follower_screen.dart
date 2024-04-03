@@ -41,7 +41,7 @@ class UserProfileFollowerScreenState
           },
         ),
         title: const Text(
-          'Following',
+          'Followers',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
