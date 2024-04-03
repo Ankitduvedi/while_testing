@@ -57,7 +57,8 @@ class ProfileDataWidget extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const UserProfileFollowerScreen(),
+                        builder: (_) =>
+                            UserProfileFollowerScreen(chatUser: user),
                       ),
                     );
                   },
@@ -95,7 +96,7 @@ class ProfileDataWidget extends ConsumerWidget {
                               // Ensure data is not null before accessing it
                               if (snapshot.data != null) {
                                 return Text(
-                                  user.follower.toString(),
+                                  snapshot.data!.docs.length.toString(),
                                   style: GoogleFonts.ptSans(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 26,
