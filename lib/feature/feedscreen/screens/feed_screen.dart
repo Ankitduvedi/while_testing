@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/feature/counsellor/screens/tabs.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
 import 'package:com.while.while_app/feature/notifications/screens/notification_view.dart';
@@ -88,6 +89,12 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                         color: Colors.black),
                   ),
                 ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const TabsScreen()));
+                    },
+                    icon: const Icon(Icons.people_outlined))
               ],
             ),
             SliverList(
