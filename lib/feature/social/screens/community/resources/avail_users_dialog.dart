@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/providers/apis.dart';
-import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/feature/social/controller/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

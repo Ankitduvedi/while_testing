@@ -7,7 +7,7 @@ import 'package:com.while.while_app/feature/notifications/controller/notif_conto
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
-import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/feature/social/controller/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';

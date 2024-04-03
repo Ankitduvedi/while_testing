@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
-import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/feature/social/controller/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,7 +61,10 @@ class Connect extends ConsumerWidget {
                             '${fireService!.name} started following you',
                             user.id);
                         log("now following");
-                        ref.read(userProvider.notifier).state!.copyWith(follower: currentUser!.follower + 1);
+                        ref
+                            .watch(userProvider.notifier)
+                            .state!
+                            .copyWith(follower: currentUser!.follower + 1);
                       } else {
                         log("failed to follow");
                       }
