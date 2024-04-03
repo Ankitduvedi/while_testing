@@ -51,30 +51,7 @@ class APIs {
   // for getting firebase messaging token
 
   // adding content creator request
-  void postStatus(File imageFile, String statText) async {
-    final statusText = statText;
-    final userId =
-        _ref.read(apisProvider).me.id; // Replace with the actual user's ID
-
-    // Upload the image to Firebase Storage
-    final storageReference =
-        FirebaseStorage.instance.ref().child('$userId/${DateTime.now()}.png');
-    await storageReference.putFile(imageFile);
-
-    // Get the image URL from Firebase Storage
-    final imageUrl = await storageReference.getDownloadURL();
-
-    FirebaseFirestore.instance.collection('statuses').add({
-      'userId': userId,
-      'userName': _ref.read(apisProvider).me.name,
-      'profileImg': _ref.read(apisProvider).me.image,
-      'statusText': statusText,
-      'imageUrl': imageUrl, // Add the URL of the uploaded image
-      'timestamp': FieldValue.serverTimestamp(),
-      // Add other necessary fields like user name and profile image URL
-    });
-  }
-
+  
   // for sending push notification
   Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
     try {

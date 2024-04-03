@@ -4,7 +4,7 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/add_quiz.dart';
-import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/feature/social/controller/connect_users_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allCommunitiesProvider = StreamProvider<List<Community>>((ref) {
