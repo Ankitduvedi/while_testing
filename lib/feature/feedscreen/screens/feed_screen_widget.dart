@@ -75,43 +75,48 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
               child: Card(
                 color: Colors.black,
                 elevation: 4.0,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomStart,
+                child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(state.videos[index].thumbnail),
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: LinearGradient(
-                            begin: Alignment.center,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.2),
-                              Colors.black.withOpacity(0.4),
-                              Colors.black.withOpacity(0.9),
-                            ],
+                    Stack(
+                      alignment: AlignmentDirectional.bottomStart,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image:
+                                    NetworkImage(state.videos[index].thumbnail),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                begin: Alignment.center,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.2),
+                                  Colors.black.withOpacity(0.4),
+                                  Colors.black.withOpacity(0.9),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        state.videos[index].title,
-                        maxLines: 1,
-                        style: const TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromARGB(255, 255, 255, 255)),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            state.videos[index].creatorName,
+                            maxLines: 1,
+                            style: const TextStyle(
+                                fontSize: 16.0,
+                                color: Color.fromARGB(255, 255, 255, 255)),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
