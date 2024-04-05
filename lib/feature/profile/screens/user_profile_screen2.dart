@@ -9,6 +9,8 @@ import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_scr
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
 
+import '../../../providers/user_provider.dart';
+
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -20,6 +22,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+
+    ref.watch(userDataProvider);
+
     log(user!.name);
 
     const tabBarIcons = [

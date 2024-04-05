@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +12,6 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
@@ -42,6 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.read(userDataProvider);
     return Scaffold(
       body: TabBarView(
         controller: _controller,

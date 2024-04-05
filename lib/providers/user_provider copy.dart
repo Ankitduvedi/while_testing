@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../data/model/chat_user.dart';
 
 class UserDataProvider with ChangeNotifier {
@@ -22,7 +21,6 @@ class UserDataProvider with ChangeNotifier {
   ChatUser? get userData => _userData;
 
   void _initData() {
-    log('userdataprovider init function called');
     final auth = FirebaseAuth.instance.currentUser;
     if (auth != null) {
       // User data subscription

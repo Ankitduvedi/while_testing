@@ -1,12 +1,11 @@
-import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
 import 'package:com.while.while_app/feature/creator/screens/become_creator_screen.dart';
 import 'package:com.while.while_app/feature/creator/screens/main_creator_screen.dart';
 import 'package:com.while.while_app/feature/creator/screens/under_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../providers/user_provider.dart';
 
 class CreateScreen extends river.ConsumerStatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -28,38 +27,25 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userStream = ref.watch(getUserStreamProvider);
+    final user = ref.watch(userDataProvider).userData;
+
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Text('Studio',
-            style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: userStream.when(
-          data: (DocumentSnapshot snapshot) {
-            Map<String, dynamic> userData =
-                snapshot.data() as Map<String, dynamic>;
-            bool isContentCreator = userData['isContentCreator'] ?? false;
-            bool isApproved = userData['isApproved'] ?? false;
-            if (!isContentCreator && !isApproved) {
-              return BecomeCreator(
-                instagramController: _instagramController,
-                youtubeController: _youtubeController,
-              );
-            } else if (!isContentCreator && isApproved) {
-              return const UnderReviewScreen();
-            } else {
-              return const MainCreatorScreen();
-            }
-          },
-          error: (error, stackTrace) => Text(error.toString()),
-          loading: () => const CircularProgressIndicator(),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          centerTitle: false,
+          title: Text('Studio',
+              style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
         ),
-      ),
-    );
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+            child: (!user!.isContentCreator && !user.isApproved)
+                ? BecomeCreator(
+                    instagramController: _instagramController,
+                    youtubeController: _youtubeController,
+                  )
+                : (!user.isContentCreator && user.isApproved)
+                    ? const UnderReviewScreen()
+                    : const MainCreatorScreen()));
   }
 }

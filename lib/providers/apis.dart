@@ -28,6 +28,8 @@ final userDataProviderMain = StreamProvider.family((ref, String uid) {
 class APIs {
   // for authentication
   final Ref _ref;
+  //static FirebaseStorage storage = FirebaseStorage.instance;
+
   APIs({required Ref ref}) : _ref = ref;
 
   FirebaseAuth get auth => _ref.read(authProvider);
@@ -151,6 +153,28 @@ class APIs {
         .delete();
 
     return true;
+  }
+
+  // update profile picture of user
+  Future<void> updateProfilePicture(File file) async {
+    //getting image file extension
+    final ext = file.path.split('.').last;
+    log('Extension: $ext');
+
+    //storage file ref with path
+    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
+
+    //uploading image
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) {
+      log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    //updating image in firestore database
+    userImage = await ref.getDownloadURL();
+    me.image = userImage;
+
+    firestore.collection('users').doc(user.uid).update({'image': userImage});
   }
 
   Future<bool> deleteReel(String id) async {
@@ -747,6 +771,7 @@ class APIs {
     var image = await ref.getDownloadURL();
     await firestore.collection('communities').doc(id).update({'image': image});
   }
+  // update profile picture of user
 
   ///// update community info
 

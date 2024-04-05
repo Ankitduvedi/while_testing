@@ -1,16 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/feature/profile/controller/proflie_controller.dart';
-import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
+import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
+import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/data/model/chat_user.dart';
-import '../../../core/utils/dialogs/dialogs.dart';
+import '../../../data/model/chat_user.dart';
+import '../../../main.dart';
 
 //profile screen -- to show signed in user info
 class EditUserProfileScreen extends ConsumerStatefulWidget {
@@ -25,22 +25,22 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProv = ref.watch(userProvider);
-    final isUpdating = ref.watch(profilerControllerProvider);
-    final user = userProv;
+    final userProvider = ref.watch(userDataProvider);
+    final user = userProvider.userData;
     final ChatUser updatedUser = user!;
-    return Scaffold(
-        //app bar
-        appBar: AppBar(
-            title: Text(
-          user.name,
-          style: const TextStyle(color: Colors.black),
-        )),
+    return GestureDetector(
+      // for hiding keyboard
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          //app bar
+          appBar: AppBar(
+              title: Text(
+            user.name,
+            style: const TextStyle(color: Colors.black),
+          )),
 
-        //body
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Form(
+          //body
+          body: Form(
             key: _formKey,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
@@ -49,12 +49,14 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                   children: [
                     // for adding some space
                     SizedBox(width: mq.width, height: mq.height * .03),
+
                     //user profile picture
                     Stack(
                       children: [
                         //profile picture
                         _image != null
                             ?
+
                             //local image
                             ClipRRect(
                                 borderRadius:
@@ -64,6 +66,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                                     height: mq.height * .2,
                                     fit: BoxFit.cover))
                             :
+
                             //image from server
                             ClipRRect(
                                 borderRadius:
@@ -105,6 +108,42 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                         style: const TextStyle(
                             color: Colors.black54, fontSize: 16)),
 
+                    // for adding some space
+                    SizedBox(height: mq.height * .05),
+
+                    // name input field
+                    TextFormField(
+                      initialValue: user.name,
+                      onSaved: (val) => updatedUser.name = val ?? '',
+                      validator: (val) => val != null && val.isNotEmpty
+                          ? null
+                          : 'Required Field',
+                      decoration: InputDecoration(
+                          prefixIcon:
+                              const Icon(Icons.person, color: Colors.blue),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          hintText: 'eg. Happy Singh',
+                          label: const Text('Name')),
+                    ),
+
+                    // for adding some space
+                    SizedBox(height: mq.height * .02),
+                    // email input field
+                    TextFormField(
+                      initialValue: user.email,
+                      onSaved: (val) => updatedUser.email = val ?? '',
+                      validator: (val) => val != null && val.isNotEmpty
+                          ? null
+                          : 'Required Field',
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.info_outline,
+                              color: Colors.blue),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          hintText: 'eg. Feeling Happy',
+                          label: const Text('Email')),
+                    ),
                     SizedBox(height: mq.height * .02),
                     // phone number input field
                     TextFormField(
@@ -203,35 +242,36 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           hintText: 'DD/MM/YYYY',
                           label: const Text('Date Of Birth')),
                     ),
-                    SizedBox(height: mq.height * .03),
+                    SizedBox(height: mq.height * .02),
+
+                    // for adding some space
+                    SizedBox(height: mq.height * .05),
+
                     // update profile button
-                    isUpdating
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                shape: const StadiumBorder(),
-                                minimumSize:
-                                    Size(mq.width * .5, mq.height * .06)),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                ref
-                                    .read(profilerControllerProvider.notifier)
-                                    .updateUserData(updatedUser, context);
-                                Dialogs.showSnackbar(
-                                    context, 'Profile Updated Successfully!');
-                                // ref.refresh(userProv as Refreshable);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Wrapper(),
-                                    ));
-                              }
-                            },
-                            icon: const Icon(Icons.edit, size: 28),
-                            label: const Text('UPDATE',
-                                style: TextStyle(fontSize: 16)),
-                          ),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          minimumSize: Size(mq.width * .5, mq.height * .06)),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          userProvider.updateUserData(updatedUser);
+                          Dialogs.showSnackbar(
+                              context, 'Profile Updated Successfully!');
+                        }
+                      },
+                      icon: const Icon(Icons.edit, size: 28),
+                      label:
+                          const Text('UPDATE', style: TextStyle(fontSize: 16)),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    const SizedBox(
+                      height: 15,
+                    ),
+
                     const SizedBox(
                       height: 30,
                     ),
@@ -239,8 +279,8 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   // bottom sheet for picking a profile picture for user
@@ -285,9 +325,10 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           setState(() {
                             _image = image.path;
                           });
+
                           ref
-                              .read(profilerControllerProvider.notifier)
-                              .updateProfilePicture(File(_image!), context);
+                              .read(apisProvider)
+                              .updateProfilePicture(File(_image!));
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }
@@ -317,8 +358,8 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           });
 
                           ref
-                              .read(profilerControllerProvider.notifier)
-                              .updateProfilePicture(File(_image!), context);
+                              .read(apisProvider)
+                              .updateProfilePicture(File(_image!));
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }
