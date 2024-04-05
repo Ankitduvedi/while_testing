@@ -56,9 +56,10 @@ class _TabScreenState extends ConsumerState<TabsScreen> {
     }
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         title: Text(activePageTitle),
       ),
-      drawer: MainDrawer(
+      endDrawer: MainDrawer(
         onSelectScreen: _setScreen,
       ),
       body: activePage,

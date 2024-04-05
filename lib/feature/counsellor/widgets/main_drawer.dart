@@ -22,7 +22,7 @@ class MainDrawer extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.fastfood,
+                  Icons.person_4_sharp,
                   size: 48,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -30,7 +30,7 @@ class MainDrawer extends StatelessWidget {
                   width: 18,
                 ),
                 Text(
-                  'Cooking up',
+                  'Counsellor',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: Theme.of(context).colorScheme.onBackground,
                         fontSize: 24,
@@ -46,7 +46,7 @@ class MainDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.onBackground,
             ),
             title: Text(
-              'Meals',
+              'Become a counsellor',
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 24,
