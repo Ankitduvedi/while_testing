@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,7 +25,6 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(" profile screen");
     final userProv = ref.watch(userProvider);
     final isUpdating = ref.watch(profilerControllerProvider);
     final user = userProv;
@@ -51,14 +49,12 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                   children: [
                     // for adding some space
                     SizedBox(width: mq.width, height: mq.height * .03),
-
                     //user profile picture
                     Stack(
                       children: [
                         //profile picture
                         _image != null
                             ?
-
                             //local image
                             ClipRRect(
                                 borderRadius:
@@ -68,7 +64,6 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                                     height: mq.height * .2,
                                     fit: BoxFit.cover))
                             :
-
                             //image from server
                             ClipRRect(
                                 borderRadius:
@@ -110,42 +105,6 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                         style: const TextStyle(
                             color: Colors.black54, fontSize: 16)),
 
-                    // for adding some space
-                    SizedBox(height: mq.height * .05),
-
-                    // name input field
-                    TextFormField(
-                      initialValue: user.name,
-                      onSaved: (val) => updatedUser.name = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon:
-                              const Icon(Icons.person, color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Happy Singh',
-                          label: const Text('Name')),
-                    ),
-
-                    // for adding some space
-                    SizedBox(height: mq.height * .02),
-                    // email input field
-                    TextFormField(
-                      initialValue: user.email,
-                      onSaved: (val) => updatedUser.email = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Feeling Happy',
-                          label: const Text('Email')),
-                    ),
                     SizedBox(height: mq.height * .02),
                     // phone number input field
                     TextFormField(
@@ -244,11 +203,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           hintText: 'DD/MM/YYYY',
                           label: const Text('Date Of Birth')),
                     ),
-                    SizedBox(height: mq.height * .02),
-
-                    // for adding some space
-                    SizedBox(height: mq.height * .05),
-
+                    SizedBox(height: mq.height * .03),
                     // update profile button
                     isUpdating
                         ? const CircularProgressIndicator()
@@ -277,14 +232,6 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                             label: const Text('UPDATE',
                                 style: TextStyle(fontSize: 16)),
                           ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    const SizedBox(
-                      height: 15,
-                    ),
-
                     const SizedBox(
                       height: 30,
                     ),
