@@ -84,6 +84,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
           // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
           final Video vid = Video(
+              creatorName: ref.read(userProvider)!.name,
               id: id,
               uploadedBy: ref.read(userProvider)!.id,
               videoUrl: data['assets']['mp4'],

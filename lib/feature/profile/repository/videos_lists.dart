@@ -8,16 +8,19 @@ final videoListRepositoryProvider = Provider<VideoListRepository>((ref) {
 
 class VideoListRepository {
   List<Video> getVideoList(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) => Video(
-      category: doc.get('category') ?? '',
-      id: doc.id,
-      uploadedBy: doc.get('uploadedBy') ?? '',
-      videoUrl: doc.get('videoUrl') ?? '',
-      title: doc.get('title') ?? '',
-      description: doc.get('description') ?? '',
-      thumbnail: doc.get('thumbnail') ?? '',
-      likes: doc.get('likes') ?? 0,
-      views: doc.get('views') ?? 0,
-    )).toList();
+    return snapshot.docs
+        .map((doc) => Video(
+              category: doc.get('category') ?? '',
+              id: doc.id,
+              uploadedBy: doc.get('uploadedBy') ?? '',
+              creatorName: doc.get('creatorName') ?? '',
+              videoUrl: doc.get('videoUrl') ?? '',
+              title: doc.get('title') ?? '',
+              description: doc.get('description') ?? '',
+              thumbnail: doc.get('thumbnail') ?? '',
+              likes: doc.get('likes') ?? 0,
+              views: doc.get('views') ?? 0,
+            ))
+        .toList();
   }
 }
