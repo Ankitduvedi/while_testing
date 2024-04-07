@@ -5,12 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BecomeCounsellor extends ConsumerStatefulWidget {
-  final TextEditingController instagramController;
-  final TextEditingController youtubeController;
-  const BecomeCounsellor(
-      {super.key,
-      required this.instagramController,
-      required this.youtubeController});
+  const BecomeCounsellor({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -18,6 +15,16 @@ class BecomeCounsellor extends ConsumerStatefulWidget {
 }
 
 class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
+  final TextEditingController _instagramController = TextEditingController();
+  final TextEditingController _youtubeController = TextEditingController();
+
+  @override
+  void dispose() {
+    _instagramController.dispose();
+    _youtubeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(creatorControllerProvider);
@@ -27,7 +34,7 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Become Creator',
+            'Become Counsellor',
             style: GoogleFonts.ptSans(
                 color: Colors.lightBlueAccent,
                 fontSize: 24,
@@ -36,7 +43,7 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
           ),
           const SizedBox(height: 20),
           TextField(
-            controller: widget.instagramController,
+            controller: _instagramController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Instagram Link',
@@ -44,7 +51,7 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
           ),
           const SizedBox(height: 10),
           TextField(
-            controller: widget.youtubeController,
+            controller: _youtubeController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'YouTube Link',
@@ -58,8 +65,8 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
                   .watch(creatorControllerProvider.notifier)
                   .submitCreatorRequest(
                       ref.read(userProvider)!.id,
-                      widget.instagramController.text.trim(),
-                      widget.youtubeController.text.trim());
+                      _instagramController.text.trim(),
+                      _youtubeController.text.trim());
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightBlueAccent),

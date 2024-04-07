@@ -67,7 +67,9 @@ class AuthRepository {
           follower: 0,
           following: 0,
           isContentCreator: false,
-          isApproved: false);
+          isApproved: false,
+          isCounsellor: false,
+          isCounsellorVerified: false);
       log('/////as////${_auth.currentUser!.uid}');
       await createNewUser(userModel);
       return right(userModel);
@@ -187,7 +189,9 @@ class AuthRepository {
                 follower: 0,
                 following: 0,
                 isContentCreator: false,
-                isApproved: false);
+                isApproved: false,
+                isCounsellor: false,
+                isCounsellorVerified: false);
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");

@@ -1,5 +1,6 @@
 import 'package:com.while.while_app/feature/counsellor/providers/favorites_provider.dart';
 import 'package:com.while.while_app/feature/counsellor/screens/categories.dart';
+import 'package:com.while.while_app/feature/counsellor/screens/create_screen.dart';
 import 'package:com.while.while_app/feature/counsellor/screens/filters.dart';
 import 'package:com.while.while_app/feature/counsellor/screens/meals.dart';
 import 'package:com.while.while_app/feature/counsellor/widgets/main_drawer.dart';
@@ -36,6 +37,10 @@ class _TabScreenState extends ConsumerState<TabsScreen> {
     if (identifier == 'filters') {
       await Navigator.of(context).push<Map<Filter, bool>>(MaterialPageRoute(
         builder: (ctx) => const FiltersScreen(),
+      ));
+    } else if (identifier == 'counsellor') {
+      Navigator.of(context).push<Map<Filter, bool>>(MaterialPageRoute(
+        builder: (ctx) => const CounsellorScreen(),
       ));
     }
   }

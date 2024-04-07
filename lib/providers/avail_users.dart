@@ -18,6 +18,8 @@ final myUsersProvider = StreamProvider<List<ChatUser>>((ref) {
           .get();
 
       var userDetail = ChatUser(
+          isCounsellorVerified: userDetailsDoc['isCounsellorVerified'],
+          isCounsellor: userDetailsDoc['isCounsellor'],
           isContentCreator: userDetailsDoc['isContentCreator'],
           isApproved: userDetailsDoc['isApproved'],
           image: userDetailsDoc['image'],

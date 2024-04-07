@@ -325,6 +325,8 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
+      isCounsellorVerified: false,
+      isCounsellor: false,
       isContentCreator: false,
       isApproved: false,
       lives: 0,

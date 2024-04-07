@@ -1,28 +1,31 @@
 class ChatUser {
-  ChatUser(
-      {required this.image,
-      required this.about,
-      required this.name,
-      required this.createdAt,
-      required this.isOnline,
-      required this.id,
-      required this.lastActive,
-      required this.email,
-      required this.pushToken,
-      required this.dateOfBirth,
-      required this.gender,
-      required this.phoneNumber,
-      required this.place,
-      required this.profession,
-      required this.designation,
-      required this.follower,
-      required this.easyQuestions,
-      required this.mediumQuestions,
-      required this.hardQuestions,
-      required this.lives,
-      required this.following,
-      required this.isContentCreator,
-      required this.isApproved});
+  ChatUser({
+    required this.image,
+    required this.about,
+    required this.name,
+    required this.createdAt,
+    required this.isOnline,
+    required this.id,
+    required this.lastActive,
+    required this.email,
+    required this.pushToken,
+    required this.dateOfBirth,
+    required this.gender,
+    required this.phoneNumber,
+    required this.place,
+    required this.profession,
+    required this.designation,
+    required this.follower,
+    required this.easyQuestions,
+    required this.mediumQuestions,
+    required this.hardQuestions,
+    required this.lives,
+    required this.following,
+    required this.isContentCreator,
+    required this.isApproved,
+    required this.isCounsellor,
+    required this.isCounsellorVerified,
+  });
   late String image;
   late String about;
   late String name;
@@ -45,10 +48,14 @@ class ChatUser {
   late int hardQuestions;
   late int lives;
   late bool isContentCreator;
+  late bool isCounsellor;
+  late bool isCounsellorVerified;
   late bool isApproved;
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
+    isCounsellor = json['isCounsellor'] ?? false;
+    isCounsellorVerified = json['isCounsellorVerified'] ?? false;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
@@ -78,6 +85,8 @@ class ChatUser {
   // Update toJson method to include the new field
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
+    data['isCounsellor'] = isCounsellor;
+    data['isCounsellorVerified'] = isCounsellorVerified;
     data['image'] = image;
     data['about'] = about;
     data['name'] = name;
@@ -132,12 +141,16 @@ class ChatUser {
       // Add the new field
       'isContentCreator': isContentCreator,
       'isApproved': isApproved,
+      'isCounsellor': isCounsellor,
+      'isCounsellorVerified': isCounsellorVerified,
     };
   }
 
   // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
+        isCounsellor: false,
+        isCounsellorVerified: false,
         lives: 0,
         easyQuestions: 0,
         image: '',
@@ -189,8 +202,12 @@ class ChatUser {
     int? lives,
     bool? isContentCreator,
     bool? isApproved,
+    bool? isCounsellor,
+    bool? isCounsellorVerified,
   }) {
     return ChatUser(
+      isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,
+      isCounsellor: isCounsellor ?? this.isCounsellor,
       image: image ?? this.image,
       about: about ?? this.about,
       name: name ?? this.name,
