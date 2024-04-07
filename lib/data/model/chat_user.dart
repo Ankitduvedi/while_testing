@@ -22,9 +22,7 @@ class ChatUser {
       required this.lives,
       required this.following,
       required this.isContentCreator,
-      required this.isApproved
-
-      });
+      required this.isApproved});
   late String image;
   late String about;
   late String name;
@@ -103,7 +101,7 @@ class ChatUser {
     data['lives'] = lives;
     // Add the new field
     data['isContentCreator'] = isContentCreator;
-      data['isApproved'] = isApproved;
+    data['isApproved'] = isApproved;
     return data;
   }
 
@@ -140,58 +138,30 @@ class ChatUser {
   // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
-      lives: 0,
-      easyQuestions: 0,
-      image: '',
-      hardQuestions: 0,
-      about: '',
-      mediumQuestions: 0,
-      name: '',
-      createdAt: '',
-      isOnline: false,
-      id: '',
-      lastActive: '',
-      email: '',
-      pushToken: '',
-      dateOfBirth: '',
-      gender: '',
-      phoneNumber: '',
-      place: '',
-      profession: '',
-      designation: '',
-      follower: 0,
-      following: 0,
-      // Initialize the new field
-      isContentCreator: false,
-      isApproved: false
-    );
-  }
-  factory ChatUser.fromMap(Map<String, dynamic> map) {
-    return ChatUser(
-      image: map['image'] ?? '',
-      about: map['about'] ?? '',
-      name: map['name'] ?? '',
-      createdAt: map['created_at'] ?? '',
-      isOnline: map['is_online'] ?? false,
-      id: map['id'] ?? '',
-      lastActive: map['last_active'] ?? '',
-      email: map['email'] ?? '',
-      pushToken: map['push_token'] ?? '',
-      dateOfBirth: map['dateOfBirth'] ?? '',
-      gender: map['gender'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      place: map['place'] ?? '',
-      profession: map['profession'] ?? '',
-      designation: map['designation'] ?? '',
-      follower: map['follower'] ?? 0,
-      following: map['following'] ?? 0,
-      easyQuestions: map['easyQuestions'] ?? 0,
-      mediumQuestions: map['mediumQuestions'] ?? 0,
-      hardQuestions: map['hardQuestions'] ?? 0,
-      lives: map['lives'] ?? 0,
-      isContentCreator: map['isContentCreator'] ?? false,
-      isApproved: map['isApproved'] ?? false,
-    );
+        lives: 0,
+        easyQuestions: 0,
+        image: '',
+        hardQuestions: 0,
+        about: '',
+        mediumQuestions: 0,
+        name: '',
+        createdAt: '',
+        isOnline: false,
+        id: '',
+        lastActive: '',
+        email: '',
+        pushToken: '',
+        dateOfBirth: '',
+        gender: '',
+        phoneNumber: '',
+        place: '',
+        profession: '',
+        designation: '',
+        follower: 0,
+        following: 0,
+        // Initialize the new field
+        isContentCreator: false,
+        isApproved: false);
   }
 
   // Add a copyWith method
@@ -246,5 +216,4 @@ class ChatUser {
       isApproved: isApproved ?? this.isApproved,
     );
   }
-
 }

@@ -1,19 +1,8 @@
 // ignore_for_file: unused_field
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/core/enums/firebase_providers.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/creator/repository/creator_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final getUserStreamProvider = StreamProvider<DocumentSnapshot>((ref) {
-  return ref
-      .read(fireStoreProvider)
-      .collection('users')
-      .doc(ref.read(userProvider)!.id)
-      .snapshots();
-});
 final creatorControllerProvider =
     StateNotifierProvider<CreatorController, bool>((ref) {
   return CreatorController(

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
@@ -31,15 +30,15 @@ class ProfileController extends StateNotifier<bool> {
         (r) => _ref.read(userProvider.notifier).update((state) => r));
   }
 
-  void updateProfilePicture(File file, BuildContext context) async {
-    state = true;
-    final imageUrl = await _profileRepository.updateProfilePicture(file);
-    log("updating provider data");
-    imageUrl.fold(
-        (l) => Failure(message: l.message),
-        (r) => _ref
-            .read(userProvider.notifier)
-            .update((state) => state!.copyWith(image: r)));
-    state = false;
-  }
+  // void updateProfilePicture(File file, BuildContext context) async {
+  //   state = true;
+  //   final imageUrl = await _profileRepository.updateProfilePicture(file);
+  //   log("updating provider data");
+  //   imageUrl.fold(
+  //       (l) => Failure(message: l.message),
+  //       (r) => _ref
+  //           .read(userProvider.notifier)
+  //           .update((state) => state!.copyWith(image: r)));
+  //   state = false;
+  // }
 }

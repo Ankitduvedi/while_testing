@@ -15,16 +15,6 @@ class CreateScreen extends river.ConsumerStatefulWidget {
 }
 
 class _CreateScreenState extends river.ConsumerState<CreateScreen> {
-  final TextEditingController _instagramController = TextEditingController();
-  final TextEditingController _youtubeController = TextEditingController();
-
-  @override
-  void dispose() {
-    _instagramController.dispose();
-    _youtubeController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userDataProvider).userData;
@@ -40,10 +30,7 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             child: (!user!.isContentCreator && !user.isApproved)
-                ? BecomeCreator(
-                    instagramController: _instagramController,
-                    youtubeController: _youtubeController,
-                  )
+                ? BecomeCreator()
                 : (!user.isContentCreator && user.isApproved)
                     ? const UnderReviewScreen()
                     : const MainCreatorScreen()));

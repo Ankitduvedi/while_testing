@@ -435,11 +435,8 @@ class APIs {
   // for getting specific user info
 
   Stream<ChatUser> getUserInfo(String uid) {
-    return firestore
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
+    return firestore.collection('users').doc(uid).snapshots().map(
+        (event) => ChatUser.fromJson(event.data() as Map<String, dynamic>));
   }
 
   // update online or last active status of user

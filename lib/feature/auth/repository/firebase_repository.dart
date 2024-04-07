@@ -95,7 +95,7 @@ class AuthRepository {
         return left(Failure(message: "No account exists for this user."));
       } else {
         final ChatUser user =
-            ChatUser.fromMap(userDoc.data() as Map<String, dynamic>);
+            ChatUser.fromJson(userDoc.data() as Map<String, dynamic>);
         return right(user);
       }
     } on FirebaseAuthException catch (e) {
@@ -217,11 +217,8 @@ class AuthRepository {
   }
 
   Stream<ChatUser> getUserData(String uid) {
-    return _firestore
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((event) => ChatUser.fromMap(event.data() as Map<String, dynamic>));
+    return _firestore.collection('users').doc(uid).snapshots().map(
+        (event) => ChatUser.fromJson(event.data() as Map<String, dynamic>));
   }
 
   Stream<User?> get authStateChange =>
