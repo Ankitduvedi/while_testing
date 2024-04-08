@@ -1,4 +1,5 @@
 import 'package:com.while.while_app/feature/counsellor/screens/become_counsellor_screen.dart';
+import 'package:com.while.while_app/feature/counsellor/screens/test.dart';
 import 'package:com.while.while_app/feature/creator/screens/main_creator_screen.dart';
 import 'package:com.while.while_app/feature/creator/screens/under_review_screen.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,10 @@ class _CounsellorScreenState extends river.ConsumerState<CounsellorScreen> {
               style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
         ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-            child: (!user!.isCounsellor && !user.isCounsellorVerified)
-                ? BecomeCounsellor()
-                : (!user.isCounsellor && user.isCounsellorVerified)
-                    ? const UnderReviewScreen()
-                    : const MainCreatorScreen()));
+        body: (!user!.isCounsellor && !user.isCounsellorVerified)
+            ? BecomeCounsellor()
+            : (!user.isCounsellor && user.isCounsellorVerified)
+                ? const UnderReviewScreen()
+                : const MainCreatorScreen());
   }
 }
