@@ -33,7 +33,7 @@ class _CommunityMessageCardState extends ConsumerState<CommunityMessageCard> {
         ? Center(
             child: Text(
             widget.message.msg,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.lightBlueAccent),
           ))
         : InkWell(
             onLongPress: () {

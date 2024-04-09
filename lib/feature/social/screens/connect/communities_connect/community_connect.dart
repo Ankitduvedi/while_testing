@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/providers/connect_community_provider.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +32,7 @@ class CommunityConnect extends ConsumerWidget {
               itemCount: nonJoinedCommunities.length,
               itemBuilder: (context, index) {
                 final user = nonJoinedCommunities[index];
+                //log("${ref.read(userProvider)?.id} ");
 
                 return ListTile(
                   leading: CircleAvatar(
@@ -44,7 +47,7 @@ class CommunityConnect extends ConsumerWidget {
                     onPressed: () async {
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          ref.read(apisProvider).me.id, user.id);
+                          ref.read(userProvider)!.id, user.id);
 
                       if (didJoin) {
                         log("joined community");

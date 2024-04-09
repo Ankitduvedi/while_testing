@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -219,17 +220,19 @@ class APIs {
   }
 
   Future<bool> addUserToCommunity(String id) async {
+    final us =_ref.read(userProvider);
+  
     await firestore
         .collection('communities')
         .doc(id)
         .collection('participants')
-        .doc(user.uid)
-        .set(_ref.read(apisProvider).me.toJson())
+        .doc(us!.id)
+        .set(us.toJson())
         .then((value) => firestore
                 .collection('communities')
                 .doc(id)
                 .collection('participants')
-                .doc(user.uid)
+                .doc(us.id)
                 .update({
               'easyQuestions': 0,
               'mediumQuestions': 0,
@@ -240,7 +243,7 @@ class APIs {
             }));
     await firestore
         .collection('users')
-        .doc(user.uid)
+        .doc(us.id)
         .collection('my_communities')
         .doc(id)
         .set({

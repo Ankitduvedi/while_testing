@@ -25,7 +25,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     ref.watch(userDataProvider);
 
-    log(user!.name);
+    log(user!.id);
 
     const tabBarIcons = [
       Tab(
