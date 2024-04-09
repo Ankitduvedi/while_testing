@@ -1,90 +1,64 @@
-// import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-// import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:google_fonts/google_fonts.dart';
+// BecomeCounsellor.dart
+import 'package:com.while.while_app/feature/counsellor/widgets/categories_input.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// class BecomeCounsellor extends ConsumerStatefulWidget {
-//   const BecomeCounsellor({
-//     super.key,
-//   });
+import '../data/dummy_data.dart';
+// Import the CategoryInput widget
 
-//   @override
-//   ConsumerState<ConsumerStatefulWidget> createState() =>
-//       _BecomeCounsellorState();
-// }
+class BecomeCounsellor extends ConsumerStatefulWidget {
+  const BecomeCounsellor({Key? key}) : super(key: key);
 
-// class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
-//   final TextEditingController _instagramController = TextEditingController();
-//   final TextEditingController _youtubeController = TextEditingController();
-//   final TextEditingController _organisationController = TextEditingController();
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BecomeCounsellorState();
+}
 
-//   @override
-//   void dispose() {
-//     _instagramController.dispose();
-//     _youtubeController.dispose();
-//     _organisationController.dispose();
-//     super.dispose();
-//   }
+class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
+  List<Widget> categoryInputs = [];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final isLoading = ref.watch(creatorControllerProvider);
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.stretch,
-//         children: [
-//           Text(
-//             'Become Counsellor',
-//             style: GoogleFonts.ptSans(
-//                 color: Colors.lightBlueAccent,
-//                 fontSize: 24,
-//                 fontWeight: FontWeight.bold),
-//             textAlign: TextAlign.center,
-//           ),
-//           const SizedBox(height: 20),
-//           TextField(
-//             controller: _instagramController,
-//             decoration: const InputDecoration(
-//               border: OutlineInputBorder(),
-//               labelText: 'Instagram Link',
-//             ),
-//           ),
-//           TextField(
-//             controller: _instagramController,
-//             decoration: const InputDecoration(
-//               border: OutlineInputBorder(),
-//               labelText: 'Instagram Link',
-//             ),
-//           ),
-//           const SizedBox(height: 10),
-//           TextField(
-//             controller: _organisationController,
-//             decoration: const InputDecoration(
-//               border: OutlineInputBorder(),
-//               labelText: 'Organisation name',
-//             ),
-//           ),
-//           const SizedBox(height: 20),
-//           ElevatedButton(
-//             onPressed: () async {
-//               // Add your submission logic here
-//               ref
-//                   .watch(creatorControllerProvider.notifier)
-//                   .submitCreatorRequest(
-//                       ref.read(userProvider)!.id,
-//                       _instagramController.text.trim(),
-//                       _youtubeController.text.trim());
-//             },
-//             style: ElevatedButton.styleFrom(
-//                 backgroundColor: Colors.lightBlueAccent),
-//             child: isLoading
-//                 ? const CircularProgressIndicator()
-//                 : const Text('Submit'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  void initState() {
+    super.initState();
+    addNewCategoryInput();
+  }
+
+  void addNewCategoryInput() {
+    categoryInputs.add(CategoryInput(
+      key: UniqueKey(),
+      categories: availableCategories,
+      onCategoryAdded: (categoryInfo) {
+        // Handle the added category info here
+      },
+    ));
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          // Wrap Column in a ConstrainedBox to give it a maximum height
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ...categoryInputs,
+              ElevatedButton(
+                onPressed: addNewCategoryInput,
+                child: const Text('Add Another Category'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Implement saving logic here
+                },
+                child: const Text('Save All'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

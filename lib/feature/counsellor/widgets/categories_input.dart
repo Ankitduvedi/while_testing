@@ -1,6 +1,6 @@
 // CategoryInput.dart
 import 'package:com.while.while_app/feature/counsellor/models/category.dart';
-import 'package:com.while.while_app/feature/counsellor/screens/categories_info.dart';
+import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
 import 'package:flutter/material.dart';
 // Import the CategoryInfo model
 

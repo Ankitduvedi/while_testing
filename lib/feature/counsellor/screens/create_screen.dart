@@ -1,5 +1,5 @@
 import 'package:com.while.while_app/feature/counsellor/screens/become_counsellor_screen.dart';
-import 'package:com.while.while_app/feature/counsellor/screens/test.dart';
+import 'package:com.while.while_app/feature/counsellor/screens/become_counsellor_screen.dart';
 import 'package:com.while.while_app/feature/creator/screens/main_creator_screen.dart';
 import 'package:com.while.while_app/feature/creator/screens/under_review_screen.dart';
 import 'package:flutter/material.dart';
