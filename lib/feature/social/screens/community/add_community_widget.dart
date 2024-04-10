@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:com.while.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,7 +132,7 @@ class AddCommunityScreen {
                       name: name,
                       createdAt: time,
                       id: id,
-                      email: ref.read(apisProvider).me.email,
+                      email: ref.read(userProvider)!.email,
                       type: type,
                       noOfUsers: '1',
                       domain: domain,
@@ -139,7 +140,7 @@ class AddCommunityScreen {
                       easyQuestions: 0,
                       hardQuestions: 0,
                       mediumQuestions: 0,
-                      admin: ref.read(apisProvider).me.name);
+                      admin: ref.read(userProvider)!.name);
                   log("creating");
                   ref
                       .read(apisProvider)
