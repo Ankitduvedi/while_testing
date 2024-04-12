@@ -12,7 +12,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
-import '../data/model/community_message.dart';
 import '../data/model/community_user.dart';
 import '../data/model/message.dart';
 
@@ -220,8 +219,8 @@ class APIs {
   }
 
   Future<bool> addUserToCommunity(String id) async {
-    final us =_ref.read(userProvider);
-  
+    final us = _ref.read(userProvider);
+
     await firestore
         .collection('communities')
         .doc(id)
@@ -677,32 +676,6 @@ class APIs {
 
   // for sending message
 
-  Future<void> sendCommunityMessage(String id, String msg, Types type) async {
-    //message sending time (also used as id)
-    final time = DateTime.now().millisecondsSinceEpoch.toString();
-
-    //message to send
-    final CommunityMessage message = CommunityMessage(
-      toId: id,
-      msg: msg,
-      read: '',
-      types: type,
-      fromId: user.uid,
-      sent: time,
-      senderName: me.name,
-    );
-    log(me.name);
-
-    final ref = firestore.collection('communities').doc(id).collection('chat');
-    await ref.doc(time).set(message.toJson()).then((value) {
-      try {
-        firestore.collection('communities').doc(id).update({'timeStamp': time});
-      } catch (error) {
-        log(error.toString());
-      }
-    });
-  }
-
   ///////////////
 
   Future<void> addCommunities(Community chatUser, File? file) async {
@@ -732,26 +705,7 @@ class APIs {
     });
   }
 
-  Future<void> communitySendChatImage(Community chatUser, File file) async {
-    //getting image file extension
-    final ext = file.path.split('.').last;
-
-    //storage file ref with path
-    final ref = storage.ref().child(
-        'images/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
-
-    //uploading image
-    await ref
-        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-        .then((p0) {
-      log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
-    });
-
-    //updating image in firestore database
-    final imageUrl = await ref.getDownloadURL();
-    await sendCommunityMessage(chatUser.id, imageUrl, Types.image);
-  }
-
+  
   // update profile picture of community
 
   Future<void> updateProfilePictureCommunity(File file, String id) async {

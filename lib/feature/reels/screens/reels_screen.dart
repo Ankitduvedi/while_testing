@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 import 'package:com.while.while_app/feature/reels/screens/feed_item.dart';
-import 'package:com.while.while_app/feature/profile/repository/videos_lists.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import '../../../providers/data_provider.dart';
 
