@@ -84,7 +84,7 @@ class _CCommunityDetailScreenState
             children: [
               IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back, color: Colors.blue.shade300)),
+                  icon: const Icon(Icons.arrow_back, color: Colors.black)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(

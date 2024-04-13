@@ -154,7 +154,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             //back button
             IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back, color: Colors.blue.shade300)),
+                icon: const Icon(Icons.arrow_back, color: Colors.black)),
 
             //user profile picture
             ClipRRect(
