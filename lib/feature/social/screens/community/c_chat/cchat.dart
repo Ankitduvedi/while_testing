@@ -137,9 +137,10 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   // bottom chat input field
   Widget _chatInput(BuildContext context, WidgetRef ref) {
     return Material(
+      color: Colors.transparent,
       //elevation: 25,
       child: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.fromLTRB(
               mq.width * .005, mq.height * .01, mq.width * .005, 0
