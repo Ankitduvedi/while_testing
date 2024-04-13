@@ -138,7 +138,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   Widget _chatInput(BuildContext context, WidgetRef ref) {
     return Material(
       color: Colors.transparent,
-      //elevation: 25,
+      elevation: 25,
       child: Container(
         color: Colors.transparent,
         child: Padding(

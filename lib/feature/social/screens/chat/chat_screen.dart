@@ -228,9 +228,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget _chatInput(fireservice) {
     final fireServices = ref.read(apisProvider);
     return Material(
+      color: Colors.transparent,
       elevation: 25,
       child: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.symmetric(
               vertical: mq.height * .01, horizontal: mq.width * .01),
