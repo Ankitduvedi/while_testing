@@ -39,6 +39,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
           // Hide emojis if shown
           setState(() => _showEmoji = false);
         }
+        //updated
       },
       child: Scaffold(
         backgroundColor: Colors.white,
