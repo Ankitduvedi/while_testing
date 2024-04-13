@@ -25,6 +25,13 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  late ChatUser user;
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
+
   //for storing all messages
   List<Message> _list = [];
 
@@ -37,6 +44,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('users id whoom i am messaging ${user.name}');
     final fireService = ref.read(apisProvider);
     return GestureDetector(
       onTap: () {
@@ -66,7 +74,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             children: [
               Expanded(
                 child: StreamBuilder(
-                  stream: fireService.getAllMessages(widget.user),
+                  stream: fireService.getAllMessages(user),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       //if data is loading
@@ -155,7 +163,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 width: mq.height * .05,
                 height: mq.height * .05,
                 fit: BoxFit.fill,
-                imageUrl: widget.user.image,
+                imageUrl: user.image,
                 errorWidget: (context, url, error) => const CircleAvatar(
                     child: Icon(
                   CupertinoIcons.person,
@@ -173,7 +181,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //user name
-                Text(widget.user.name,
+                Text(user.name,
                     style: GoogleFonts.ptSans(
                         fontSize: 16,
                         color: Colors.black,
@@ -181,18 +189,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
                 //last seen time of user
                 StreamBuilder(
-                    stream: fireServices.getUserInfo(widget.user.id),
+                    stream: fireServices.getUserInfo(user.id),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         //if data is loading
                         case ConnectionState.waiting:
                         case ConnectionState.none:
                           return Text(
-                              widget.user.isOnline
+                              user.isOnline
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,
-                                      lastActive: widget.user.lastActive),
+                                      lastActive: user.lastActive),
                               style: GoogleFonts.ptSans(
                                   fontSize: 13, color: Colors.black45));
 
@@ -218,6 +226,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   // bottom chat input field
   Widget _chatInput(fireservice) {
+    final fireServices = ref.read(apisProvider);
     return Material(
       elevation: 25,
       child: Container(
@@ -240,8 +249,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     for (var i in images) {
                       log('Image Path: ${i.path}');
                       setState(() => _isUploading = true);
-                      await fireservice.sendChatImage(
-                          widget.user, File(i.path));
+                      await fireServices.sendChatImage(user, File(i.path));
                       setState(() => _isUploading = false);
                     }
                   },
@@ -305,8 +313,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       log('Image Path: ${image.path}');
                       setState(() => _isUploading = true);
 
-                      await fireservice.sendChatImage(
-                          widget.user, File(image.path));
+                      await fireServices.sendChatImage(user, File(image.path));
                       setState(() => _isUploading = false);
                     }
                   },
@@ -319,12 +326,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   if (_textController.text.isNotEmpty) {
                     if (_list.isEmpty) {
                       //on first message (add user to my_user collection of chat user)
-                      fireservice.sendFirstMessage(
-                          widget.user, _textController.text, Type.text);
+                      fireServices.sendFirstMessage(
+                          user, _textController.text, Type.text);
                     } else {
                       //simply send message
-                      fireservice.sendMessage(
-                          widget.user, _textController.text, Type.text);
+                      fireServices.sendMessage(
+                          user, _textController.text, Type.text);
                     }
                     _textController.text = '';
                   }
