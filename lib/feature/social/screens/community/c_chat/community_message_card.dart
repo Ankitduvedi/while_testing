@@ -33,7 +33,7 @@ class _CommunityMessageCardState extends ConsumerState<CommunityMessageCard> {
         ? Center(
             child: Text(
             widget.message.msg,
-            style: const TextStyle(color: Colors.lightBlueAccent),
+            style: const TextStyle(color: Color.fromARGB(255, 26, 144, 199)),
           ))
         : InkWell(
             onLongPress: () {
@@ -104,7 +104,7 @@ class _CommunityMessageCardState extends ConsumerState<CommunityMessageCard> {
             margin: const EdgeInsets.only(left: 20),
             child: Text(
                 '${widget.message.senderName} : ${MyDateUtil.getFormattedTime(context: context, time: widget.message.sent)}',
-                style: const TextStyle(fontSize: 13, color: Colors.white)),
+                style: const TextStyle(fontSize: 12, color: Colors.black54)),
           ),
         ),
       ],
