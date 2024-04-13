@@ -14,9 +14,9 @@ import '../../../../../data/model/community_user.dart';
 
 // Convert to ConsumerStatefulWidget
 class CChatScreen extends ConsumerStatefulWidget {
-  final Community user;
+  final Community community;
 
-  const CChatScreen({super.key, required this.user});
+  const CChatScreen({super.key, required this.community});
 
   @override
   ConsumerState<CChatScreen> createState() => _CChatScreenState();
@@ -24,6 +24,13 @@ class CChatScreen extends ConsumerStatefulWidget {
 
 // Extend from ConsumerState
 class _CChatScreenState extends ConsumerState<CChatScreen> {
+  late Community community;
+  @override
+  void initState() {
+    super.initState();
+    community = widget.community;
+  }
+
   List<CommunityMessage> _list = [];
   final _textController = TextEditingController();
   bool _showEmoji = false, _isUploading = false;
@@ -54,9 +61,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
             children: [
               Expanded(
                 child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream: ref
-                      .read(apisProvider)
-                      .getAllCommunityMessages(widget.user),
+                  stream:
+                      ref.read(apisProvider).getAllCommunityMessages(community),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       // Handle any errors that occur during fetching data
@@ -164,7 +170,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       ref
                           .read(socialControllerProvider.notifier)
                           .communitySendChatImage(
-                              widget.user, File(i.path), context);
+                              community, File(i.path), context);
                       setState(() => _isUploading = false);
                     }
                   },
@@ -226,7 +232,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       ref
                           .read(socialControllerProvider.notifier)
                           .communitySendChatImage(
-                              widget.user, File(image.path), context);
+                              community, File(image.path), context);
                       setState(() => _isUploading = false);
                     }
                   },
@@ -239,7 +245,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                   if (_textController.text.isNotEmpty) {
                     ref
                         .read(socialControllerProvider.notifier)
-                        .sendCommunityMessage(widget.user.id,
+                        .sendCommunityMessage(community.id,
                             _textController.text, Types.text, context);
                     // }
                     _textController.text = '';

@@ -42,7 +42,8 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => CCommunityDetailScreen(user: widget.user)));
+                    builder: (_) =>
+                        CCommunityDetailScreen(community: widget.user)));
           },
           child: StreamBuilder(
             stream: fireService.getLastCommunityMessage(widget.user),
