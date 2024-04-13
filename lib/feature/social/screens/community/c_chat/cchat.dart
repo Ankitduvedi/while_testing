@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -171,8 +172,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       log('Image Path: ${i.path}');
                       setState(() => _isUploading = true);
                       ref
-                          .read(apisProvider)
-                          .communitySendChatImage(widget.user, File(i.path));
+                          .read(socialControllerProvider.notifier)
+                          .communitySendChatImage(widget.user, File(i.path),context);
                       setState(() => _isUploading = false);
                     }
                   },
@@ -231,8 +232,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       log('Image Path: ${image.path}');
                       setState(() => _isUploading = true);
 
-                      ref.read(apisProvider).communitySendChatImage(
-                          widget.user, File(image.path));
+                      ref.read(socialControllerProvider.notifier).communitySendChatImage(
+                          widget.user, File(image.path),context);
                       setState(() => _isUploading = false);
                     }
                   },
@@ -243,8 +244,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
               MaterialButton(
                 onPressed: () {
                   if (_textController.text.isNotEmpty) {
-                    ref.read(apisProvider).sendCommunityMessage(
-                        widget.user.id, _textController.text, Types.text);
+                    ref.read(socialControllerProvider.notifier).sendCommunityMessage(
+                        widget.user.id, _textController.text, Types.text,context);
                     // }
                     _textController.text = '';
                   }
