@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/community_detail_resources_widget%20.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/community_detail_opportunities_widget.dart';
@@ -59,7 +60,7 @@ class _CCommunityDetailScreenState
         automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () {
-            if (widget.user.email == ref.read(apisProvider).me.email) {
+            if (widget.user.email == ref.read(userProvider)!.email) {
               Navigator.push(
                   context,
                   MaterialPageRoute(

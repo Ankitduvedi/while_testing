@@ -256,7 +256,8 @@ class APIs {
         .collection('communities')
         .doc(commId) // Use commId as the document ID
         .collection('participants')
-        .add({
+        .doc(user.id).
+        set({
       'easyQuestions': 0,
       'mediumQuestions': 0,
       'hardQuestions': 0,
