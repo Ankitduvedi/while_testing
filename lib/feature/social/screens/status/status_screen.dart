@@ -34,7 +34,9 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    final userId = ref.watch(userProvider)!.id; // Assuming this is how you get the user ID.
+    final userId = ref
+        .watch(userProvider)!
+        .id; // Assuming this is how you get the user ID.
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,61 +44,86 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
         builder: (context, ref, _) {
           final peopleStream = ref.watch(peopleStreamProvider);
           final followingStream = ref.watch(followingStreamProvider(userId));
-          
+
           return peopleStream.when(
             data: (peopleSnapshot) {
               final peopleDocs = peopleSnapshot.docs;
               return followingStream.when(
                 data: (followingSnapshot) {
-                  final followingDocs = followingSnapshot.docs.map((doc) => doc.id).toList();
+                  final followingDocs =
+                      followingSnapshot.docs.map((doc) => doc.id).toList();
 
                   // Filter out the people who are already followed by the user
                   final filteredPeople = peopleDocs.where((personDoc) {
                     final person = personDoc.data() as Map<String, dynamic>;
                     final personId = person['userId'];
-                    return personId == userId || followingDocs.contains(personId);
+                    return personId == userId ||
+                        followingDocs.contains(personId);
                   }).toList();
-                  
-                  return ListView.builder(
-                    itemCount: filteredPeople.length,
-                    itemBuilder: (context, index) {
-                      final person = filteredPeople[index].data() as Map<String, dynamic>;
-                      final timestamp = person['timestamp'] as Timestamp;
-                      final dateTime = timestamp.toDate();
-                      final formattedDate = DateFormat.yMd().add_Hms().format(dateTime);
 
-                      return Hero(
-                        tag: 'status_${person['statusId']}',
-                        child: Column(
-                          children: [
-                            ListTile(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => FullStatusScreen(
-                                    statuses:  filteredPeople.map((doc) => doc.data() as Map<String, dynamic>).toList(),
-                                    initialIndex: index,
+                  return filteredPeople.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: filteredPeople.length,
+                          itemBuilder: (context, index) {
+                            final person = filteredPeople[index].data()
+                                as Map<String, dynamic>;
+                            final timestamp = person['timestamp'] as Timestamp;
+                            final dateTime = timestamp.toDate();
+                            final formattedDate =
+                                DateFormat.yMd().add_Hms().format(dateTime);
+
+                            return Hero(
+                              tag: 'status_${person['statusId']}',
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FullStatusScreen(
+                                              statuses: filteredPeople
+                                                  .map((doc) => doc.data()
+                                                      as Map<String, dynamic>)
+                                                  .toList(),
+                                              initialIndex: index,
+                                            ),
+                                          ));
+                                    },
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                          mq!.height * .03),
+                                      child: CachedNetworkImage(
+                                        width: mq!.height * .055,
+                                        height: mq!.height * .055,
+                                        fit: BoxFit.fill,
+                                        imageUrl: person['profileImg'],
+                                        errorWidget: (context, url, error) =>
+                                            const CircleAvatar(
+                                                child: Icon(
+                                                    CupertinoIcons.person)),
+                                      ),
+                                    ),
+                                    title: Text(person['userName'],
+                                        style: GoogleFonts.ptSans(
+                                            color: Colors.black)),
+                                    subtitle: Text(formattedDate,
+                                        style: GoogleFonts.ptSans(
+                                            color: Colors.black)),
                                   ),
-                                ));
-                              },
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(mq!.height * .03),
-                                child: CachedNetworkImage(
-                                  width: mq!.height * .055,
-                                  height: mq!.height * .055,
-                                  fit: BoxFit.fill,
-                                  imageUrl: person['profileImg'],
-                                  errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
-                                ),
+                                  Divider(
+                                      color: Colors.grey.shade300,
+                                      thickness: 1,
+                                      height: 0),
+                                ],
                               ),
-                              title: Text(person['userName'], style: GoogleFonts.ptSans(color: Colors.black)),
-                              subtitle: Text(formattedDate, style: GoogleFonts.ptSans(color: Colors.black)),
-                            ),
-                             Divider(color: Colors.grey.shade300, thickness: 1, height: 0),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Text('No status found'),
+                        );
                 },
                 loading: () => const CircularProgressIndicator(),
                 error: (error, _) => Text('Error: $error'),
@@ -137,7 +164,8 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
               Image.file(imageFile),
               TextField(
                 controller: _statusTextController,
-                decoration: const InputDecoration(hintText: 'Enter your status'),
+                decoration:
+                    const InputDecoration(hintText: 'Enter your status'),
               ),
             ],
           ),
@@ -150,7 +178,9 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
               child: const Text('Post'),
               onPressed: () {
                 // Assuming postStatus is a method in your API provider
-                ref.read(apisProvider).postStatus(imageFile, _statusTextController.text);
+                ref
+                    .read(apisProvider)
+                    .postStatus(imageFile, _statusTextController.text);
                 Navigator.of(context).pop();
               },
             ),
