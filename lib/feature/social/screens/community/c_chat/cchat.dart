@@ -169,8 +169,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       setState(() => _isUploading = false);
                     }
                   },
-                  icon: const Icon(Icons.add,
-                      color: Colors.lightBlueAccent, size: 34)),
+                  icon: const Icon(Icons.add, color: Colors.black, size: 34)),
 
               //input field & buttons
               Expanded(
@@ -186,7 +185,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                             setState(() => _showEmoji = !_showEmoji);
                           },
                           icon: const Icon(Icons.emoji_emotions_outlined,
-                              color: Colors.lightBlueAccent, size: 28)),
+                              color: Colors.black, size: 28)),
 
                       Expanded(
                           child: TextField(
@@ -204,7 +203,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                             counterStyle: TextStyle(color: Colors.black),
                             fillColor: Colors.black,
                             hintText: 'Type Something...',
-                            hintStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 108, 108, 108)),
                             border: InputBorder.none),
                       )),
                       SizedBox(width: mq.width * .02),
@@ -233,7 +233,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                     }
                   },
                   icon: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.lightBlueAccent, size: 32)),
+                      color: Colors.black, size: 32)),
 
               //send message button
               MaterialButton(
@@ -251,7 +251,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                 padding:
                     const EdgeInsets.only(top: 8, bottom: 8, right: 4, left: 8),
                 shape: const CircleBorder(),
-                color: Colors.lightBlueAccent,
+                color: Colors.black,
                 child: const Icon(Icons.send, color: Colors.white, size: 25),
               )
             ],

@@ -254,8 +254,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       setState(() => _isUploading = false);
                     }
                   },
-                  icon: const Icon(Icons.add,
-                      color: Colors.lightBlueAccent, size: 34)),
+                  icon: const Icon(Icons.add, color: Colors.black, size: 34)),
               //input field & buttons
               Expanded(
                 child: SizedBox(
@@ -267,6 +266,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         borderRadius: BorderRadius.circular(15)),
                     child: Row(
                       children: [
+                        //emoji button
+                        IconButton(
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                              setState(() => _showEmoji = !_showEmoji);
+                            },
+                            icon: const Icon(Icons.emoji_emotions_outlined,
+                                color: Colors.black, size: 28)),
                         Expanded(
                           child: TextField(
                             controller: _textController,
@@ -278,25 +285,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 setState(() => _showEmoji = !_showEmoji);
                               }
                             },
-                            decoration: InputDecoration(
-                                //hintText: 'Type Something...',
-                                hintStyle:
-                                    GoogleFonts.ptSans(color: Colors.black),
+                            decoration: const InputDecoration(
+                                counterStyle: TextStyle(color: Colors.black),
+                                fillColor: Colors.black,
+                                hintText: 'Type Something...',
+                                hintStyle: TextStyle(
+                                    color: Color.fromARGB(255, 108, 108, 108)),
                                 border: InputBorder.none),
                           ),
                         ),
 
-                        //emoji button
-                        IconButton(
-                            onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              setState(() => _showEmoji = !_showEmoji);
-                            },
-                            icon: const Icon(Icons.emoji_emotions_outlined,
-                                color: Colors.lightBlueAccent, size: 28)),
-
                         //adding some space
-                        //SizedBox(width: mq.width * .005,),
+                        SizedBox(
+                          width: mq.width * .005,
+                        ),
                       ],
                     ),
                   ),
@@ -319,7 +321,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     }
                   },
                   icon: const Icon(Icons.camera_alt_outlined,
-                      color: Colors.lightBlueAccent, size: 32)),
+                      color: Colors.black, size: 32)),
 
               //send message button
               MaterialButton(
@@ -341,7 +343,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 padding:
                     const EdgeInsets.only(top: 8, bottom: 8, right: 4, left: 8),
                 shape: const CircleBorder(),
-                color: Colors.lightBlueAccent,
+                color: Colors.black,
                 child: const Icon(Icons.send, color: Colors.white, size: 25),
               )
             ],
