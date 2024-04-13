@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/add_quiz.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allCommunitiesProvider = StreamProvider<List<Community>>((ref) {
@@ -48,7 +49,7 @@ final joinedCommuntiesProvider =
 });
 
 final joinCommunityProvider = Provider((ref) {
-  return (String currentUserId, String communityIdToJoin) async {
+  return (String currentUserId, String communityIdToJoin,BuildContext context) async {
     try {
       // Add the user to the 'my_users' subcollection of the current user
       await FirebaseFirestore.instance
@@ -62,7 +63,7 @@ final joinCommunityProvider = Provider((ref) {
           .doc(communityIdToJoin)
           .collection('participants')
           .doc(currentUserId)
-          .set(ref.read(apisProvider).me.toJson())
+          .set(ref.read(userProvider)!.toJson())
           .then((value) => firestore
                   .collection('communities')
                   .doc(communityIdToJoin)
@@ -76,10 +77,8 @@ final joinCommunityProvider = Provider((ref) {
                 'attemptedMediumQuestion': 0,
                 'attemptedHardQuestion': 0,
               }));
-      ref.read(apisProvider).sendCommunityMessage(
-          communityIdToJoin,
-          '${ref.read(apisProvider).me.name} joined the community',
-          Types.joined);
+      ref.read(socialControllerProvider.notifier).sendCommunityMessage(communityIdToJoin,
+          '${ref.read(userProvider)!.name} joined the community', Types.joined,context);
       return true; // Indicate the follow action was successful
     } catch (e) {
       // If there's an error, you can handle it here

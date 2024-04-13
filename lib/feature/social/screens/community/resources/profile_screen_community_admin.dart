@@ -31,13 +31,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   void _openUserListDialog(String id, List<ChatUser> listUsers) {
     log("community id$id");
-    showDialog(
-      context: context,
-      builder: (context) => UserListDialog(
-        commId: id,
-        list: listUsers,
-      ),
-    );
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => UserListDialog(
+                  commId: id,
+                  list: listUsers,
+                )));
   }
 
   // Initialize the TextEditingController in your state

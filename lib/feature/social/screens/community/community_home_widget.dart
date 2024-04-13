@@ -66,6 +66,7 @@ class CommunityHomeWidget extends ConsumerWidget {
         ),
         floatingActionButton: IconButton(
           onPressed: () {
+            log("creating community");
             AddCommunityScreen().addCommunityDialog(context, ref);
           },
           icon: const Icon(
