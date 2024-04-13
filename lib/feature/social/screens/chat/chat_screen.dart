@@ -41,103 +41,96 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: WillPopScope(
-        //if emojis are shown & back button is pressed then hide emojis
-        //or else simple close current screen on back button click
-        onWillPop: () {
-          if (_showEmoji) {
-            setState(() => _showEmoji = !_showEmoji);
-            return Future.value(false);
-          } else {
-            return Future.value(true);
-          }
-        },
-        child: Scaffold(
-          //app bar
-          // appBar: AppBar(
-          //   automaticallyImplyLeading: false,
-          //   flexibleSpace: _appBar(fireService),
-          //   backgroundColor: Colors.white,
-          //   toolbarHeight: 60,
-          // ),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        if (_showEmoji) {
+          // Hide emojis if shown
+          setState(() => _showEmoji = false);
+        }
+      },
+      child: Scaffold(
+        //app bar
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   flexibleSpace: _appBar(fireService),
+        //   backgroundColor: Colors.white,
+        //   toolbarHeight: 60,
+        // ),
 
-          backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
 
-          //body
-          body: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/chat_bg.png'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: fireService.getAllMessages(widget.user),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        //if data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                          return const SizedBox();
+        //body
+        body: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/chat_bg.png'), fit: BoxFit.cover)),
+          child: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: fireService.getAllMessages(widget.user),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      //if data is loading
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return const SizedBox();
 
-                        //if some or all data is loaded then show it
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          _list = data
-                                  ?.map((e) => Message.fromJson(e.data()))
-                                  .toList() ??
-                              [];
+                      //if some or all data is loaded then show it
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        _list = data
+                                ?.map((e) => Message.fromJson(e.data()))
+                                .toList() ??
+                            [];
 
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                                reverse: true,
-                                itemCount: _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return MessageCard(message: _list[index]);
-                                });
-                          } else {
-                            return Center(
-                              child: Text('Say Hii! 👋',
-                                  style: GoogleFonts.ptSans(fontSize: 20)),
-                            );
-                          }
-                      }
-                    },
-                  ),
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                              reverse: true,
+                              itemCount: _list.length,
+                              padding: EdgeInsets.only(top: mq.height * .01),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return MessageCard(message: _list[index]);
+                              });
+                        } else {
+                          return Center(
+                            child: Text('Say Hii! 👋',
+                                style: GoogleFonts.ptSans(fontSize: 20)),
+                          );
+                        }
+                    }
+                  },
                 ),
+              ),
 
-                //progress indicator for showing uploading
-                if (_isUploading)
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                          child: CircularProgressIndicator(strokeWidth: 2))),
+              //progress indicator for showing uploading
+              if (_isUploading)
+                const Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        child: CircularProgressIndicator(strokeWidth: 2))),
 
-                //chat input filed
-                _chatInput(fireService),
+              //chat input filed
+              _chatInput(fireService),
 
-                //show emojis on keyboard emoji button click & vice versa
-                if (_showEmoji)
-                  SizedBox(
-                    height: mq.height * .35,
-                    child: EmojiPicker(
-                      textEditingController: _textController,
-                      config: Config(
-                        bgColor: const Color.fromARGB(255, 234, 248, 255),
-                        columns: 8,
-                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                      ),
+              //show emojis on keyboard emoji button click & vice versa
+              if (_showEmoji)
+                SizedBox(
+                  height: mq.height * .35,
+                  child: EmojiPicker(
+                    textEditingController: _textController,
+                    config: Config(
+                      bgColor: const Color.fromARGB(255, 234, 248, 255),
+                      columns: 8,
+                      emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
                     ),
-                  )
-              ],
-            ),
+                  ),
+                )
+            ],
           ),
         ),
       ),
