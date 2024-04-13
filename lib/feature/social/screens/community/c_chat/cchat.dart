@@ -193,7 +193,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                         controller: _textController,
                         keyboardType: TextInputType.multiline,
                         style: const TextStyle(color: Colors.black),
-                        maxLines: null,
+                        maxLines: 3,
                         onTap: () {
                           if (_showEmoji) {
                             setState(() => _showEmoji = !_showEmoji);

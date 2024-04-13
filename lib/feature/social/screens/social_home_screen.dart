@@ -123,6 +123,8 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     });
   }
 
+  final TextEditingController _textController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     var toogleSearch = ref.watch(toggleSearchStateProvider);
@@ -136,39 +138,61 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
           automaticallyImplyLeading: false,
           toolbarHeight: 45,
           backgroundColor: Colors.white,
-          title: toogleSearch != 0
-              ? TextField(
-                  onChanged: (value) => searchValue.state = value,
-                  decoration: InputDecoration(
-                      labelText: 'Search', labelStyle: GoogleFonts.ptSans()
-                      //suffixIcon: Icon(Icons.search),
-                      ),
-                  style: GoogleFonts.ptSans(color: Colors.black),
-                )
-              : Text(
-                  '',
-                  style: GoogleFonts.ptSans(color: Colors.black),
+          title: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: TextField(
+                controller: _textController,
+                focusNode: _focusNode,
+                onTap: () {
+                  log('value changed on tap');
+                  final currentToggleSearch =
+                      ref.read(toggleSearchStateProvider);
+                  if (currentToggleSearch == 0) {
+                    ref.read(toggleSearchStateProvider.notifier).state =
+                        _controller.index + 1; // Enable search
+                  }
+                },
+                onChanged: (value) {
+                  log('value changed');
+                  searchValue.state = value;
+                },
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  labelStyle: GoogleFonts.ptSans(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  //prefixIcon: const Icon(Icons.search, color: Colors.black),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      final currentToggleSearch =
+                          ref.read(toggleSearchStateProvider);
+                      if (currentToggleSearch != 0) {
+                        ref.read(searchQueryProvider.notifier).state =
+                            ''; // Clear search query
+                        ref.read(toggleSearchStateProvider.notifier).state =
+                            0; // Disable search
+                        _textController.clear();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      } else {
+                        ref.read(toggleSearchStateProvider.notifier).state =
+                            _controller.index + 1; // Enable search
+                        FocusScope.of(context).requestFocus(_focusNode);
+                      }
+                    },
+                    icon: Icon(
+                      toogleSearch != 0
+                          ? CupertinoIcons.xmark
+                          : Icons.search_rounded,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                final currentToggleSearch = ref.read(toggleSearchStateProvider);
-                if (currentToggleSearch != 0) {
-                  ref.read(searchQueryProvider.notifier).state =
-                      ''; // Clear search query
-                  ref.read(toggleSearchStateProvider.notifier).state =
-                      0; // Disable search
-                } else {
-                  ref.read(toggleSearchStateProvider.notifier).state =
-                      _controller.index + 1; // Enable search
-                }
-              },
-              icon: Icon(
-                toogleSearch != 0 ? CupertinoIcons.xmark : Icons.search_rounded,
-                color: Colors.black,
-              ),
-            ),
-          ],
+                style: GoogleFonts.ptSans(color: Colors.black),
+              )),
           bottom: TabBar(
             dividerColor: Colors.transparent,
             controller: _controller,
