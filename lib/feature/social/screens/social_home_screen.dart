@@ -144,7 +144,6 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                 controller: _textController,
                 focusNode: _focusNode,
                 onTap: () {
-                  log('value changed on tap');
                   final currentToggleSearch =
                       ref.read(toggleSearchStateProvider);
                   if (currentToggleSearch == 0) {
@@ -153,10 +152,10 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                   }
                 },
                 onChanged: (value) {
-                  log('value changed');
                   searchValue.state = value;
                 },
                 decoration: InputDecoration(
+                  hintText: "Type to search...",
                   labelText: 'Search',
                   labelStyle: GoogleFonts.ptSans(),
                   border: OutlineInputBorder(
@@ -164,8 +163,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.grey[200],
-                  //prefixIcon: const Icon(Icons.search, color: Colors.black),
+                  fillColor: Colors.grey[100],
                   suffixIcon: IconButton(
                     onPressed: () {
                       final currentToggleSearch =
@@ -187,7 +185,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
                       toogleSearch != 0
                           ? CupertinoIcons.xmark
                           : Icons.search_rounded,
-                      color: Colors.black,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ),
