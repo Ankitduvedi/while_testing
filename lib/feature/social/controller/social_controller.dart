@@ -41,9 +41,8 @@ class SocialController extends StateNotifier<bool> {
   void sendCommunityMessage(
       String id, String msg, Types type, BuildContext context) async {
     state = true;
-    final res = await _socialRepository.sendCommunityMessage(id, msg, type);
-    // res.fold((l) => Utils.snackBar(l.message, context),
-    //     (r) => Utils.snackBar(r, context));
+    await _socialRepository.sendCommunityMessage(id, msg, type);
+
     state = false;
   }
 
