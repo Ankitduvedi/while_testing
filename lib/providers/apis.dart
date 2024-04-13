@@ -251,12 +251,12 @@ class APIs {
     return true;
   }
 
-  Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
+Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
         .collection('participants')
-        .doc(user.id).
+      .doc(user.id).
         set({
       'easyQuestions': 0,
       'mediumQuestions': 0,
