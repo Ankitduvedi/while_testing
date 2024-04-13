@@ -3,7 +3,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final ChatUser user;
-
   const ChatScreen({super.key, required this.user});
 
   @override
@@ -50,12 +48,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       },
       child: Scaffold(
         //app bar
-        // appBar: AppBar(
-        //   automaticallyImplyLeading: false,
-        //   flexibleSpace: _appBar(fireService),
-        //   backgroundColor: Colors.white,
-        //   toolbarHeight: 60,
-        // ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: _appBar(fireService),
+          backgroundColor: Colors.white,
+          toolbarHeight: 60,
+        ),
 
         backgroundColor: Colors.white,
 
@@ -139,86 +137,83 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   // app bar widget
   Widget _appBar(fireservice) {
+    final fireServices = ref.read(apisProvider);
+
     return Container(
-      margin: const EdgeInsets.only(top: 40),
-      child: InkWell(
-          onTap: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (_) => ViewProfileScreen(user: widget.user)));
-          },
-          child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: fireservice.getUserInfo(widget.user.id),
-              builder: (context, snapshot) {
-                final data = snapshot.data?.docs;
-                final list =
-                    data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                        [];
+        margin: const EdgeInsets.only(top: 40),
+        child: Row(
+          children: [
+            //back button
+            IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.arrow_back, color: Colors.blue.shade300)),
 
-                return Row(
-                  children: [
-                    //back button
-                    IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(Icons.arrow_back,
-                            color: Colors.blue.shade300)),
+            //user profile picture
+            ClipRRect(
+              borderRadius: BorderRadius.circular(mq.height * .03),
+              child: CachedNetworkImage(
+                width: mq.height * .05,
+                height: mq.height * .05,
+                fit: BoxFit.fill,
+                imageUrl: widget.user.image,
+                errorWidget: (context, url, error) => const CircleAvatar(
+                    child: Icon(
+                  CupertinoIcons.person,
+                  color: Colors.white,
+                )),
+              ),
+            ),
 
-                    //user profile picture
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(mq.height * .03),
-                      child: CachedNetworkImage(
-                        width: mq.height * .05,
-                        height: mq.height * .05,
-                        fit: BoxFit.fill,
-                        imageUrl:
-                            list.isNotEmpty ? list[0].image : widget.user.image,
-                        errorWidget: (context, url, error) =>
-                            const CircleAvatar(
-                                child: Icon(
-                          CupertinoIcons.person,
-                          color: Colors.white,
-                        )),
-                      ),
-                    ),
+            //for adding some space
+            const SizedBox(width: 10),
 
-                    //for adding some space
-                    const SizedBox(width: 10),
+            //user name & last seen time
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //user name
+                Text(widget.user.name,
+                    style: GoogleFonts.ptSans(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500)),
 
-                    //user name & last seen time
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //user name
-                        Text(list.isNotEmpty ? list[0].name : widget.user.name,
-                            style: GoogleFonts.ptSans(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
+                //last seen time of user
+                StreamBuilder(
+                    stream: fireServices.getUserInfo(widget.user.id),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        //if data is loading
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return Text(
+                              widget.user.isOnline
+                                  ? 'Online'
+                                  : MyDateUtil.getLastActiveTime(
+                                      context: context,
+                                      lastActive: widget.user.lastActive),
+                              style: GoogleFonts.ptSans(
+                                  fontSize: 13, color: Colors.black45));
 
-                        //for adding some space
-                        // const SizedBox(height: 2),
-
-                        //last seen time of user
-                        Text(
-                            list.isNotEmpty
-                                ? list[0].isOnline
-                                    ? 'Online'
-                                    : MyDateUtil.getLastActiveTime(
-                                        context: context,
-                                        lastActive: list[0].lastActive)
-                                : MyDateUtil.getLastActiveTime(
-                                    context: context,
-                                    lastActive: widget.user.lastActive),
-                            style: GoogleFonts.ptSans(
-                                fontSize: 13, color: Colors.black45)),
-                      ],
-                    )
-                  ],
-                );
-              })),
-    );
+                        //if some or all data is loaded then show it
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data;
+                          return Text(
+                              data!.isOnline
+                                  ? 'Online'
+                                  : MyDateUtil.getLastActiveTime(
+                                      context: context,
+                                      lastActive: data.lastActive),
+                              style: GoogleFonts.ptSans(
+                                  fontSize: 13, color: Colors.black45));
+                      }
+                    })
+              ],
+            )
+          ],
+        ));
   }
 
   // bottom chat input field
