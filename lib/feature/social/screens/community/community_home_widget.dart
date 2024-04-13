@@ -64,15 +64,14 @@ class CommunityHomeWidget extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error: $e')),
         ),
-        floatingActionButton: IconButton(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white,
           onPressed: () {
-            log("creating community");
             AddCommunityScreen().addCommunityDialog(context, ref);
           },
-          icon: const Icon(
+          child: const Icon(
             Icons.group_add_rounded,
             color: Colors.black,
-            size: 34,
           ),
         ));
   }
