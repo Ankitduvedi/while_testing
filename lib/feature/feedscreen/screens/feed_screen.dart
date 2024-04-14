@@ -4,6 +4,7 @@ import 'package:com.while.while_app/feature/notifications/controller/notif_conto
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
 import 'package:com.while.while_app/feature/notifications/screens/notification_view.dart';
 import 'package:com.while.while_app/feature/feedscreen/controller/categories_test_provider.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,44 +58,41 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
               elevation: 0,
               backgroundColor: Colors.white,
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: unreadNotifsAsyncValue.when(
-                    data: (int unreadCount) {
-                      if (unreadCount == 0) {
-                        return IconButton(
-                          icon: const Icon(Icons.notifications_none_rounded,
-                              color: Colors.black),
-                          onPressed: () async {
-                            await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const NotificationsScreen()));
-                          },
-                        );
-                      } else {
-                        return IconButton(
-                          icon: const Icon(Icons.notifications_active_outlined,
-                              color: Colors.blueAccent),
-                          onPressed: () async {
-                            await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const NotificationsScreen()));
-                          },
-                        );
-                      }
-                    },
-                    error: (error, stack) =>
-                        const Icon(Icons.error, color: Colors.red),
-                    loading: () => const Icon(Icons.notifications_none_rounded,
-                        color: Colors.black),
-                  ),
+                unreadNotifsAsyncValue.when(
+                  data: (int unreadCount) {
+                    if (unreadCount == 0) {
+                      return IconButton(
+                        icon: const Icon(Icons.notifications_none_rounded,
+                            color: Colors.black),
+                        onPressed: () async {
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationsScreen()));
+                        },
+                      );
+                    } else {
+                      return IconButton(
+                        icon: const Icon(Icons.notifications_active_outlined,
+                            color: Colors.blueAccent),
+                        onPressed: () async {
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationsScreen()));
+                        },
+                      );
+                    }
+                  },
+                  error: (error, stack) =>
+                      const Icon(Icons.error, color: Colors.red),
+                  loading: () => const Icon(Icons.notifications_none_rounded,
+                      color: Colors.black),
                 ),
                 IconButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const TabsScreen()));
                     },
-                    icon: const Icon(Icons.people_outlined))
+                    icon: const Icon(FluentIcons.people_12_filled))
               ],
             ),
             SliverList(
