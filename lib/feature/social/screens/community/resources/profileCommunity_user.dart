@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +40,31 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
             widget.user.name,
             style: const TextStyle(color: Color.fromARGB(255, 43, 21, 21)),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                CupertinoIcons.person_badge_minus_fill,
+                size: 28,
+                color: Colors.deepPurple,
+              ),
+              onPressed: () {
+                log(widget.user.id);
+                log(ref.read(userProvider)!.id);
+                ref
+                    .read(socialControllerProvider.notifier)
+                    .removeUserFromCommunity(
+                        widget.user.id, ref.read(userProvider)!.id, context);
+
+                ref
+                    .read(socialControllerProvider.notifier)
+                    .removeCommunityFromUser(
+                        ref.read(userProvider)!.id, widget.user.id, context);
+                Future.delayed(const Duration(seconds: 5));
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         ),
         body: Form(
           key: _formKey,

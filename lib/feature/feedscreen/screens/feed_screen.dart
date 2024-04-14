@@ -89,6 +89,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                 ),
                 IconButton(
                     onPressed: () {
+                      log("become counseller");
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const TabsScreen()));
                     },
