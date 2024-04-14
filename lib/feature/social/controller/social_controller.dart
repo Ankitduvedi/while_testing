@@ -69,12 +69,21 @@ class SocialController extends StateNotifier<bool> {
     state = false;
   }
 
-  void uddateDesignation(
-      String communityId, String userId, String designation,BuildContext context) async {
+  void uddateDesignation(String communityId, String userId, String designation,
+      BuildContext context) async {
+    state = true;
+    final res = await _socialRepository.uddateDesignation(
+        communityId, userId, designation);
+    res.fold((l) => Utils.snackBar(l.message, context),
+        (r) => Utils.snackBar(r, context));
+    state = false;
+  }
+
+  void removeCommunityFromUser(String userId, String communityId,BuildContext context) async {
     state = true;
     final res =
-         await _socialRepository.uddateDesignation(communityId, userId, designation);
-     res.fold((l) => Utils.snackBar(l.message, context),
+        await _socialRepository.removeCommunityFromUser(userId, communityId);
+    res.fold((l) => Utils.snackBar(l.message, context),
         (r) => Utils.snackBar(r, context));
     state = false;
   }

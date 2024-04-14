@@ -137,6 +137,24 @@ class SocialRepository {
       return left(Failure(message: e.toString()));
     }
   }
+
+  Future<Either<Failure, String>> removeCommunityFromUser(
+      String userId, String communityId) async {
+    try {
+      // Path to the user's specific community document
+      DocumentReference communityDoc = firestore
+          .collection('users')
+          .doc(userId)
+          .collection('my_communities')
+          .doc(communityId);
+
+      // Perform the delete operation
+      await communityDoc.delete();
+      return right("Community successfully removed from user's list.");
+    } catch (e, stacktrace) {
+      return left(Failure(message: e.toString()));
+    }
+  }
 }
 
 class ChatImageResult {
