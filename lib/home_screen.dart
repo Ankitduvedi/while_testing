@@ -19,6 +19,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
+  bool blackColor = false;
   late TabController _controller;
   @override
   void initState() {
@@ -58,12 +59,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.only(bottom: 2),
-        color: Colors.white,
+        color: !blackColor ? Colors.white : Colors.black,
         height: 50,
         child: TabBar(
           controller: _controller,
           indicatorColor: Colors.transparent,
           onTap: (index) {
+            if (index == 2) {
+              blackColor = true;
+            } else {
+              blackColor = false;
+            }
             setState(() {});
           },
           tabs: [
@@ -73,7 +79,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ? FluentIcons.home_20_filled
                     : FluentIcons.home_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
@@ -82,25 +88,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ? FluentIcons.video_add_20_filled
                     : FluentIcons.video_add_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
-              icon: Icon(
-                _controller.index == 2
-                    ? FluentIcons.play_20_filled
-                    : FluentIcons.play_20_regular,
-                size: 30,
-                color: Colors.black,
-              ),
-            ),
+                icon: Image.asset(
+              'assets/while_icon.png',
+              width: 70,
+              height: 30, // Dynamic width for the image
+            )
+
+                // Icon(
+                //   _controller.index == 2
+                //       ? FluentIcons.play_20_filled
+                //       : FluentIcons.play_20_regular,
+                //   size: 30,
+                //   color: Colors.black,
+                // ),
+                ),
             Tab(
               icon: Icon(
                 _controller.index == 3
                     ? FluentIcons.chat_20_filled
                     : FluentIcons.chat_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
@@ -109,7 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ? FluentIcons.person_20_filled
                     : FluentIcons.person_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
           ],
