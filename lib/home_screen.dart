@@ -95,7 +95,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 icon: Image.asset(
               'assets/while_icon.png',
               width: 70,
-              height: 30, // Dynamic width for the image
+              height: 27, // Dynamic width for the image
             )
 
                 // Icon(
