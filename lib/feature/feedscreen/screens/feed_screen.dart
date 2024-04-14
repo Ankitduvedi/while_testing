@@ -51,7 +51,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
               floating: true, // makes the app bar hide and show on scroll
               snap: true, // snap effects
               automaticallyImplyLeading: false,
-              title: Image.asset('assets/while_transparent.png',
+              title: Image.asset('assets/while_logo.png',
                   width: 110 // Dynamic width for the image
                   ),
               elevation: 0,

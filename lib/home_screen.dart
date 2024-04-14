@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,8 +70,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               icon: Icon(
                 _controller.index == 0
-                    ? Icons.home_rounded
-                    : Icons.home_outlined,
+                    ? FluentIcons.home_20_filled
+                    : FluentIcons.home_20_regular,
                 size: 30,
                 color: Colors.black,
               ),
@@ -78,8 +79,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               icon: Icon(
                 _controller.index == 1
-                    ? Icons.videocam_rounded
-                    : Icons.videocam_outlined,
+                    ? FluentIcons.video_add_20_filled
+                    : FluentIcons.video_add_20_regular,
                 size: 30,
                 color: Colors.black,
               ),
@@ -87,8 +88,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               icon: Icon(
                 _controller.index == 2
-                    ? Icons.slow_motion_video_rounded
-                    : Icons.slow_motion_video_outlined,
+                    ? FluentIcons.play_20_filled
+                    : FluentIcons.play_20_regular,
                 size: 30,
                 color: Colors.black,
               ),
@@ -96,8 +97,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               icon: Icon(
                 _controller.index == 3
-                    ? Icons.message_rounded
-                    : Icons.message_outlined,
+                    ? FluentIcons.chat_20_filled
+                    : FluentIcons.chat_20_regular,
                 size: 30,
                 color: Colors.black,
               ),
@@ -105,8 +106,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               icon: Icon(
                 _controller.index == 4
-                    ? Icons.account_circle_rounded
-                    : Icons.account_circle_outlined,
+                    ? FluentIcons.person_20_filled
+                    : FluentIcons.person_20_regular,
                 size: 30,
                 color: Colors.black,
               ),
