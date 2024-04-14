@@ -78,6 +78,7 @@ class _AddReelState extends ConsumerState<AddReel> {
           //Dialogs.showSnackbar(context, data['videoId']);
           //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
           final Loops loop = Loops(
+              creatorName: ref.read(userProvider)!.name,
               id: id,
               uploadedBy: ref.read(userProvider)!.id,
               videoUrl: data['assets']['mp4'],

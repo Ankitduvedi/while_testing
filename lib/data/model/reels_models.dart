@@ -8,9 +8,11 @@ class Loops {
   final List likes;
   final int views;
   final String category;
+  final String creatorName;
 
   Loops(
       {required this.id,
+      required this.creatorName,
       required this.uploadedBy,
       required this.videoUrl,
       required this.thumbnail,
@@ -23,6 +25,7 @@ class Loops {
   factory Loops.fromMap(Map<String, dynamic> map) {
     return Loops(
       thumbnail: map['thumbnail'] as String,
+      creatorName: map['creatorName'] as String,
       description: map['description'] as String,
       likes: List.from(map['likes']),
       title: map['title'] as String,
@@ -44,6 +47,7 @@ class Loops {
     map['id'] = id;
     map['views'] = views;
     map['category'] = category;
+    map['creatorName'] = creatorName;
     return map;
   }
 }
