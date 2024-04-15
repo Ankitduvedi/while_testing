@@ -16,6 +16,7 @@ class MealDetailsScreen extends ConsumerWidget {
     final isFavorite = favoriteMeals.contains(meal);
     return Scaffold(
       appBar: AppBar(
+        // backgroundColor: Colors.teal,
         title: Text(meal.title),
         actions: [
           IconButton(
