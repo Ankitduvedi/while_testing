@@ -9,11 +9,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/route_manager.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
 import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'core/routes/routes.dart';
 import 'package:get/get.dart';
 
 late Size mq;
+final theme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.dark,
+    seedColor: const Color.fromARGB(255, 131, 57, 0),
+  ),
+  textTheme: GoogleFonts.latoTextTheme(),
+);
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -85,6 +94,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
     return MaterialApp(
+      theme: theme,
       routes: {
         '/profile': (BuildContext context) => const HomeScreen(),
       },
