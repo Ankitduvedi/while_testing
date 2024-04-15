@@ -36,7 +36,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             child: Column(
               children: <Widget>[
                 Image.asset(
-                  'assets/while_transparent.png',
+                  'assets/while_logo.png',
                   width: screenSize.width * 0.9, // Dynamic width for the image
                   height: screenSize.height * 0.3,
                 ), // Placeholder for the image
