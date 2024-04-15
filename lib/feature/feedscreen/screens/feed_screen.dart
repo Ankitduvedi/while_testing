@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/feature/advertisement/widgets/carousoal_feed_screen.dart';
 import 'package:com.while.while_app/feature/counsellor/screens/tabs.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
@@ -95,6 +96,9 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                     },
                     icon: const Icon(FluentIcons.people_12_filled))
               ],
+            ),
+            SliverToBoxAdapter(
+              child: ImageCarousel(),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
