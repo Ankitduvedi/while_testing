@@ -20,11 +20,9 @@ class CategoryInput extends StatefulWidget {
 
 class CategoryInputState extends State<CategoryInput> {
   String? selectedCategory;
-  final TextEditingController _yearsOfExperienceController =
-      TextEditingController();
+  final TextEditingController _yearsOfExperienceController = TextEditingController();
   final TextEditingController _organisationController = TextEditingController();
-  final TextEditingController _customersCateredController =
-      TextEditingController();
+  final TextEditingController _customersCateredController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +36,7 @@ class CategoryInputState extends State<CategoryInput> {
               selectedCategory = newValue;
             });
           },
-          items:
-              widget.categories.map<DropdownMenuItem<String>>((Category value) {
+          items: widget.categories.map<DropdownMenuItem<String>>((Category value) {
             return DropdownMenuItem<String>(
               value: value.id,
               child: Text(value.title),
@@ -58,10 +55,25 @@ class CategoryInputState extends State<CategoryInput> {
           controller: _customersCateredController,
           decoration: const InputDecoration(labelText: 'Customers Catered'),
         ),
-        // Consider adding a submit button here to capture the input data
+        ElevatedButton(
+          onPressed: submitData,
+          child: const Text("Submit"),
+        )
       ],
     );
   }
 
-  // Add any additional logic or methods needed to handle the input data
+  void submitData() {
+    if (selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please select a category")));
+      return;
+    }
+    CategoryInfo categoryInfo = CategoryInfo(
+      category: selectedCategory!,
+      yearsOfExperience: int.tryParse(_yearsOfExperienceController.text) ?? 0,
+      organisation: _organisationController.text,
+      customersCatered: int.tryParse(_customersCateredController.text) ?? 0,
+    );
+    widget.onCategoryAdded(categoryInfo);
+  }
 }
