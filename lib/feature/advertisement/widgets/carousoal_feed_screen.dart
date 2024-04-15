@@ -13,16 +13,6 @@ class ImageCarousel extends StatefulWidget {
 class ImageCarouselState extends State<ImageCarousel> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  StreamgetImageUrls() {
-    return firestore
-        .collection('advertisement')
-        .doc('carousel')
-        .collection('a')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => doc.data()['url'] as String).toList());
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -54,21 +44,54 @@ class ImageCarouselState extends State<ImageCarousel> {
           items: data.map((url) {
             return Builder(
               builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: ClipRRect(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      child: CachedNetworkImage(
-                        imageUrl: url.thumbnail,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                return Card(
+                  color: Colors.black,
+                  elevation: 4.0,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomStart,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                        child: CachedNetworkImage(
+                          imageUrl: url.thumbnail,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
-                    ));
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                              begin: Alignment.center,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.2),
+                                Colors.black.withOpacity(0.4),
+                                Colors.black.withOpacity(0.9),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Ad. ${url.organisation}',
+                          maxLines: 1,
+                          style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Color.fromARGB(255, 255, 255, 255)),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
             );
           }).toList(),
