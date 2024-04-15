@@ -97,8 +97,8 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                     icon: const Icon(FluentIcons.people_12_filled))
               ],
             ),
-            SliverToBoxAdapter(
-              child: ImageCarousel(),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 200, child: ImageCarousel()),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
