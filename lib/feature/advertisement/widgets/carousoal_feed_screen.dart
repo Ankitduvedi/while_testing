@@ -1,25 +1,36 @@
+import 'package:com.while.while_app/feature/advertisement/models/carousel_feed_scren_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageCarousel extends StatefulWidget {
+  const ImageCarousel({super.key});
   @override
-  _ImageCarouselState createState() => _ImageCarouselState();
+  ImageCarouselState createState() => ImageCarouselState();
 }
 
-class _ImageCarouselState extends State<ImageCarousel> {
+class ImageCarouselState extends State<ImageCarousel> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Stream<List<String>> getImageUrls() {
-    return firestore.collection('images').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => doc.data()['url'] as String).toList());
+  StreamgetImageUrls() {
+    return firestore
+        .collection('advertisement')
+        .doc('carousel')
+        .collection('a')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => doc.data()['url'] as String).toList());
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<String>>(
-      stream: getImageUrls(),
+    return StreamBuilder(
+      stream: firestore
+          .collection('advertisement')
+          .doc('carousel')
+          .collection('a')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -27,18 +38,20 @@ class _ImageCarouselState extends State<ImageCarousel> {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No images found'));
         }
 
-        List<String> imageUrls = snapshot.data!;
+        final data = snapshot.data!.docs
+            .map((e) => AdCarousel.fromMap(e.data()))
+            .toList();
         return CarouselSlider(
           options: CarouselOptions(
             autoPlay: true,
             aspectRatio: 2.0,
             enlargeCenterPage: true,
           ),
-          items: imageUrls.map((url) {
+          items: data.map((url) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
@@ -48,7 +61,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10.0)),
                       child: CachedNetworkImage(
-                        imageUrl: url,
+                        imageUrl: url.thumbnail,
                         fit: BoxFit.cover,
                         placeholder: (context, url) =>
                             const Center(child: CircularProgressIndicator()),
