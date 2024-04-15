@@ -1,4 +1,8 @@
 // BecomeCounsellor.dart
+import 'dart:developer';
+
+import 'package:com.while.while_app/feature/counsellor/controller/counseller_contoller.dart';
+import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
 import 'package:com.while.while_app/feature/counsellor/widgets/categories_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +20,7 @@ class BecomeCounsellor extends ConsumerStatefulWidget {
 
 class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
   List<Widget> categoryInputs = [];
+  List<CategoryInfo> allCategoriesInfo = []; // Store all category inputs
 
   @override
   void initState() {
@@ -28,7 +33,9 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
       key: UniqueKey(),
       categories: availableCategories,
       onCategoryAdded: (categoryInfo) {
-        // Handle the added category info here
+        allCategoriesInfo.add(
+            categoryInfo); // Add to the list whenever a new category is added
+        // print(categoryInfo.toString());  // Optional: print each addition immediately
       },
     ));
     setState(() {});
@@ -40,7 +47,6 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          // Wrap Column in a ConstrainedBox to give it a maximum height
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -51,7 +57,11 @@ class _BecomeCounsellorState extends ConsumerState<BecomeCounsellor> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Implement saving logic here
+                  // Print all collected category info when 'Save All' is pressed
+                  log("requesting");
+                  ref
+                      .read(counsellorContollerProvider.notifier)
+                      .submitCounsellerRequest(allCategoriesInfo);
                 },
                 child: const Text('Save All'),
               ),

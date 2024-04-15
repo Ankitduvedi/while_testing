@@ -2,7 +2,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/avail_users_dialog.dart';
 import 'package:flutter/cupertino.dart';

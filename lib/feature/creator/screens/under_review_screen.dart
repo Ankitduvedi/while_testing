@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UnderReviewScreen extends ConsumerStatefulWidget {
-  const UnderReviewScreen({super.key});
+  final String type;
+  const UnderReviewScreen({super.key,required this.type});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UnderReviewScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _UnderReviewScreenState();
 }
 
 class _UnderReviewScreenState extends ConsumerState<UnderReviewScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -29,7 +30,7 @@ class _UnderReviewScreenState extends ConsumerState<UnderReviewScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              "Thank you for submitting your request to become a creator. We're currently reviewing your submission and will notify you once the process is complete.",
+              "Thank you for submitting your request to become a ${widget.type}. We're currently reviewing your submission and will notify you once the process is complete.",
               style: GoogleFonts.ptSans(fontSize: 16),
               textAlign: TextAlign.center,
             ),
@@ -38,4 +39,4 @@ class _UnderReviewScreenState extends ConsumerState<UnderReviewScreen> {
       ),
     );
   }
-  }
+}
