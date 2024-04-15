@@ -1,4 +1,7 @@
 // CategoryInput.dart
+
+import 'dart:developer';
+
 import 'package:com.while.while_app/feature/counsellor/models/category.dart';
 import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +23,11 @@ class CategoryInput extends StatefulWidget {
 
 class CategoryInputState extends State<CategoryInput> {
   String? selectedCategory;
-  final TextEditingController _yearsOfExperienceController = TextEditingController();
+  final TextEditingController _yearsOfExperienceController =
+      TextEditingController();
   final TextEditingController _organisationController = TextEditingController();
-  final TextEditingController _customersCateredController = TextEditingController();
+  final TextEditingController _customersCateredController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +38,14 @@ class CategoryInputState extends State<CategoryInput> {
           hint: const Text('Select Category'),
           onChanged: (newValue) {
             setState(() {
+              log(newValue.toString());
               selectedCategory = newValue;
             });
           },
-          items: widget.categories.map<DropdownMenuItem<String>>((Category value) {
+          items:
+              widget.categories.map<DropdownMenuItem<String>>((Category value) {
             return DropdownMenuItem<String>(
-              value: value.id,
+              value: value.title,
               child: Text(value.title),
             );
           }).toList(),
@@ -65,7 +72,8 @@ class CategoryInputState extends State<CategoryInput> {
 
   void submitData() {
     if (selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please select a category")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a category")));
       return;
     }
     CategoryInfo categoryInfo = CategoryInfo(
