@@ -1,4 +1,8 @@
 // ignore_for_file: unused_field
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
 import 'package:com.while.while_app/feature/counsellor/repository/coounsaeller_repositroy.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +12,21 @@ final counsellorContollerProvider =
     StateNotifierProvider<CounsellorContoller, bool>((ref) {
   return CounsellorContoller(
       counsellerRepository: ref.read(counsellerRepositoryProvider), ref: ref);
+});
+final counsellerDetailsProvider =
+    StreamProvider.family<QuerySnapshot, String>((ref, counsellorId) {
+  log("fetching");
+  return ref
+      .read(fireStoreProvider)
+      .collection('counsellers')
+      .doc(counsellorId)
+      .collection('counsellersData')
+      .snapshots();
+});
+
+final particularUser =
+    FutureProvider.family<DocumentSnapshot, String>((ref, userId) {
+  return ref.read(fireStoreProvider).collection('users').doc(userId).get();
 });
 
 class CounsellorContoller extends StateNotifier<bool> {
