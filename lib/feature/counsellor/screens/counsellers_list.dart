@@ -1,55 +1,67 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/counsellor/controller/counseller_contoller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CounsellorDetails extends StatelessWidget {
+class CounsellorDetails extends ConsumerWidget {
   final String counsellorId;
 
   const CounsellorDetails({Key? key, required this.counsellorId})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counsellorDataSnapshot =
+        ref.watch(counsellerDetailsProvider(counsellorId));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Counsellor Details'),
+        title: Text(counsellorId),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('counsellers')
-            .doc(counsellorId)
-            .collection('counsellersData')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          // Extract the documents from the snapshot
-          final List<DocumentSnapshot> alldataDocs = snapshot.data!.docs;
-          log(alldataDocs.length.toString());
+      body: counsellorDataSnapshot.when(
+        data: (QuerySnapshot snapshot) {
+          final List<DocumentSnapshot> documents = snapshot.docs;
           return ListView.builder(
-            itemCount: alldataDocs.length,
+            itemCount: documents.length,
             itemBuilder: (context, index) {
-              final alldataDoc = alldataDocs[index];
-              final data = alldataDoc.data() as Map<String, dynamic>;
-              return ListTile(
-                title: Text('Document ID: ${alldataDoc.id}'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: data.entries.map((entry) {
-                    return Text('${entry.key}: ${entry.value}');
-                  }).toList(),
+              final document = documents[index];
+              final data = document.data() as Map<String, dynamic>;
+              log(data.toString());
+
+              // Using FutureProvider.family to fetch user details
+              final userAsyncValue =
+                  ref.watch(particularUser(data['counsellerId']));
+              return userAsyncValue.when(
+                data: (DocumentSnapshot snapshot) {
+                  final userData = ChatUser.fromJson(
+                      snapshot.data() as Map<String, dynamic>);
+                  return ListTile(
+                    leading: CircleAvatar(
+                        backgroundImage:
+                            CachedNetworkImageProvider(userData.image)),
+                    title: Text(userData.name),
+                    subtitle: Text(data['organisation']),
+                    trailing: Wrap(
+                      spacing: 8, // space between two icons
+                      children: [
+                        Text("Experience: ${data['yearsOfExperience']}"),
+                        Text("Catered: ${data['customersCatered']}"),
+                      ],
+                    ),
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, stack) => const ListTile(
+                  title: Text('Error loading user data'),
                 ),
               );
             },
           );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, stack) => Center(child: Text('Error: ${e.toString()}')),
       ),
     );
   }
