@@ -32,8 +32,7 @@ class CommunityHomeWidget extends ConsumerWidget {
                       .toList()
                   : notJoinedCommunity;
 
-              log(communityList.length.toString());
-              log('usersList.length.toString()');
+              log("Community length ${communityList.length}");
               if (communityList.isEmpty) {
                 return Center(
                   child: Text(

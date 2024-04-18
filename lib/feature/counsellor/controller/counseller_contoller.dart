@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
@@ -47,5 +46,23 @@ class CounsellorContoller extends StateNotifier<bool> {
     response.fold((l) => SnackBar(content: Text(l.message)),
         (r) => const Text("Request Submiited Successfully"));
     state = false;
+  }
+
+  Future<bool> checkIfUserDocumentExists(String userId, String docId) async {
+    try {
+      var result =
+          await _counsellorRepository.checkIfUserDocumentExists(userId, docId);
+      return result.fold((l) {
+        // Log the error or handle it appropriately
+  
+        return false; // Return false or handle the error as needed
+      },
+          (r) =>
+              r // Directly return the boolean from the repository if there's no error
+          );
+    } catch (e) {
+      // Catch any unexpected errors that might not be handled by the repository method
+      return false;
+    }
   }
 }

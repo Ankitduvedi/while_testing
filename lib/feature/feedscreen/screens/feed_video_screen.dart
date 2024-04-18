@@ -74,7 +74,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   Widget build(BuildContext context) {
     final notifService = ref.read(notifControllerProvider.notifier);
     final ChatUser me = ref.read(userProvider)!;
-    final followingUsersList = ref.watch(followingUsersProvider('userId'));
+    final followingUsersList = ref.watch(followingUsersProvider('id'));
 
     return Scaffold(
       body: SafeArea(

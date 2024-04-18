@@ -117,7 +117,7 @@ class SocialRepository {
           .doc(userId)
           .delete();
       return right("Removed User from Community");
-    } catch (e, stacktrace) {
+    } catch (e) {
       return left(Failure(message: e.toString()));
     }
   }
@@ -151,7 +151,7 @@ class SocialRepository {
       // Perform the delete operation
       await communityDoc.delete();
       return right("Community successfully removed from user's list.");
-    } catch (e, stacktrace) {
+    } catch (e) {
       return left(Failure(message: e.toString()));
     }
   }

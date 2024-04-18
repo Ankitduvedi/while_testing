@@ -36,8 +36,8 @@ class MessageHomeWidget extends ConsumerWidget {
                     .toList()
                 : nonFollowingUsers;
 
-            log(usersList.length.toString());
-            log('usersList.length.toString()');
+            log("chatusers length ${usersList.length}");
+            // log('usersList.length.toString()');
             if (usersList.isEmpty) {
               return Center(
                 child: Text(

@@ -58,4 +58,23 @@ class CounsellerRepository {
       return left(Failure(message: e.toString()));
     }
   }
+
+  Future<Either<Failure, bool>> checkIfUserDocumentExists(
+      String userId, String docId) async {
+    try {
+      // Reference to the nested document
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users') // Main collection
+          .doc(userId) // Main document ID
+          .collection('following') // Sub-collection
+          .doc(docId) // Document ID you are checking for
+          .get();
+
+      // Returns true if the document exists
+      return right(documentSnapshot.exists);
+    } catch (e) {
+      // Handle any exceptions here, possibly logging the error
+      return left(Failure(message: e.toString()));
+    }
+  }
 }

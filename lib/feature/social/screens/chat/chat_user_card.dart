@@ -1,8 +1,6 @@
+import 'dart:developer';
 import 'dart:typed_data';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../providers/apis.dart';
@@ -62,13 +60,24 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
                     builder: (_) => ProfileDialog(user: widget.user),
                   );
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(mq.height * .03),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.user.image,
-                    height: mq.height * .055,
-                    width: mq.height * .055,
-                  ),
+                child: CircleAvatar(
+                  radius: MediaQuery.of(context).size.height *
+                      0.055, // setting radius for size
+                  backgroundImage: NetworkImage(widget
+                      .user.image), // using NetworkImage to load the image
+                  onBackgroundImageError: (_, __) {
+                    // Handling errors in image loading
+                    // Log error or handle the image load failure appropriately
+                    log('Failed to load image');
+                  },
+                  // Default image to show in case of an error or while the image is loading
+                  backgroundColor: Colors.grey[
+                      200], // optional: background color, shows while image is loading
+                  child: Text(
+                      widget.user.name[0]
+                          .toUpperCase(), // Show the first letter of the user's name as fallback
+                      style: const TextStyle(
+                          color: Colors.white)), // Styling for text
                 ),
               ),
               title: Text(

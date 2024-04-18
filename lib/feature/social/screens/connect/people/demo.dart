@@ -13,25 +13,28 @@ class Connect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
+    final user = ref.read(userProvider); // Assume this is non-null
     final followingUsersAsyncValue =
-        ref.watch(followingUsersProvider('userId'));
+        ref.watch(followingUsersProvider(user!.id));
 
-    final fireService = ref.read(userProvider);
+    final fireService =
+        ref.read(userProvider); // Assuming this returns a user object
     final notifService = ref.read(notifControllerProvider.notifier);
 
     return Scaffold(
       body: allUsersAsyncValue.when(
         data: (allUsers) => followingUsersAsyncValue.when(
           data: (followingUsers) {
+            // Now excluding the current user's ID as well
             final nonFollowingUsers = allUsers
-                .where((user) => !followingUsers.contains(user.id))
+                .where((user) =>
+                    !followingUsers.contains(user.id) &&
+                    user.id != ref.read(userProvider)!.id)
                 .toList();
-
             return ListView.builder(
               itemCount: nonFollowingUsers.length,
               itemBuilder: (context, index) {
                 final user = nonFollowingUsers[index];
-
                 return ListTile(
                   leading: InkWell(
                     onTap: () {
@@ -44,26 +47,31 @@ class Connect extends ConsumerWidget {
                       backgroundImage: NetworkImage(user.image),
                     ),
                   ),
-                  title: Text(
-                    user.name,
-                    style: GoogleFonts.ptSans(),
-                  ),
+                  title: Text(user.name, style: GoogleFonts.ptSans()),
                   subtitle: Text(user.email, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
-                      final didFollow =
-                          await ref.read(followUserProvider)(user.id);
-
-                      final currentUser = ref.read(userProvider.notifier).state;
-
-                      if (didFollow) {
-                        notifService.addNotification(
-                            '${fireService!.name} started following you',
-                            user.id);
-                        log("now following");
-                        ref.read(userProvider.notifier).state!.copyWith(follower: currentUser!.follower + 1);
-                      } else {
-                        log("failed to follow");
+                      try {
+                        final didFollow =
+                            await ref.read(followUserProvider)(user.id);
+                        final currentUser =
+                            ref.read(userProvider.notifier).state;
+                        if (didFollow) {
+                          if (fireService != null && currentUser != null) {
+                            notifService.addNotification(
+                                '${fireService.name} started following you',
+                                user.id);
+                            log("now following");
+                            ref.read(userProvider.notifier).update((state) =>
+                                state?.copyWith(follower: state.follower + 1));
+                          } else {
+                            log("Error: fireService or currentUser is null");
+                          }
+                        } else {
+                          log("failed to follow");
+                        }
+                      } catch (e) {
+                        log("Error in follow button: $e");
                       }
                     },
                     child: Text('Follow', style: GoogleFonts.ptSans()),
@@ -73,10 +81,10 @@ class Connect extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          error: (e, _) => Center(child: Text('Error up: $e')),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('Error down: $e')),
       ),
     );
   }
