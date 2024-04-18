@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/counsellor/controller/counseller_contoller.dart';
+import 'package:com.while.while_app/feature/counsellor/screens/counseller_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ class CounsellorDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log("building");
     final counsellorDataSnapshot =
         ref.watch(counsellerDetailsProvider(counsellorId));
     return Scaffold(
@@ -28,11 +30,9 @@ class CounsellorDetails extends ConsumerWidget {
             itemBuilder: (context, index) {
               final document = documents[index];
               final data = document.data() as Map<String, dynamic>;
-              log(data.toString());
-
-              // Using FutureProvider.family to fetch user details
               final userAsyncValue =
                   ref.watch(particularUser(data['counsellerId']));
+
               return userAsyncValue.when(
                 data: (DocumentSnapshot snapshot) {
                   final userData = ChatUser.fromJson(
@@ -44,18 +44,25 @@ class CounsellorDetails extends ConsumerWidget {
                     title: Text(userData.name),
                     subtitle: Text(data['organisation']),
                     trailing: Wrap(
-                      spacing: 8, // space between two icons
+                      spacing: 8,
                       children: [
                         Text("Experience: ${data['yearsOfExperience']}"),
                         Text("Catered: ${data['customersCatered']}"),
                       ],
                     ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CounsellorDetailPage(
+                              userData: userData, extraData: data),
+                        ),
+                      );
+                    },
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, stack) => const ListTile(
-                  title: Text('Error loading user data'),
-                ),
+                error: (e, stack) =>
+                    const ListTile(title: Text('Error loading user data')),
               );
             },
           );

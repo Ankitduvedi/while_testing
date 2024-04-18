@@ -34,6 +34,9 @@ class CommunityConnect extends ConsumerWidget {
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.image),
+                    onBackgroundImageError: (exception, stackTrace) {
+                      log('Failed to load image');
+                    },
                   ),
                   title: Text(
                     user.name,
@@ -44,7 +47,7 @@ class CommunityConnect extends ConsumerWidget {
                     onPressed: () async {
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          ref.read(userProvider)!.id, user.id,context);
+                          ref.read(userProvider)!.id, user.id, context);
 
                       if (didJoin) {
                         log("joined community");

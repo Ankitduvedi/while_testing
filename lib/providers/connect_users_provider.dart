@@ -8,24 +8,24 @@ final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
   final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
   final toggle = ref.watch(toggleSearchStateProvider);
 
-  log('allUsersProvider');
-  return FirebaseFirestore.instance
-      .collection('users')
-      .snapshots()
-      .map((snapshot) {
-    // First, map all documents to ChatUser objects
-    var users =
-        snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
-    log('allUsersProvider user lengh ${users.length.toString()}');
-    // Then, if toggle is not 0, filter users based on the search query
-    if (toggle == 1 && searchQuery != '') {
-      return users
-          .where((user) => user.name.toLowerCase().contains(searchQuery))
-          .toList();
-    } else {
-      return users;
-    }
-  });
+  log('///////////');
+   return FirebaseFirestore.instance
+    .collection('users')
+    .snapshots()
+    .handleError((error) {
+      log('Error fetching users: $error');
+      return const Stream.empty();  // Return an empty stream on error.
+    })
+    .map((snapshot) {
+      var users = snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
+      log('allUsersProvider user length ${users.length}');
+      if (toggle == 1 && searchQuery != '') {
+        return users.where((user) => user.name.toLowerCase().contains(searchQuery)).toList();
+      } else {
+        return users;
+      }
+    });
+
 });
 // this provider is for search users
 final searchQueryProvider = StateProvider<String>((ref) {
@@ -61,7 +61,7 @@ final followingUsersProvider =
   // final user = ref.watch(userDataProvider).userData;
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(ref.read(userProvider)!.id)
+      .doc(userId)
       .collection('following')
       .snapshots()
       .map((snapshot) {

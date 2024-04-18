@@ -34,21 +34,19 @@ class UserDataProvider with ChangeNotifier {
         _userUpdateListener(snapshot);
       });
 
-      // Following subscription
-      // _followingSubscription = FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(auth.uid)
-      //     .collection('following')
-      //     .snapshots()
-      //     .listen(_followingUpdateListener);
+      _followingSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .collection('following')
+          .snapshots()
+          .listen(_followingUpdateListener);
 
-      // Follower subscription
-      // _followerSubscription = FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(auth.uid)
-      //     .collection('follower')
-      //     .snapshots()
-      //     .listen(_followerUpdateListener);
+      _followerSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.uid)
+          .collection('follower')
+          .snapshots()
+          .listen(_followerUpdateListener);
     }
   }
 
@@ -59,19 +57,19 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-  // void _followingUpdateListener(QuerySnapshot snapshot) {
-  //   if (!_isDisposed) {
-  //     _userData.following = snapshot.docs.length;
-  //     _safeNotifyListeners();
-  //   }
-  // }
+  void _followingUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.following = snapshot.docs.length;
+      _safeNotifyListeners();
+    }
+  }
 
-  // void _followerUpdateListener(QuerySnapshot snapshot) {
-  //   if (!_isDisposed) {
-  //     _userData.follower = snapshot.docs.length;
-  //     _safeNotifyListeners();
-  //   }
-  // }
+  void _followerUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.follower = snapshot.docs.length;
+      _safeNotifyListeners();
+    }
+  }
 
   void _safeNotifyListeners() {
     if (!_isDisposed) notifyListeners();
