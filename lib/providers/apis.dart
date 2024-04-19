@@ -468,12 +468,20 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
 
   // for getting all messages of a specific conversation from firestore database
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(ChatUser user) {
-    return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
-        .orderBy('sent', descending: true)
-        .snapshots();
-  }
+ Stream<List<Message>> getAllMessages(ChatUser user) {
+  return FirebaseFirestore.instance
+      .collection('chats/${getConversationID(user.id)}/messages/')
+      .orderBy('sent', descending: true)
+      .snapshots()
+      .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
+        return snapshot.docs
+            .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+                Message.fromJson(doc.data()! as Map<String, dynamic>))
+            .toList();
+      });
+}
+
+
 
   // for sending message
 
