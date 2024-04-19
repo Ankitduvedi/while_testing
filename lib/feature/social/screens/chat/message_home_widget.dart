@@ -13,6 +13,7 @@ class MessageHomeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log("chatScreen");
     final allUsersAsyncValue = ref.watch(allUsersProvider);
     final myUsersAsyncValue = ref.watch(myUsersUidsProvider);
     var toogleSearch = ref.watch(toggleSearchStateProvider);
