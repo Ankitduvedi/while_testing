@@ -71,6 +71,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
   void _checkInitialMessage() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
+    log('initial message');
 
     if (initialMessage != null) {
       // Navigate to desired screen based on initialMessage

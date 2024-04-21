@@ -5,6 +5,8 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/route_manager.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
@@ -37,12 +39,12 @@ void main() async {
 }
 
 Future<void> _initializeFirebase() async {
-  // var result = await FlutterNotificationChannel.registerNotificationChannel(
-  //   description: 'For showing notification',
-  //   id: 'chats',
-  //   importance: NotificationImportance.IMPORTANCE_HIGH,
-  //   name: 'WHILE',
-  // );
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+    description: 'For showing notification',
+    id: 'chats',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'WHILE',
+  );
   // Optionally print the result
   await initDynamicLinks();
 }

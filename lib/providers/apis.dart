@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -79,16 +80,17 @@ class APIs {
 
   // for sending push notification
   Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
+    final user = _ref.read(userDataProvider).userData!;
     try {
       final body = {
         "to": chatUser.pushToken,
         "notification": {
-          "title": me.name, //our name should be send
+          "title": user.name, //our name should be send
           "body": msg,
           "android_channel_id": "chats"
         },
         "data": {
-          "some_data": "User ID: ${me.id}",
+          "some_data": "User ID: ${user.id}",
         },
       };
 
@@ -251,13 +253,13 @@ class APIs {
     return true;
   }
 
-Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
+  Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
         .collection('participants')
-      .doc(user.id).
-        set({
+        .doc(user.id)
+        .set({
       'easyQuestions': 0,
       'mediumQuestions': 0,
       'hardQuestions': 0,
@@ -307,6 +309,8 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
   // for getting current user info
 
   Future<void> getSelfInfo() async {
+    log(' getSelfInfo My Data: ');
+
     await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
@@ -468,20 +472,18 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
 
   // for getting all messages of a specific conversation from firestore database
 
- Stream<List<Message>> getAllMessages(ChatUser user) {
-  return FirebaseFirestore.instance
-      .collection('chats/${getConversationID(user.id)}/messages/')
-      .orderBy('sent', descending: true)
-      .snapshots()
-      .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-        return snapshot.docs
-            .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-                Message.fromJson(doc.data()! as Map<String, dynamic>))
-            .toList();
-      });
-}
-
-
+  Stream<List<Message>> getAllMessages(ChatUser user) {
+    return FirebaseFirestore.instance
+        .collection('chats/${getConversationID(user.id)}/messages/')
+        .orderBy('sent', descending: true)
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
+      return snapshot.docs
+          .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+              Message.fromJson(doc.data()! as Map<String, dynamic>))
+          .toList();
+    });
+  }
 
   // for sending message
 
@@ -714,7 +716,6 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     });
   }
 
-  
   // update profile picture of community
 
   Future<void> updateProfilePictureCommunity(File file, String id) async {
@@ -827,10 +828,13 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
   }
 
   Future<void> getFirebaseMessagingToken() async {
+    log('Push Tokens : ');
     await fMessaging.requestPermission();
-
     await fMessaging.getToken().then((t) {
+      final user = _ref.read(userProvider);
       if (t != null) {
+        user!.pushToken = t;
+        _ref.read(userDataProvider).updateUserData(user);
         me.pushToken = t;
         log('Push Token: $t');
       }
