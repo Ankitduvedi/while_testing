@@ -14,22 +14,14 @@ class Connect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
-<<<<<<< HEAD
+
     var user = ref.watch(userDataProvider).userData!;
 
     final followingUsersAsyncValue = ref.watch(followingUsersProvider(user.id));
 
     final fireService = ref.watch(userProvider);
-    final notifService = ref.watch(notifControllerProvider.notifier);
-=======
-    final user = ref.read(userProvider); // Assume this is non-null
-    final followingUsersAsyncValue =
-        ref.watch(followingUsersProvider(user!.id));
-
-    final fireService =
-        ref.read(userProvider); // Assuming this returns a user object
-    final notifService = ref.read(notifControllerProvider.notifier);
->>>>>>> 4970102ec27d4e6646816f5c286847bad93f885c
+    final notifService =
+        ref.watch(notifControllerProvider.notifier); // Assume this is non-null
 
     return Scaffold(
       body: allUsersAsyncValue.when(
@@ -61,24 +53,6 @@ class Connect extends ConsumerWidget {
                   subtitle: Text(user.email, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
-<<<<<<< HEAD
-                      final didFollow =
-                          await ref.read(followUserProvider)(user.id);
-
-                      final currentUser = ref.read(userProvider.notifier).state;
-
-                      if (didFollow) {
-                        notifService.addNotification(
-                            '${fireService!.name} started following you',
-                            user.id);
-                        log("now following");
-                        ref
-                            .read(userProvider.notifier)
-                            .state!
-                            .copyWith(follower: currentUser!.follower + 1);
-                      } else {
-                        log("failed to follow");
-=======
                       try {
                         final didFollow =
                             await ref.read(followUserProvider)(user.id);
@@ -100,7 +74,6 @@ class Connect extends ConsumerWidget {
                         }
                       } catch (e) {
                         log("Error in follow button: $e");
->>>>>>> 4970102ec27d4e6646816f5c286847bad93f885c
                       }
                     },
                     child: Text('Follow', style: GoogleFonts.ptSans()),
@@ -110,17 +83,10 @@ class Connect extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-<<<<<<< HEAD
-          error: (e, _) => Center(child: Text('Error1: $e')),
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error2: $e')),
-=======
           error: (e, _) => Center(child: Text('Error up: $e')),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error down: $e')),
->>>>>>> 4970102ec27d4e6646816f5c286847bad93f885c
       ),
     );
   }
