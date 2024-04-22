@@ -1,4 +1,7 @@
 // CategoryInput.dart
+
+import 'dart:developer';
+
 import 'package:com.while.while_app/feature/counsellor/models/category.dart';
 import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +38,14 @@ class CategoryInputState extends State<CategoryInput> {
           hint: const Text('Select Category'),
           onChanged: (newValue) {
             setState(() {
+              log(newValue.toString());
               selectedCategory = newValue;
             });
           },
           items:
               widget.categories.map<DropdownMenuItem<String>>((Category value) {
             return DropdownMenuItem<String>(
-              value: value.id,
+              value: value.title,
               child: Text(value.title),
             );
           }).toList(),
@@ -58,10 +62,26 @@ class CategoryInputState extends State<CategoryInput> {
           controller: _customersCateredController,
           decoration: const InputDecoration(labelText: 'Customers Catered'),
         ),
-        // Consider adding a submit button here to capture the input data
+        ElevatedButton(
+          onPressed: submitData,
+          child: const Text("Submit"),
+        )
       ],
     );
   }
 
-  // Add any additional logic or methods needed to handle the input data
+  void submitData() {
+    if (selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a category")));
+      return;
+    }
+    CategoryInfo categoryInfo = CategoryInfo(
+      category: selectedCategory!,
+      yearsOfExperience: int.tryParse(_yearsOfExperienceController.text) ?? 0,
+      organisation: _organisationController.text,
+      customersCatered: int.tryParse(_customersCateredController.text) ?? 0,
+    );
+    widget.onCategoryAdded(categoryInfo);
+  }
 }

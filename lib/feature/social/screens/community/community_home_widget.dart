@@ -32,8 +32,7 @@ class CommunityHomeWidget extends ConsumerWidget {
                       .toList()
                   : notJoinedCommunity;
 
-              log(communityList.length.toString());
-              log('usersList.length.toString()');
+              log("Community length ${communityList.length}");
               if (communityList.isEmpty) {
                 return Center(
                   child: Text(
@@ -64,14 +63,14 @@ class CommunityHomeWidget extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error: $e')),
         ),
-        floatingActionButton: IconButton(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white,
           onPressed: () {
             AddCommunityScreen().addCommunityDialog(context, ref);
           },
-          icon: const Icon(
+          child: const Icon(
             Icons.group_add_rounded,
             color: Colors.black,
-            size: 34,
           ),
         ));
   }

@@ -122,6 +122,7 @@ class AddCommunityScreen {
               ),
               onPressed: () async {
                 // Your create logic here
+                log("creating");
                 if (type != '' && name != '') {
                   final time = DateTime.now().millisecondsSinceEpoch.toString();
                   final String id = uuid.v4();

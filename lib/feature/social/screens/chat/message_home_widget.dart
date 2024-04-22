@@ -14,6 +14,7 @@ class MessageHomeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log("chatScreen");
     final allUsersAsyncValue = ref.watch(allUsersProvider);
     var user = ref.watch(userDataProvider).userData!;
     // user = ref.watch(userDataProvider).userData!;
@@ -40,8 +41,8 @@ class MessageHomeWidget extends ConsumerWidget {
                     .toList()
                 : nonFollowingUsers;
 
-            log(usersList.length.toString());
-            log('usersList.length.toString()');
+            log("chatusers length ${usersList.length}");
+            // log('usersList.length.toString()');
             if (usersList.isEmpty) {
               return Center(
                 child: Text(

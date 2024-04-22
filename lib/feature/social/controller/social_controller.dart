@@ -10,7 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final socialControllerProvider =
     StateNotifierProvider<SocialController, bool>((ref) {
-  return SocialController(socialRepository: ref.read(socialRepositoryProvider),ref:ref);
+  return SocialController(
+      socialRepository: ref.read(socialRepositoryProvider), ref: ref);
 });
 final peopleStreamProvider = StreamProvider<QuerySnapshot<Object>>((ref) {
   final socialController = ref.watch(socialControllerProvider.notifier);
@@ -27,8 +28,10 @@ class SocialController extends StateNotifier<bool> {
   final SocialRepository _socialRepository;
   final Ref _ref;
 
-  SocialController({required SocialRepository socialRepository,required Ref ref})
-      : _socialRepository = socialRepository,_ref = ref,
+  SocialController(
+      {required SocialRepository socialRepository, required Ref ref})
+      : _socialRepository = socialRepository,
+        _ref = ref,
         super(false);
   Stream<QuerySnapshot<Object>> peopleStream() =>
       _socialRepository.peopleStream();
@@ -38,9 +41,8 @@ class SocialController extends StateNotifier<bool> {
   void sendCommunityMessage(
       String id, String msg, Types type, BuildContext context) async {
     state = true;
-    final res = await _socialRepository.sendCommunityMessage(id, msg, type);
-    res.fold((l) => Utils.snackBar(l.message, context),
-        (r) => Utils.snackBar(r, context));
+    await _socialRepository.sendCommunityMessage(id, msg, type);
+
     state = false;
   }
 
@@ -48,12 +50,41 @@ class SocialController extends StateNotifier<bool> {
       Community chatUser, File file, BuildContext context) async {
     state = true;
     final res = await _socialRepository.communitySendChatImage(chatUser, file);
-    res.fold((l) => Utils.snackBar(l.message, context), (r){
-       _ref
+    res.fold((l) => Utils.snackBar(l.message, context), (r) {
+      _ref
           .read(socialControllerProvider.notifier)
-          .sendCommunityMessage(r.chatId, r.imageUrl,r.type,context );
-        Utils.snackBar("Message sent to ${r.chatId}",context);
+          .sendCommunityMessage(r.chatId, r.imageUrl, r.type, context);
+      Utils.snackBar("Message sent to ${r.chatId}", context);
     });
+    state = false;
+  }
+
+  void removeUserFromCommunity(
+      String communityId, String userId, BuildContext context) async {
+    state = true;
+    final res =
+        await _socialRepository.removeUserFromCommunity(communityId, userId);
+    res.fold((l) => Utils.snackBar(l.message, context),
+        (r) => Utils.snackBar(r, context));
+    state = false;
+  }
+
+  void uddateDesignation(String communityId, String userId, String designation,
+      BuildContext context) async {
+    state = true;
+    final res = await _socialRepository.uddateDesignation(
+        communityId, userId, designation);
+    res.fold((l) => Utils.snackBar(l.message, context),
+        (r) => Utils.snackBar(r, context));
+    state = false;
+  }
+
+  void removeCommunityFromUser(String userId, String communityId,BuildContext context) async {
+    state = true;
+    final res =
+        await _socialRepository.removeCommunityFromUser(userId, communityId);
+    res.fold((l) => Utils.snackBar(l.message, context),
+        (r) => Utils.snackBar(r, context));
     state = false;
   }
 }

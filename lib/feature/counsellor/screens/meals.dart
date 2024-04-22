@@ -1,3 +1,4 @@
+import 'package:com.while.while_app/feature/counsellor/screens/counsellers_list.dart';
 import 'package:flutter/material.dart';
 
 import '../models/meal.dart';
@@ -63,11 +64,8 @@ class MealsScreen extends StatelessWidget {
     if (title == null) {
       return content;
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title!),
-      ),
-      body: content,
+    return CounsellorDetails(
+      counsellorId: title!,
     );
   }
 }

@@ -32,7 +32,9 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
             child: (!user!.isContentCreator && !user.isApproved)
                 ? const BecomeCreator()
                 : (!user.isContentCreator && user.isApproved)
-                    ? const UnderReviewScreen()
+                    ? const UnderReviewScreen(
+                        type: "Creator",
+                      )
                     : const MainCreatorScreen()));
   }
 }

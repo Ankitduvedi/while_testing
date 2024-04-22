@@ -33,8 +33,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0),
       color: Colors.white,
-      //elevation: 5,
-      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 0,
       child: InkWell(
           onTap: () {
             // for navigating to chat screen
@@ -42,7 +41,8 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => CCommunityDetailScreen(user: widget.user)));
+                    builder: (_) =>
+                        CCommunityDetailScreen(community: widget.user)));
           },
           child: StreamBuilder(
             stream: fireService.getLastCommunityMessage(widget.user),

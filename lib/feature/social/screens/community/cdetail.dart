@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/community_detail_resources_widget%20.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/community_detail_opportunities_widget.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/community_detail_quiz_widget.dart';
-import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/profile_screen_community_admin.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/profileCommunity_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,9 +14,9 @@ import '../../../../data/model/community_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CCommunityDetailScreen extends ConsumerStatefulWidget {
-  const CCommunityDetailScreen({Key? key, required this.user})
+  const CCommunityDetailScreen({Key? key, required this.community})
       : super(key: key);
-  final Community user;
+  final Community community;
   @override
   ConsumerState<CCommunityDetailScreen> createState() =>
       _CCommunityDetailScreenState();
@@ -24,6 +24,13 @@ class CCommunityDetailScreen extends ConsumerStatefulWidget {
 
 class _CCommunityDetailScreenState
     extends ConsumerState<CCommunityDetailScreen> {
+  late Community community;
+  @override
+  void initState() {
+    super.initState();
+    community = widget.community;
+  }
+
   /// List of Tab Bar Item
 
   List<String> itemsName = const [
@@ -40,14 +47,14 @@ class _CCommunityDetailScreenState
     log(keyboardSpace.toString());
     List items = [
       CChatScreen(
-        user: widget.user,
+        community: community,
       ),
       const CommunityDetailResources(),
       OpportunitiesScreen(
-        user: widget.user,
+        user: community,
       ),
       QuizScreen(
-        user: widget.user,
+        user: community,
       ),
     ];
     return Scaffold(
@@ -59,17 +66,17 @@ class _CCommunityDetailScreenState
         automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () {
-            if (widget.user.email == ref.read(apisProvider).me.email) {
+            if (community.email == ref.read(userProvider)!.email) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => ProfileScreen(user: widget.user)));
+                      builder: (_) => ProfileScreen(user: community)));
             } else {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) =>
-                          ProfileScreenParticipant(user: widget.user)));
+                          ProfileScreenParticipant(user: community)));
             }
           },
           child: Row(
@@ -77,13 +84,13 @@ class _CCommunityDetailScreenState
             children: [
               IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back, color: Colors.blue.shade300)),
+                  icon: const Icon(Icons.arrow_back, color: Colors.black)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(
                   width: 42,
                   height: 42,
-                  imageUrl: widget.user.image,
+                  imageUrl: community.image,
                   fit: BoxFit.fill,
                   placeholder: (context, url) => const Padding(
                     padding: EdgeInsets.all(8.0),
@@ -98,7 +105,7 @@ class _CCommunityDetailScreenState
               const SizedBox(
                 width: 15,
               ),
-              Text(widget.user.name,
+              Text(community.name,
                   style: GoogleFonts.ptSans(
                       color: Colors.black, fontWeight: FontWeight.w400)),
             ],

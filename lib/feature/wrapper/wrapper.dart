@@ -5,6 +5,7 @@ import 'package:com.while.while_app/feature/auth/screens/login_screen.dart';
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
 import 'package:com.while.while_app/home_screen.dart';
 import 'package:com.while.while_app/feature/intro_screens/onboarding_screen.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,6 +45,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
         if (firedata != null) {
           //user provider data
           if (user != null) {
+            ref.watch(apisProvider).getFirebaseMessagingToken();
             return const HomeScreen();
           } else {
             //function that will trigger provider update

@@ -14,9 +14,9 @@ class UserDataProvider with ChangeNotifier {
   String coluid = 'uid';
   final Ref ref;
 
-  // late final StreamSubscription<DocumentSnapshot> _userSubscription;
-  // late final StreamSubscription<QuerySnapshot> _followingSubscription;
-  // late final StreamSubscription<QuerySnapshot> _followerSubscription;
+  late final StreamSubscription<DocumentSnapshot> _userSubscription;
+  late final StreamSubscription<QuerySnapshot> _followingSubscription;
+  late final StreamSubscription<QuerySnapshot> _followerSubscription;
   bool _isDisposed = false;
 
   UserDataProvider(this.ref) {
@@ -47,9 +47,31 @@ class UserDataProvider with ChangeNotifier {
           _userData = user;
           ref.read(userProvider.notifier).update((state) => user);
         }
+        _userSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.uid)
+            .snapshots()
+            .listen((snapshot) {
+          _userUpdateListener(snapshot);
+        });
+
+        _followingSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.uid)
+            .collection('following')
+            .snapshots()
+            .listen(_followingUpdateListener);
+
+        _followerSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.uid)
+            .collection('follower')
+            .snapshots()
+            .listen(_followerUpdateListener);
         ;
       } catch (e) {
         print(" error is ${e.toString()}");
+        // User data subscription
       }
     }
   }
@@ -71,6 +93,20 @@ class UserDataProvider with ChangeNotifier {
   void _userUpdateListener(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     if (snapshot.exists && !_isDisposed) {
       _userData = ChatUser.fromJson(snapshot.data()!);
+      _safeNotifyListeners();
+    }
+  }
+
+  void _followingUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.following = snapshot.docs.length;
+      _safeNotifyListeners();
+    }
+  }
+
+  void _followerUpdateListener(QuerySnapshot snapshot) {
+    if (!_isDisposed) {
+      _userData.follower = snapshot.docs.length;
       _safeNotifyListeners();
     }
   }

@@ -32,7 +32,7 @@ class _CounsellorScreenState extends river.ConsumerState<CounsellorScreen> {
         body: (!user!.isCounsellor && !user.isCounsellorVerified)
             ? const BecomeCounsellor()
             : (!user.isCounsellor && user.isCounsellorVerified)
-                ? const UnderReviewScreen()
+                ? const UnderReviewScreen(type: "Counsellor",)
                 : const MainCreatorScreen());
   }
 }

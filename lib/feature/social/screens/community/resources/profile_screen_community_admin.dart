@@ -2,7 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/avail_users_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +31,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   void _openUserListDialog(String id, List<ChatUser> listUsers) {
     log("community id$id");
-    showDialog(
-      context: context,
-      builder: (context) => UserListDialog(
-        commId: id,
-        list: listUsers,
-      ),
-    );
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => UserListDialog(
+                  commId: id,
+                  list: listUsers,
+                )));
   }
 
   // Initialize the TextEditingController in your state
@@ -58,10 +58,31 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Scaffold(
           //app bar
           appBar: AppBar(
-              title: Text(
-            widget.user.name,
-            style: const TextStyle(color: Colors.black),
-          )),
+            title: Text(
+              widget.user.name,
+              style: const TextStyle(color: Colors.black),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  CupertinoIcons.person_add_solid,
+                  size: 28,
+                  color: Colors.deepPurple,
+                ),
+                onPressed: () {
+                  _openUserListDialog(widget.user.id, list);
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    log(community.toJson().toString());
+                    fireService.updateCommunityInfo(community).then((value) {
+                      Dialogs.showSnackbar(
+                          context, 'Added Users Successfully!');
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
 
           //body
           body: Form(
@@ -273,32 +294,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   return Column(
                                     children: [
                                       // Add participants
-                                      TextButton.icon(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: const StadiumBorder(),
-                                            minimumSize: Size(mq.width * .2,
-                                                mq.height * .02)),
-                                        onPressed: () {
-                                          _openUserListDialog(
-                                              widget.user.id, list);
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState!.save();
-                                            log(community.toJson().toString());
-                                            fireService
-                                                .updateCommunityInfo(community)
-                                                .then((value) {
-                                              Dialogs.showSnackbar(context,
-                                                  'Profile Updated Successfully!');
-                                            });
-                                          }
-                                        },
-                                        label: const Text('Add Participants',
-                                            style: TextStyle(fontSize: 16)),
-                                        icon: const Icon(
-                                            CupertinoIcons.person_add_solid,
-                                            size: 28),
-                                      ),
                                       ListView.builder(
                                         physics:
                                             const NeverScrollableScrollPhysics(),
@@ -365,34 +360,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                           actions: [
                                                             OutlinedButton(
                                                               onPressed: () {
-                                                                FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'communities')
-                                                                    .doc(
+                                                                ref
+                                                                    .read(socialControllerProvider
+                                                                        .notifier)
+                                                                    .removeUserFromCommunity(
                                                                         community
-                                                                            .id)
-                                                                    .collection(
-                                                                        'participants')
-                                                                    .doc(list[
-                                                                            index]
-                                                                        .id)
-                                                                    .delete();
-                                                                FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'users')
-                                                                    .doc(list[
-                                                                            index]
-                                                                        .id)
-                                                                    .collection(
-                                                                        'my_communities')
-                                                                    .doc(
-                                                                        community
-                                                                            .id)
-                                                                    .delete();
-                                                                // Delete user logic here
-                                                                // You can call an API to delete the user from the community
+                                                                            .id,
+                                                                        list[index]
+                                                                            .id,
+                                                                        context);
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop(); // Close the dialog
@@ -410,25 +386,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                                       .currentState!
                                                                       .save();
 
+                                                                  ref.read(socialControllerProvider.notifier).uddateDesignation(
+                                                                      community
+                                                                          .id,
+                                                                      list[index]
+                                                                          .id,
+                                                                      designation,
+                                                                      context);
                                                                   Navigator.of(
                                                                           context)
                                                                       .pop();
-                                                                  FirebaseFirestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          'communities')
-                                                                      .doc(community
-                                                                          .id)
-                                                                      .collection(
-                                                                          'participants')
-                                                                      .doc(list[
-                                                                              index]
-                                                                          .id)
-                                                                      .update({
-                                                                    'designation':
-                                                                        designation
-                                                                  });
-                                                                  // Close the dialog
                                                                 }
                                                               },
                                                               child: const Text(

@@ -5,15 +5,26 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/route_manager.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
 import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'core/routes/routes.dart';
 import 'package:get/get.dart';
 
 late Size mq;
+final theme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.light,
+    seedColor: const Color.fromARGB(255, 131, 57, 0),
+  ),
+  textTheme: GoogleFonts.latoTextTheme(),
+);
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -28,12 +39,12 @@ void main() async {
 }
 
 Future<void> _initializeFirebase() async {
-  // var result = await FlutterNotificationChannel.registerNotificationChannel(
-  //   description: 'For showing notification',
-  //   id: 'chats',
-  //   importance: NotificationImportance.IMPORTANCE_HIGH,
-  //   name: 'WHILE',
-  // );
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+    description: 'For showing notification',
+    id: 'chats',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'WHILE',
+  );
   // Optionally print the result
   await initDynamicLinks();
 }
@@ -85,6 +96,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
     return MaterialApp(
+      theme: theme,
       routes: {
         '/profile': (BuildContext context) => const HomeScreen(),
       },
