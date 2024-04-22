@@ -7,6 +7,7 @@ import 'package:com.while.while_app/providers/connect_users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 
 class MessageHomeWidget extends ConsumerWidget {
   const MessageHomeWidget({Key? key}) : super(key: key);
@@ -14,7 +15,10 @@ class MessageHomeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
-    final myUsersAsyncValue = ref.watch(myUsersUidsProvider);
+    var user = ref.watch(userDataProvider).userData!;
+    // user = ref.watch(userDataProvider).userData!;
+    // print("user uid is ${user.id}");
+    final myUsersAsyncValue = ref.watch(myUsersUidsProvider(user.id));
     var toogleSearch = ref.watch(toggleSearchStateProvider);
     final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
     return Scaffold(
@@ -63,10 +67,10 @@ class MessageHomeWidget extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          error: (e, _) => Center(child: Text('Error1: $e')),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text('Error2: $e')),
       ),
     );
   }

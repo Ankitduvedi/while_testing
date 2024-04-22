@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,11 +20,12 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
       ref: ref);
 });
 
-class AuthRepository {
+class AuthRepository extends ConsumerStatefulWidget {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
   final Ref _ref;
+
   AuthRepository(
       {required FirebaseFirestore firestore,
       required FirebaseAuth auth,
@@ -98,6 +101,10 @@ class AuthRepository {
       } else {
         final ChatUser user =
             ChatUser.fromJson(userDoc.data() as Map<String, dynamic>);
+        UserDataProvider userDataProvider =
+            UserDataProvider(_ref); // Create an instance
+        userDataProvider.updateUserData(user);
+
         return right(user);
       }
     } on FirebaseAuthException catch (e) {
@@ -196,8 +203,8 @@ class AuthRepository {
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
           } else {
-            userModel = await getUserData(newUser.uid)
-                .first; // Assume this fetches the user correctly
+            userModel = await getUserData(
+                newUser.uid); // Assume this fetches the user correctly
             log("existing user");
           }
           return right(userModel); // Return userModel instead of newUser
@@ -218,13 +225,45 @@ class AuthRepository {
     log(' users given id is /: ${newUser.name}');
     log(newUser.id);
     await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
+    UserDataProvider userDataProvider =
+        UserDataProvider(_ref); // Create an instance
+    userDataProvider.setUserData(newUser);
   }
 
-  Stream<ChatUser> getUserData(String uid) {
-    return _firestore.collection('users').doc(uid).snapshots().map(
-        (event) => ChatUser.fromJson(event.data() as Map<String, dynamic>));
+  Future<ChatUser> getUserData(String uid) async {
+    UserDataProvider userDataProvider =
+        UserDataProvider(_ref); // Create an instance
+    ChatUser user = await userDataProvider.fetchUser(uid);
+    print("user is ${user.toJson()}");
+
+    if (user.id == null || user.id == '') {
+      final docRef = _firestore.collection("users").doc(uid);
+      docRef.get().then((DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        user = ChatUser.fromJson(data);
+        userDataProvider.setUserData(user);
+      });
+    } else {
+      final docRef = _firestore.collection("users").doc(uid);
+      docRef.get().then((DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        user = ChatUser.fromJson(data);
+        userDataProvider.updateUserData(user);
+      });
+    }
+    return user;
   }
 
   Stream<User?> get authStateChange =>
       _ref.read(authProvider).authStateChanges();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
+}
+
+class a {
+  void b() {}
 }

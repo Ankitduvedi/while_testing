@@ -21,7 +21,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
+    var user = ref.watch(userDataProvider).userData!;
 
     ref.watch(userDataProvider);
 

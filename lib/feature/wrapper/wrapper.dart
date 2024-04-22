@@ -21,10 +21,8 @@ class _WrapperState extends ConsumerState<Wrapper> {
   ChatUser? userModel;
 
   void getData(User data) async {
-    userModel = await ref
-        .read(authControllerProvider.notifier)
-        .getUserData(data.uid)
-        .first;
+    userModel =
+        await ref.read(authControllerProvider.notifier).getUserData(data.uid);
     log(userModel!.email);
     ref.read(userProvider.notifier).update((state) => userModel);
     //so that ui rebuilds

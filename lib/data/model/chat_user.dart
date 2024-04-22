@@ -54,13 +54,15 @@ class ChatUser {
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
-    isCounsellor = json['isCounsellor'] ?? false;
-    isCounsellorVerified = json['isCounsellorVerified'] ?? false;
+    print("json is $json");
+    isCounsellor = (json['isCounsellor'] == 0 ? false : true) ?? false;
+    isCounsellorVerified =
+        (json['isCounsellorVerified'] == 0 ? false : true) ?? false;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = json['is_online'] ?? false;
+    isOnline = (json['is_online'] == 0 ? false : true) ?? false;
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     email = json['email'] ?? '';
@@ -78,20 +80,20 @@ class ChatUser {
     hardQuestions = json['hardQuestions'] ?? 0;
     lives = json['lives'] ?? 0;
     // Add the new field
-    isContentCreator = json['isContentCreator'] ?? false;
-    isApproved = json['isApproved'] ?? false;
+    isContentCreator = (json['isContentCreator'] == 0 ? false : true) ?? false;
+    isApproved = (json['isApproved'] == 0 ? false : true) ?? false;
   }
 
   // Update toJson method to include the new field
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['isCounsellor'] = isCounsellor;
-    data['isCounsellorVerified'] = isCounsellorVerified;
+    data['isCounsellor'] = isCounsellor == true ? 1 : 0;
+    data['isCounsellorVerified'] = isCounsellorVerified == true ? 1 : 0;
     data['image'] = image;
     data['about'] = about;
     data['name'] = name;
     data['created_at'] = createdAt;
-    data['is_online'] = isOnline;
+    data['is_online'] = isOnline == true ? 1 : 0;
     data['id'] = id;
     data['last_active'] = lastActive;
     data['email'] = email;
@@ -109,8 +111,8 @@ class ChatUser {
     data['hardQuestions'] = hardQuestions;
     data['lives'] = lives;
     // Add the new field
-    data['isContentCreator'] = isContentCreator;
-    data['isApproved'] = isApproved;
+    data['isContentCreator'] = isContentCreator == true ? 1 : 0;
+    data['isApproved'] = isApproved == true ? 1 : 0;
     return data;
   }
 
