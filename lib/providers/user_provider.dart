@@ -34,11 +34,9 @@ class UserDataProvider with ChangeNotifier {
 
     if (auth != null) {
       try {
-        print("called");
         ChatUser user = await fetchUser(auth.uid);
-        print("userdata is ${user.toJson()}");
-        if (user.id == null || user.id == '') {
-          print("entered");
+
+        if (user.id == null || user.id == '' || user.email == '') {
           user = await fetchUserFirebase();
           _userData = user;
           ref.read(userProvider.notifier).update((state) => user);
@@ -118,9 +116,9 @@ class UserDataProvider with ChangeNotifier {
   @override
   void dispose() {
     _isDisposed = true;
-    // _userSubscription.cancel();
-    // _followingSubscription.cancel();
-    // _followerSubscription.cancel();
+    _userSubscription.cancel();
+    _followingSubscription.cancel();
+    _followerSubscription.cancel();
     super.dispose();
   }
 
@@ -153,11 +151,17 @@ class UserDataProvider with ChangeNotifier {
 
   Future<ChatUser> setUserData(ChatUser newUser) async {
     final db = await DatabaseHelper().database;
+    final auth = FirebaseAuth.instance.currentUser;
     await db!.insert(
       UsersTable,
       newUser.toJson(),
     );
     _userData = newUser;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth?.uid)
+        .set(newUser.toJson());
+    ref.read(userProvider.notifier).update((state) => newUser);
     return newUser;
   }
 
@@ -184,9 +188,7 @@ class UserDataProvider with ChangeNotifier {
       } catch (e) {
         log('Error updating user data: $e');
       }
-    } else {
-      print("enter");
-    }
+    } else {}
   }
 }
 

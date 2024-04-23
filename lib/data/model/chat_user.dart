@@ -26,6 +26,7 @@ class ChatUser {
     required this.isCounsellor,
     required this.isCounsellorVerified,
   });
+
   late String image;
   late String about;
   late String name;

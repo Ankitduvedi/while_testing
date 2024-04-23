@@ -203,8 +203,42 @@ class AuthRepository extends ConsumerStatefulWidget {
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
           } else {
+            final time = DateTime.now().millisecondsSinceEpoch.toString();
+            ChatUser newusemodel = ChatUser(
+                lives: 0,
+                easyQuestions: 0,
+                id: newUser.uid,
+                hardQuestions: 0,
+                mediumQuestions: 0,
+                name: newUser.displayName.toString(),
+                email: newUser.email.toString(),
+                about: 'Hey I am ${newUser.displayName}',
+                image:
+                    'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
+                createdAt: time,
+                isOnline: false,
+                lastActive: time,
+                pushToken: '',
+                dateOfBirth: '',
+                gender: '',
+                phoneNumber: '',
+                place: '',
+                profession: '',
+                designation: 'Member',
+                follower: 0,
+                following: 0,
+                isContentCreator: false,
+                isApproved: false,
+                isCounsellor: false,
+                isCounsellorVerified: false);
+
             userModel = await getUserData(
-                newUser.uid); // Assume this fetches the user correctly
+              newUser.uid,
+            ); // Assume this fetches the user correctly
+            if (userModel.id == '' || userModel.id == null) {
+              userModel = newusemodel;
+              createNewUser(newusemodel);
+            }
             log("existing user");
           }
           return right(userModel); // Return userModel instead of newUser
@@ -230,11 +264,12 @@ class AuthRepository extends ConsumerStatefulWidget {
     userDataProvider.setUserData(newUser);
   }
 
-  Future<ChatUser> getUserData(String uid) async {
+  Future<ChatUser> getUserData(
+    String uid,
+  ) async {
     UserDataProvider userDataProvider =
         UserDataProvider(_ref); // Create an instance
     ChatUser user = await userDataProvider.fetchUser(uid);
-    print("user is ${user.toJson()}");
 
     if (user.id == null || user.id == '') {
       final docRef = _firestore.collection("users").doc(uid);
@@ -242,13 +277,6 @@ class AuthRepository extends ConsumerStatefulWidget {
         final data = doc.data() as Map<String, dynamic>;
         user = ChatUser.fromJson(data);
         userDataProvider.setUserData(user);
-      });
-    } else {
-      final docRef = _firestore.collection("users").doc(uid);
-      docRef.get().then((DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        user = ChatUser.fromJson(data);
-        userDataProvider.updateUserData(user);
       });
     }
     return user;

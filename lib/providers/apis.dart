@@ -831,7 +831,7 @@ class APIs {
     log('Push Tokens : ');
     await fMessaging.requestPermission();
     await fMessaging.getToken().then((t) {
-      final user = _ref.read(userProvider);
+      final user = _ref.read(userDataProvider).userData;
       if (t != null) {
         user!.pushToken = t;
         _ref.read(userDataProvider).updateUserData(user);
