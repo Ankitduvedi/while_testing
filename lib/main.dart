@@ -17,6 +17,7 @@ import 'core/routes/routes.dart';
 import 'package:get/get.dart';
 
 late Size mq;
+String? activeChatUserId;
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
