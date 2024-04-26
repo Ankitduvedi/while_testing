@@ -27,6 +27,8 @@ class MessageHomeWidget extends ConsumerWidget {
       body: allUsersAsyncValue.when(
         data: (allUsers) => myUsersAsyncValue.when(
           data: (followingUsers) {
+            print("all users ${allUsers[1].toJson()}");
+            print("following users ${followingUsers}");
             final nonFollowingUsers = followingUsers
                 .map((userId) => allUsers.firstWhere(
                       (user) => user.id == userId,
@@ -34,6 +36,7 @@ class MessageHomeWidget extends ConsumerWidget {
                           .empty(), // Provide a fallback value to avoid the error
                     ))
                 .toList();
+            print("nonflowers ${nonFollowingUsers[0].toJson()}");
             var usersList = toogleSearch == 2
                 ? nonFollowingUsers
                     .where(

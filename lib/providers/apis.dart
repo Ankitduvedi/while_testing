@@ -530,6 +530,7 @@ class APIs {
   //get only last message of a specific chat
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(ChatUser user) {
+    print(" conversation id ${getConversationID(user.id)}");
     return firestore
         .collection('chats/${getConversationID(user.id)}/messages/')
         .orderBy('sent', descending: true)
