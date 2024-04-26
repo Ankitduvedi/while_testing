@@ -1,9 +1,13 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
+import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
+import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/feature/creator/screens/create_screen.dart';
@@ -21,6 +25,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   bool blackColor = false;
   late TabController _controller;
+  late final FirebaseMessaging _messaging;
+  late final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   @override
   void initState() {
     final fireSevice = ref.read(apisProvider);
@@ -40,6 +46,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
     super.initState();
     _controller = TabController(length: 5, vsync: this, initialIndex: 0);
+
+    _messaging = FirebaseMessaging.instance;
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    _initializeNotification();
+    _requestPermission();
+    _handleForegroundNotifications();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      log('A new onMessageOpenedApp event was published!');
+      // Navigate to desired screen based on message
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MessageHomeWidget(),
+          ));
+    });
+
+    _checkInitialMessage();
+  }
+
+  void _checkInitialMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    log('initial message');
+
+    if (initialMessage != null) {
+      // Navigate to desired screen based on initialMessage
+    }
+  }
+
+  void _initializeNotification() async {
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings(
+            '@mipmap/ic_launcher'); // Set your app icon here
+    //const IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings();
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidInitializationSettings,
+      //iOS: iosInitializationSettings,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _requestPermission() {
+    _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+    );
+  }
+
+  void _handleForegroundNotifications() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        _flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'channel_id',
+              'channel_name',
+              channelDescription: 'channel_description',
+              icon: android.smallIcon,
+              // other properties...
+            ),
+          ),
+        );
+      }
+    });
   }
 
   @override

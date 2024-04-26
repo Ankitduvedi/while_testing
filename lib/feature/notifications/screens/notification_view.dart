@@ -21,16 +21,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     final notificationsAsyncValue = ref.watch(myNotificationsProvider);
-    const backgroundColor = Color(0xFFF0F0F3);
-    const shadowColor = Color(0xFFD1D9E6);
-    const lightShadowColor = Colors.white;
 
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Notifications'),
-        backgroundColor: backgroundColor,
+        title: const Text('Notifications',
+            style: TextStyle(color: Colors.black87)),
+        backgroundColor: Colors.white,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: notificationsAsyncValue.when(
         data: (List<Map<String, dynamic>> notifications) {
@@ -48,32 +47,48 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   timeago.format(notificationTime, allowFromNow: true);
 
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: backgroundColor,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: shadowColor,
-                          offset: Offset(-6, -6),
-                          blurRadius: 10),
-                      BoxShadow(
-                          color: lightShadowColor,
-                          offset: Offset(6, 6),
-                          blurRadius: 10),
-                    ],
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey[300]!,
+                    //     offset: const Offset(4, 4),
+                    //     blurRadius: 15,
+                    //     spreadRadius: 1,
+                    //   ),
+                    //   const BoxShadow(
+                    //     color: Colors.white,
+                    //     offset: Offset(-4, -4),
+                    //     blurRadius: 15,
+                    //     spreadRadius: 1,
+                    //   ),
+                    // ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                          child: Text(notificationText,
-                              style: const TextStyle(fontSize: 16))),
-                      Text(timeAgo,
+                        child: Text(
+                          notificationText,
                           style: const TextStyle(
-                              color: Colors.grey, fontSize: 14)),
+                            fontSize: 16,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        timeAgo,
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
                     ],
                   ),
                 ),

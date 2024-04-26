@@ -40,12 +40,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         });
       }
     });
+    activeChatUserId = widget.user.id;
   }
 
   @override
   void dispose() {
     _textController.dispose();
     _focusNode.dispose();
+    activeChatUserId = null;
     super.dispose();
   }
 
