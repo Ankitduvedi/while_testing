@@ -65,8 +65,8 @@ class AddVideoState extends ConsumerState<AddVideo> {
 // Api.video
     uploadVideo(File videoFile, String id) async {
       Dialogs.showSnackbar(context, 'Function called');
-      const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-      const apiUrl = 'https://sandbox.api.video/videos';
+      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+      const apiUrl = 'https://ws.api.video/videos';
 
       var request = http.MultipartRequest(
           'POST', Uri.parse('$apiUrl/$id/source'))
@@ -130,8 +130,8 @@ class AddVideoState extends ConsumerState<AddVideo> {
 
     createVideo(String title, String description) async {
       Dialogs.showSnackbar(context, 'Called');
-      const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-      const apiUrl = 'https://sandbox.api.video';
+      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+      const apiUrl = 'https://ws.api.video';
       final response = await http.post(
         Uri.parse('$apiUrl/videos'),
         headers: {
