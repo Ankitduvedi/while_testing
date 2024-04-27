@@ -35,7 +35,7 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
           Text(
             'Become Creator',
             style: GoogleFonts.ptSans(
-                color: Colors.lightBlueAccent,
+                color: Colors.blue[400],
                 fontSize: 24,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
@@ -80,10 +80,22 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent),
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue[400], // Text and icon color if used
+              shadowColor: Colors.blue[200], // Shadow color
+              elevation: 10, // Shadow elevation
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Rounded corners
+              ),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30, vertical: 15), // Button padding
+            ),
             child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('Submit'),
+                : const Text(
+                    'Submit',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
           ),
         ],
       ),

@@ -24,8 +24,11 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           centerTitle: false,
-          title: Text('Studio',
-              style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
+          title: Text(
+            'Studio',
+            style:
+                TextStyle(color: Colors.blue[400], fontWeight: FontWeight.w800),
+          ),
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
