@@ -15,7 +15,9 @@ class AddOpportunityScreen extends StatefulWidget {
 
 class AddOpportunityScreenState extends State<AddOpportunityScreen> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController organizationController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController tagsController = TextEditingController();
   final TextEditingController urlController = TextEditingController();
 
   @override
@@ -53,6 +55,31 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
                 ),
                 hintStyle: TextStyle(color: Colors.black),
                 suffixStyle: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextField(
+              controller: organizationController,
+              decoration: const InputDecoration(
+                labelText: 'Organization Name',
+                labelStyle: TextStyle(color: Colors.black),
+                // focusedBorder: UnderlineInputBorder(
+                //   borderSide: BorderSide(color: Colors.blue),
+                // ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
+                ),
+                hintStyle: TextStyle(color: Colors.black),
+                suffixStyle: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextField(
+              controller: tagsController,
+              decoration: const InputDecoration(
+                labelText: 'Tags (comma-separated)',
+                labelStyle: TextStyle(color: Colors.black),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.lightBlueAccent),
+                ),
               ),
             ),
             TextField(
@@ -94,28 +121,37 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
   }
 
   void _uploadOpportunity() {
-    final newOpportunity = Opportunity(
-      id: uuid.v4(),
-      name: nameController.text,
-      description: descriptionController.text,
-      url: urlController.text,
-    );
+  final List<String> tagsList = tagsController.text.split(',').map((tag) => tag.trim()).toList();
+  
+  final newOpportunity = Opportunity(
+    id: uuid.v4(),
+    name: nameController.text,
+    organization: organizationController.text,
+    description: descriptionController.text,
+    url: urlController.text,
+    tags: tagsList, // Add tags
+  );
 
-    FirebaseFirestore.instance
-        .collection('communities')
-        .doc(widget.user.id)
-        .collection('opportunities')
-        .doc(newOpportunity.id)
-        .set({
-      'name': newOpportunity.name,
-      'description': newOpportunity.description,
-      'url': newOpportunity.url,
-      'id': newOpportunity.id,
-    }).then((_) {
-      // After successful upload, clear the text fields
-      nameController.clear();
-      descriptionController.clear();
-      urlController.clear();
-    });
-  }
+  FirebaseFirestore.instance
+      .collection('communities')
+      .doc(widget.user.id)
+      .collection('opportunities')
+      .doc(newOpportunity.id)
+      .set({
+    'name': newOpportunity.name,
+    'organization': newOpportunity.organization,
+    'description': newOpportunity.description,
+    'url': newOpportunity.url,
+    'id': newOpportunity.id,
+    'tags': newOpportunity.tags, // Store tags in Firestore
+  }).then((_) {
+    // Clear all fields including tags after uploading
+    nameController.clear();
+    organizationController.clear();
+    descriptionController.clear();
+    urlController.clear();
+    tagsController.clear();
+  });
+}
+
 }
