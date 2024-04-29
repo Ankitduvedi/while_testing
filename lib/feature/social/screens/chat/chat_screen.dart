@@ -29,6 +29,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final FocusNode _focusNode = FocusNode();
   bool _showEmoji = false;
   bool _isUploading = false; // Ensure this is not final if its value can change
+  List<Message> messages = [];
 
   @override
   void initState() {
@@ -134,7 +135,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         case ConnectionState.waiting:
                         case ConnectionState.none:
                           return Text(
-                              user.isOnline
+                              user.isOnline == 1
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,
@@ -146,8 +147,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         case ConnectionState.active:
                         case ConnectionState.done:
                           final data = snapshot.data;
+                          log('active status of a user is ${data!.name} ,${data.isOnline} ');
                           return Text(
-                              data!.isOnline
+                              data.isOnline == 1
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,
@@ -175,7 +177,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           if (!snapshot.hasData) {
             return const Center(child: Text("No messages yet."));
           }
-          List<Message> messages = snapshot.data!;
+          messages = snapshot.data!;
           if (messages.isNotEmpty) {
             return ListView.builder(
               reverse: true,
@@ -261,8 +263,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     icon: const Icon(Icons.send),
                     onPressed: () {
                       if (_textController.text.isNotEmpty) {
-                        fireServices.sendMessage(
-                            user, _textController.text, Type.text);
+                        if (messages.isNotEmpty) {
+                          fireServices.sendMessage(
+                              user, _textController.text, Type.text);
+                        } else {
+                          fireServices.sendFirstMessage(
+                              user, _textController.text, Type.text);
+                        }
                         _textController.clear();
                       }
                     },

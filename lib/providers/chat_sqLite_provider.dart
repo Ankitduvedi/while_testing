@@ -1,12 +1,9 @@
 import 'package:com.while.while_app/data/model/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../data/model/chat_user.dart';
 import 'chat_SqLite_methods.dart';
-import 'draft_method.dart';
 
 class ChatDb with ChangeNotifier {
   String UsersTable = 'users';

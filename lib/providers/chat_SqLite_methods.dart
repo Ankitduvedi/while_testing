@@ -1,9 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:path_provider/path_provider.dart';
 import 'package:com.while.while_app/providers/chat_sqLite_provider.dart';
-
-import 'draft_provider.dart';
 
 class ChatDatabaseHelper {
   Database? _database;

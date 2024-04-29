@@ -29,10 +29,12 @@ class _CounsellorScreenState extends river.ConsumerState<CounsellorScreen> {
               style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
         ),
         backgroundColor: Colors.white,
-        body: (!user!.isCounsellor && !user.isCounsellorVerified)
+        body: (user!.isCounsellor == 0 && user.isCounsellorVerified == 0)
             ? const BecomeCounsellor()
-            : (!user.isCounsellor && user.isCounsellorVerified)
-                ? const UnderReviewScreen(type: "Counsellor",)
+            : (user.isCounsellor == 0 && user.isCounsellorVerified == 1)
+                ? const UnderReviewScreen(
+                    type: "Counsellor",
+                  )
                 : const MainCreatorScreen());
   }
 }

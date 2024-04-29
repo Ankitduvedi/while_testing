@@ -135,6 +135,14 @@
           }
         },
         {
+          "client_id": "759556546667-ookc7rtfmi0229hmr9eul2pqtlosqhm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
+            "certificate_hash": "7294aa7ef3396212ca4f07036078ac744bc43018"
+          }
+        },
+        {
           "client_id": "759556546667-2r6uceigpaj3imq1avid8ea4qs92n16h.apps.googleusercontent.com",
           "client_type": 3
         }

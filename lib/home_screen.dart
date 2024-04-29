@@ -36,10 +36,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
       if (fireSevice.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
-          fireSevice.updateActiveStatus(true);
+          fireSevice.updateActiveStatus(1);
         }
         if (message.toString().contains('pause')) {
-          fireSevice.updateActiveStatus(false);
+          fireSevice.updateActiveStatus(0);
         }
       }
       return Future.value(message);

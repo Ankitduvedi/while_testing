@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/repository/firebase_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,7 +41,7 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
     controller.close(); // Close the stream after adding the data
   }).catchError((error) {
     // Handle errors here if necessary
-    print("Error fetching user data: $error");
+    log("Error fetching user data: $error");
     controller.close(); // Close the stream in case of error
   });
 

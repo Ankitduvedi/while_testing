@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class ChatUser {
   ChatUser({
     required this.image,
@@ -31,7 +33,7 @@ class ChatUser {
   late String about;
   late String name;
   late String createdAt;
-  late bool isOnline;
+  late int isOnline;
   late String id;
   late String lastActive;
   late String email;
@@ -48,22 +50,21 @@ class ChatUser {
   late int mediumQuestions;
   late int hardQuestions;
   late int lives;
-  late bool isContentCreator;
-  late bool isCounsellor;
-  late bool isCounsellorVerified;
-  late bool isApproved;
+  late int isContentCreator;
+  late int isCounsellor;
+  late int isCounsellorVerified;
+  late int isApproved;
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
-    print("json is $json");
-    isCounsellor = (json['isCounsellor'] == 0 ? false : true) ?? false;
-    isCounsellorVerified =
-        (json['isCounsellorVerified'] == 0 ? false : true) ?? false;
+    log("json is $json");
+    isCounsellor = json['isCounsellor'] ?? 0;
+    isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = (json['is_online'] == 0 ? false : true) ?? false;
+    isOnline = json['is_online'] ?? 0;
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     email = json['email'] ?? '';
@@ -80,21 +81,21 @@ class ChatUser {
     mediumQuestions = json['mediumQuestions'] ?? 0;
     hardQuestions = json['hardQuestions'] ?? 0;
     lives = json['lives'] ?? 0;
+    isContentCreator = json['isContentCreator'] ?? 0;
+    isApproved = json['isApproved'] ?? 0;
     // Add the new field
-    isContentCreator = (json['isContentCreator'] == 0 ? false : true) ?? false;
-    isApproved = (json['isApproved'] == 0 ? false : true) ?? false;
   }
 
   // Update toJson method to include the new field
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['isCounsellor'] = isCounsellor == true ? 1 : 0;
-    data['isCounsellorVerified'] = isCounsellorVerified == true ? 1 : 0;
+    data['isCounsellor'] = isCounsellor;
+    data['isCounsellorVerified'] = isCounsellorVerified;
     data['image'] = image;
     data['about'] = about;
     data['name'] = name;
     data['created_at'] = createdAt;
-    data['is_online'] = isOnline == true ? 1 : 0;
+    data['is_online'] = isOnline;
     data['id'] = id;
     data['last_active'] = lastActive;
     data['email'] = email;
@@ -111,9 +112,9 @@ class ChatUser {
     data['mediumQuestions'] = mediumQuestions;
     data['hardQuestions'] = hardQuestions;
     data['lives'] = lives;
+    data['isContentCreator'] = isContentCreator;
+    data['isApproved'] = isApproved;
     // Add the new field
-    data['isContentCreator'] = isContentCreator == true ? 1 : 0;
-    data['isApproved'] = isApproved == true ? 1 : 0;
     return data;
   }
 
@@ -152,8 +153,8 @@ class ChatUser {
   // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
-        isCounsellor: false,
-        isCounsellorVerified: false,
+        isCounsellor: 0,
+        isCounsellorVerified: 0,
         lives: 0,
         easyQuestions: 0,
         image: '',
@@ -162,7 +163,7 @@ class ChatUser {
         mediumQuestions: 0,
         name: '',
         createdAt: '',
-        isOnline: false,
+        isOnline: 0,
         id: '',
         lastActive: '',
         email: '',
@@ -175,9 +176,9 @@ class ChatUser {
         designation: '',
         follower: 0,
         following: 0,
-        // Initialize the new field
-        isContentCreator: false,
-        isApproved: false);
+        isContentCreator: 0,
+        isApproved: 0);
+    // Initialize the new field
   }
 
   // Add a copyWith method
@@ -186,7 +187,7 @@ class ChatUser {
     String? about,
     String? name,
     String? createdAt,
-    bool? isOnline,
+    int? isOnline,
     String? id,
     String? lastActive,
     String? email,
@@ -203,10 +204,10 @@ class ChatUser {
     int? mediumQuestions,
     int? hardQuestions,
     int? lives,
-    bool? isContentCreator,
-    bool? isApproved,
-    bool? isCounsellor,
-    bool? isCounsellorVerified,
+    int? isContentCreator,
+    int? isApproved,
+    int? isCounsellor,
+    int? isCounsellorVerified,
   }) {
     return ChatUser(
       isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,

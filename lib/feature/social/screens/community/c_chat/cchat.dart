@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
@@ -239,6 +240,21 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
               MaterialButton(
                 onPressed: () {
                   if (_textController.text.isNotEmpty) {
+                    Future<void> notifyCommunity(String communityId,
+                        String senderId, String message) async {
+                      List<String> memberTokens = await ref
+                          .read(apisProvider)
+                          .getCommunityMemberTokens(communityId, senderId);
+                      log('notifyCommunity $memberTokens');
+                      if (memberTokens.isNotEmpty) {
+                        await ref.read(apisProvider).sendCommunityNotification(
+                            memberTokens, message, "Community Update");
+                      }
+                    }
+
+                    notifyCommunity(widget.community.id,
+                        ref.read(userProvider)!.id, _textController.text);
+
                     ref
                         .read(socialControllerProvider.notifier)
                         .sendCommunityMessage(widget.community.id,
