@@ -166,57 +166,37 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              final resource = snapshot.data!.docs[index].data();
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      resource['title'] ?? 'Resource $index',
-                      style: const TextStyle(color: Colors.black),
-                    ), // Use the title if available
-                    subtitle: Text(
-                      resource['text'],
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    onTap: () {
-                      // Handle the resource item click
-                      // You can open or download the resource here
-
-                      if (resource['type'] == 'jpg' ||
-                          resource['type'] == 'jpeg' ||
-                          resource['type'] == 'png') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ImageDekhlo(
-                              url: resource['url'], //resource['title']
-                            ),
-                          ),
-                        );
-                      } else if (resource['type'] == 'mp4') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                VideoPlay(url: resource['url']),
-                          ),
-                        );
-                      } else if (resource['type'] == 'pdf') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PdfView(url: resource['url']),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  Divider(
-                    color: Colors.grey.shade300,
-                    thickness: 1,
-                    height: 0,
-                  )
-                ],
+              final resource =
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              return ResourceCard(
+                resource: resource,
+                index: index,
+                onTap: () {
+                  if (resource['type'] == 'jpg' ||
+                      resource['type'] == 'jpeg' ||
+                      resource['type'] == 'png') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ImageDekhlo(url: resource['url']),
+                      ),
+                    );
+                  } else if (resource['type'] == 'mp4') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoPlay(url: resource['url']),
+                      ),
+                    );
+                  } else if (resource['type'] == 'pdf') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PdfView(url: resource['url']),
+                      ),
+                    );
+                  }
+                },
               );
             },
           );
@@ -237,42 +217,43 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
   }
 }
 
-// class VideoPlayerWidget extends StatefulWidget {
-//   final File videoFile;
 
-//   VideoPlayerWidget(this.videoFile);
+class ResourceCard extends StatelessWidget {
+  final Map<String, dynamic> resource;
+  final int index;
+  final Function onTap;
 
-//   @override
-//   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-// }
+  ResourceCard(
+      {required this.resource, required this.index, required this.onTap});
 
-// class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-//   late VideoPlayerController _controller;
+  @override
+  Widget build(BuildContext context) {
+    IconData iconData;
+    switch (resource['type']) {
+      case 'pdf':
+        iconData = Icons.picture_as_pdf;
+        break;
+      case 'mp4':
+        iconData = Icons.videocam;
+        break;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        iconData = Icons.photo;
+        break;
+      default:
+        iconData = Icons.insert_drive_file;
+    }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller = VideoPlayerController.file(widget.videoFile)
-//       ..initialize().then((_) {
-//         setState(() {});
-//       });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_controller.value.isInitialized) {
-//       return AspectRatio(
-//         aspectRatio: _controller.value.aspectRatio,
-//         child: VideoPlayer(_controller),
-//       );
-//     } else {
-//       return const CircularProgressIndicator();
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     super.dispose();
-//     _controller.dispose();
-//   }
-// }
+    return Card(
+      elevation: 4,
+      child: ListTile(
+        leading: Icon(iconData, size: 40),
+        title: Text(resource['title'] ?? 'Resource $index'),
+        subtitle: Text(resource['text'] ?? 'No description provided'),
+        onTap: () => onTap(),
+        trailing: Icon(Icons.menu),
+      ),
+    );
+  }
+}

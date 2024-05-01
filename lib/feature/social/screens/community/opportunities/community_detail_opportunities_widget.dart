@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/AddOpportunityScreen.dart';
 import 'package:com.while.while_app/providers/apis.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Opportunity {
   final String name;
@@ -20,7 +21,7 @@ class Opportunity {
     required this.description,
     required this.url,
     required this.id,
-    this.tags = const [],
+    required this.tags,
   });
 }
 
@@ -36,31 +37,90 @@ class OpportunitiesScreen extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(opportunity.name,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Description:',
-                  style:
-                      TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-              Text(opportunity.description, style: TextStyle(fontSize: 16.0)),
-              SizedBox(height: 16),
-              Text('URL:',
-                  style:
-                      TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-              InkWell(
-                child: Text(opportunity.url,
-                    style: TextStyle(fontSize: 16.0, color: Colors.blue)),
-                onTap: () => launchURL(opportunity.url),
-              ),
-            ],
+          title: Text(
+            opportunity.name,
+            style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Organization:',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  opportunity.organization,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Description:',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  opportunity.description,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Skills:',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                Wrap(
+                  spacing: 8.0, // Horizontal space between children
+                  children:
+                      List<Widget>.generate(opportunity.tags.length, (index) {
+                    // Check if the current item is the last in the list
+                    bool isLast = index == opportunity.tags.length - 1;
+                    // Create a text widget with or without a comma
+                    return Text(
+                      '${opportunity.tags[index]}${isLast ? '' : ','}',
+                      style: const TextStyle(fontSize: 16),
+                    );
+                  }),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'URL:',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  child: Text(
+                    opportunity.url,
+                    style: TextStyle(fontSize: 16.0, color: Colors.blue),
+                  ),
+                  onTap: () => launchURL(opportunity.url),
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // This will space out the children
+              children: <Widget>[
+                TextButton(
+                  child: const Text('Delete'),
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('communities')
+                        .doc(user.id)
+                        .collection('opportunities')
+                        .doc(opportunity.id)
+                        .delete();
+                    // Add your delete logic here before popping the dialog
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
             ),
           ],
         );
@@ -79,77 +139,86 @@ class OpportunitiesScreen extends ConsumerWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No opportunities available.'));
+            return const Center(child: Text('No opportunities available.'));
           }
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               var doc = snapshot.data!.docs[index];
               var data = doc.data() as Map<String, dynamic>;
+              var tagsList = List<String>.from(data['tags'] ?? []);
               var opportunity = Opportunity(
                 organization: data['organization'],
                 name: data['name'],
                 description: data['description'],
                 url: data['url'],
+                tags: tagsList,
                 id: doc.id,
               );
               return Padding(
-  padding: const EdgeInsets.fromLTRB(9, 2, 9, 2),
-  child: Card(
-    elevation: 4,
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFFF2F2F2),
-            Color.fromARGB(255, 242, 208, 192),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )
-      ),
-      child: ListTile(
-        leading: Icon(Icons.business_center, size: 44),
-        title: Text(
-          opportunity.name,
-          style: TextStyle(fontSize: 26),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Ensures the column takes up minimal space
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(opportunity.organization, style: TextStyle(fontSize: 20)),
-              SizedBox(height: 8),  // Adds space between the organization and tags
-              Wrap(
-                spacing: 8.0, // space between chips
-                runSpacing: 4.0, // space between lines
-                children: opportunity.tags
-                  .map((tag) => Chip(
-                    label: Text(tag),
-                    backgroundColor: Colors.lightBlueAccent, // Adds a background color to the chips
-                  ))
-                  .toList(),
-              ),
-            ],
-          ),
-        ),
-        onTap: () {
-          _showOpportunityDetails(context, opportunity, ref);
-        },
-      ),
-    ),
-  ),
-);
-
+                padding: const EdgeInsets.fromLTRB(9, 2, 9, 2),
+                child: Card(
+                  elevation: 4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFFF2F2F2),
+                            Color.fromARGB(255, 242, 208, 192),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )),
+                    child: ListTile(
+                      leading: const Icon(Icons.business_center, size: 58),
+                      title: Text(
+                        opportunity.name,
+                        style: TextStyle(fontSize: 28),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize
+                              .min, // Ensures the column takes up minimal space
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(opportunity.organization,
+                                style: TextStyle(fontSize: 20)),
+                            SizedBox(
+                                height:
+                                    8), // Adds space between the organization and tags
+                            Wrap(
+                              spacing: 3.0, // space between chips
+                              runSpacing: 1.0, // space between lines
+                              children: opportunity.tags
+                                  .map((tag) => Chip(
+                                        padding: EdgeInsets.all(0),
+                                        label: Text(tag),
+                                        backgroundColor: Color.fromARGB(
+                                            255,
+                                            187,
+                                            198,
+                                            208), // Adds a background color to the chips
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        _showOpportunityDetails(context, opportunity, ref);
+                      },
+                    ),
+                  ),
+                ),
+              );
             },
           );
         },
@@ -170,8 +239,9 @@ class OpportunitiesScreen extends ConsumerWidget {
 }
 
 void launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
+  final Uri uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
   } else {
     throw 'Could not launch $url';
   }
