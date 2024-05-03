@@ -149,7 +149,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           final data = snapshot.data;
                           log('active status of a user is ${data!.name} ,${data.isOnline} ');
                           return Text(
-                              data.isOnline == 1
+                              data!.isOnline == 1
+
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,

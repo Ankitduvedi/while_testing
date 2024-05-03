@@ -57,7 +57,7 @@ class ChatUser {
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
-    log("json is $json");
+
     isCounsellor = json['isCounsellor'] ?? 0;
     isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
@@ -163,7 +163,9 @@ class ChatUser {
         mediumQuestions: 0,
         name: '',
         createdAt: '',
+
         isOnline: 0,
+
         id: '',
         lastActive: '',
         email: '',
@@ -176,9 +178,9 @@ class ChatUser {
         designation: '',
         follower: 0,
         following: 0,
+        // Initialize the new field
         isContentCreator: 0,
         isApproved: 0);
-    // Initialize the new field
   }
 
   // Add a copyWith method
