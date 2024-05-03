@@ -30,5 +30,17 @@ class ChatDatabaseHelper {
   }
 
   Future<void> create(Database database, int version) async =>
-      await ChatDb().createChatDb(database, version, '');
+      await createChatDb(database, version, '');
+
+  Future<void> createChatDb(
+    Database db,
+    int newVersion,
+    String Tablename,
+  ) async {
+    if (Tablename == '') {
+      Tablename = 'Default';
+    }
+    await db.execute(
+        'CREATE TABLE $Tablename(sent TEXT PRIMARY KEY, toId TEXT, msg TEXT, read TEXT, fromId TEXT, type TEXT)');
+  }
 }

@@ -1,14 +1,23 @@
 import 'package:com.while.while_app/data/model/message.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../data/model/chat_user.dart';
 import 'chat_SqLite_methods.dart';
 import 'draft_method.dart';
 
-class ChatDb with ChangeNotifier {
+final chatDBProvider = Provider<ChatDb>((ref) {
+  return ChatDb(ref: ref);
+});
+
+class ChatDb {
+  final Ref _ref;
+  //static FirebaseStorage storage = FirebaseStorage.instance;
+
+  ChatDb({required Ref ref}) : _ref = ref;
   String UsersTable = 'users';
   String coluid = 'uid';
 
@@ -35,8 +44,6 @@ class ChatDb with ChangeNotifier {
     int result = await database1!.insert(Tablename, msg.toJson());
 
     print("inserted $result");
-
-    notifyListeners();
   }
 
   Future<List<Map<String, dynamic>>> getAllUserChatMapList(
@@ -45,11 +52,11 @@ class ChatDb with ChangeNotifier {
     var result = await database1!.query(
       Tablename,
     );
-    notifyListeners();
+
     return result;
   }
 
-  Future<void> getAllChatUserList(String Tablename) async {
+  Future<List<Message>> getAllChatUserList(String Tablename) async {
     print("call");
     var noteMapList = await getAllUserChatMapList(Tablename);
     int count = noteMapList.length;
@@ -59,6 +66,10 @@ class ChatDb with ChangeNotifier {
       allMessage.add(Message.fromJson(noteMapList[i]));
     }
 
-    notifyListeners();
+    if (allMessage.length == 0) {
+      final fireService = _ref.watch(apisProvider);
+      // allMessage = await fireService.getAllMessages("");
+    }
+    return allMessage;
   }
 }
