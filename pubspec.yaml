@@ -97,6 +97,9 @@ dependencies:
   fpdart: 
   flutter_native_image: ^0.0.6+1
   font_awesome_flutter: ^10.7.0
+  fluentui_system_icons: ^1.1.234
+  url_launcher: ^6.0.17
+  
 
   
 

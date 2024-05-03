@@ -34,6 +34,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(screenSize.width * 0.05),
+
             child: Form(
               key: _formKey,
               child: Column(
@@ -67,6 +68,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
+
                   ),
                   SizedBox(height: verticalPadding),
                   TextFormField(

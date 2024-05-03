@@ -3,6 +3,7 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,13 +14,14 @@ class Connect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
-    final user = ref.read(userProvider); // Assume this is non-null
-    final followingUsersAsyncValue =
-        ref.watch(followingUsersProvider(user!.id));
 
-    final fireService =
-        ref.read(userProvider); // Assuming this returns a user object
-    final notifService = ref.read(notifControllerProvider.notifier);
+    var user = ref.watch(userDataProvider).userData!;
+
+    final followingUsersAsyncValue = ref.watch(followingUsersProvider(user.id));
+
+    final fireService = ref.watch(userProvider);
+    final notifService =
+        ref.watch(notifControllerProvider.notifier); // Assume this is non-null
 
     return Scaffold(
       body: allUsersAsyncValue.when(

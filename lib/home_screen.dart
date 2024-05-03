@@ -1,8 +1,13 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
+import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
+import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/feature/creator/screens/create_screen.dart';
@@ -18,7 +23,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
+  bool blackColor = false;
   late TabController _controller;
+  late final FirebaseMessaging _messaging;
+  late final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   @override
   void initState() {
     final fireSevice = ref.read(apisProvider);
@@ -28,16 +36,90 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
       if (fireSevice.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
-          fireSevice.updateActiveStatus(true);
+          fireSevice.updateActiveStatus(1);
         }
         if (message.toString().contains('pause')) {
-          fireSevice.updateActiveStatus(false);
+          fireSevice.updateActiveStatus(0);
         }
       }
       return Future.value(message);
     });
     super.initState();
     _controller = TabController(length: 5, vsync: this, initialIndex: 0);
+
+    _messaging = FirebaseMessaging.instance;
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    _initializeNotification();
+    _requestPermission();
+    _handleForegroundNotifications();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      log('A new onMessageOpenedApp event was published!');
+      // Navigate to desired screen based on message
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MessageHomeWidget(),
+          ));
+    });
+
+    _checkInitialMessage();
+  }
+
+  void _checkInitialMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    log('initial message');
+
+    if (initialMessage != null) {
+      // Navigate to desired screen based on initialMessage
+    }
+  }
+
+  void _initializeNotification() async {
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings(
+            '@mipmap/ic_launcher'); // Set your app icon here
+    //const IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings();
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidInitializationSettings,
+      //iOS: iosInitializationSettings,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _requestPermission() {
+    _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+    );
+  }
+
+  void _handleForegroundNotifications() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        _flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'channel_id',
+              'channel_name',
+              channelDescription: 'channel_description',
+              icon: android.smallIcon,
+              // other properties...
+            ),
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -57,58 +139,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.only(bottom: 2),
-        color: Colors.white,
+        color: !blackColor ? Colors.white : Colors.black,
         height: 50,
         child: TabBar(
           controller: _controller,
           indicatorColor: Colors.transparent,
           onTap: (index) {
+            if (index == 2) {
+              blackColor = true;
+            } else {
+              blackColor = false;
+            }
             setState(() {});
           },
           tabs: [
             Tab(
               icon: Icon(
                 _controller.index == 0
-                    ? Icons.home_rounded
-                    : Icons.home_outlined,
+                    ? FluentIcons.home_20_filled
+                    : FluentIcons.home_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
               icon: Icon(
                 _controller.index == 1
-                    ? Icons.videocam_rounded
-                    : Icons.videocam_outlined,
+                    ? FluentIcons.video_add_20_filled
+                    : FluentIcons.video_add_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
-              icon: Icon(
-                _controller.index == 2
-                    ? Icons.slow_motion_video_rounded
-                    : Icons.slow_motion_video_outlined,
-                size: 30,
-                color: Colors.black,
-              ),
-            ),
+                icon: Image.asset(
+              'assets/while_icon.png',
+              width: 70,
+              height: 27, // Dynamic width for the image
+            )
+
+                // Icon(
+                //   _controller.index == 2
+                //       ? FluentIcons.play_20_filled
+                //       : FluentIcons.play_20_regular,
+                //   size: 30,
+                //   color: Colors.black,
+                // ),
+                ),
             Tab(
               icon: Icon(
                 _controller.index == 3
-                    ? Icons.message_rounded
-                    : Icons.message_outlined,
+                    ? FluentIcons.chat_20_filled
+                    : FluentIcons.chat_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
             Tab(
               icon: Icon(
                 _controller.index == 4
-                    ? Icons.account_circle_rounded
-                    : Icons.account_circle_outlined,
+                    ? FluentIcons.person_20_filled
+                    : FluentIcons.person_20_regular,
                 size: 30,
-                color: Colors.black,
+                color: !blackColor ? Colors.black : Colors.white,
               ),
             ),
           ],

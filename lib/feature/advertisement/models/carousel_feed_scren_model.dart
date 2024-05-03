@@ -1,6 +1,6 @@
-class Loops {
+class AdCarousel {
   final String id;
-  final String uploadedBy;
+  final String organisation;
   final String videoUrl;
   final String thumbnail;
   final String title;
@@ -8,12 +8,14 @@ class Loops {
   final List likes;
   final int views;
   final String category;
-  final String creatorName;
+  final String playStoreURL;
+  final String website;
 
-  Loops(
+  AdCarousel(
       {required this.id,
-      required this.creatorName,
-      required this.uploadedBy,
+      required this.playStoreURL,
+      required this.website,
+      required this.organisation,
       required this.videoUrl,
       required this.thumbnail,
       required this.title,
@@ -22,14 +24,15 @@ class Loops {
       required this.views,
       required this.category});
 
-  factory Loops.fromMap(Map<String, dynamic> map) {
-    return Loops(
+  factory AdCarousel.fromMap(Map<String, dynamic> map) {
+    return AdCarousel(
       thumbnail: map['thumbnail'] as String,
-      creatorName: map['creatorName'] as String,
+      playStoreURL: map['playStoreURL'] as String,
+      website: map['website'] as String,
       description: map['description'] as String,
       likes: List.from(map['likes']),
       title: map['title'] as String,
-      uploadedBy: map['uploadedBy'] as String,
+      organisation: map['organisation'] as String,
       videoUrl: map['videoUrl'] as String,
       id: map['id'] as String,
       views: map['views'] as int,
@@ -42,12 +45,13 @@ class Loops {
     map['description'] = description;
     map['likes'] = likes;
     map['title'] = title;
-    map['uploadedBy'] = uploadedBy;
+    map['organisation'] = organisation;
     map['videoUrl'] = videoUrl;
     map['id'] = id;
     map['views'] = views;
     map['category'] = category;
-    map['creatorName'] = creatorName;
+    map['playStoreURL'] = playStoreURL;
+    map['website'] = website;
     return map;
   }
 }

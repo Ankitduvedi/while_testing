@@ -99,6 +99,8 @@ class UserDataProvider with ChangeNotifier {
       }
     }
   }
+
+  fetchUserList() {}
 }
 
 final userDataProvider =

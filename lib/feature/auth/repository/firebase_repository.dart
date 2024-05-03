@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,11 +20,12 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
       ref: ref);
 });
 
-class AuthRepository {
+class AuthRepository extends ConsumerStatefulWidget {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
   final Ref _ref;
+
   AuthRepository(
       {required FirebaseFirestore firestore,
       required FirebaseAuth auth,
@@ -56,7 +58,8 @@ class AuthRepository {
           image:
               'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
           createdAt: time,
-          isOnline: 1,
+
+          isOnline: 0,
           lastActive: time,
           pushToken: '',
           dateOfBirth: '',
@@ -99,6 +102,10 @@ class AuthRepository {
       } else {
         final ChatUser user =
             ChatUser.fromJson(userDoc.data() as Map<String, dynamic>);
+        UserDataProvider userDataProvider =
+            UserDataProvider(_ref); // Create an instance
+        userDataProvider.updateUserData(user);
+
         return right(user);
       }
     } on FirebaseAuthException catch (e) {
@@ -114,7 +121,7 @@ class AuthRepository {
 
   Future<Either<Failure, String>> signout() async {
     try {
-      _ref.read(apisProvider).updateActiveStatus(false);
+      _ref.read(apisProvider).updateActiveStatus(0);
       await _googleSignIn.signOut();
       await _auth.signOut();
       return right(r"Successfully signed out.");
@@ -133,7 +140,9 @@ class AuthRepository {
 
   Future<Either<Failure, String>> deleteAccount() async {
     try {
-      _ref.read(apisProvider).updateActiveStatus(false);
+
+      _ref.read(apisProvider).updateActiveStatus(0);
+      // await APIs.updateActiveStatus(false);
       await _auth.currentUser!.delete();
       return right("Account deleted successfully");
     } on FirebaseAuthException catch (e) {
@@ -195,7 +204,9 @@ class AuthRepository {
                 image:
                     'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
                 createdAt: time,
-                isOnline: 1,
+
+                isOnline: 0,
+
                 lastActive: time,
                 pushToken: '',
                 dateOfBirth: '',
@@ -214,8 +225,42 @@ class AuthRepository {
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
           } else {
-            userModel = await getUserData(newUser.uid)
-                .first; // Assume this fetches the user correctly
+            final time = DateTime.now().millisecondsSinceEpoch.toString();
+            ChatUser newusemodel = ChatUser(
+                lives: 0,
+                easyQuestions: 0,
+                id: newUser.uid,
+                hardQuestions: 0,
+                mediumQuestions: 0,
+                name: newUser.displayName.toString(),
+                email: newUser.email.toString(),
+                about: 'Hey I am ${newUser.displayName}',
+                image:
+                    'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
+                createdAt: time,
+                isOnline: 0,
+                lastActive: time,
+                pushToken: '',
+                dateOfBirth: '',
+                gender: '',
+                phoneNumber: '',
+                place: '',
+                profession: '',
+                designation: 'Member',
+                follower: 0,
+                following: 0,
+                isContentCreator: 0,
+                isApproved: 0,
+                isCounsellor: 0,
+                isCounsellorVerified: 0);
+
+            userModel = await getUserData(
+              newUser.uid,
+            ); // Assume this fetches the user correctly
+            if (userModel.id == '' || userModel.id == null) {
+              userModel = newusemodel;
+              createNewUser(newusemodel);
+            }
             log("existing user");
           }
           return right(userModel); // Return userModel instead of newUser
@@ -246,13 +291,39 @@ class AuthRepository {
     log(' users given id is /: ${newUser.name}');
     log(newUser.id);
     await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
+    UserDataProvider userDataProvider =
+        UserDataProvider(_ref); // Create an instance
+    userDataProvider.setUserData(newUser);
   }
 
-  Stream<ChatUser> getUserData(String uid) {
-    return _firestore.collection('users').doc(uid).snapshots().map(
-        (event) => ChatUser.fromJson(event.data() as Map<String, dynamic>));
+  Future<ChatUser> getUserData(
+    String uid,
+  ) async {
+    UserDataProvider userDataProvider =
+        UserDataProvider(_ref); // Create an instance
+    ChatUser user = await userDataProvider.fetchUser(uid);
+
+    if (user.id == null || user.id == '') {
+      final docRef = _firestore.collection("users").doc(uid);
+      docRef.get().then((DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        user = ChatUser.fromJson(data);
+        userDataProvider.setUserData(user);
+      });
+    }
+    return user;
   }
 
   Stream<User?> get authStateChange =>
       _ref.read(authProvider).authStateChanges();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
+}
+
+class a {
+  void b() {}
 }

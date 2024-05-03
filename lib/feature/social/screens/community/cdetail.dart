@@ -49,7 +49,9 @@ class _CCommunityDetailScreenState
       CChatScreen(
         community: community,
       ),
-      const CommunityDetailResources(),
+       CommunityDetailResources(
+        user: community,
+      ),
       OpportunitiesScreen(
         user: community,
       ),

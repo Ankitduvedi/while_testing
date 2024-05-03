@@ -3,7 +3,6 @@ import 'package:com.while.while_app/feature/creator/screens/main_creator_screen.
 import 'package:com.while.while_app/feature/creator/screens/under_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../providers/user_provider.dart';
 
@@ -24,8 +23,11 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           centerTitle: false,
-          title: Text('Studio',
-              style: GoogleFonts.ptSans(color: Colors.lightBlueAccent)),
+          title: Text(
+            'Studio',
+            style:
+                TextStyle(color: Colors.blue[400], fontWeight: FontWeight.w800),
+          ),
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(

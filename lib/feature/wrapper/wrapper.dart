@@ -5,6 +5,7 @@ import 'package:com.while.while_app/feature/auth/screens/login_screen.dart';
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
 import 'package:com.while.while_app/home_screen.dart';
 import 'package:com.while.while_app/feature/intro_screens/onboarding_screen.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,10 +22,8 @@ class _WrapperState extends ConsumerState<Wrapper> {
   ChatUser? userModel;
 
   void getData(User data) async {
-    userModel = await ref
-        .read(authControllerProvider.notifier)
-        .getUserData(data.uid)
-        .first;
+    userModel =
+        await ref.read(authControllerProvider.notifier).getUserData(data.uid);
     log(userModel!.email);
     ref.read(userProvider.notifier).update((state) => userModel);
     //so that ui rebuilds
@@ -46,6 +45,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
         if (firedata != null) {
           //user provider data
           if (user != null) {
+            ref.watch(apisProvider).getFirebaseMessagingToken(user.id);
             return const HomeScreen();
           } else {
             //function that will trigger provider update

@@ -15,6 +15,7 @@ import '../../../main.dart';
 //profile screen -- to show signed in user info
 class EditUserProfileScreen extends ConsumerStatefulWidget {
   const EditUserProfileScreen({super.key});
+
   @override
   ConsumerState<EditUserProfileScreen> createState() => _ProfileScreenState();
 }
@@ -28,6 +29,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
     final userProvider = ref.watch(userDataProvider);
     final user = userProvider.userData;
     final ChatUser updatedUser = user!;
+
     return GestureDetector(
       // for hiding keyboard
       onTap: () => FocusScope.of(context).unfocus(),

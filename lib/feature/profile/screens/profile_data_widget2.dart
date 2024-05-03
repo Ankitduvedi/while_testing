@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_follower_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_following_screen.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,7 +17,7 @@ class ProfileDataWidget extends ConsumerWidget {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    final user = ref.watch(userProvider);
+    final user = ref.watch(userDataProvider).userData;
 
     return SafeArea(
         child: LiquidPullToRefresh(

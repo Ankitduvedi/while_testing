@@ -3,7 +3,6 @@ import 'package:com.while.while_app/feature/profile/screens/creator_profile_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
@@ -21,11 +20,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
+    var user = ref.watch(userDataProvider).userData!;
 
     ref.watch(userDataProvider);
 
-    log(user!.id);
+    log(user.id);
 
     const tabBarIcons = [
       Tab(

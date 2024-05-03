@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'edit_profile_user.dart';
@@ -58,6 +59,7 @@ class MoreOptions extends ConsumerWidget {
               title: Text("Logout", style: GoogleFonts.ptSans()),
               onTap: () async {
                 log("logging out user");
+                ref.read(apisProvider).updateActiveStatus(0);
                 ref.read(toggleStateProvider.notifier).state = 1;
                 ref.read(authControllerProvider.notifier).signOut(context);
                 Navigator.pop(context);

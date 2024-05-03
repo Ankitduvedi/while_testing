@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class ChatUser {
   ChatUser({
     required this.image,
@@ -26,6 +28,7 @@ class ChatUser {
     required this.isCounsellor,
     required this.isCounsellorVerified,
   });
+
   late String image;
   late String about;
   late String name;
@@ -54,13 +57,14 @@ class ChatUser {
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
-    isCounsellor = json['isCounsellor'] ?? false;
+
+    isCounsellor = json['isCounsellor'] ?? 0;
     isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = json['is_online'] ?? 1;
+    isOnline = json['is_online'] ?? 0;
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     email = json['email'] ?? '';
@@ -77,9 +81,9 @@ class ChatUser {
     mediumQuestions = json['mediumQuestions'] ?? 0;
     hardQuestions = json['hardQuestions'] ?? 0;
     lives = json['lives'] ?? 0;
-    // Add the new field
     isContentCreator = json['isContentCreator'] ?? 0;
     isApproved = json['isApproved'] ?? 0;
+    // Add the new field
   }
 
   // Update toJson method to include the new field
@@ -108,9 +112,9 @@ class ChatUser {
     data['mediumQuestions'] = mediumQuestions;
     data['hardQuestions'] = hardQuestions;
     data['lives'] = lives;
-    // Add the new field
     data['isContentCreator'] = isContentCreator;
     data['isApproved'] = isApproved;
+    // Add the new field
     return data;
   }
 
@@ -159,7 +163,9 @@ class ChatUser {
         mediumQuestions: 0,
         name: '',
         createdAt: '',
-        isOnline: 1,
+
+        isOnline: 0,
+
         id: '',
         lastActive: '',
         email: '',

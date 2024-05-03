@@ -40,7 +40,7 @@ class CreatorRepository {
       // Update 'isApproved' in the 'users' collection for the user
       await _firestore.collection('users').doc(userId).update({
         'isApproved':
-            true, // Update this field based on your logic, false if you're awaiting approval
+            1, // Update this field based on your logic, false if you're awaiting approval
       });
       log("User and request submitted successfully");
       return right(true);

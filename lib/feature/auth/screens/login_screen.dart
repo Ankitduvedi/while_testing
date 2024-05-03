@@ -59,6 +59,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         ), // Placeholder for the image
                         SizedBox(height: verticalPadding),
 
+
+
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {

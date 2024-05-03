@@ -60,8 +60,8 @@ class _AddReelState extends ConsumerState<AddReel> {
 // Api.video
     uploadVideo(File videoFile, String id) async {
       //Dialogs.showSnackbar(context, 'Function called');
-      const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-      const apiUrl = 'https://sandbox.api.video/videos';
+      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+      const apiUrl = 'https://ws.api.video/videos';
 
       var request = http.MultipartRequest(
           'POST', Uri.parse('$apiUrl/$id/source'))
@@ -78,6 +78,7 @@ class _AddReelState extends ConsumerState<AddReel> {
           //Dialogs.showSnackbar(context, data['videoId']);
           //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
           final Loops loop = Loops(
+              creatorName: ref.read(userProvider)!.name,
               id: id,
               uploadedBy: ref.read(userProvider)!.id,
               videoUrl: data['assets']['mp4'],
@@ -121,8 +122,8 @@ class _AddReelState extends ConsumerState<AddReel> {
 
     createVideo(String title, String description) async {
       Dialogs.showSnackbar(context, 'Called');
-      const apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-      const apiUrl = 'https://sandbox.api.video';
+      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+      const apiUrl = 'https://ws.api.video';
       final response = await http.post(
         Uri.parse('$apiUrl/videos'),
         headers: {

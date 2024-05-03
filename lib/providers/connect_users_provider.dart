@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
@@ -47,10 +48,15 @@ final filteredUsersProvider = Provider<List<ChatUser>>((ref) {
 });
 
 ///
-final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
+final myUsersUidsProvider =
+    StreamProvider.family<List<String>, String>((ref, userId) {
+  UserDataProvider userDataProvider =
+      UserDataProvider(ref); // Create an instance
+  ChatUser user = userDataProvider.userData!;
+  print("userid is ${userId}");
   return FirebaseFirestore.instance
       .collection('users')
-      .doc(ref.read(userProvider)!.id)
+      .doc(userId)
       .collection('my_users')
       .orderBy('timeStamp', descending: true)
       .snapshots()
@@ -59,6 +65,10 @@ final myUsersUidsProvider = StreamProvider<List<String>>((ref) {
 final followingUsersProvider =
     StreamProvider.family<List<String>, String>((ref, userId) {
   // final user = ref.watch(userDataProvider).userData;
+  UserDataProvider userDataProvider =
+      UserDataProvider(ref); // Create an instance
+  ChatUser user = userDataProvider.userData!;
+
   return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)

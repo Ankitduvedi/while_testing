@@ -111,11 +111,35 @@
           }
         },
         {
+          "client_id": "759556546667-c5or0h9r8puku650pem570fpb3hrdbn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
+            "certificate_hash": "b29f93cbb2ac08e9751175f55f86cfe252c986fe"
+          }
+        },
+        {
           "client_id": "759556546667-f58uj1cd365f2jj8h8d1v69qus1kgrbt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.while.while_app",
             "certificate_hash": "639380563c8e411c544edf0258b623a2c0ede402"
+          }
+        },
+        {
+          "client_id": "759556546667-fathuqsfk62bm17blljkdhgn2snjpdcq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
+            "certificate_hash": "252ffeb6ce9418bdb471e53eecb0d662c4ee151f"
+          }
+        },
+        {
+          "client_id": "759556546667-ookc7rtfmi0229hmr9eul2pqtlosqhm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.while.while_app",
+            "certificate_hash": "7294aa7ef3396212ca4f07036078ac744bc43018"
           }
         },
         {

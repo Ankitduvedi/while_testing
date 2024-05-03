@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -79,16 +80,17 @@ class APIs {
 
   // for sending push notification
   Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
+    final user = _ref.read(userDataProvider).userData!;
     try {
       final body = {
         "to": chatUser.pushToken,
         "notification": {
-          "title": me.name, //our name should be send
+          "title": user.name, //our name should be send
           "body": msg,
           "android_channel_id": "chats"
         },
         "data": {
-          "some_data": "User ID: ${me.id}",
+          "some_data": "User ID: ${user.id}",
         },
       };
 
@@ -307,12 +309,14 @@ class APIs {
   // for getting current user info
 
   Future<void> getSelfInfo() async {
+    log(' getSelfInfo My Data: ');
+
     await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        await getFirebaseMessagingToken();
+        await getFirebaseMessagingToken(user.id);
         //for setting user status to active
-        _ref.read(apisProvider).updateActiveStatus(true);
+        _ref.read(apisProvider).updateActiveStatus(1);
         log('My Data: ${user.data()}');
       } else {
         await createUser().then((value) => getSelfInfo());
@@ -342,7 +346,9 @@ class APIs {
       about: "Hey, I'm using We Chat!",
       image: user.photoURL.toString(),
       createdAt: time,
-      isOnline: 1,
+
+      isOnline: 0,
+
       lastActive: time,
       pushToken: '',
       dateOfBirth: '',
@@ -446,7 +452,7 @@ class APIs {
 
   // update online or last active status of user
 
-  Future<void> updateActiveStatus(bool isOnline) async {
+  Future<void> updateActiveStatus(int isOnline) async {
     log("updating status of user");
     log(user.uid);
     await firestore.collection('users').doc(user.uid).update({
@@ -476,7 +482,9 @@ class APIs {
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
       return snapshot.docs
           .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-              Message.fromJson(doc.data()!))
+
+              Message.fromJson(doc.data()! as Map<String, dynamic>))
+
           .toList();
     });
   }
@@ -526,6 +534,7 @@ class APIs {
   //get only last message of a specific chat
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(ChatUser user) {
+    print(" conversation id ${getConversationID(user.id)}");
     return firestore
         .collection('chats/${getConversationID(user.id)}/messages/')
         .orderBy('sent', descending: true)
@@ -823,14 +832,93 @@ class APIs {
     return dynamicLink.shortUrl.toString();
   }
 
-  Future<void> getFirebaseMessagingToken() async {
+  Future<void> getFirebaseMessagingToken(String id) async {
+    log('Push Tokens : ');
     await fMessaging.requestPermission();
-
     await fMessaging.getToken().then((t) {
+      final user = _ref.read(userDataProvider).userData;
       if (t != null) {
+        user!.pushToken = t;
+        //_ref.read(userDataProvider).updateUserData(user);
+        firestore.collection('users').doc(id).update({
+          'push_token': t,
+        });
         me.pushToken = t;
         log('Push Token: $t');
       }
     });
+  }
+
+  Future<List<String>> getCommunityMemberTokens(
+      String communityId, String senderId) async {
+    List<String> tokens = [];
+    List<String> userIds = [];
+    try {
+      // Get a reference to the participants sub-collection
+      CollectionReference participants = FirebaseFirestore.instance
+          .collection('communities')
+          .doc(communityId)
+          .collection('participants');
+
+      // Fetch all participant documents
+      QuerySnapshot snapshot = await participants.get();
+
+      for (var doc in snapshot.docs) {
+        String userId = doc.id; // Assuming the document ID is the user ID
+        userIds.add(userId);
+      }
+
+      // Remove senderId from the list to avoid sending notification to the sender
+      userIds.remove(senderId);
+      log('userids for push token: $userIds , $senderId');
+
+      // Fetch each user and get their pushToken
+      for (String userId in userIds) {
+        var userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+        String? token = userDoc.data()?['push_token'];
+        if (token != null && token.isNotEmpty) {
+          tokens.add(token);
+        }
+      }
+    } catch (e) {
+      log('Error fetching community member tokens: $e');
+    }
+    return tokens;
+  }
+
+  Future<void> sendCommunityNotification(
+      List<String> tokens, String message, String senderName) async {
+    try {
+      final body = {
+        "registration_ids": tokens,
+        "notification": {
+          "title": "New message from $senderName",
+          "body": message,
+          "android_channel_id": "chats",
+          "sound":
+              "default" // Optional: add sound or other notification parameters
+        },
+        "data": {
+          "click_action":
+              "FLUTTER_NOTIFICATION_CLICK", // For handling notification tap
+          "status": "done"
+        }
+      };
+
+      var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader:
+                'key=AAAAsNkZIGs:APA91bGeaCnMuqtGmil4H3ZKYVQ_9aaWIZlqd1hvrBzJlaKIUYl-w2XCycnvx8l5Iis61lezhZzdjphO4kYG0ahxTZUiz0fMdcaiKyZ3SjQxlt_y57i4sc3npUM4jjgoA7kUSawYYTDt'
+          },
+          body: jsonEncode(body));
+      log('Response status: ${res.statusCode}');
+      log('Response body: ${res.body}');
+    } catch (e) {
+      log('Error sending community notification: $e');
+    }
   }
 }
