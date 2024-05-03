@@ -1,14 +1,37 @@
+import 'package:com.while.while_app/data/model/community_user.dart';
+import 'package:com.while.while_app/feature/social/screens/community/resources/card_widget.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/imageview.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/pdfview.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/videoplay.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
+import 'package:uuid/uuid.dart';
+
+class Resource {
+  final String title;
+  final String description;
+  final String url;
+  final String id;
+
+  Resource({
+    required this.title,
+    required this.description,
+    required this.url,
+    required this.id,
+  });
+}
+
+const uuid = Uuid();
+
 class CommunityDetailResources extends StatefulWidget {
-  const CommunityDetailResources({Key? key}) : super(key: key);
+  final Community user;
+  const CommunityDetailResources({Key? key, required this.user})
+      : super(key: key);
 
   @override
   CommunityDetailResourcesState createState() =>
@@ -33,7 +56,12 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
     super.initState();
   }
 
-  Future<void> uploadFile() async {
+  Future<void> uploadFile(String title) async {
+    final newResource = Resource(
+        id: uuid.v4(),
+        title: title,
+        description: statusTextController.text,
+        url: (''));
     try {
       final ref =
           _storage.ref('resources/${selectedFilePath!.split('/').last}');
@@ -45,13 +73,15 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
       // Store the download URL, text, and title in Firestore
       await _firestore
           .collection('communities')
-          .doc('6d34287d-76c5-4317-a72d-e8fcd33fb87d')
+          .doc(widget.user.id)
           .collection('resources')
-          .add({
+          .doc(newResource.id)
+          .set({
         'url': downloadUrl,
-        'text': statusTextController.text,
+        'text': newResource.description,
         'type': selectedFileType,
-        'title': titleTextController.text, // Add title
+        'title': newResource.title,
+        'id': newResource.id,
       }); // Fetch updated resources
 
       setState(() {
@@ -114,31 +144,49 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
               TextField(
                 controller: statusTextController,
                 decoration: const InputDecoration(
-                  hintText: 'Add a description (optional)',
+                  hintText: 'Add a description ',
                 ),
               ),
               TextField(
                 controller: titleTextController, // Add title text field
                 decoration: const InputDecoration(
-                  hintText: 'Add a title (optional)',
+                  hintText: 'Add a title ',
                 ),
               ),
             ],
           ),
           actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              //style: ButtonStyle(iconColor: Colors.black),
-            ),
-            TextButton(
-              child: const Text('Upload'),
-              onPressed: () {
-                uploadFile();
-                Navigator.of(context).pop();
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // This spreads out the children across the available space
+              children: [
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Upload'),
+
+                  onPressed: () {
+                    String title = titleTextController.text.isNotEmpty
+                        ? titleTextController.text
+                        : selectedFile!.path
+                            .split('/')
+                            .last; // Use file name if title is empty
+
+                    // Call upload with the determined title
+                    uploadFile(title);
+                    Navigator.of(context).pop();
+                  },
+
+                  // onPressed: () {
+                  //   uploadFile();
+                  //   Navigator.of(context).pop();
+                  // },
+                ),
+              ],
             ),
           ],
         );
@@ -153,7 +201,7 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
       body: StreamBuilder(
         stream: _firestore
             .collection('communities')
-            .doc('6d34287d-76c5-4317-a72d-e8fcd33fb87d')
+            .doc(widget.user.id)
             .collection('resources')
             .snapshots(),
         builder: (context, snapshot) {
@@ -163,12 +211,16 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('Uh-Oh! No Resources uploaded yet.', style: TextStyle(fontSize: 18),));
+          }
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final resource =
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
               return ResourceCard(
+                user: widget.user,
                 resource: resource,
                 index: index,
                 onTap: () {
@@ -217,14 +269,17 @@ class CommunityDetailResourcesState extends State<CommunityDetailResources> {
   }
 }
 
-
 class ResourceCard extends StatelessWidget {
   final Map<String, dynamic> resource;
   final int index;
   final Function onTap;
+  final Community user;
 
   ResourceCard(
-      {required this.resource, required this.index, required this.onTap});
+      {required this.resource,
+      required this.index,
+      required this.onTap,
+      required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +289,7 @@ class ResourceCard extends StatelessWidget {
         iconData = Icons.picture_as_pdf;
         break;
       case 'mp4':
-        iconData = Icons.videocam;
+        iconData = Icons.play_circle_fill_outlined;
         break;
       case 'jpg':
       case 'jpeg':
@@ -245,15 +300,11 @@ class ResourceCard extends StatelessWidget {
         iconData = Icons.insert_drive_file;
     }
 
-    return Card(
-      elevation: 4,
-      child: ListTile(
-        leading: Icon(iconData, size: 40),
-        title: Text(resource['title'] ?? 'Resource $index'),
-        subtitle: Text(resource['text'] ?? 'No description provided'),
-        onTap: () => onTap(),
-        trailing: Icon(Icons.menu),
-      ),
+    return MyCardWidget(
+      resource: resource,
+      iconData: iconData,
+      onTap: onTap,
+      user: user,
     );
   }
 }

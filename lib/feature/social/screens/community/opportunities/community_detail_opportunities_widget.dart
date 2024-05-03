@@ -33,7 +33,7 @@ class OpportunitiesScreen extends ConsumerWidget {
 
   Future<void> _showOpportunityDetails(
       BuildContext context, Opportunity opportunity, WidgetRef ref) async {
-    return showDialog<void>(
+    return showDialog<void>( 
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
