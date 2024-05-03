@@ -30,7 +30,7 @@ class ChatUser {
   late String about;
   late String name;
   late String createdAt;
-  late bool isOnline;
+  late int isOnline;
   late String id;
   late String lastActive;
   late String email;
@@ -47,20 +47,20 @@ class ChatUser {
   late int mediumQuestions;
   late int hardQuestions;
   late int lives;
-  late bool isContentCreator;
-  late bool isCounsellor;
-  late bool isCounsellorVerified;
-  late bool isApproved;
+  late int isContentCreator;
+  late int isCounsellor;
+  late int isCounsellorVerified;
+  late int isApproved;
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
     isCounsellor = json['isCounsellor'] ?? false;
-    isCounsellorVerified = json['isCounsellorVerified'] ?? false;
+    isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = json['is_online'] ?? false;
+    isOnline = json['is_online'] ?? 1;
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     email = json['email'] ?? '';
@@ -78,8 +78,8 @@ class ChatUser {
     hardQuestions = json['hardQuestions'] ?? 0;
     lives = json['lives'] ?? 0;
     // Add the new field
-    isContentCreator = json['isContentCreator'] ?? false;
-    isApproved = json['isApproved'] ?? false;
+    isContentCreator = json['isContentCreator'] ?? 0;
+    isApproved = json['isApproved'] ?? 0;
   }
 
   // Update toJson method to include the new field
@@ -149,8 +149,8 @@ class ChatUser {
   // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
-        isCounsellor: false,
-        isCounsellorVerified: false,
+        isCounsellor: 0,
+        isCounsellorVerified: 0,
         lives: 0,
         easyQuestions: 0,
         image: '',
@@ -159,7 +159,7 @@ class ChatUser {
         mediumQuestions: 0,
         name: '',
         createdAt: '',
-        isOnline: false,
+        isOnline: 1,
         id: '',
         lastActive: '',
         email: '',
@@ -173,8 +173,8 @@ class ChatUser {
         follower: 0,
         following: 0,
         // Initialize the new field
-        isContentCreator: false,
-        isApproved: false);
+        isContentCreator: 0,
+        isApproved: 0);
   }
 
   // Add a copyWith method
@@ -183,7 +183,7 @@ class ChatUser {
     String? about,
     String? name,
     String? createdAt,
-    bool? isOnline,
+    int? isOnline,
     String? id,
     String? lastActive,
     String? email,
@@ -200,10 +200,10 @@ class ChatUser {
     int? mediumQuestions,
     int? hardQuestions,
     int? lives,
-    bool? isContentCreator,
-    bool? isApproved,
-    bool? isCounsellor,
-    bool? isCounsellorVerified,
+    int? isContentCreator,
+    int? isApproved,
+    int? isCounsellor,
+    int? isCounsellorVerified,
   }) {
     return ChatUser(
       isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,

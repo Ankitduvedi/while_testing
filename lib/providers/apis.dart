@@ -251,13 +251,13 @@ class APIs {
     return true;
   }
 
-Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
+  Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     await firestore
         .collection('communities')
         .doc(commId) // Use commId as the document ID
         .collection('participants')
-      .doc(user.id).
-        set({
+        .doc(user.id)
+        .set({
       'easyQuestions': 0,
       'mediumQuestions': 0,
       'hardQuestions': 0,
@@ -328,10 +328,10 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-      isCounsellorVerified: false,
-      isCounsellor: false,
-      isContentCreator: false,
-      isApproved: false,
+      isCounsellorVerified: 0,
+      isCounsellor: 0,
+      isContentCreator: 0,
+      isApproved: 0,
       lives: 0,
       easyQuestions: 0,
       hardQuestions: 0,
@@ -342,7 +342,7 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
       about: "Hey, I'm using We Chat!",
       image: user.photoURL.toString(),
       createdAt: time,
-      isOnline: false,
+      isOnline: 1,
       lastActive: time,
       pushToken: '',
       dateOfBirth: '',
@@ -468,20 +468,18 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
 
   // for getting all messages of a specific conversation from firestore database
 
- Stream<List<Message>> getAllMessages(ChatUser user) {
-  return FirebaseFirestore.instance
-      .collection('chats/${getConversationID(user.id)}/messages/')
-      .orderBy('sent', descending: true)
-      .snapshots()
-      .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
-        return snapshot.docs
-            .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-                Message.fromJson(doc.data()! as Map<String, dynamic>))
-            .toList();
-      });
-}
-
-
+  Stream<List<Message>> getAllMessages(ChatUser user) {
+    return FirebaseFirestore.instance
+        .collection('chats/${getConversationID(user.id)}/messages/')
+        .orderBy('sent', descending: true)
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
+      return snapshot.docs
+          .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+              Message.fromJson(doc.data()!))
+          .toList();
+    });
+  }
 
   // for sending message
 
@@ -714,7 +712,6 @@ Future<bool> adminAddUserToCommunity(String commId, ChatUser user) async {
     });
   }
 
-  
   // update profile picture of community
 
   Future<void> updateProfilePictureCommunity(File file, String id) async {

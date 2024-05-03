@@ -29,9 +29,9 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-            child: (!user!.isContentCreator && !user.isApproved)
+            child: (user!.isContentCreator == 0 && user.isApproved == 0)
                 ? const BecomeCreator()
-                : (!user.isContentCreator && user.isApproved)
+                : (user.isContentCreator == 0 && user.isApproved == 1)
                     ? const UnderReviewScreen(
                         type: "Creator",
                       )

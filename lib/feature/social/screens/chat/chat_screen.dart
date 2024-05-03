@@ -132,7 +132,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         case ConnectionState.waiting:
                         case ConnectionState.none:
                           return Text(
-                              user.isOnline
+                              user.isOnline == 1
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,
@@ -145,7 +145,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         case ConnectionState.done:
                           final data = snapshot.data;
                           return Text(
-                              data!.isOnline
+                              data!.isOnline == 1
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
                                       context: context,

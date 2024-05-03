@@ -59,7 +59,7 @@ class MoreOptions extends ConsumerWidget {
               onTap: () async {
                 log("logging out user");
                 ref.read(toggleStateProvider.notifier).state = 1;
-                ref.read(authControllerProvider.notifier).signOut();
+                ref.read(authControllerProvider.notifier).signOut(context);
                 Navigator.pop(context);
                 // SystemNavigator.pop();
               },
@@ -103,8 +103,10 @@ class MoreOptions extends ConsumerWidget {
                 // Proceed with deletion if confirmed
                 if (shouldDelete) {
                   ref.read(toggleStateProvider.notifier).state = 0;
-                  ref.read(authControllerProvider.notifier).deleteAccount();
-                  ref.read(authControllerProvider.notifier).signOut();
+                  ref
+                      .read(authControllerProvider.notifier)
+                      .deleteAccount(context);
+                  ref.read(authControllerProvider.notifier).signOut(context);
                   Navigator.pop(context);
                 }
               },

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/repository/firebase_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,16 +53,22 @@ class AuthController extends StateNotifier<bool> {
     final user = await _authRepository.signInWithGoogle();
     state = false;
     log("setting user data to userProv");
-    user.fold((l) => SnackBar(content: Text(l.message)),
+    user.fold((l) => Utils.snackBar(l.message, context),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
   }
 
-  void signOut() {
-    _authRepository.signout();
+  void signOut(BuildContext context) async {
+    state = true;
+    final response = await _authRepository.signout();
+    state = false;
+    response.fold((l) => Utils.snackBar(l.message, context), (r) => null);
   }
 
-  void deleteAccount() {
-    _authRepository.deleteAccount();
+  void deleteAccount(BuildContext context) async {
+    state = true;
+    final response = await _authRepository.deleteAccount();
+    state = false;
+    response.fold((l) => Utils.snackBar(l.message, context), (r) => null);
   }
 
   void getSnapshot() {
@@ -73,7 +80,7 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     final user = await _authRepository.loginWithEmailAndPassword(
         email, password, context);
-    user.fold((l) => SnackBar(content: Text(l.message)),
+    user.fold((l) => Utils.snackBar(l.message, context),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
     state = false;
   }
@@ -83,8 +90,8 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     final response = await _authRepository.signInWithEmailAndPassword(
         email, password, name, context);
-    response.fold((l) => SnackBar(content: Text(l.message)),
-        (r) => const SnackBar(content: Text("Successfully signed in")));
+    response.fold((l) => Utils.snackBar(l.message, context),
+        (r) => _ref.read(userProvider.notifier).update((state) => r));
     state = false;
   }
 }

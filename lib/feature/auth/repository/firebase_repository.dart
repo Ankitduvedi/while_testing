@@ -4,6 +4,7 @@ import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:com.while.while_app/providers/apis.dart';
@@ -55,7 +56,7 @@ class AuthRepository {
           image:
               'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
           createdAt: time,
-          isOnline: false,
+          isOnline: 1,
           lastActive: time,
           pushToken: '',
           dateOfBirth: '',
@@ -66,10 +67,10 @@ class AuthRepository {
           designation: 'Member',
           follower: 0,
           following: 0,
-          isContentCreator: false,
-          isApproved: false,
-          isCounsellor: false,
-          isCounsellorVerified: false);
+          isContentCreator: 0,
+          isApproved: 0,
+          isCounsellor: 0,
+          isCounsellorVerified: 0);
       log('/////as////${_auth.currentUser!.uid}');
       await createNewUser(userModel);
       return right(userModel);
@@ -111,23 +112,40 @@ class AuthRepository {
     }
   }
 
-  Future signout() async {
+  Future<Either<Failure, String>> signout() async {
     try {
       _ref.read(apisProvider).updateActiveStatus(false);
       await _googleSignIn.signOut();
       await _auth.signOut();
+      return right(r"Successfully signed out.");
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      if (e.code == 'network-request-failed') {
+        log("Network error: ${e.toString()}");
+        return left(Failure(message: "No internet connection available."));
+      } else {
+        log("FirebaseAuth error: ${e.toString()}");
+        return left(Failure(message: "Authentication error: ${e.message}"));
+      }
+    } catch (e) {
+      return left(Failure(message: e.toString()));
     }
   }
 
-  Future deleteAccount() async {
+  Future<Either<Failure, String>> deleteAccount() async {
     try {
       _ref.read(apisProvider).updateActiveStatus(false);
-      // await APIs.updateActiveStatus(false);
       await _auth.currentUser!.delete();
+      return right("Account deleted successfully");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'network-request-failed') {
+        log("Network error: ${e.toString()}");
+        return left(Failure(message: "No internet connection available."));
+      } else {
+        log("FirebaseAuth error: ${e.toString()}");
+        return left(Failure(message: "Authentication error: ${e.message}"));
+      }
     } catch (error) {
-      log(error.toString());
+      return left(Failure(message: error.toString()));
     }
   }
 
@@ -177,7 +195,7 @@ class AuthRepository {
                 image:
                     'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
                 createdAt: time,
-                isOnline: false,
+                isOnline: 1,
                 lastActive: time,
                 pushToken: '',
                 dateOfBirth: '',
@@ -188,10 +206,10 @@ class AuthRepository {
                 designation: 'Member',
                 follower: 0,
                 following: 0,
-                isContentCreator: false,
-                isApproved: false,
-                isCounsellor: false,
-                isCounsellorVerified: false);
+                isContentCreator: 0,
+                isApproved: 0,
+                isCounsellor: 0,
+                isCounsellorVerified: 0);
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
@@ -204,11 +222,21 @@ class AuthRepository {
         }
       }
     } on FirebaseAuthException catch (e) {
-      log(e.toString()); // Log the error for debugging
-      return left(Failure(message: "FirebaseAuthException: ${e.message}"));
+      if (e.code == 'network-request-failed') {
+        log("Network error: ${e.toString()}");
+        return left(Failure(message: "No internet connection available."));
+      } else {
+        log("FirebaseAuth error: ${e.toString()}");
+        return left(Failure(message: "Authentication error: ${e.message}"));
+      }
     } catch (e) {
-      log(e.toString()); // Log any other exceptions
-      return left(Failure(message: e.toString()));
+      log(e.toString());
+      // Log any other exceptions
+      if (e is PlatformException) {
+        return left(Failure(message: "Try checking your network connection"));
+      } else {
+        return left(Failure(message: "Error  $e"));
+      }
     }
     // Handle case where Google sign-in was cancelled or failed before returning
     return left(Failure(message: "Google sign-in failed."));
