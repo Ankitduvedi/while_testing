@@ -4,15 +4,18 @@ import 'dart:developer';
 
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/chat_user_card.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/chat_sqLite_provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../data/model/community_message.dart';
 import '../../../../providers/apis.dart';
 import '../../../../core/utils/my_date_util.dart';
 import '../../../../data/model/chat_user.dart';
@@ -34,11 +37,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   bool _showEmoji = false;
   bool _isUploading = false; // Ensure this is not final if its value can change
   List<Message> messages = [];
+  bool isset = false;
+
+  late Stream<QuerySnapshot<Map<String, dynamic>>> messageStream;
 
   @override
   void initState() {
+    setState(() {
+      setmessagestream();
+    });
+
     super.initState();
+
     fetchMessage();
+
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         setState(() {
@@ -46,12 +58,34 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         });
       }
     });
-    activeChatUserId = widget.user.id;
+  }
+
+  void setmessagestream() async {
+    final fireService = ref.watch(apisProvider);
+    final chatService = ref.watch(chatDBProvider);
+    final currentuser = ref.watch(userDataProvider).userData;
+
+    String conversationID = await fireService.getConversationID(widget.user.id);
+    if (isset == false)
+      setState(() {
+        messageStream = FirebaseFirestore.instance
+            .collection('chats/$conversationID/messages')
+            .orderBy('sent', descending: true)
+            .snapshots();
+        isset = true;
+      });
   }
 
   void fetchMessage() async {
     final fireService = ref.watch(apisProvider);
     final chatService = ref.watch(chatDBProvider);
+    final currentuser = ref.watch(userDataProvider).userData;
+
+    String conversationID = fireService.getConversationID(widget.user.id);
+    messageStream = FirebaseFirestore.instance
+        .collection('chats/$conversationID/messages')
+        .orderBy('sent', descending: true)
+        .snapshots();
     messages = await chatService
         .getAllChatUserList(fireService.getConversationID(widget.user.id));
   }
@@ -78,10 +112,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setmessagestream();
     print("hi everyone");
 
     final fireService = ref.watch(
         apisProvider); // Changed from read to watch if using inside build for reactivity
+
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -104,13 +140,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 _buildMessagesList(),
                 if (_isUploading) _buildUploadingIndicator(),
                 MessageBox(
-                  focusNode: _focusNode,
-                  textController: _textController,
-                  user: widget.user,
-                  setEmoji: setEmoji,
-                  setUpload: setUpload,
+                  _textController,
+                  _focusNode,
+                  widget.user,
+                  setEmoji,
+                  setUpload,
+                  messages.length,
+                  fireService.sendFirstMessage,
+                  fireService.sendMessage,
+                  fireService.sendChatImage,
                 ),
-                if (_showEmoji) _buildEmojiPicker(),
+                if (_showEmoji)
+                  SizedBox(height: mq.height * .35, child: _buildEmojiPicker()),
               ],
             ),
           ),
@@ -173,7 +214,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           case ConnectionState.waiting:
                           case ConnectionState.none:
                             return Text(
-                                user.isOnline
+                                user.isOnline == 1
                                     ? 'Online'
                                     : MyDateUtil.getLastActiveTime(
                                         context: context,
@@ -186,7 +227,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           case ConnectionState.done:
                             final data = snapshot.data;
                             return Text(
-                                data!.isOnline
+                                data!.isOnline == 1
                                     ? 'Online'
                                     : MyDateUtil.getLastActiveTime(
                                         context: context,
@@ -206,40 +247,34 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final fireService =
         ref.watch(apisProvider); // Use watch for reactive updates if needed
     return Expanded(
-      child:
-          // ListView.builder(
-          //   itemCount: messages.length,
-          //   itemBuilder: (context, index) {
-          //     MessageCard(message: messages[index]);
-          //   },
-          // ),
-
-          StreamBuilder<List<Message>>(
-        stream: fireService.getAllMessages(widget.user),
-        builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Text("No messages yet."));
-          }
-          List<Message> messages = snapshot.data!;
-          if (messages.isNotEmpty) {
-            return ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) =>
-                  MessageCard(message: messages[index]),
-            );
-          } else {
-            return Center(
-              child:
-                  Text('Say Hii! 👋', style: GoogleFonts.ptSans(fontSize: 20)),
-            );
-          }
-        },
-      ),
-    );
+        child: StreamBuilder<QuerySnapshot>(
+      stream: messageStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData) {
+          return const Center(child: Text("No messages yet."));
+        }
+        List<Message> messages =
+            snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+          return Message.fromJson(data);
+        }).toList();
+        if (messages.isNotEmpty) {
+          return ListView.builder(
+            reverse: true,
+            itemCount: messages.length,
+            itemBuilder: (context, index) =>
+                MessageCard(message: messages[index]),
+          );
+        } else {
+          return Center(
+            child: Text('Say Hii! 👋', style: GoogleFonts.ptSans(fontSize: 20)),
+          );
+        }
+      },
+    ));
   }
 
   Widget _buildUploadingIndicator() {
@@ -281,33 +316,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 }
 
-class MessageBox extends ConsumerStatefulWidget {
-  final ChatUser _user;
-  final TextEditingController _textController;
-  final FocusNode _focusNode;
-  final VoidCallback _setEmoji;
-  final VoidCallback _setUpload;
+class MessageBox extends ConsumerWidget {
+  const MessageBox(
+      this.textController,
+      this.focusNode,
+      this.user,
+      this.setEmoji,
+      this.setUpload,
+      this.messageLength,
+      this.sendFirstMessage,
+      this.sendMessage,
+      this.sendChatImage);
 
-  MessageBox({
-    required ChatUser user,
-    required TextEditingController textController,
-    required FocusNode focusNode,
-    required VoidCallback setEmoji,
-    required VoidCallback setUpload,
-  })  : _user = user,
-        _focusNode = focusNode,
-        _textController = textController,
-        _setEmoji = setEmoji,
-        _setUpload = setUpload;
+  final TextEditingController textController;
+  final FocusNode focusNode;
+  final ChatUser user;
+  final VoidCallback setEmoji;
+  final VoidCallback setUpload;
+  final int messageLength;
+  final void Function(ChatUser user, String message, Type type)
+      sendFirstMessage;
+  final void Function(ChatUser user, String message, Type type) sendMessage;
+  final void Function(ChatUser user, File image) sendChatImage;
 
   @override
-  ConsumerState<ChatScreen> createState() => _ChatScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Changed from read to watch if using inside build for reactivity
 
-class _MessageBoxState extends ConsumerState<MessageBox> {
-  @override
-  Widget build(BuildContext context) {
-    final fireServices = ref.read(apisProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -322,10 +357,11 @@ class _MessageBoxState extends ConsumerState<MessageBox> {
                       await picker.pickMultiImage(imageQuality: 70);
                   for (var i in images) {
                     log('Image Path: ${i.path}');
-                    widget._setUpload();
-                    await fireServices.sendChatImage(
-                        widget._user, File(i.path));
-                    widget._setUpload();
+                    setUpload();
+                    sendChatImage(user, File(i.path));
+                    Future.delayed(const Duration(seconds: 1), () {
+                      setUpload();
+                    });
                   }
                 },
                 icon: const Icon(Icons.add, color: Colors.black, size: 34)),
@@ -342,14 +378,14 @@ class _MessageBoxState extends ConsumerState<MessageBox> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        widget._setEmoji();
+                        setEmoji();
                       },
                       icon: const Icon(Icons.emoji_emotions_outlined,
                           color: Colors.black, size: 28)),
                   Expanded(
                     child: TextField(
-                      focusNode: widget._focusNode,
-                      controller: widget._textController,
+                      focusNode: focusNode,
+                      controller: textController,
                       decoration: InputDecoration(
                         hintText: "Type a message",
                         border: OutlineInputBorder(
@@ -362,15 +398,23 @@ class _MessageBoxState extends ConsumerState<MessageBox> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: () {
-                      if (widget._textController.text.isNotEmpty) {
-                        fireServices.sendMessage(widget._user,
-                            widget._textController.text, Type.text);
-                        widget._textController.clear();
-                      }
-                    },
-                  ),
+                      icon: const Icon(Icons.send),
+                      onPressed: () {
+                        if (textController.text.isNotEmpty) {
+                          sendMessage(user, textController.text, Type.text);
+                          textController.clear();
+
+                          if (textController.text.isNotEmpty) {
+                            if (messageLength != 0) {
+                              sendMessage(user, textController.text, Type.text);
+                            } else {
+                              sendFirstMessage(
+                                  user, textController.text, Type.text);
+                            }
+                            textController.clear();
+                          }
+                        }
+                      }),
                 ],
               ),
             ),

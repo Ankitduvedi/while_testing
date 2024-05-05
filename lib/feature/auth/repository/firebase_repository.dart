@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +57,7 @@ class AuthRepository extends ConsumerStatefulWidget {
           image:
               'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
           createdAt: time,
-          isOnline: false,
+          isOnline: 0,
           lastActive: time,
           pushToken: '',
           dateOfBirth: '',
@@ -69,10 +68,10 @@ class AuthRepository extends ConsumerStatefulWidget {
           designation: 'Member',
           follower: 0,
           following: 0,
-          isContentCreator: false,
-          isApproved: false,
-          isCounsellor: false,
-          isCounsellorVerified: false);
+          isContentCreator: 0,
+          isApproved: 0,
+          isCounsellor: 0,
+          isCounsellorVerified: 0);
       log('/////as////${_auth.currentUser!.uid}');
       await createNewUser(userModel);
       return right(userModel);
@@ -120,7 +119,7 @@ class AuthRepository extends ConsumerStatefulWidget {
 
   Future signout() async {
     try {
-      _ref.read(apisProvider).updateActiveStatus(false);
+      _ref.read(apisProvider).updateActiveStatus(0);
       await _googleSignIn.signOut();
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
@@ -130,7 +129,7 @@ class AuthRepository extends ConsumerStatefulWidget {
 
   Future deleteAccount() async {
     try {
-      _ref.read(apisProvider).updateActiveStatus(false);
+      _ref.read(apisProvider).updateActiveStatus(0);
       // await APIs.updateActiveStatus(false);
       await _auth.currentUser!.delete();
     } catch (error) {
@@ -184,7 +183,7 @@ class AuthRepository extends ConsumerStatefulWidget {
                 image:
                     'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
                 createdAt: time,
-                isOnline: false,
+                isOnline: 0,
                 lastActive: time,
                 pushToken: '',
                 dateOfBirth: '',
@@ -195,10 +194,10 @@ class AuthRepository extends ConsumerStatefulWidget {
                 designation: 'Member',
                 follower: 0,
                 following: 0,
-                isContentCreator: false,
-                isApproved: false,
-                isCounsellor: false,
-                isCounsellorVerified: false);
+                isContentCreator: 0,
+                isApproved: 0,
+                isCounsellor: 0,
+                isCounsellorVerified: 0);
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
@@ -216,7 +215,7 @@ class AuthRepository extends ConsumerStatefulWidget {
                 image:
                     'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
                 createdAt: time,
-                isOnline: false,
+                isOnline: 0,
                 lastActive: time,
                 pushToken: '',
                 dateOfBirth: '',
@@ -227,10 +226,10 @@ class AuthRepository extends ConsumerStatefulWidget {
                 designation: 'Member',
                 follower: 0,
                 following: 0,
-                isContentCreator: false,
-                isApproved: false,
-                isCounsellor: false,
-                isCounsellorVerified: false);
+                isContentCreator: 0,
+                isApproved: 0,
+                isCounsellor: 0,
+                isCounsellorVerified: 0);
 
             userModel = await getUserData(
               newUser.uid,

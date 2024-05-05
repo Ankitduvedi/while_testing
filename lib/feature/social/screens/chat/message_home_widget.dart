@@ -17,11 +17,14 @@ class MessageHomeWidget extends ConsumerWidget {
     log("chatScreen");
     final allUsersAsyncValue = ref.watch(allUsersProvider);
     var user = ref.watch(userDataProvider).userData!;
-    // user = ref.watch(userDataProvider).userData!;
-    // print("user uid is ${user.id}");
+    user = ref.watch(userDataProvider).userData!;
+    print("user uid is ${user.id}");
     final myUsersAsyncValue = ref.watch(myUsersUidsProvider(user.id));
+    print("hi");
     var toogleSearch = ref.watch(toggleSearchStateProvider);
+    print("hi1");
     final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
+    print("hi2");
     return Scaffold(
       backgroundColor: Colors.white,
       body: allUsersAsyncValue.when(
@@ -35,6 +38,7 @@ class MessageHomeWidget extends ConsumerWidget {
                           .empty(), // Provide a fallback value to avoid the error
                     ))
                 .toList();
+            print("hi3");
             // print("nonflowers ${nonFollowingUsers[0].toJson()}");
             var usersList = toogleSearch == 2
                 ? nonFollowingUsers

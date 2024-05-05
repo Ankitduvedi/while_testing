@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_follower_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_following_screen.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';

@@ -35,7 +35,7 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
           Text(
             'Become Creator',
             style: GoogleFonts.ptSans(
-                color: Colors.lightBlueAccent,
+                color: Colors.blue[400],
                 fontSize: 24,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
@@ -59,19 +59,43 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              // Add your submission logic here
-              ref
-                  .watch(creatorControllerProvider.notifier)
-                  .submitCreatorRequest(
-                      ref.read(userProvider)!.id,
-                      _instagramController.text.trim(),
-                      _youtubeController.text.trim());
+              // Check if the text fields are empty
+              if (_instagramController.text.trim().isEmpty ||
+                  _youtubeController.text.trim().isEmpty) {
+                // Show an error message if any field is empty
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please fill in all fields.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } else {
+                // Proceed with submitting the form
+                ref
+                    .watch(creatorControllerProvider.notifier)
+                    .submitCreatorRequest(
+                        ref.read(userProvider)!.id,
+                        _instagramController.text.trim(),
+                        _youtubeController.text.trim());
+              }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent),
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue[400], // Text and icon color if used
+              shadowColor: Colors.blue[200], // Shadow color
+              elevation: 10, // Shadow elevation
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Rounded corners
+              ),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30, vertical: 15), // Button padding
+            ),
             child: isLoading
                 ? const CircularProgressIndicator()
-                : const Text('Submit'),
+                : const Text(
+                    'Submit',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
           ),
         ],
       ),

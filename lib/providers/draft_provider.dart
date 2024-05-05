@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../data/model/chat_user.dart';
@@ -21,7 +22,7 @@ class DraftDb with ChangeNotifier {
   Future<void> insertNote(ChatUser user) async {
     final database1 = await DatabaseHelper().database;
     print(database1?.path);
-    print(user.toJson());
+    log('insertNote $user');
     int result = await database1!.insert(UsersTable, user.toJson());
     allMyUsers.add(user);
     print("inserted $result");

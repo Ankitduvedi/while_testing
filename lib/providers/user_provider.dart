@@ -66,9 +66,8 @@ class UserDataProvider with ChangeNotifier {
             .collection('follower')
             .snapshots()
             .listen(_followerUpdateListener);
-        ;
       } catch (e) {
-        print(" error is ${e.toString()}");
+        log("this error is ${e.toString()}");
         // User data subscription
       }
     }
@@ -83,7 +82,7 @@ class UserDataProvider with ChangeNotifier {
       final data = doc.data() as Map<String, dynamic>;
       user = ChatUser.fromJson(data);
     });
-
+    log('fetchUserFirebase $user');
     _userData = user;
     return user;
   }

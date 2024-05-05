@@ -3,11 +3,10 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sqflite/sqflite.dart';
 
+import 'package:sqflite/sqflite.dart';
 import '../data/model/chat_user.dart';
 import 'chat_SqLite_methods.dart';
-import 'draft_method.dart';
 
 final chatDBProvider = Provider<ChatDb>((ref) {
   return ChatDb(ref: ref);
