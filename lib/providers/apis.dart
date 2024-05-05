@@ -346,7 +346,9 @@ class APIs {
       about: "Hey, I'm using We Chat!",
       image: user.photoURL.toString(),
       createdAt: time,
+
       isOnline: 0,
+
       lastActive: time,
       pushToken: '',
       dateOfBirth: '',
@@ -480,7 +482,9 @@ class APIs {
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
       return snapshot.docs
           .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
+
               Message.fromJson(doc.data()! as Map<String, dynamic>))
+
           .toList();
     });
   }
