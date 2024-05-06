@@ -11,8 +11,11 @@ import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+import 'package:tus_client/tus_client.dart';
 
 class AddReel extends ConsumerStatefulWidget {
   final String video;
@@ -55,6 +58,7 @@ class _AddReelState extends ConsumerState<AddReel> {
     setState(() {
       isloading = true;
     });
+    _handleUpload();
     File vid = await compressVideo(path);
     Dialogs.showSnackbar(context, vid.path.split(".").last);
 // Api.video
@@ -215,5 +219,119 @@ class _AddReelState extends ConsumerState<AddReel> {
         ),
       ),
     );
+  }
+
+// Add 'tus_client' package to your pubspec.yaml
+
+  final String _title = 'abcdef';
+  final String _description = 'edfdef';
+  XFile? _videoFile;
+
+  final String _apiKey = '5d92156c-5900-42a8-911500a7e326-350d-46d5';
+  final String _libraryId = '235359';
+
+  Future<String> _createVideo(String title, String description) async {
+    log('entered in createvideo');
+
+    final response = await http.post(
+      Uri.parse('https://video.bunnycdn.com/library/$_libraryId/videos'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'AccessKey': _apiKey,
+      },
+      body: jsonEncode({'title': title, 'description': description}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      log('response code is ${response.statusCode}');
+
+      return data['guid'];
+    } else {
+      log('Failed to create video: ${response.body} , ');
+      throw Exception(
+          'Failed to create video: ${response.body}, ${response.statusCode}');
+    }
+  }
+
+  String _generateSignature(String videoId) {
+    log('entered in _generateSignature');
+
+    final expirationTime =
+        (DateTime.now().millisecondsSinceEpoch ~/ 1000) + 3600;
+    final signatureString = '$_libraryId$_apiKey$expirationTime$videoId';
+    final hash = sha256.convert(utf8.encode(signatureString)).toString();
+    return '$hash,$expirationTime';
+  }
+
+  void _uploadVideo(
+      String videoId, String signature, String expirationTime) async {
+    log('entered in _uploadVideo');
+    final endpointUrl = Uri.parse('https://video.bunnycdn.com/tusupload');
+    final client = TusClient(endpointUrl, _videoFile!)
+      ..headers = {
+        'AuthorizationSignature': signature.split(',')[0],
+        'AuthorizationExpire': expirationTime,
+        'VideoId': videoId,
+        'LibraryId': _libraryId,
+      };
+
+    try {
+      log('entered in _uploadVideo and trying');
+
+      await client.upload(
+        onComplete: () {
+          log("Complete!");
+
+          // Prints the uploaded file URL
+          log(client.uploadUrl.toString());
+        },
+        onProgress: (progress) {
+          log("Progress: $progress");
+        },
+      );
+
+      // Store video information in Firestore
+      // final videoData = {
+      //   'id': videoId,
+      //   'title': _title,
+      //   'description': _description,
+      //   'creatorName': _userName,
+      //   'uploadedBy': _auth.currentUser!.uid,
+      //   'videoUrl':
+      //       'https://iframe.mediadelivery.net/play/$_libraryId/$videoId',
+      //   'thumbnail':
+      //       'https://video.bunnycdn.com/library/$_libraryId/video/$videoId/thumbnail.jpg',
+      // };
+
+      // final batch = _db.batch();
+      // final loopsRef = _db.collection('loops').doc(videoId);
+      // final userLoopsRef = _db
+      //     .collection('users')
+      //     .doc(_auth.currentUser!.uid)
+      //     .collection('loops')
+      //     .doc(videoId);
+      // batch.set(loopsRef, videoData);
+      // batch.set(userLoopsRef, videoData);
+      // await batch.commit();
+
+      log('Video uploaded successfully!');
+    } catch (e) {
+      log('Upload failed: $e');
+    }
+  }
+
+  Future<void> _handleUpload() async {
+    log('entered in _handleUpload');
+
+    try {
+      final videoId = await _createVideo(_title, _description);
+      final signatureParts = _generateSignature(videoId).split(',');
+      _uploadVideo(videoId, signatureParts[0], signatureParts[1]);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to prepare video: $e')));
+    }
   }
 }
