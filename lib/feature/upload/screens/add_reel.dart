@@ -227,8 +227,8 @@ class _AddReelState extends ConsumerState<AddReel> {
   final String _description = 'edfdef';
   XFile? _videoFile;
 
-  final String _apiKey = '5d92156c-5900-42a8-911500a7e326-350d-46d5';
-  final String _libraryId = '235359';
+  final String _apiKey = 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d';
+  final String _libraryId = '239543';
 
   Future<String> _createVideo(String title, String description) async {
     log('entered in createvideo');
@@ -245,7 +245,7 @@ class _AddReelState extends ConsumerState<AddReel> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      log('response code is ${response.statusCode}');
+      log('response code is ${response.statusCode}, ${data['guid']} ');
 
       return data['guid'];
     } else {
