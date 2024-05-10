@@ -2,8 +2,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,12 +18,11 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
       ref: ref);
 });
 
-class AuthRepository extends ConsumerStatefulWidget {
+class AuthRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
   final Ref _ref;
-
   AuthRepository(
       {required FirebaseFirestore firestore,
       required FirebaseAuth auth,
@@ -101,10 +98,6 @@ class AuthRepository extends ConsumerStatefulWidget {
       } else {
         final ChatUser user =
             ChatUser.fromJson(userDoc.data() as Map<String, dynamic>);
-        UserDataProvider userDataProvider =
-            UserDataProvider(_ref); // Create an instance
-        userDataProvider.updateUserData(user);
-
         return right(user);
       }
     } on FirebaseAuthException catch (e) {
@@ -203,42 +196,8 @@ class AuthRepository extends ConsumerStatefulWidget {
                 userModel); // Ensure this is awaited if asynchronous
             log("success new user");
           } else {
-            final time = DateTime.now().millisecondsSinceEpoch.toString();
-            ChatUser newusemodel = ChatUser(
-                lives: 0,
-                easyQuestions: 0,
-                id: newUser.uid,
-                hardQuestions: 0,
-                mediumQuestions: 0,
-                name: newUser.displayName.toString(),
-                email: newUser.email.toString(),
-                about: 'Hey I am ${newUser.displayName}',
-                image:
-                    'https://firebasestorage.googleapis.com/v0/b/while-2.appspot.com/o/profile_pictures%2FKIHEXrUQrzcWT7aw15E2ho6BNhc2.jpg?alt=media&token=1316edc6-b215-4655-ae0d-20df15555e34',
-                createdAt: time,
-                isOnline: false,
-                lastActive: time,
-                pushToken: '',
-                dateOfBirth: '',
-                gender: '',
-                phoneNumber: '',
-                place: '',
-                profession: '',
-                designation: 'Member',
-                follower: 0,
-                following: 0,
-                isContentCreator: false,
-                isApproved: false,
-                isCounsellor: false,
-                isCounsellorVerified: false);
-
-            userModel = await getUserData(
-              newUser.uid,
-            ); // Assume this fetches the user correctly
-            if (userModel.id == '' || userModel.id == null) {
-              userModel = newusemodel;
-              createNewUser(newusemodel);
-            }
+            userModel = await getUserData(newUser.uid)
+                .first; // Assume this fetches the user correctly
             log("existing user");
           }
           return right(userModel); // Return userModel instead of newUser
@@ -259,39 +218,13 @@ class AuthRepository extends ConsumerStatefulWidget {
     log(' users given id is /: ${newUser.name}');
     log(newUser.id);
     await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
-    UserDataProvider userDataProvider =
-        UserDataProvider(_ref); // Create an instance
-    userDataProvider.setUserData(newUser);
   }
 
-  Future<ChatUser> getUserData(
-    String uid,
-  ) async {
-    UserDataProvider userDataProvider =
-        UserDataProvider(_ref); // Create an instance
-    ChatUser user = await userDataProvider.fetchUser(uid);
-
-    if (user.id == null || user.id == '') {
-      final docRef = _firestore.collection("users").doc(uid);
-      docRef.get().then((DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        user = ChatUser.fromJson(data);
-        userDataProvider.setUserData(user);
-      });
-    }
-    return user;
+  Stream<ChatUser> getUserData(String uid) {
+    return _firestore.collection('users').doc(uid).snapshots().map(
+        (event) => ChatUser.fromJson(event.data() as Map<String, dynamic>));
   }
 
   Stream<User?> get authStateChange =>
       _ref.read(authProvider).authStateChanges();
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-}
-
-class a {
-  void b() {}
 }

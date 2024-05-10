@@ -32,21 +32,7 @@ final authStateChangeProvider = StreamProvider((ref) {
 });
 final getUserDataProvider = StreamProvider.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
-
-  // Create a StreamController to convert the Future into a Stream
-  final controller = StreamController<ChatUser>();
-
-  // Call getUserData and add the result to the stream
-  authController.getUserData(uid).then((userData) {
-    controller.add(userData);
-    controller.close(); // Close the stream after adding the data
-  }).catchError((error) {
-    // Handle errors here if necessary
-    print("Error fetching user data: $error");
-    controller.close(); // Close the stream in case of error
-  });
-
-  return controller.stream;
+  return authController.getUserData(uid);
 });
 
 class AuthController extends StateNotifier<bool> {
@@ -58,7 +44,8 @@ class AuthController extends StateNotifier<bool> {
         super(false); // to tell isLoading state
 
   Stream<User?> get authStateChange => _authRepository.authStateChange;
-  Future<ChatUser> getUserData(String uid) => _authRepository.getUserData(uid);
+
+  Stream<ChatUser> getUserData(String uid) => _authRepository.getUserData(uid);
 
   void signInWithGoogle(BuildContext context) async {
     state = true;
@@ -86,7 +73,6 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     final user = await _authRepository.loginWithEmailAndPassword(
         email, password, context);
-    log("setting user data to userProv");
     user.fold((l) => SnackBar(content: Text(l.message)),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
     state = false;
@@ -97,16 +83,8 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     final response = await _authRepository.signInWithEmailAndPassword(
         email, password, name, context);
-    response.fold(
-        (l) => SnackBar(content: Text(l.message)),
-        (r) => {
-              _ref.read(userProvider.notifier).update((state) => r),
-              const SnackBar(content: Text("Successfully signed in"))
-            });
+    response.fold((l) => SnackBar(content: Text(l.message)),
+        (r) => const SnackBar(content: Text("Successfully signed in")));
     state = false;
-  }
-
-  void updateUserProfile(ChatUser user) {
-    _ref.read(userProvider.notifier).update((state) => user);
   }
 }
