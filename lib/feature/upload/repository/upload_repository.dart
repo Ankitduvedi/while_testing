@@ -33,13 +33,13 @@ class UploadRepository {
         return left(Failure(message: "No video was selected"));
       }
 
-      _selectedVideo = File(pickedFile.path);
+      // _selectedVideo = File(pickedFile.path);
       final String routeName =
           (type == 'Video') ? RoutesName.addVideo : RoutesName.addReel;
 
       // Now return both the route name and the _selectedVideo.
       return right(VideoSelectionResult(
-          routeName: routeName, selectedVideo: _selectedVideo));
+          routeName: routeName, selectedVideo: pickedFile));
     } catch (e) {
       return left(Failure(
           message:
@@ -50,7 +50,7 @@ class UploadRepository {
 
 class VideoSelectionResult {
   final String routeName;
-  final File selectedVideo;
+  final XFile selectedVideo;
 
   VideoSelectionResult({required this.routeName, required this.selectedVideo});
 }

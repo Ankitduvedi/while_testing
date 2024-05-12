@@ -29,7 +29,7 @@ class UploadController {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddReel(video: r.selectedVideo.path),
+              builder: (context) => AddReel(video: r.selectedVideo),
             ));
       }
     });

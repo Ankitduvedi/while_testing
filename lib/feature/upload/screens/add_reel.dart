@@ -18,7 +18,8 @@ import 'package:crypto/crypto.dart';
 import 'package:tus_client/tus_client.dart';
 
 class AddReel extends ConsumerStatefulWidget {
-  final String video;
+  final XFile video;
+
   const AddReel({Key? key, required this.video}) : super(key: key);
 
   @override
@@ -48,9 +49,23 @@ class _AddReelState extends ConsumerState<AddReel> {
   }
 
   compressVideo(String videoPath) async {
-    final compressedVideo = await VideoCompress.compressVideo(videoPath,
-        quality: VideoQuality.MediumQuality, deleteOrigin: false);
-    return compressedVideo?.file;
+    MediaInfo? infov;
+    try {
+      final info = await VideoCompress.compressVideo(
+        videoPath,
+        quality: VideoQuality.LowQuality,
+        deleteOrigin: false,
+        includeAudio: true,
+      );
+      setState(() {
+        infov = info;
+      });
+    } catch (e) {
+      log("error is $e");
+      VideoCompress.cancelCompression();
+    }
+
+    return infov!.file;
   }
 
   void uploadVideo(BuildContext context, String title, String des, String path,
@@ -59,8 +74,8 @@ class _AddReelState extends ConsumerState<AddReel> {
       isloading = true;
     });
     _handleUpload();
-    File vid = await compressVideo(path);
-    Dialogs.showSnackbar(context, vid.path.split(".").last);
+    // File vid = await compressVideo(path);
+    // Dialogs.showSnackbar(context, vid.path.split(".").last);
 // Api.video
     uploadVideo(File videoFile, String id) async {
       //Dialogs.showSnackbar(context, 'Function called');
@@ -124,34 +139,34 @@ class _AddReelState extends ConsumerState<AddReel> {
       }
     }
 
-    createVideo(String title, String description) async {
-      Dialogs.showSnackbar(context, 'Called');
-      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
-      const apiUrl = 'https://ws.api.video';
-      final response = await http.post(
-        Uri.parse('$apiUrl/videos'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
-          // 'Content-Length': '', // Add the length of the request body here
-          // 'Host': 'sandbox.api.video',
-        },
-        body: jsonEncode({
-          'title': title,
-          'description': description,
-        }),
-      );
+    // createVideo(String title, String description) async {
+    //   Dialogs.showSnackbar(context, 'Called');
+    //   const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+    //   const apiUrl = 'https://ws.api.video';
+    //   final response = await http.post(
+    //     Uri.parse('$apiUrl/videos'),
+    //     headers: {
+    //       'Authorization': 'Bearer $apiKey',
+    //       'Content-Type': 'application/json',
+    //       // 'Content-Length': '', // Add the length of the request body here
+    //       // 'Host': 'sandbox.api.video',
+    //     },
+    //     body: jsonEncode({
+    //       'title': title,
+    //       'description': description,
+    //     }),
+    //   );
+    //
+    //   if (response.statusCode == 201) {
+    //     final Map<String, dynamic> data = jsonDecode(response.body);
+    //     uploadVideo(vid, data['videoId']);
+    //   } else {
+    //     Dialogs.showSnackbar(context, 'Failed');
+    //     throw Exception('Failed to create video');
+    //   }
+    // }
 
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        uploadVideo(vid, data['videoId']);
-      } else {
-        Dialogs.showSnackbar(context, 'Failed');
-        throw Exception('Failed to create video');
-      }
-    }
-
-    createVideo(title, des);
+    // createVideo(title, des);
   }
 
   @override
@@ -174,7 +189,7 @@ class _AddReelState extends ConsumerState<AddReel> {
                 child: SizedBox(
                   width: w,
                   height: h / 2,
-                  child: VideoPlayerWidget(videoPath: widget.video),
+                  child: VideoPlayerWidget(videoPath: widget.video.path),
                 ),
               ),
               const SizedBox(height: 15),
@@ -209,8 +224,9 @@ class _AddReelState extends ConsumerState<AddReel> {
                           context,
                           _titleController.text.toString(),
                           _descriptionController.text.toString(),
-                          widget.video.toString(),
-                          [], // initally the likes list shall be holding an empty list to be precise
+                          widget.video.path.toString(),
+                          [],
+                          // initally the likes list shall be holding an empty list to be precise
                           0);
                     }
                   })
@@ -223,8 +239,8 @@ class _AddReelState extends ConsumerState<AddReel> {
 
 // Add 'tus_client' package to your pubspec.yaml
 
-  final String _title = 'abcdef';
-  final String _description = 'edfdef';
+  final String _title = 'a132';
+  final String _description = 'e12';
   XFile? _videoFile;
 
   final String _apiKey = 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d';
@@ -240,7 +256,7 @@ class _AddReelState extends ConsumerState<AddReel> {
         'Content-Type': 'application/json',
         'AccessKey': _apiKey,
       },
-      body: jsonEncode({'title': title, 'description': description}),
+      body: jsonEncode({'title': 'arpitverma', 'description': 'verma'}),
     );
 
     if (response.statusCode == 200) {
@@ -260,22 +276,26 @@ class _AddReelState extends ConsumerState<AddReel> {
 
     final expirationTime =
         (DateTime.now().millisecondsSinceEpoch ~/ 1000) + 3600;
-    final signatureString = '$_libraryId$_apiKey$expirationTime$videoId';
+    final signatureString =
+        '$_libraryId' + '$_apiKey' + '$expirationTime' + '$videoId';
     final hash = sha256.convert(utf8.encode(signatureString)).toString();
     return '$hash,$expirationTime';
   }
 
   void _uploadVideo(
       String videoId, String signature, String expirationTime) async {
-    log('entered in _uploadVideo');
+    File vid = await compressVideo(widget.video.path);
+
+    XFile video = XFile(vid.path);
+    int len = await video.length();
+
     final endpointUrl = Uri.parse('https://video.bunnycdn.com/tusupload');
-    final client = TusClient(endpointUrl, _videoFile!)
-      ..headers = {
-        'AuthorizationSignature': signature.split(',')[0],
-        'AuthorizationExpire': expirationTime,
-        'VideoId': videoId,
-        'LibraryId': _libraryId,
-      };
+    final client = TusClient(endpointUrl, video, headers: {
+      'AuthorizationSignature': signature.split(',')[0],
+      'AuthorizationExpire': expirationTime,
+      'VideoId': videoId,
+      'LibraryId': _libraryId,
+    });
 
     try {
       log('entered in _uploadVideo and trying');
@@ -284,7 +304,6 @@ class _AddReelState extends ConsumerState<AddReel> {
         onComplete: () {
           log("Complete!");
 
-          // Prints the uploaded file URL
           log(client.uploadUrl.toString());
         },
         onProgress: (progress) {
@@ -327,6 +346,7 @@ class _AddReelState extends ConsumerState<AddReel> {
 
     try {
       final videoId = await _createVideo(_title, _description);
+
       final signatureParts = _generateSignature(videoId).split(',');
       _uploadVideo(videoId, signatureParts[0], signatureParts[1]);
     } catch (e) {

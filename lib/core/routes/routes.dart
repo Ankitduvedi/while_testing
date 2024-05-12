@@ -8,6 +8,7 @@ import 'package:com.while.while_app/feature/upload/screens/add_reel.dart';
 import 'package:com.while.while_app/home_screen.dart';
 import 'package:com.while.while_app/feature/splash/screens/splash_view.dart';
 import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../feature/auth/screens/login_screen.dart';
 import '../../feature/profile/screens/user_profile_screen2.dart';
 import '../../feature/settings/settings_page.dart';
@@ -46,7 +47,7 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const CreateMenuScreen());
       case RoutesName.addReel:
-        if (arguments is String) {
+        if (arguments is XFile) {
           return MaterialPageRoute(
               builder: (BuildContext context) => AddReel(
                     video: arguments,
