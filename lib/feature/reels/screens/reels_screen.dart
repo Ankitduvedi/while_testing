@@ -22,8 +22,6 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   late VideoPlayerController _controller1;
   late VideoPlayerController _controller2;
 
-  
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -38,8 +36,13 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
     controller1.play().whenComplete(
       () {
         _controller2 = VideoPlayerController.networkUrl(
-            Uri.parse(video[index + 1].videoUrl))
-          ..initialize();
+          Uri.parse(
+              "https://iframe.mediadelivery.net/play/239543/e080998b-3823-40ad-9a69-da33782c4b26/play_360p.mp4"),
+          httpHeaders: {
+            "AccessKey": 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d',
+            "Content-Type": "application/json"
+          },
+        )..initialize();
       },
     );
     return FeedItem(video: video[index], index: index, controller: controller1);
@@ -61,7 +64,7 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
     final streamData = ref.read(videoStreamProvider.future);
     return FutureBuilder<QuerySnapshot>(
         future: streamData,
-        builder: (context, snapshot)  {
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -73,8 +76,9 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
               child: Text('Error: ${snapshot.error}'),
             );
           }
-          final videoList = ref.read(videoListControllerProvider.notifier).videoList(snapshot.data);
-
+          final videoList = ref
+              .read(videoListControllerProvider.notifier)
+              .videoList(snapshot.data);
 
           videoList.shuffle();
           return PageView.builder(

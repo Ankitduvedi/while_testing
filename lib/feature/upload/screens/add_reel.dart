@@ -87,56 +87,57 @@ class _AddReelState extends ConsumerState<AddReel> {
         ..headers['Authorization'] = 'Bearer $apiKey'
         ..files.add(await http.MultipartFile.fromPath('file', videoFile.path));
 
-      try {
-        var response = await request.send();
-        //Dialogs.showSnackbar(context, 'Trying');
-        if (response.statusCode == 201) {
-          // Video uploaded successfully
-          final Map<String, dynamic> data =
-              json.decode(await response.stream.bytesToString());
-          //Dialogs.showSnackbar(context, data['videoId']);
-          //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
-          final Loops loop = Loops(
-              creatorName: ref.read(userProvider)!.name,
-              id: id,
-              uploadedBy: ref.read(userProvider)!.id,
-              videoUrl: data['assets']['mp4'],
-              thumbnail: data['assets']['thumbnail'],
-              title: title,
-              description: des,
-              likes: likes,
-              views: 0,
-              category: 'category');
+      var response = await request.send();
+      //Dialogs.showSnackbar(context, 'Trying');
+      print("res is ${response.stream.bytesToString()}");
+      if (response.statusCode == 201) {
+        // Video uploaded successfully
+        final Map<String, dynamic> data =
+            json.decode(await response.stream.bytesToString());
 
+        //Dialogs.showSnackbar(context, data['videoId']);
+        //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
+        final Loops loop = Loops(
+            creatorName: ref.read(userProvider)!.name,
+            id: id,
+            uploadedBy: ref.read(userProvider)!.id,
+            videoUrl: data['assets']['mp4'],
+            thumbnail: data['assets']['thumbnail'],
+            title: title,
+            description: des,
+            likes: likes,
+            views: 0,
+            category: 'category');
+
+        FirebaseFirestore.instance
+            .collection('loops')
+            .doc(id)
+            .set(loop.toJson())
+            .then((value) {
           FirebaseFirestore.instance
+              .collection('users')
+              .doc(ref.read(userProvider)!.id)
               .collection('loops')
               .doc(id)
-              .set(loop.toJson())
-              .then((value) {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(ref.read(userProvider)!.id)
-                .collection('loops')
-                .doc(id)
-                .set(loop.toJson());
-            Utils.toastMessage('Your video is uploaded!');
-            setState(() {
-              isloading = false;
-            });
-            Navigator.pop(context);
-            return data['videoId'];
+              .set(loop.toJson());
+          Utils.toastMessage('Your video is uploaded!');
+          setState(() {
+            isloading = false;
           });
-        } else {
-          // Handle upload failure
-          //Dialogs.showSnackbar(context, 'Failed');
-          throw Exception('Failed to upload video');
-        }
-      } catch (e) {
-        // Handle exceptions
-        //Dialogs.showSnackbar(context, e.toString());
-        log('Error uploading video: $e');
+          Navigator.pop(context);
+          return data['videoId'];
+        });
+      } else {
+        // Handle upload failure
+        //Dialogs.showSnackbar(context, 'Failed');
         throw Exception('Failed to upload video');
       }
+      // } catch (e) {
+      //   // Handle exceptions
+      //   //Dialogs.showSnackbar(context, e.toString());
+      //   log('Error uploading video: $e');
+      //   throw Exception('Failed to upload video');
+      // }
     }
 
     // createVideo(String title, String description) async {
@@ -239,12 +240,11 @@ class _AddReelState extends ConsumerState<AddReel> {
 
 // Add 'tus_client' package to your pubspec.yaml
 
-  final String _title = 'a132';
-  final String _description = 'e12';
   XFile? _videoFile;
 
   final String _apiKey = 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d';
   final String _libraryId = '239543';
+  final String _CDN_host = 'vz-a12f2b63-c06.b-cdn.net';
 
   Future<String> _createVideo(String title, String description) async {
     log('entered in createvideo');
@@ -256,8 +256,12 @@ class _AddReelState extends ConsumerState<AddReel> {
         'Content-Type': 'application/json',
         'AccessKey': _apiKey,
       },
-      body: jsonEncode({'title': 'arpitverma', 'description': 'verma'}),
+      body: jsonEncode({
+        'title': _titleController.text,
+        'description': _descriptionController.text
+      }),
     );
+    print("res is ${response.body}");
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -288,6 +292,23 @@ class _AddReelState extends ConsumerState<AddReel> {
 
     XFile video = XFile(vid.path);
     int len = await video.length();
+    ;
+
+    // try {
+    //   final res = await http.put(
+    //       Uri.parse('https://storage.bunnycdn.com/while3///y.mp4'),
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         "AccessKey": "4573db24-8174-44e1-bb83f462173b-7d2a-4141",
+    //       },
+    //       body: await vid.readAsBytes());
+    //   if (res.statusCode == 201) {
+    //     print("video uploaded");
+    //     print(res.body);
+    //   }
+    // } catch (e) {
+    //   print("error is  $e");
+    // }
 
     final endpointUrl = Uri.parse('https://video.bunnycdn.com/tusupload');
     final client = TusClient(endpointUrl, video, headers: {
@@ -297,55 +318,61 @@ class _AddReelState extends ConsumerState<AddReel> {
       'LibraryId': _libraryId,
     });
 
-    try {
-      log('entered in _uploadVideo and trying');
+    // try {
+    //   log('entered in _uploadVideo and trying');
 
-      await client.upload(
-        onComplete: () {
-          log("Complete!");
+    await client.upload(
+      onComplete: () {
+        log("Complete!");
+        final Loops loop = Loops(
+            creatorName: ref.read(userProvider)!.name,
+            id: videoId,
+            uploadedBy: ref.read(userProvider)!.id,
+            videoUrl:
+                'https://vz-a12f2b63-c06.b-cdn.net/${videoId}/play_360p.mp4',
+            thumbnail:
+                'https://vz-a12f2b63-c06.b-cdn.net/${videoId}/thumbnail.jpg',
+            title: _titleController.text,
+            description: _descriptionController.text,
+            likes: [],
+            views: 0,
+            category: 'category');
 
-          log(client.uploadUrl.toString());
-        },
-        onProgress: (progress) {
-          log("Progress: $progress");
-        },
-      );
+        FirebaseFirestore.instance
+            .collection('loops')
+            .doc(videoId)
+            .set(loop.toJson())
+            .then((value) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(ref.read(userProvider)!.id)
+              .collection('loops')
+              .doc(videoId)
+              .set(loop.toJson());
+          Utils.toastMessage('Your video is uploaded!');
+          setState(() {
+            isloading = false;
+          });
+        });
+        Navigator.pop(context);
+      },
+      onProgress: (progress) {
+        log("Progress: $progress");
+      },
+    );
 
-      // Store video information in Firestore
-      // final videoData = {
-      //   'id': videoId,
-      //   'title': _title,
-      //   'description': _description,
-      //   'creatorName': _userName,
-      //   'uploadedBy': _auth.currentUser!.uid,
-      //   'videoUrl':
-      //       'https://iframe.mediadelivery.net/play/$_libraryId/$videoId',
-      //   'thumbnail':
-      //       'https://video.bunnycdn.com/library/$_libraryId/video/$videoId/thumbnail.jpg',
-      // };
-
-      // final batch = _db.batch();
-      // final loopsRef = _db.collection('loops').doc(videoId);
-      // final userLoopsRef = _db
-      //     .collection('users')
-      //     .doc(_auth.currentUser!.uid)
-      //     .collection('loops')
-      //     .doc(videoId);
-      // batch.set(loopsRef, videoData);
-      // batch.set(userLoopsRef, videoData);
-      // await batch.commit();
-
-      log('Video uploaded successfully!');
-    } catch (e) {
-      log('Upload failed: $e');
-    }
+    log('Video uploaded successfully!');
+    // } catch (e) {
+    //   log('Upload failed: $e');
+    // }
   }
 
   Future<void> _handleUpload() async {
     log('entered in _handleUpload');
 
     try {
-      final videoId = await _createVideo(_title, _description);
+      final videoId = await _createVideo(
+          _titleController.text, _descriptionController.text);
 
       final signatureParts = _generateSignature(videoId).split(',');
       _uploadVideo(videoId, signatureParts[0], signatureParts[1]);

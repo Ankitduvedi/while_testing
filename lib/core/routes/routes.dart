@@ -62,7 +62,7 @@ class Routes {
           });
         }
       case RoutesName.addVideo:
-        if (arguments is String) {
+        if (arguments is XFile) {
           return MaterialPageRoute(
               builder: (BuildContext context) => AddVideo(
                     video: arguments,
