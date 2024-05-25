@@ -10,14 +10,10 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:tus_client/tus_client.dart';
 import 'package:video_compress/video_compress.dart';
-import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/core/utils/utils.dart';
-
-import '../../../data/model/reels_models.dart';
 import '../../auth/controller/auth_controller.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
 
@@ -55,7 +51,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
   }
 
   compressVideo(String videoPath) async {
-    print("video path is $videoPath");
+    log("video path is $videoPath");
     MediaInfo? infov;
     try {
       final info = await VideoCompress.compressVideo(
@@ -73,114 +69,6 @@ class AddVideoState extends ConsumerState<AddVideo> {
     }
 
     return infov!.file;
-  }
-
-  void uploadVideo(BuildContext context, String title, String des, String path,
-      List likes, int shares) async {
-    setState(() {
-      isloading = true;
-    });
-    File vid = await compressVideo(path);
-    // Dialogs.showSnackbar(context, vid.path.split(".").last);
-
-// Api.video
-    uploadVideo(File videoFile, String id) async {
-      Dialogs.showSnackbar(context, 'Function called');
-      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
-      const apiUrl = 'https://ws.api.video/videos';
-
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('$apiUrl/$id/source'))
-        ..headers['Authorization'] = 'Bearer $apiKey'
-        ..files.add(await http.MultipartFile.fromPath('file', videoFile.path));
-
-      try {
-        var response = await request.send();
-        // Dialogs.showSnackbar(context, 'Trying');
-        if (response.statusCode == 201) {
-          // Video uploaded successfully
-          final Map<String, dynamic> data =
-              json.decode(await response.stream.bytesToString());
-          //Dialogs.showSnackbar(context, data['videoId']);
-          // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
-
-          final Video vid = Video(
-              maxVideoRes: "360p",
-              creatorName: ref.read(userProvider)!.name,
-              id: id,
-              uploadedBy: ref.read(userProvider)!.id,
-              videoUrl: data['assets']['mp4'],
-              thumbnail: data['assets']['thumbnail'],
-              title: title,
-              description: des,
-              likes: likes,
-              views: 0,
-              category: _selectedItem ?? "App Development");
-
-          FirebaseFirestore.instance
-              .collection('videos')
-              .doc(_selectedItem)
-              .collection(_selectedItem!)
-              .doc(id)
-              .set(vid.toJson())
-              .then((value) {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(ref.read(userProvider)!.id)
-                .collection('videos')
-                .doc(id)
-                .set(vid.toJson());
-            Utils.toastMessage('Your video is uploaded!');
-            setState(() {
-              isloading = false;
-            });
-            Navigator.pop(context);
-            return data['videoId'];
-          });
-        } else {
-          // Handle upload failure
-          // Dialogs.showSnackbar(context, 'Failed');
-          throw Exception('Failed to upload video');
-        }
-      } catch (e) {
-        // Handle exceptions
-        // Dialogs.showSnackbar(context, e.toString());
-        // print('Error uploading video: $e');
-        throw Exception('Failed to upload video');
-      }
-    }
-
-    createVideo(String title, String description) async {
-      Dialogs.showSnackbar(context, 'Called');
-      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
-      const apiUrl = 'https://ws.api.video';
-      final response = await http.post(
-        Uri.parse('$apiUrl/videos'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
-          // 'Content-Length': '', // Add the length of the request body here
-          // 'Host': 'sandbox.api.video',
-        },
-        body: jsonEncode({
-          'title': title,
-          'description': description,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        uploadVideo(vid, data['videoId']);
-      } else {
-        log("failed to upload video");
-        // Dialogs.showSnackbar(context, 'Failed');
-        throw Exception('Failed to create video');
-      }
-    }
-
-    createVideo(title, des);
-    log(url.toString());
-    // print(url);
   }
 
   @override
@@ -359,23 +247,6 @@ class AddVideoState extends ConsumerState<AddVideo> {
     String height = info?.height.toString() ?? "";
     log("info is $info");
     int len = await video.length();
-    ;
-
-    // try {
-    //   final res = await http.put(
-    //       Uri.parse('https://storage.bunnycdn.com/while3///y.mp4'),
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         "AccessKey": "4573db24-8174-44e1-bb83f462173b-7d2a-4141",
-    //       },
-    //       body: await vid.readAsBytes());
-    //   if (res.statusCode == 201) {
-    //     print("video uploaded");
-    //     print(res.body);
-    //   }
-    // } catch (e) {
-    //   print("error is  $e");
-    // }
 
     final endpointUrl = Uri.parse('https://video.bunnycdn.com/tusupload');
     final client = TusClient(endpointUrl, video, headers: {
@@ -405,14 +276,16 @@ class AddVideoState extends ConsumerState<AddVideo> {
               category: 'category');
 
           FirebaseFirestore.instance
-              .collection('loops')
+              .collection('videos')
+              .doc(selectedOption)
+              .collection(selectedOption)
               .doc(videoId)
               .set(uploadedVideo.toJson())
               .then((value) {
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(ref.read(userProvider)!.id)
-                .collection('loops')
+                .collection('videos')
                 .doc(videoId)
                 .set(uploadedVideo.toJson());
             Utils.toastMessage('Your video is uploaded!');
