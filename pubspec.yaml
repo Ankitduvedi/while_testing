@@ -101,6 +101,9 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   fluentui_system_icons: ^1.1.234
   url_launcher: ^6.0.17
+  connectivity_plus: ^6.0.3
+  flutter_video_info: ^1.3.2
+
   
 
   

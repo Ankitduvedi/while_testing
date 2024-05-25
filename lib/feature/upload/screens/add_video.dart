@@ -19,6 +19,7 @@ import 'package:com.while.while_app/core/utils/utils.dart';
 
 import '../../../data/model/reels_models.dart';
 import '../../auth/controller/auth_controller.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 
 class AddVideo extends ConsumerStatefulWidget {
   final XFile video;
@@ -104,6 +105,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
           // Dialogs.showSnackbar(context, data['assets']['thumbnail']);
 
           final Video vid = Video(
+              maxVideoRes: "360p",
               creatorName: ref.read(userProvider)!.name,
               id: id,
               uploadedBy: ref.read(userProvider)!.id,
@@ -351,6 +353,11 @@ class AddVideoState extends ConsumerState<AddVideo> {
     File vid = await compressVideo(widget.video.path);
 
     XFile video = XFile(vid.path);
+    final videoInfo = FlutterVideoInfo();
+    var info = await videoInfo.getVideoInfo(vid.path);
+    log("height is ${info?.height.toString()}");
+    String height = info?.height.toString() ?? "";
+    log("info is $info");
     int len = await video.length();
     ;
 
@@ -385,6 +392,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
         onComplete: () {
           log("Complete!");
           final Video uploadedVideo = Video(
+              maxVideoRes: height,
               creatorName: ref.read(userProvider)!.name,
               id: videoId,
               uploadedBy: ref.read(userProvider)!.id,

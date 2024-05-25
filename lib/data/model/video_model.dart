@@ -9,6 +9,7 @@ class Video {
   final int views;
   final String category;
   final String creatorName;
+  final String maxVideoRes;
 
   Video(
       {required this.id,
@@ -20,21 +21,22 @@ class Video {
       required this.likes,
       required this.views,
       required this.category,
-      required this.creatorName});
+      required this.creatorName,
+      required this.maxVideoRes});
 
   factory Video.fromMap(Map<String, dynamic> map) {
     return Video(
-      thumbnail: map['thumbnail'] as String,
-      creatorName: map['creatorName'] as String,
-      description: map['description'] as String,
-      likes: List.from(map['likes']),
-      title: map['title'] as String,
-      uploadedBy: map['uploadedBy'] as String,
-      videoUrl: map['videoUrl'] as String,
-      id: map['id'] as String,
-      views: map['views'] as int,
-      category: map['category'] as String,
-    );
+        thumbnail: map['thumbnail'] as String,
+        creatorName: map['creatorName'] as String,
+        description: map['description'] as String,
+        likes: List.from(map['likes']),
+        title: map['title'] as String,
+        uploadedBy: map['uploadedBy'] as String,
+        videoUrl: map['videoUrl'] as String,
+        id: map['id'] as String,
+        views: map['views'] as int,
+        category: map['category'] as String,
+        maxVideoRes: map['maxVideoRes'] as String);
   }
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -48,6 +50,7 @@ class Video {
     map['id'] = id;
     map['views'] = views;
     map['category'] = category;
+    map['maxVideoRes'] = maxVideoRes;
     return map;
   }
 }

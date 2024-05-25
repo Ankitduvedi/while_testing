@@ -11,6 +11,7 @@ import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
@@ -98,6 +99,7 @@ class _AddReelState extends ConsumerState<AddReel> {
         //Dialogs.showSnackbar(context, data['videoId']);
         //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
         final Loops loop = Loops(
+            maxVideoRes: '360p',
             creatorName: ref.read(userProvider)!.name,
             id: id,
             uploadedBy: ref.read(userProvider)!.id,
@@ -291,6 +293,11 @@ class _AddReelState extends ConsumerState<AddReel> {
     File vid = await compressVideo(widget.video.path);
 
     XFile video = XFile(vid.path);
+    final videoInfo = FlutterVideoInfo();
+    var info = await videoInfo.getVideoInfo(vid.path);
+    log("height is ${info?.height.toString()}");
+    String height = info?.height.toString() ?? "";
+    log("info is $info");
     int len = await video.length();
     ;
 
@@ -325,6 +332,7 @@ class _AddReelState extends ConsumerState<AddReel> {
       onComplete: () {
         log("Complete!");
         final Loops loop = Loops(
+            maxVideoRes: height,
             creatorName: ref.read(userProvider)!.name,
             id: videoId,
             uploadedBy: ref.read(userProvider)!.id,

@@ -10,6 +10,7 @@ class VideoListRepository {
   List<Video> getVideoList(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => Video(
+              maxVideoRes: doc.get('maxVideoRes') ?? '',
               category: doc.get('category') ?? '',
               id: doc.id,
               uploadedBy: doc.get('uploadedBy') ?? '',

@@ -32,30 +32,36 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
     super.dispose();
   }
 
-  Widget text(VideoPlayerController controller1, int index, List<Video> video) {
+  Widget text(VideoPlayerController controller1, int index, List<Video> video,
+      String videoUrl) {
     controller1.play().whenComplete(
       () {
         _controller2 = VideoPlayerController.networkUrl(
-          Uri.parse(
-              "https://iframe.mediadelivery.net/play/239543/e080998b-3823-40ad-9a69-da33782c4b26/play_360p.mp4"),
-          httpHeaders: {
-            "AccessKey": 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d',
-            "Content-Type": "application/json"
-          },
-        )..initialize();
+            Uri.parse(video[index + 1].videoUrl))
+          ..initialize();
       },
     );
-    return FeedItem(video: video[index], index: index, controller: controller1);
+    return FeedItem(
+      video: video[index],
+      index: index,
+      controller: controller1,
+      baseVideoUrl: videoUrl,
+    );
   }
 
-  Widget text2(
-      VideoPlayerController controller2, int index, List<Video> video) {
+  Widget text2(VideoPlayerController controller2, int index, List<Video> video,
+      String videoUrl) {
     controller2.play().then((value) {
       _controller1 =
           VideoPlayerController.networkUrl(Uri.parse(video[index + 1].videoUrl))
             ..initialize();
     });
-    return FeedItem(video: video[index], index: index, controller: controller2);
+    return FeedItem(
+      video: video[index],
+      index: index,
+      controller: controller2,
+      baseVideoUrl: videoUrl,
+    );
   }
 
   @override
@@ -92,18 +98,21 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
               });
             },
             itemBuilder: (context, index) {
+              List<String> parts = videoList[0].videoUrl.split('/play');
+              // The part before '/play' will be the first element in the list
+              String videoUrl = parts[0];
               _controller0 = VideoPlayerController.networkUrl(
                   Uri.parse(videoList[0].videoUrl))
                 ..initialize();
               if (_lastPage > index) {
                 _lastPage--;
-                return text(_controller0, index, videoList);
+                return text(_controller0, index, videoList, videoUrl);
               } else {
                 _lastPage++;
                 return (index % 2 == 0)
                     ? text(index == 0 ? _controller0 : _controller1, index,
-                        videoList)
-                    : text2(_controller2, index, videoList);
+                        videoList, videoUrl)
+                    : text2(_controller2, index, videoList, videoUrl);
               }
             },
           );
