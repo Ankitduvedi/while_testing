@@ -3,7 +3,7 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,8 +56,7 @@ class Connect extends ConsumerWidget {
                       try {
                         final didFollow =
                             await ref.read(followUserProvider)(user.id);
-                        final currentUser =
-                            ref.read(userProvider.notifier).state;
+                        final currentUser = ref.read(userDataProvider).userData;
                         if (didFollow) {
                           if (fireService != null && currentUser != null) {
                             notifService.addNotification(
@@ -70,7 +69,7 @@ class Connect extends ConsumerWidget {
                             log("Error: fireService or currentUser is null");
                           }
                         } else {
-                          log("failed to follow");
+                          log("failed to follow, ${currentUser!.name}");
                         }
                       } catch (e) {
                         log("Error in follow button: $e");

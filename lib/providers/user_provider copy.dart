@@ -105,6 +105,6 @@ class UserDataProvider with ChangeNotifier {
 
 final userDataProvider =
     ChangeNotifierProvider.autoDispose<UserDataProvider>((ref) {
-  log('userDataProvider');
+  log('userDataProvidercopy');
   return UserDataProvider(ref);
 });

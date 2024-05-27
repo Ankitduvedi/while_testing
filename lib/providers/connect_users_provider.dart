@@ -2,31 +2,31 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final allUsersProvider = StreamProvider<List<ChatUser>>((ref) {
   final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
   final toggle = ref.watch(toggleSearchStateProvider);
 
-  log('///////////');
-   return FirebaseFirestore.instance
-    .collection('users')
-    .snapshots()
-    .handleError((error) {
-      log('Error fetching users: $error');
-      return const Stream.empty();  // Return an empty stream on error.
-    })
-    .map((snapshot) {
-      var users = snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
-      log('allUsersProvider user length ${users.length}');
-      if (toggle == 1 && searchQuery != '') {
-        return users.where((user) => user.name.toLowerCase().contains(searchQuery)).toList();
-      } else {
-        return users;
-      }
-    });
-
+  return FirebaseFirestore.instance
+      .collection('users')
+      .snapshots()
+      .handleError((error) {
+    log('Error fetching users: $error');
+    return const Stream.empty(); // Return an empty stream on error.
+  }).map((snapshot) {
+    var users =
+        snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
+    log('allUsersProvider user length ${users.length}');
+    if (toggle == 1 && searchQuery != '') {
+      return users
+          .where((user) => user.name.toLowerCase().contains(searchQuery))
+          .toList();
+    } else {
+      return users;
+    }
+  });
 });
 // this provider is for search users
 final searchQueryProvider = StateProvider<String>((ref) {
@@ -50,9 +50,6 @@ final filteredUsersProvider = Provider<List<ChatUser>>((ref) {
 ///
 final myUsersUidsProvider =
     StreamProvider.family<List<String>, String>((ref, userId) {
-  UserDataProvider userDataProvider =
-      UserDataProvider(ref); // Create an instance
-  ChatUser user = userDataProvider.userData!;
   print("userid is ${userId}");
   return FirebaseFirestore.instance
       .collection('users')
@@ -64,11 +61,6 @@ final myUsersUidsProvider =
 });
 final followingUsersProvider =
     StreamProvider.family<List<String>, String>((ref, userId) {
-  // final user = ref.watch(userDataProvider).userData;
-  UserDataProvider userDataProvider =
-      UserDataProvider(ref); // Create an instance
-  ChatUser user = userDataProvider.userData!;
-
   return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)
@@ -93,7 +85,7 @@ final communityParticipantsProvider =
 
 final followUserProvider = Provider((ref) {
   return (String userIdToFollow) async {
-    final String currentUserId = ref.read(userProvider)!.id;
+    final String currentUserId = ref.read(userDataProvider).userData!.id;
     try {
       // Add the user to the 'my_users' subcollection of the current user
       await FirebaseFirestore.instance

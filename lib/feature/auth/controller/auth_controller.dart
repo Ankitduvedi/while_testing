@@ -39,14 +39,9 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
   final controller = StreamController<ChatUser>();
 
   // Call getUserData and add the result to the stream
-  authController.getUserData(uid).then((userData) {
-    controller.add(userData);
-    controller.close(); // Close the stream after adding the data
-  }).catchError((error) {
-    // Handle errors here if necessary
-    log("Error fetching user data: $error");
-    controller.close(); // Close the stream in case of error
-  });
+  final userData = authController.getUserData(uid);
+  controller.add(userData);
+  controller.close(); // Close the stream after adding the data
 
   return controller.stream;
 });
@@ -60,7 +55,7 @@ class AuthController extends StateNotifier<bool> {
         super(false); // to tell isLoading state
 
   Stream<User?> get authStateChange => _authRepository.authStateChange;
-  Future<ChatUser> getUserData(String uid) => _authRepository.getUserData(uid);
+  ChatUser getUserData(String uid) => _authRepository.getUserData(uid);
 
   void signInWithGoogle(BuildContext context) async {
     state = true;
@@ -95,7 +90,6 @@ class AuthController extends StateNotifier<bool> {
     final user = await _authRepository.loginWithEmailAndPassword(
         email, password, context);
     user.fold((l) => Utils.snackBar(l.message, context),
-
         (r) => _ref.read(userProvider.notifier).update((state) => r));
     state = false;
   }

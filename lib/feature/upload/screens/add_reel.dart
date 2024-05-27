@@ -299,23 +299,6 @@ class _AddReelState extends ConsumerState<AddReel> {
     String height = info?.height.toString() ?? "";
     log("info is $info");
     int len = await video.length();
-    ;
-
-    // try {
-    //   final res = await http.put(
-    //       Uri.parse('https://storage.bunnycdn.com/while3///y.mp4'),
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         "AccessKey": "4573db24-8174-44e1-bb83f462173b-7d2a-4141",
-    //       },
-    //       body: await vid.readAsBytes());
-    //   if (res.statusCode == 201) {
-    //     print("video uploaded");
-    //     print(res.body);
-    //   }
-    // } catch (e) {
-    //   print("error is  $e");
-    // }
 
     final endpointUrl = Uri.parse('https://video.bunnycdn.com/tusupload');
     final client = TusClient(endpointUrl, video, headers: {
@@ -324,9 +307,6 @@ class _AddReelState extends ConsumerState<AddReel> {
       'VideoId': videoId,
       'LibraryId': _libraryId,
     });
-
-    // try {
-    //   log('entered in _uploadVideo and trying');
 
     await client.upload(
       onComplete: () {

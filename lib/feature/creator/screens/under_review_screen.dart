@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UnderReviewScreen extends ConsumerStatefulWidget {
   final String type;
-  const UnderReviewScreen({super.key,required this.type});
+  const UnderReviewScreen({super.key, required this.type});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -14,6 +16,7 @@ class UnderReviewScreen extends ConsumerStatefulWidget {
 class _UnderReviewScreenState extends ConsumerState<UnderReviewScreen> {
   @override
   Widget build(BuildContext context) {
+    log('under review screen');
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

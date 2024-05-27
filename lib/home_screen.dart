@@ -1,8 +1,8 @@
 import 'dart:developer';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
 import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,8 @@ import 'package:com.while.while_app/feature/creator/screens/create_screen.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_screen2.dart';
 import 'package:com.while.while_app/feature/social/screens/social_home_screen.dart';
+
+import 'providers/user_provider copy.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -124,16 +126,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    ref.read(userDataProvider);
+    final ChatUser user = ref.watch(userDataProvider).userData!;
     return Scaffold(
       body: TabBarView(
         controller: _controller,
-        children: const [
-          FeedScreen(),
-          CreateScreen(),
-          ReelsScreen(),
-          SocialScreen(),
-          ProfileScreen()
+        children: [
+          const FeedScreen(),
+          CreateScreen(
+            user: user,
+          ),
+          const ReelsScreen(),
+          const SocialScreen(),
+          const ProfileScreen()
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

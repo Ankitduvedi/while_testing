@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:com.while.while_app/core/utils/containers_widgets/create_container.dart';
 import 'package:com.while.while_app/data/model/numeric_model.dart';
 import 'package:com.while.while_app/feature/upload/controller/upload_controller.dart';
@@ -20,6 +22,7 @@ class MainCreatorScreen extends ConsumerStatefulWidget {
 class _MainCreatorScreenState extends ConsumerState<MainCreatorScreen> {
   @override
   Widget build(BuildContext context) {
+    log('main screen');
     final upload = ref.read(uploadControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

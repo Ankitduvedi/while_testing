@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -346,9 +346,7 @@ class APIs {
       about: "Hey, I'm using We Chat!",
       image: user.photoURL.toString(),
       createdAt: time,
-
       isOnline: 0,
-
       lastActive: time,
       pushToken: '',
       dateOfBirth: '',
@@ -482,9 +480,7 @@ class APIs {
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
       return snapshot.docs
           .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-
               Message.fromJson(doc.data()! as Map<String, dynamic>))
-
           .toList();
     });
   }
