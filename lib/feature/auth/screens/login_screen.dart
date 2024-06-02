@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:com.while.while_app/core/routes/routes_name.dart';
-import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>[
@@ -58,8 +57,6 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                           height: screenSize.height * 0.3,
                         ), // Placeholder for the image
                         SizedBox(height: verticalPadding),
-
-
 
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,

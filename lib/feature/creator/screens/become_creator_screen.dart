@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
 
   @override
   Widget build(BuildContext context) {
+    log('become creator screen');
     final isLoading = ref.watch(creatorControllerProvider);
     return Padding(
       padding: const EdgeInsets.all(16.0),

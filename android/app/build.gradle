@@ -57,21 +57,21 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 13
-        versionName "1.113"
+        versionCode 15
+        versionName "1.115"
         multiDexEnabled true
     }
     signingConfigs {
-//      release {
-//          keyAlias keystoreProperties['keyAlias']
-//          keyPassword keystoreProperties['keyPassword']
-//          storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-//          storePassword keystoreProperties['storePassword']
-//      }
+     release {
+         keyAlias keystoreProperties['keyAlias']
+         keyPassword keystoreProperties['keyPassword']
+         storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+         storePassword keystoreProperties['storePassword']
+     }
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 

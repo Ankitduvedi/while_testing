@@ -6,6 +6,7 @@ import 'package:com.while.while_app/core/utils/buttons/round_button.dart';
 import 'package:com.while.while_app/core/utils/containers_widgets/text_container_widget.dart';
 import 'package:com.while.while_app/core/utils/players/video_player.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
+import 'package:com.while.while_app/feature/upload/repository/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/core/utils/utils.dart';
 import '../../auth/controller/auth_controller.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
+// Import the categories provider
 
 class AddVideo extends ConsumerStatefulWidget {
   final XFile video;
@@ -29,6 +31,7 @@ class AddVideo extends ConsumerStatefulWidget {
 class AddVideoState extends ConsumerState<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
+  double _uploadProgress = 0.0;
   String selectedOption = 'App Development';
   String? _selectedItem = 'App Development';
 
@@ -40,7 +43,10 @@ class AddVideoState extends ConsumerState<AddVideo> {
     super.initState();
     _subscription = VideoCompress.compressProgress$.subscribe((progress) {
       debugPrint('progress: $progress');
-      isloading = false;
+      setState(() {
+        _uploadProgress = progress / 100;
+        isloading = false;
+      });
     });
   }
 
@@ -76,6 +82,8 @@ class AddVideoState extends ConsumerState<AddVideo> {
     final h = MediaQuery.of(context).size.height * 1;
     final w = MediaQuery.of(context).size.width * 1;
 
+    final categoriesAsyncValue = ref.watch(categoriesProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Video"),
@@ -109,52 +117,43 @@ class AddVideoState extends ConsumerState<AddVideo> {
                 prefixIcon: Icons.description,
                 hintText: 'Description',
               ),
-              FutureBuilder<List<String>>(
-                future: fetchCategoriesFromFirestore(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<String>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(); // Show loading indicator while waiting for data
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    // Once data is fetched, use it to build the dropdown
-                    return _buildDropDown(
-                        "Select Category", _selectedItem!, snapshot.data!,
-                        (String? newValue) {
+              categoriesAsyncValue.when(
+                data: (categories) {
+                  return _buildDropDown(
+                    "Select Category",
+                    _selectedItem!,
+                    categories,
+                    (String? newValue) {
                       setState(() {
-                        _selectedItem = newValue;
+                        _selectedItem = newValue!;
                       });
-                    });
+                    },
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, stack) => Text('Error: $error'),
+              ),
+              const SizedBox(height: 10),
+              if (isloading)
+                LinearProgressIndicator(
+                  value: _uploadProgress,
+                ),
+              const SizedBox(height: 10),
+              RoundButton(
+                title: "Upload",
+                loading: isloading,
+                onPress: () {
+                  if (_titleController.text.isEmpty) {
+                    Utils.flushBarErrorMessage('Please enter title', context);
+                  } else if (_descriptionController.text.isEmpty) {
+                    Utils.flushBarErrorMessage(
+                        'Please enter description', context);
+                  } else {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    _handleUpload();
                   }
                 },
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              RoundButton(
-                  title: "Add Reel",
-                  loading: isloading,
-                  onPress: () {
-                    if (_titleController.text.isEmpty) {
-                      Utils.flushBarErrorMessage('Please enter title', context);
-                    } else if (_descriptionController.text.isEmpty) {
-                      Utils.flushBarErrorMessage(
-                          'Please enter description', context);
-                    } else {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      _handleUpload();
-
-                      // uploadVideo(
-                      //     context,
-                      //     _titleController.text.toString(),
-                      //     _descriptionController.text.toString(),
-                      //     widget.video.toString(),
-                      //     [],
-                      //     // initally the likes list shall be holding an empty list to be precise
-                      //     0);
-                    }
-                  })
             ],
           ),
         ),
@@ -221,6 +220,10 @@ class AddVideoState extends ConsumerState<AddVideo> {
   }
 
   Future<void> _handleUpload() async {
+    setState(() {
+      isloading = true;
+      _uploadProgress = 0.0;
+    });
     log('entered in _handleUpload');
 
     try {
@@ -257,15 +260,12 @@ class AddVideoState extends ConsumerState<AddVideo> {
     });
 
     try {
-      log('entered in _uploadVideo and trying');
-
       await client.upload(
-        onComplete: () {
-          log("Complete!");
-          final Video uploadedVideo = Video(
-              maxVideoRes: height,
-              creatorName: ref.read(userProvider)!.name,
+        onComplete: () async {
+          final uploadedVideo = Video(
+              maxVideoRes: '1080',
               id: videoId,
+              category: selectedOption,
               uploadedBy: ref.read(userProvider)!.id,
               videoUrl: 'https://$_CDN_host/${videoId}/play_360p.mp4',
               thumbnail: 'https://$_CDN_host/${videoId}/thumbnail.jpg',
@@ -273,8 +273,8 @@ class AddVideoState extends ConsumerState<AddVideo> {
               description: _descriptionController.text,
               likes: [],
               views: 0,
-              category: 'category');
-
+              creatorName: ref.read(userProvider)!.name);
+          log('Selected category before firebase $selectedOption');
           FirebaseFirestore.instance
               .collection('videos')
               .doc(selectedOption)
@@ -297,12 +297,18 @@ class AddVideoState extends ConsumerState<AddVideo> {
         },
         onProgress: (progress) {
           log("Progress: $progress");
+          setState(() {
+            _uploadProgress = progress / 100;
+          });
         },
       );
 
       log('Video uploaded successfully!');
     } catch (e) {
       log('Upload failed: $e');
+      setState(() {
+        isloading = false;
+      });
     }
   }
 
