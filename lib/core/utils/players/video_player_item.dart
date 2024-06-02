@@ -15,7 +15,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
 
   @override
   void initState() {
-    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    videoPlayerController = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((value) {
         videoPlayerController.play();
         videoPlayerController.setVolume(1);

@@ -68,8 +68,7 @@ class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(video.videoUrl))
-      ..initialize();
+    _controller = VideoPlayerController.network(video.videoUrl)..initialize();
     _controller.play();
     final size = MediaQuery.of(context).size;
     return Scaffold(

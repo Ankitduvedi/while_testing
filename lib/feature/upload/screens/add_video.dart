@@ -56,7 +56,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
     try {
       final info = await VideoCompress.compressVideo(
         videoPath,
-        quality: VideoQuality.LowQuality,
+        quality: VideoQuality.MediumQuality,
         deleteOrigin: false,
         includeAudio: true,
       );
@@ -243,7 +243,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
     XFile video = XFile(vid.path);
     final videoInfo = FlutterVideoInfo();
     var info = await videoInfo.getVideoInfo(vid.path);
-    log("height is ${info?.height.toString()}");
+    log("height is ${info?.height.toString()}  width is ${info?.width.toString()}");
     String height = info?.height.toString() ?? "";
     log("info is $info");
     int len = await video.length();

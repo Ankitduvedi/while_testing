@@ -31,20 +31,31 @@ class _WrapperState extends ConsumerState<Wrapper> {
   }
 
   @override
+  void initState() {
+    // final firebaseUser1 = ref.watch(authStateChangeProvider);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     log("wrapper");
     // check AuthState of user
     final firebaseUser = ref.watch(authStateChangeProvider);
     // toggle for onboard on login screen
     final toggle = ref.watch(toggleStateProvider);
+    print("toggle is $toggle");
     final user = ref.read(userProvider);
     // Directly return the widget from firebaseUser.when
+
     return firebaseUser.when(
       data: (firedata) {
         //user firebase data
+
         if (firedata != null) {
           //user provider data
           if (user != null) {
+            print("user is ${user.name}");
             ref.watch(apisProvider).getFirebaseMessagingToken(user.id);
             return const HomeScreen();
           } else {
@@ -52,11 +63,16 @@ class _WrapperState extends ConsumerState<Wrapper> {
             getData(firedata);
           }
         }
-        return toggle == 0
-            ? const OnBoardingScreen()
-            : toggle == 1
-                ? const LoginScreen()
-                : const SignUpScreen();
+        // Future.delayed(Duration(seconds: 2), () {
+          return toggle == 0
+              ? const OnBoardingScreen()
+              : toggle == 1
+                  ? const LoginScreen()
+                  : const SignUpScreen();
+        // });
+        return Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
       },
       error: (error, stackTrace) {
         log("error: $error");

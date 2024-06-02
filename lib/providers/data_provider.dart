@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final videoStreamProvider =
-    StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+    StreamProvider<QuerySnapshot<Map<String, dynamic>>>((
+  ref,
+) {
   return FirebaseFirestore.instance.collection('loops').snapshots();
 });
 

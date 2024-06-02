@@ -19,7 +19,8 @@ class _VideoPlayState extends State<VideoPlay> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url)) // Access the URL directly from the widget
+    _controller = VideoPlayerController.network(
+        widget.url) // Access the URL directly from the widget
       ..addListener(() {
         setState(() {});
       })
@@ -34,7 +35,8 @@ class _VideoPlayState extends State<VideoPlay> {
 
   @override
   void dispose() {
-    _controller.dispose(); // Dispose of the controller when the widget is disposed
+    _controller
+        .dispose(); // Dispose of the controller when the widget is disposed
     super.dispose();
   }
 

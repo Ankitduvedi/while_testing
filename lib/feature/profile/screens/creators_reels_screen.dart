@@ -61,9 +61,8 @@ class CreatorReelsScreenState extends ConsumerState<CreatorReelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl))
-          ..initialize();
+    _controller = VideoPlayerController.network(widget.video.videoUrl)
+      ..initialize();
     _controller.play();
     final size = MediaQuery.of(context).size;
     return Scaffold(
