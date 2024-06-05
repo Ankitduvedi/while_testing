@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,7 +78,7 @@ class _BecomeCreatorState extends ConsumerState<BecomeCreator> {
                 ref
                     .watch(creatorControllerProvider.notifier)
                     .submitCreatorRequest(
-                        ref.read(userProvider)!.id,
+                        ref.read(userDataProvider).userData!.id,
                         _instagramController.text.trim(),
                         _youtubeController.text.trim());
               }

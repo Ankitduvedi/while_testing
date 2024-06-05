@@ -36,8 +36,8 @@ class CommunityHomeWidget extends ConsumerWidget {
               if (communityList.isEmpty) {
                 return Center(
                   child: Text(
-                    'No Data Found',
-                    style: GoogleFonts.ptSans(color: Colors.white),
+                    'Join a Community',
+                    style: GoogleFonts.ptSans(color: Colors.black),
                   ),
                 );
               }

@@ -7,6 +7,7 @@ import 'package:com.while.while_app/core/utils/containers_widgets/text_container
 import 'package:com.while.while_app/core/utils/players/video_player.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/upload/repository/provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,9 +16,7 @@ import 'package:tus_client/tus_client.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/core/utils/utils.dart';
-import '../../auth/controller/auth_controller.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
-// Import the categories provider
 
 class AddVideo extends ConsumerStatefulWidget {
   final XFile video;
@@ -33,7 +32,6 @@ class AddVideoState extends ConsumerState<AddVideo> {
   bool isloading = false;
   double _uploadProgress = 0.0;
   String selectedOption = 'App Development';
-  String? _selectedItem = 'App Development';
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -121,11 +119,11 @@ class AddVideoState extends ConsumerState<AddVideo> {
                 data: (categories) {
                   return _buildDropDown(
                     "Select Category",
-                    _selectedItem!,
+                    selectedOption,
                     categories,
                     (String? newValue) {
                       setState(() {
-                        _selectedItem = newValue!;
+                        selectedOption = newValue!;
                       });
                     },
                   );
@@ -161,8 +159,6 @@ class AddVideoState extends ConsumerState<AddVideo> {
     );
   }
 
-  XFile? _videoFile;
-
   final String _apiKey = '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
   final String _libraryId = '243538';
   final String _CDN_host = 'vz-f0994fc7-d98.b-cdn.net';
@@ -197,16 +193,12 @@ class AddVideoState extends ConsumerState<AddVideo> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: _selectedItem,
+          value: value,
           icon: const Icon(Icons.arrow_drop_down),
           iconSize: 24,
           elevation: 16,
           style: const TextStyle(color: Colors.deepPurple, fontSize: 18),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedItem = newValue!;
-            });
-          },
+          onChanged: onChanged,
           items: items.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -266,33 +258,33 @@ class AddVideoState extends ConsumerState<AddVideo> {
               maxVideoRes: '1080',
               id: videoId,
               category: selectedOption,
-              uploadedBy: ref.read(userProvider)!.id,
+              uploadedBy: ref.read(userDataProvider).userData!.id,
               videoUrl: 'https://$_CDN_host/${videoId}/play_360p.mp4',
               thumbnail: 'https://$_CDN_host/${videoId}/thumbnail.jpg',
               title: _titleController.text,
               description: _descriptionController.text,
               likes: [],
               views: 0,
-              creatorName: ref.read(userProvider)!.name);
+              creatorName: ref.read(userDataProvider).userData!.name);
           log('Selected category before firebase $selectedOption');
           FirebaseFirestore.instance
               .collection('videos')
               .doc(selectedOption)
               .collection(selectedOption)
               .doc(videoId)
-              .set(uploadedVideo.toJson())
-              .then((value) {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(ref.read(userProvider)!.id)
-                .collection('videos')
-                .doc(videoId)
-                .set(uploadedVideo.toJson());
-            Utils.toastMessage('Your video is uploaded!');
-            setState(() {
-              isloading = false;
-            });
+              .set(uploadedVideo.toJson());
+          log('value of user id is = ${ref.read(userDataProvider).userData!.id}');
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(ref.read(userDataProvider).userData!.id)
+              .collection('videos')
+              .doc(videoId)
+              .set(uploadedVideo.toJson());
+          Utils.toastMessage('Your video is uploaded!');
+          setState(() {
+            isloading = false;
           });
+
           Navigator.pop(this.context);
         },
         onProgress: (progress) {

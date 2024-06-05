@@ -6,9 +6,8 @@ import 'package:com.while.while_app/core/utils/buttons/round_button.dart';
 import 'package:com.while.while_app/core/utils/containers_widgets/text_container_widget.dart';
 import 'package:com.while.while_app/core/utils/players/video_player.dart';
 import 'package:com.while.while_app/data/model/reels_models.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/core/utils/utils.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
@@ -100,9 +99,9 @@ class _AddReelState extends ConsumerState<AddReel> {
         //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
         final Loops loop = Loops(
             maxVideoRes: '360p',
-            creatorName: ref.read(userProvider)!.name,
+            creatorName: ref.read(userDataProvider).userData!.name,
             id: id,
-            uploadedBy: ref.read(userProvider)!.id,
+            uploadedBy: ref.read(userDataProvider).userData!.id,
             videoUrl: data['assets']['mp4'],
             thumbnail: data['assets']['thumbnail'],
             title: title,
@@ -114,21 +113,20 @@ class _AddReelState extends ConsumerState<AddReel> {
         FirebaseFirestore.instance
             .collection('loops')
             .doc(id)
-            .set(loop.toJson())
-            .then((value) {
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(ref.read(userProvider)!.id)
-              .collection('loops')
-              .doc(id)
-              .set(loop.toJson());
-          Utils.toastMessage('Your video is uploaded!');
-          setState(() {
-            isloading = false;
-          });
-          Navigator.pop(context);
-          return data['videoId'];
+            .set(loop.toJson());
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(ref.read(userDataProvider).userData!.id)
+            .collection('loops')
+            .doc(id)
+            .set(loop.toJson());
+        Utils.toastMessage('Your video is uploaded!');
+        setState(() {
+          isloading = false;
         });
+        Navigator.pop(context);
+        return data['videoId'];
       } else {
         // Handle upload failure
         //Dialogs.showSnackbar(context, 'Failed');
@@ -313,9 +311,9 @@ class _AddReelState extends ConsumerState<AddReel> {
         log("Complete!");
         final Loops loop = Loops(
             maxVideoRes: height,
-            creatorName: ref.read(userProvider)!.name,
+            creatorName: ref.read(userDataProvider).userData!.name,
             id: videoId,
-            uploadedBy: ref.read(userProvider)!.id,
+            uploadedBy: ref.read(userDataProvider).userData!.id,
             videoUrl:
                 'https://vz-a12f2b63-c06.b-cdn.net/${videoId}/play_360p.mp4',
             thumbnail:
@@ -333,7 +331,7 @@ class _AddReelState extends ConsumerState<AddReel> {
             .then((value) {
           FirebaseFirestore.instance
               .collection('users')
-              .doc(ref.read(userProvider)!.id)
+              .doc(ref.read(userDataProvider).userData!.id)
               .collection('loops')
               .doc(videoId)
               .set(loop.toJson());

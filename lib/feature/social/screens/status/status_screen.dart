@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/status/full_screen_status.dart';
 import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +35,8 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
     final userId = ref
-        .watch(userProvider)!
+        .watch(userDataProvider)
+        .userData!
         .id; // Assuming this is how you get the user ID.
 
     return Scaffold(

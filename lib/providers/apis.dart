@@ -56,21 +56,22 @@ class APIs {
   // adding content creator request
   void postStatus(File imageFile, String statText) async {
     final statusText = statText;
-    final userId =
-        _ref.read(apisProvider).me.id; // Replace with the actual user's ID
+    final userdata = _ref.read(userDataProvider).userData!;
+    // Replace with the actual user's ID
 
     // Upload the image to Firebase Storage
-    final storageReference =
-        FirebaseStorage.instance.ref().child('$userId/${DateTime.now()}.png');
+    final storageReference = FirebaseStorage.instance
+        .ref()
+        .child('${userdata.id}/${DateTime.now()}.png');
     await storageReference.putFile(imageFile);
 
     // Get the image URL from Firebase Storage
     final imageUrl = await storageReference.getDownloadURL();
 
     FirebaseFirestore.instance.collection('statuses').add({
-      'userId': userId,
-      'userName': _ref.read(apisProvider).me.name,
-      'profileImg': _ref.read(apisProvider).me.image,
+      'userId': userdata.id,
+      'userName': userdata.name,
+      'profileImg': userdata.image,
       'statusText': statusText,
       'imageUrl': imageUrl, // Add the URL of the uploaded image
       'timestamp': FieldValue.serverTimestamp(),
@@ -221,7 +222,7 @@ class APIs {
   }
 
   Future<bool> addUserToCommunity(String id) async {
-    final us = _ref.read(userProvider);
+    final us = _ref.read(userDataProvider).userData;
 
     await firestore
         .collection('communities')

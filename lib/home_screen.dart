@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/comingsoon.dart';
 import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
 import 'package:com.while.while_app/main.dart';
@@ -135,7 +136,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           CreateScreen(
             user: user,
           ),
-          const ReelsScreen(),
+          const ComingSoonPage(),
+          //const ReelsScreentest(),
           const SocialScreen(),
           const ProfileScreen()
         ],

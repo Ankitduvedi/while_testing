@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -37,7 +37,7 @@ class NotifRepository {
       var collection = _ref
           .read(fireStoreProvider)
           .collection('notifications')
-          .doc(_ref.read(userProvider)!.id)
+          .doc(_ref.read(userDataProvider).userData!.id)
           .collection('notifs');
       var snapshots = await collection.where('isRead', isEqualTo: false).get();
 

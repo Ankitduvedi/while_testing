@@ -5,9 +5,9 @@ import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/add_quiz.dart';
 import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -44,7 +44,7 @@ class SocialRepository {
     //message sending time (also used as id)
     try {
       final time = DateTime.now().millisecondsSinceEpoch.toString();
-      final user = _ref.read(userProvider);
+      final user = _ref.read(userDataProvider).userData;
       //message to send
       final CommunityMessage message = CommunityMessage(
         toId: id,
