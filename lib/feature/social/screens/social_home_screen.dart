@@ -38,8 +38,12 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
         updateSearchToggleBasedOnTab(_controller.index);
       }
     });
-    initAppTour();
-    _showTutorial();
+    bool isNewUser = ref.read(isNewUserProvider);
+    print("home screen $isNewUser");
+    if (!isNewUser) {
+      initAppTour();
+      _showTutorial();
+    }
   }
 
   void updateSearchToggleBasedOnTab(int index) {

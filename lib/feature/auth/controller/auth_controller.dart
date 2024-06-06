@@ -13,6 +13,9 @@ import 'dart:async';
 final userProvider = StateProvider<ChatUser?>((ref) {
   return null;
 });
+final isNewUserProvider = StateProvider<bool>((ref) {
+  return false; // Initial value is false
+});
 //user authStateProvider
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {
@@ -59,11 +62,14 @@ class AuthController extends StateNotifier<bool> {
 
   void signInWithGoogle(BuildContext context) async {
     state = true;
-    final user = await _authRepository.signInWithGoogle();
+    final isNewuser = await _authRepository.checkisNewuser();
+    final user = await _authRepository.signInWithGoogle(_ref);
     state = false;
     log("setting user data to userProv");
     user.fold((l) => Utils.snackBar(l.message, context),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
+    _ref.read(isNewUserProvider.notifier).update((state) => isNewuser);
+    print("isNewUserProvider ${isNewuser}");
   }
 
   void signOut(BuildContext context) async {

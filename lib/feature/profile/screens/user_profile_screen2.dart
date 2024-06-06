@@ -12,6 +12,7 @@ import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../providers/user_provider.dart';
+import '../../auth/controller/auth_controller.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -25,8 +26,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    initAppTour();
-    _showTutorial();
+    bool isNewUser = ref.read(isNewUserProvider);
+    print("home screen $isNewUser");
+    if (!isNewUser) {
+      initAppTour();
+      _showTutorial();
+    }
   }
 
   final photosKey = GlobalKey();

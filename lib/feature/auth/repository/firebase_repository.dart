@@ -12,6 +12,8 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:fpdart/fpdart.dart';
 
+import '../../../providers/appTourProvider.dart';
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(
       firestore: ref.read(fireStoreProvider),
@@ -164,7 +166,42 @@ class AuthRepository extends ConsumerStatefulWidget {
     return snapshot;
   }
 
-  Future<Either<Failure, ChatUser>> signInWithGoogle() async {
+  Future<bool> checkisNewuser() async {
+    try {
+      // Assumed _googleSignIn and _auth are initialized
+      await GoogleSignIn().signOut();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+        log("sign in successfully");
+
+        if (userCredential.user != null) {
+          final User newUser = userCredential.user!;
+          ChatUser userModel;
+
+          if (userCredential.additionalUserInfo!.isNewUser) {
+            return true;
+          }
+          return false;
+        }
+        return false;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Either> signInWithGoogle(Ref ref) async {
     try {
       // Assumed _googleSignIn and _auth are initialized
       await GoogleSignIn().signOut();
@@ -188,6 +225,8 @@ class AuthRepository extends ConsumerStatefulWidget {
 
           if (userCredential.additionalUserInfo!.isNewUser) {
             log("new user");
+            // Set isNewUser to true
+
             // Define userModel for a new user
             final time = DateTime.now().millisecondsSinceEpoch.toString();
             userModel = ChatUser(
@@ -219,18 +258,15 @@ class AuthRepository extends ConsumerStatefulWidget {
                 isCounsellorVerified: 0);
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
+
             log("success new user");
           } else {
             userModel = getUserData(
               newUser.uid,
             ); // Assume this fetches the user correctly
-            // if (userModel.id == '' || userModel.id == null) {
-            //   userModel = newusemodel;
-            //   createNewUser(newusemodel);
-            //   log("existing user uses newusermodel");
-            // }
             log("existing user");
           }
+
           return right(userModel); // Return userModel instead of newUser
         }
       }

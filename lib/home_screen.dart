@@ -18,6 +18,7 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'app_info_home.dart';
+import 'feature/auth/controller/auth_controller.dart';
 import 'providers/user_provider copy.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -69,8 +70,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     _checkInitialMessage();
-    initAppTour();
-    _showTutorial();
+    bool isNewUser = ref.read(isNewUserProvider);
+    print("home screen $isNewUser");
+    if (!isNewUser) {
+      initAppTour();
+      _showTutorial();
+    }
   }
 
   void _checkInitialMessage() async {

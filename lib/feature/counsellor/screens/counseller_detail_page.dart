@@ -29,6 +29,7 @@ class _CounsellorDetailPageState extends ConsumerState<CounsellorDetailPage> {
   void initState() {
     super.initState();
     final currentUser = ref.read(userProvider);
+
     isFollowing = ref
         .read(counsellorContollerProvider.notifier)
         .checkIfUserDocumentExists(currentUser!.id, widget.userData.id);
