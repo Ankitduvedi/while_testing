@@ -40,7 +40,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     });
     bool isNewUser = ref.read(isNewUserProvider);
     print("home screen $isNewUser");
-    if (!isNewUser) {
+    if (isNewUser) {
       initAppTour();
       _showTutorial();
     }

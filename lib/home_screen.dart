@@ -72,7 +72,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _checkInitialMessage();
     bool isNewUser = ref.read(isNewUserProvider);
     print("home screen $isNewUser");
-    if (!isNewUser) {
+    if (isNewUser) {
       initAppTour();
       _showTutorial();
     }

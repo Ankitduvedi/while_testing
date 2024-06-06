@@ -28,7 +28,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     super.initState();
     bool isNewUser = ref.read(isNewUserProvider);
     print("home screen $isNewUser");
-    if (!isNewUser) {
+    if (isNewUser) {
       initAppTour();
       _showTutorial();
     }
