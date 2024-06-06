@@ -2,8 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/notifications/repository/notif_repo.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +11,7 @@ final listenUnreadNotifsProvider = StreamProvider<int>((ref) {
   return ref
       .read(fireStoreProvider)
       .collection('notifications')
-      .doc(ref.read(userProvider)!.id)
+      .doc(ref.read(userDataProvider).userData!.id)
       .collection('notifs')
       .where('isRead', isEqualTo: false)
       .snapshots()
@@ -23,7 +23,7 @@ final myNotificationsProvider =
   return ref
       .read(fireStoreProvider)
       .collection('notifications')
-      .doc(ref.read(userProvider)!.id)
+      .doc(ref.read(userDataProvider).userData!.id)
       .collection('notifs') // Filter for unread notifications
       .orderBy('timeStamp', descending: true)
       .limit(100)

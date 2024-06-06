@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -252,8 +252,10 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                       }
                     }
 
-                    notifyCommunity(widget.community.id,
-                        ref.read(userProvider)!.id, _textController.text);
+                    notifyCommunity(
+                        widget.community.id,
+                        ref.read(userDataProvider).userData!.id,
+                        _textController.text);
 
                     ref
                         .read(socialControllerProvider.notifier)

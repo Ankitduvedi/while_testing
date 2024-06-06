@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,17 @@ final videoStreamProvider =
 ) {
   return FirebaseFirestore.instance.collection('loops').snapshots();
 });
+
+class DataProvider extends ChangeNotifier {
+  // Your Firestore stream
+  final Stream<QuerySnapshot> _videoStream =
+      FirebaseFirestore.instance.collection('loops').snapshots();
+  Stream<QuerySnapshot> get videoStream => _videoStream;
+  // Private constructor to prevent instantiation from outside
+  DataProvider._();
+  static final DataProvider _instance = DataProvider._();
+  factory DataProvider() => _instance;
+}
 
 ///////
 ///
@@ -39,20 +51,24 @@ class LoopsNotifier extends StateNotifier<LoopsState> {
   LoopsNotifier() : super(LoopsState());
 
   Future<void> fetchLoops() async {
+    log("length of loops in before fetcgloops b${state.isLoading}");
+
     if (state.isLoading) return; // Prevent fetching if already loading
     state = state.copyWith(isLoading: true);
+    log("length of loops in fetcgloops b${state.isLoading}");
 
     Query query = FirebaseFirestore.instance
         .collection('loops')
         .orderBy('title') // Assuming categories are ordered by a 'name' field
         .limit(2); // Adjust the limit as needed
-
+    log('querry done');
     // Use the lastDocument for pagination if available
     if (state.lastDocument != null) {
       query = query.startAfterDocument(state.lastDocument!);
     }
 
     try {
+      log("trying");
       var snapshot = await query.get();
       var docs = snapshot.docs;
       if (docs.isNotEmpty) {
@@ -70,6 +86,7 @@ class LoopsNotifier extends StateNotifier<LoopsState> {
     } catch (error) {
       state = state.copyWith(isLoading: false); // Handle error state
       // Optionally log or handle the error
+      log("error");
     }
   }
 }

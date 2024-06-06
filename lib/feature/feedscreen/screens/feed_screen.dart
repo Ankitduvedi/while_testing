@@ -58,44 +58,44 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                   ),
               elevation: 0,
               backgroundColor: Colors.white,
-              actions: [
-                unreadNotifsAsyncValue.when(
-                  data: (int unreadCount) {
-                    if (unreadCount == 0) {
-                      return IconButton(
-                        icon: const Icon(Icons.notifications_none_rounded,
-                            color: Colors.black),
-                        onPressed: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const NotificationsScreen()));
-                        },
-                      );
-                    } else {
-                      return IconButton(
-                        icon: const Icon(Icons.notifications_active_outlined,
-                            color: Colors.blueAccent),
-                        onPressed: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const NotificationsScreen()));
-                        },
-                      );
-                    }
-                  },
-                  error: (error, stack) =>
-                      const Icon(Icons.error, color: Colors.red),
-                  loading: () => const Icon(Icons.notifications_none_rounded,
-                      color: Colors.black),
-                ),
-                IconButton(
-                    onPressed: () {
-                      log("become counseller");
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TabsScreen()));
-                    },
-                    icon: const Icon(FluentIcons.people_12_filled))
-              ],
+              // actions: [
+              //   unreadNotifsAsyncValue.when(
+              //     data: (int unreadCount) {
+              //       if (unreadCount == 0) {
+              //         return IconButton(
+              //           icon: const Icon(Icons.notifications_none_rounded,
+              //               color: Colors.black),
+              //           onPressed: () async {
+              //             await Navigator.of(context).push(MaterialPageRoute(
+              //                 builder: (context) =>
+              //                     const NotificationsScreen()));
+              //           },
+              //         );
+              //       } else {
+              //         return IconButton(
+              //           icon: const Icon(Icons.notifications_active_outlined,
+              //               color: Colors.blueAccent),
+              //           onPressed: () async {
+              //             await Navigator.of(context).push(MaterialPageRoute(
+              //                 builder: (context) =>
+              //                     const NotificationsScreen()));
+              //           },
+              //         );
+              //       }
+              //     },
+              //     error: (error, stack) =>
+              //         const Icon(Icons.error, color: Colors.red),
+              //     loading: () => const Icon(Icons.notifications_none_rounded,
+              //         color: Colors.black),
+              //   ),
+              //   // IconButton(
+              //   //     onPressed: () {
+              //   //       log("become counseller");
+              //   //       Navigator.of(context).push(MaterialPageRoute(
+              //   //           builder: (context) => const TabsScreen()));
+              //   //     },
+              //   //     icon: const Icon(FluentIcons.people_12_filled))
+              // ],
             ),
             const SliverToBoxAdapter(
               child: SizedBox(height: 200, child: ImageCarousel()),
