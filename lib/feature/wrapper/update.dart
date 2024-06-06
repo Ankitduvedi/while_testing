@@ -63,11 +63,9 @@ class _UpdateAppScreenState extends State<UpdateAppScreen> {
                 ))),
                 onPressed: () {
                   if (Platform.isIOS) {
-                    launchUrl(Uri.parse(
-                        "https://apps.apple.com/us/app/plutonn/id6470260657"));
                   } else {
                     launchUrl(Uri.parse(
-                        "https://play.google.com/store/apps/details?id=com.plutonn.plutonn&hl=en&gl=US"));
+                        "https://play.google.com/store/apps/details?id=com.while.while_app&hl=en&gl=US"));
                   }
                 },
                 child: Padding(
