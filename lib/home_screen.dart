@@ -14,7 +14,9 @@ import 'package:com.while.while_app/feature/creator/screens/create_screen.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_screen2.dart';
 import 'package:com.while.while_app/feature/social/screens/social_home_screen.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'app_info_home.dart';
 import 'providers/user_provider copy.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -66,6 +68,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     _checkInitialMessage();
+    initAppTour();
+    _showTutorial();
   }
 
   void _checkInitialMessage() async {
@@ -124,9 +128,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
+  final homeKey = GlobalKey();
+  final videoKey = GlobalKey();
+  final playKey = GlobalKey();
+  final chatKey = GlobalKey();
+  final profileKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+
+  void initAppTour() {
+    final targets = addSiteTargetPage(
+        homeKey: homeKey,
+        videoKey: videoKey,
+        playKey: playKey,
+        chatKey: chatKey,
+        profileKey: profileKey);
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.blueAccent,
+      hideSkip: false,
+      textSkip: 'SKIP',
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        log('finish');
+      },
+      onClickTarget: (target) {
+        log(target.toString());
+      },
+    );
+  }
+
+  void _showTutorial() {
+    Future.delayed(const Duration(seconds: 1), () {
+      tutorialCoachMark.show(context: context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final ChatUser user = ref.watch(userDataProvider).userData!;
+
     return Scaffold(
       body: TabBarView(
         controller: _controller,
@@ -158,6 +200,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           },
           tabs: [
             Tab(
+              key: homeKey,
               icon: Icon(
                 _controller.index == 0
                     ? FluentIcons.home_20_filled
@@ -167,6 +210,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
             ),
             Tab(
+              key: videoKey,
               icon: Icon(
                 _controller.index == 1
                     ? FluentIcons.video_add_20_filled
@@ -176,11 +220,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
             ),
             Tab(
+                key: playKey,
                 icon: Image.asset(
-              'assets/while_icon.png',
-              width: 70,
-              height: 27, // Dynamic width for the image
-            )
+                  'assets/while_icon.png',
+                  width: 70,
+                  height: 27, // Dynamic width for the image
+                )
 
                 // Icon(
                 //   _controller.index == 2
@@ -191,6 +236,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 // ),
                 ),
             Tab(
+              key: chatKey,
               icon: Icon(
                 _controller.index == 3
                     ? FluentIcons.chat_20_filled
@@ -200,6 +246,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
             ),
             Tab(
+              key: profileKey,
               icon: Icon(
                 _controller.index == 4
                     ? FluentIcons.person_20_filled

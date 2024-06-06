@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/feature/social/screens/app_tour_chat.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 
 import 'package:com.while.while_app/feature/social/screens/community/community_home_widget.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class SocialScreen extends ConsumerStatefulWidget {
   const SocialScreen({super.key});
@@ -36,6 +38,8 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
         updateSearchToggleBasedOnTab(_controller.index);
       }
     });
+    initAppTour();
+    _showTutorial();
   }
 
   void updateSearchToggleBasedOnTab(int index) {
@@ -54,6 +58,42 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
 
   final TextEditingController _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  final connectKey = GlobalKey();
+  final chatsKey = GlobalKey();
+  final communityKey = GlobalKey();
+  final statusKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+
+  void initAppTour() {
+    final targets = addChatsSiteTargetPage(
+      connectKey: connectKey,
+      chatsKey: chatsKey,
+      communityKey: communityKey,
+      statusKey: statusKey,
+    );
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.blueAccent,
+      hideSkip: false,
+      textSkip: 'SKIP',
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        log('finish');
+      },
+      onClickTarget: (target) {
+        log(target.toString());
+      },
+    );
+  }
+
+  void _showTutorial() {
+    Future.delayed(const Duration(seconds: 1), () {
+      tutorialCoachMark.show(context: context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var toogleSearch = ref.watch(toggleSearchStateProvider);
@@ -129,17 +169,21 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
             labelColor: Colors.black,
             labelStyle:
                 GoogleFonts.ptSans(fontWeight: FontWeight.bold, fontSize: 15),
-            tabs: const [
+            tabs: [
               Tab(
+                key: connectKey,
                 text: 'Connect   ',
               ),
               Tab(
+                key: chatsKey,
                 text: 'Chats  ',
               ),
               Tab(
+                key: communityKey,
                 text: 'Community',
               ),
               Tab(
+                key: statusKey,
                 text: '    Status',
               ),
             ],

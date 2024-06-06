@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget%20copy.dart';
+import 'package:com.while.while_app/feature/profile/app_tour_profile.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../providers/user_provider.dart';
 
@@ -20,6 +22,45 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initAppTour();
+    _showTutorial();
+  }
+
+  final photosKey = GlobalKey();
+  final profileKey = GlobalKey();
+  final statsKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+
+  void initAppTour() {
+    final targets = addProfileSiteTargetPage(
+        photosKey: photosKey, profileKey: profileKey, statsKey: statsKey);
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.blueAccent,
+      hideSkip: false,
+      textSkip: 'SKIP',
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        log('finish');
+      },
+      onClickTarget: (target) {
+        log(target.toString());
+      },
+    );
+  }
+
+  void _showTutorial() {
+    Future.delayed(const Duration(seconds: 1), () {
+      tutorialCoachMark.show(context: context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var user = ref.watch(userDataProvider).userData!;
 
@@ -27,8 +68,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     log(user.id);
 
-    const tabBarIcons = [
+    var tabBarIcons = [
       Tab(
+        key: photosKey,
         icon: Icon(
           Icons.photo_outlined,
           color: Colors.blueGrey,
@@ -36,6 +78,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
       Tab(
+        key: profileKey,
         icon: Icon(
           Icons.person,
           color: Colors.blueGrey,
@@ -43,6 +86,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
       Tab(
+        key: statsKey,
         icon: Icon(
           Icons.brush,
           color: Colors.blueGrey,
@@ -91,7 +135,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Material(
+              Material(
                 color: Colors.white,
                 child: TabBar(
                   padding: EdgeInsets.all(0),
