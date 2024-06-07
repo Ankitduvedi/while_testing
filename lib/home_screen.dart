@@ -18,6 +18,7 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'app_info_home.dart';
+import 'core/constant.dart';
 import 'feature/auth/controller/auth_controller.dart';
 import 'providers/user_provider copy.dart';
 
@@ -36,6 +37,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     final fireSevice = ref.read(apisProvider);
+    _checkInitialMessage();
+
     log("initState called");
     SystemChannels.lifecycle.setMessageHandler((message) {
       log('Message: $message');
@@ -68,14 +71,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             builder: (context) => const MessageHomeWidget(),
           ));
     });
-
-    _checkInitialMessage();
-    bool isNewUser = ref.read(isNewUserProvider);
-    print("home screen $isNewUser");
-    if (isNewUser) {
-      initAppTour();
-      _showTutorial();
-    }
   }
 
   void _checkInitialMessage() async {
@@ -174,6 +169,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final ChatUser user = ref.watch(userDataProvider).userData!;
+    bool isNewUser = ref.read(isNewUserProvider);
+    // Future.delayed(const Duration(seconds: 6), () {
+    //   print("user id1: ${user.id}");
+    //
+    //   // ref.watch(userDataProvider);
+    //   print(
+    //       "containing1 ${user.tourPage} $isNewUser ${user.tourPage.contains("${tourMap['HomeScreen']}")}");
+    //   if (isNewUser || !user!.tourPage.contains("${tourMap['HomeScreen']}")) {
+    //     print("entered");
+    //     initAppTour();
+    //     _showTutorial();
+    //   }
+    // });
 
     return Scaffold(
       body: TabBarView(

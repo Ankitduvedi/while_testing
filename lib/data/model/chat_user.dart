@@ -27,6 +27,8 @@ class ChatUser {
     required this.isApproved,
     required this.isCounsellor,
     required this.isCounsellorVerified,
+    this.isnewUser = false,
+    required this.tourPage,
   });
 
   late String image;
@@ -54,10 +56,11 @@ class ChatUser {
   late int isCounsellor;
   late int isCounsellorVerified;
   late int isApproved;
+  late bool isnewUser;
+  late String tourPage = "";
 
   // Update fromJson method to include the new field
   ChatUser.fromJson(Map<String, dynamic> json) {
-
     isCounsellor = json['isCounsellor'] ?? 0;
     isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
@@ -83,6 +86,10 @@ class ChatUser {
     lives = json['lives'] ?? 0;
     isContentCreator = json['isContentCreator'] ?? 0;
     isApproved = json['isApproved'] ?? 0;
+    if (json['isnewUser'] != null) {
+      isnewUser = json['isnewUser'];
+    }
+    tourPage = json['tourPage'] ?? "";
     // Add the new field
   }
 
@@ -114,6 +121,8 @@ class ChatUser {
     data['lives'] = lives;
     data['isContentCreator'] = isContentCreator;
     data['isApproved'] = isApproved;
+    data['isnewUser'] = isnewUser;
+    data['tourPage'] = tourPage;
     // Add the new field
     return data;
   }
@@ -147,6 +156,8 @@ class ChatUser {
       'isApproved': isApproved,
       'isCounsellor': isCounsellor,
       'isCounsellorVerified': isCounsellorVerified,
+      'isnewUser': isnewUser,
+      'tourPage': tourPage
     };
   }
 
@@ -163,9 +174,7 @@ class ChatUser {
         mediumQuestions: 0,
         name: '',
         createdAt: '',
-
         isOnline: 0,
-
         id: '',
         lastActive: '',
         email: '',
@@ -180,7 +189,8 @@ class ChatUser {
         following: 0,
         // Initialize the new field
         isContentCreator: 0,
-        isApproved: 0);
+        isApproved: 0,
+        tourPage: "");
   }
 
   // Add a copyWith method
@@ -212,31 +222,31 @@ class ChatUser {
     int? isCounsellorVerified,
   }) {
     return ChatUser(
-      isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,
-      isCounsellor: isCounsellor ?? this.isCounsellor,
-      image: image ?? this.image,
-      about: about ?? this.about,
-      name: name ?? this.name,
-      createdAt: createdAt ?? this.createdAt,
-      isOnline: isOnline ?? this.isOnline,
-      id: id ?? this.id,
-      lastActive: lastActive ?? this.lastActive,
-      email: email ?? this.email,
-      pushToken: pushToken ?? this.pushToken,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      gender: gender ?? this.gender,
-      profession: profession ?? this.profession,
-      place: place ?? this.place,
-      designation: designation ?? this.designation,
-      following: following ?? this.following,
-      follower: follower ?? this.follower,
-      easyQuestions: easyQuestions ?? this.easyQuestions,
-      mediumQuestions: mediumQuestions ?? this.mediumQuestions,
-      hardQuestions: hardQuestions ?? this.hardQuestions,
-      lives: lives ?? this.lives,
-      isContentCreator: isContentCreator ?? this.isContentCreator,
-      isApproved: isApproved ?? this.isApproved,
-    );
+        isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,
+        isCounsellor: isCounsellor ?? this.isCounsellor,
+        image: image ?? this.image,
+        about: about ?? this.about,
+        name: name ?? this.name,
+        createdAt: createdAt ?? this.createdAt,
+        isOnline: isOnline ?? this.isOnline,
+        id: id ?? this.id,
+        lastActive: lastActive ?? this.lastActive,
+        email: email ?? this.email,
+        pushToken: pushToken ?? this.pushToken,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        gender: gender ?? this.gender,
+        profession: profession ?? this.profession,
+        place: place ?? this.place,
+        designation: designation ?? this.designation,
+        following: following ?? this.following,
+        follower: follower ?? this.follower,
+        easyQuestions: easyQuestions ?? this.easyQuestions,
+        mediumQuestions: mediumQuestions ?? this.mediumQuestions,
+        hardQuestions: hardQuestions ?? this.hardQuestions,
+        lives: lives ?? this.lives,
+        isContentCreator: isContentCreator ?? this.isContentCreator,
+        isApproved: isApproved ?? this.isApproved,
+        tourPage: tourPage ?? this.tourPage);
   }
 }

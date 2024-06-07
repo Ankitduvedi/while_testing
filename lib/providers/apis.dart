@@ -358,6 +358,7 @@ class APIs {
       profession: '',
       follower: 0,
       following: 0,
+      tourPage: ""
     );
 
     return await firestore

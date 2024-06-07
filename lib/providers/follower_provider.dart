@@ -16,16 +16,17 @@ class FollowerProvider with ChangeNotifier {
   }
 
   void _initData(String userId) {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .snapshots()
-        .listen((snapshot) {
-      if (snapshot.exists) {
-        _userData = ChatUser.fromJson(snapshot.data()!);
-        notifyListeners();
-      }
-    });
+    // print('userdataprovider init function called $userId');
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(userId)
+    //     .snapshots()
+    //     .listen((snapshot) {
+    //   if (snapshot.exists) {
+    //     _userData = ChatUser.fromJson(snapshot.data()!);
+    //     notifyListeners();
+    //   }
+    // });
   }
 
   Future<void> updateUserData(ChatUser updatedUser) async {

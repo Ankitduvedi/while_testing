@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget%20copy.dart';
 import 'package:com.while.while_app/feature/profile/app_tour_profile.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
@@ -11,6 +12,7 @@ import 'package:com.while.while_app/feature/profile/screens/creator_profile_widg
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import '../../../core/constant.dart';
 import '../../../providers/user_provider.dart';
 import '../../auth/controller/auth_controller.dart';
 
@@ -26,12 +28,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    bool isNewUser = ref.read(isNewUserProvider);
-    print("home screen $isNewUser");
-    if (isNewUser) {
-      initAppTour();
-      _showTutorial();
-    }
   }
 
   final photosKey = GlobalKey();
@@ -59,10 +55,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  void _showTutorial() {
+  void _showTutorial(ChatUser user) {
     Future.delayed(const Duration(seconds: 1), () {
       tutorialCoachMark.show(context: context);
     });
+    user.tourPage = user.tourPage + "${tourMap['UserProfileScreen2']}";
+    ref.read(userDataProvider).updateUserData(user);
   }
 
   @override
@@ -70,6 +68,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     var user = ref.watch(userDataProvider).userData!;
 
     ref.watch(userDataProvider);
+
+    bool isNewUser = ref.read(isNewUserProvider);
+    print("containing ${user!.tourPage}");
+    print("home screen2 $isNewUser");
+    if (isNewUser ||
+        !user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) {
+      print("enters");
+      initAppTour();
+      _showTutorial(user);
+      user.tourPage = user.tourPage + "${tourMap['UserProfileScreen2']}";
+    }
 
     log(user.id);
 

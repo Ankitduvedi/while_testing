@@ -62,14 +62,19 @@ class AuthController extends StateNotifier<bool> {
 
   void signInWithGoogle(BuildContext context) async {
     state = true;
-    final isNewuser = await _authRepository.checkisNewuser();
+    // final isNewuser = await _authRepository.checkisNewuser();
     final user = await _authRepository.signInWithGoogle(_ref);
     state = false;
     log("setting user data to userProv");
     user.fold((l) => Utils.snackBar(l.message, context),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
-    _ref.read(isNewUserProvider.notifier).update((state) => isNewuser);
-    print("isNewUserProvider ${isNewuser}");
+    ChatUser? userdata = _ref.read(userProvider.notifier).state;
+    _ref
+        .read(isNewUserProvider.notifier)
+        .update((state) => userdata!.isnewUser ?? false);
+    _ref
+        .read(isNewUserProvider.notifier)
+        .update((state) => userdata!.isnewUser ?? false);
   }
 
   void signOut(BuildContext context) async {

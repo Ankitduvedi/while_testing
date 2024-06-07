@@ -16,6 +16,7 @@ class Connect extends ConsumerWidget {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
 
     var user = ref.watch(userDataProvider).userData!;
+    print("user id: ${user.id}");
 
     final followingUsersAsyncValue = ref.watch(followingUsersProvider(user.id));
 

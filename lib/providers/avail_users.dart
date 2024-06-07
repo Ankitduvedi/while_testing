@@ -42,7 +42,11 @@ final myUsersProvider = StreamProvider<List<ChatUser>>((ref) {
           mediumQuestions: userDetailsDoc['mediumQuestions'],
           hardQuestions: userDetailsDoc['hardQuestions'],
           lives: userDetailsDoc['lives'],
-          following: userDetailsDoc['following']);
+          following: userDetailsDoc['following'],
+        tourPage:userDetailsDoc['tourPage'],
+
+      );
+
 
       users.add(userDetail);
     }

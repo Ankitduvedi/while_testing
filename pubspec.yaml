@@ -103,7 +103,7 @@ dependencies:
   url_launcher: ^6.0.17
   connectivity_plus: ^6.0.3
   flutter_video_info: ^1.3.2
-  cached_video_player: ^2.0.4
+
   tutorial_coach_mark: ^1.2.11
 
   

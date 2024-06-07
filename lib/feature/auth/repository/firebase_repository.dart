@@ -74,7 +74,8 @@ class AuthRepository extends ConsumerStatefulWidget {
           isContentCreator: 0,
           isApproved: 0,
           isCounsellor: 0,
-          isCounsellorVerified: 0);
+          isCounsellorVerified: 0,
+          tourPage: "");
       log('/////as////${_auth.currentUser!.uid}');
       await createNewUser(userModel);
       return right(userModel);
@@ -169,7 +170,6 @@ class AuthRepository extends ConsumerStatefulWidget {
   Future<bool> checkisNewuser() async {
     try {
       // Assumed _googleSignIn and _auth are initialized
-      await GoogleSignIn().signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
@@ -183,6 +183,7 @@ class AuthRepository extends ConsumerStatefulWidget {
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
         log("sign in successfully");
+        print("userCredential ${userCredential.user!.uid}");
 
         if (userCredential.user != null) {
           final User newUser = userCredential.user!;
@@ -204,7 +205,7 @@ class AuthRepository extends ConsumerStatefulWidget {
   Future<Either> signInWithGoogle(Ref ref) async {
     try {
       // Assumed _googleSignIn and _auth are initialized
-      await GoogleSignIn().signOut();
+
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
@@ -218,6 +219,7 @@ class AuthRepository extends ConsumerStatefulWidget {
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
         log("sign in successfully");
+        print("userCredential2 ${userCredential.user!.uid}");
 
         if (userCredential.user != null) {
           final User newUser = userCredential.user!;
@@ -255,7 +257,9 @@ class AuthRepository extends ConsumerStatefulWidget {
                 isContentCreator: 0,
                 isApproved: 0,
                 isCounsellor: 0,
-                isCounsellorVerified: 0);
+                isCounsellorVerified: 0,
+                isnewUser: true,
+                tourPage: "");
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
 
