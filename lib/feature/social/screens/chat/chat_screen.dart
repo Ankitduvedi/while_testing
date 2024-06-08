@@ -357,11 +357,9 @@ class MessageBox extends ConsumerWidget {
                       await picker.pickMultiImage(imageQuality: 70);
                   for (var i in images) {
                     log('Image Path: ${i.path}');
-                    setUpload();
+
                     sendChatImage(user, File(i.path));
-                    Future.delayed(const Duration(seconds: 1), () {
-                      setUpload();
-                    });
+                    Future.delayed(const Duration(seconds: 1), () {});
                   }
                 },
                 icon: const Icon(Icons.add, color: Colors.black, size: 34)),

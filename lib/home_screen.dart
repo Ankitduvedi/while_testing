@@ -160,28 +160,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  void _showTutorial() {
+  void _showTutorial(ChatUser user) {
     Future.delayed(const Duration(seconds: 1), () {
       tutorialCoachMark.show(context: context);
     });
+    user.tourPage = user.tourPage + "${tourMap['HomeScreen']}";
+    ref.read(userDataProvider).updateUserData(user);
   }
 
   @override
   Widget build(BuildContext context) {
     final ChatUser user = ref.watch(userDataProvider).userData!;
     bool isNewUser = ref.read(isNewUserProvider);
-    // Future.delayed(const Duration(seconds: 6), () {
-    //   print("user id1: ${user.id}");
-    //
-    //   // ref.watch(userDataProvider);
-    //   print(
-    //       "containing1 ${user.tourPage} $isNewUser ${user.tourPage.contains("${tourMap['HomeScreen']}")}");
-    //   if (isNewUser || !user!.tourPage.contains("${tourMap['HomeScreen']}")) {
-    //     print("entered");
-    //     initAppTour();
-    //     _showTutorial();
-    //   }
-    // });
+    Future.delayed(const Duration(seconds: 6), () {
+      print("user id1: ${user.id}");
+
+      // ref.watch(userDataProvider);
+      print(
+          "containing1 ${user.tourPage} $isNewUser ${user.tourPage.contains("${tourMap['HomeScreen']}")}");
+      if (isNewUser || !user!.tourPage.contains("${tourMap['HomeScreen']}")) {
+        print("entered");
+        initAppTour();
+        _showTutorial(user);
+      }
+    });
 
     return Scaffold(
       body: TabBarView(
