@@ -265,8 +265,10 @@ class AuthRepository extends ConsumerStatefulWidget {
 
             log("success new user ${newUser.uid}");
           } else {
-            userModel = getUserData(
-                newUser.uid); // Assume this fetches the user correctly
+            userModel = await getUserData1(newUser.uid);
+            print("usermodel is ${userModel.id}");
+
+            // getUserData(newUser.uid); // Assume this fetches the user correctly
             log("existing user");
           }
 
@@ -301,6 +303,23 @@ class AuthRepository extends ConsumerStatefulWidget {
     UserDataProvider userDataProvider =
         UserDataProvider(_ref); // Create an instance
     userDataProvider.setUserData(newUser);
+  }
+
+  Future<ChatUser> getUserData1(String uid) async {
+    UserDataProvider userDataProvider =
+        UserDataProvider(_ref); // Create an instance
+    ChatUser user = ChatUser.empty();
+    log("entered userdata");
+
+    final docRef = _firestore.collection("users").doc(uid);
+    final DocumentSnapshot doc = await docRef.get();
+    final data = doc.data() as Map<String, dynamic>;
+    log("data is $data");
+    user = ChatUser.fromJson(data);
+    userDataProvider.setUserData(user);
+
+    log("user id is ${user.id}");
+    return user;
   }
 
   ChatUser getUserData(
