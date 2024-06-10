@@ -69,6 +69,7 @@ class AuthController extends StateNotifier<bool> {
     user.fold((l) => Utils.snackBar(l.message, context),
         (r) => _ref.read(userProvider.notifier).update((state) => r));
     ChatUser? userdata = _ref.read(userProvider.notifier).state;
+    print("auth useriD ${userdata!.id}");
     _ref
         .read(isNewUserProvider.notifier)
         .update((state) => userdata!.isnewUser ?? false);

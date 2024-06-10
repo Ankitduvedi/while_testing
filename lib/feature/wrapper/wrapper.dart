@@ -74,8 +74,8 @@ class _WrapperState extends ConsumerState<Wrapper> {
 
         if (firedata != null) {
           //user provider data
-          if (user != null) {
-            print("user is ${user.name}");
+          if (user != null && user.id != null && user.id.isNotEmpty) {
+            log("userwrapper is ${user.name} ${user.id}");
             ref.watch(apisProvider).getFirebaseMessagingToken(user.id);
             return const HomeScreen();
           } else {

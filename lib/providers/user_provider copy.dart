@@ -20,7 +20,8 @@ class UserDataProvider with ChangeNotifier {
   ChatUser _userData = ChatUser.empty();
   ChatUser? get userData => _userData;
 
-  void _initData() {
+  void _initData() async {
+    log("entered init");
     final auth = FirebaseAuth.instance.currentUser;
     if (auth != null) {
       // User data subscription
@@ -48,6 +49,12 @@ class UserDataProvider with ChangeNotifier {
           .snapshots()
           .listen(_followerUpdateListener);
     }
+  }
+
+  void setUserData(ChatUser User) {
+    _userData = User;
+    log("userdata set");
+    notifyListeners();
   }
 
   void _userUpdateListener(DocumentSnapshot<Map<String, dynamic>> snapshot) {

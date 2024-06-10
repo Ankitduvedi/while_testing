@@ -158,7 +158,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         log(target.toString());
       },
     );
+    setState(() {
+      isEntered = true;
+    });
+    print("entered val is $isEntered");
   }
+
+  bool isEntered = false;
 
   void _showTutorial(ChatUser user) {
     Future.delayed(const Duration(seconds: 1), () {
@@ -170,20 +176,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final ChatUser user = ref.watch(userDataProvider).userData!;
+    // final ChatUser? user1 = ref.watch(userDataProvider).userData;
+    final user1 = ref.read(userProvider);
+    log("userhome id: ${user1?.id}");
     bool isNewUser = ref.read(isNewUserProvider);
-    Future.delayed(const Duration(seconds: 6), () {
-      print("user id1: ${user.id}");
 
-      // ref.watch(userDataProvider);
-      print(
-          "containing1 ${user.tourPage} $isNewUser ${user.tourPage.contains("${tourMap['HomeScreen']}")}");
-      if (isNewUser || !user!.tourPage.contains("${tourMap['HomeScreen']}")) {
-        print("entered");
-        initAppTour();
-        _showTutorial(user);
-      }
-    });
+    // ref.watch(userDataProvider);
+    print(
+        "containing1 ${user1?.tourPage} $isNewUser ${user1?.tourPage.contains("${tourMap['HomeScreen']}")}");
+    if (user1?.id != null &&
+        user1?.id != "" &&
+        (!user1!.tourPage.contains("${tourMap['HomeScreen']}")) &&
+        !isEntered) {
+      log("enteredhome ${user1?.tourPage} $isNewUser $isEntered");
+      initAppTour();
+      _showTutorial(user1!);
+    }
 
     return Scaffold(
       body: TabBarView(
@@ -191,7 +199,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         children: [
           const FeedScreen(),
           CreateScreen(
-            user: user,
+            user: user1!,
           ),
           const ComingSoonPage(),
           //const ReelsScreentest(),

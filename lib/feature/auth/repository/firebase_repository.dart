@@ -263,11 +263,10 @@ class AuthRepository extends ConsumerStatefulWidget {
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous
 
-            log("success new user");
+            log("success new user ${newUser.uid}");
           } else {
             userModel = getUserData(
-              newUser.uid,
-            ); // Assume this fetches the user correctly
+                newUser.uid); // Assume this fetches the user correctly
             log("existing user");
           }
 
@@ -296,12 +295,12 @@ class AuthRepository extends ConsumerStatefulWidget {
   }
 
   Future<void> createNewUser(ChatUser newUser) async {
-    log(' users given id is /: ${newUser.name}');
-    log(newUser.id);
+    log(' users given id is / ${newUser.id}: ${newUser.name}');
+    log('firebaserepo ${newUser.id}');
     await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
     UserDataProvider userDataProvider =
         UserDataProvider(_ref); // Create an instance
-    // userDataProvider.setUserData(newUser);
+    userDataProvider.setUserData(newUser);
   }
 
   ChatUser getUserData(
@@ -310,15 +309,17 @@ class AuthRepository extends ConsumerStatefulWidget {
     UserDataProvider userDataProvider =
         UserDataProvider(_ref); // Create an instance
     ChatUser user = userDataProvider.userData!;
-
+    // log("entered userdata");
+    //
     // if (user.id == null || user.id == '') {
-    //   final docRef = _firestore.collection("users").doc(uid);
+    //   final docRef = await _firestore.collection("users").doc(uid);
     //   docRef.get().then((DocumentSnapshot doc) {
     //     final data = doc.data() as Map<String, dynamic>;
     //     user = ChatUser.fromJson(data);
     //     userDataProvider.setUserData(user);
     //   });
     // }
+    // log("user id is ${user.id}");
     return user;
   }
 
