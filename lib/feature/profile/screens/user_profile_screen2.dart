@@ -13,7 +13,6 @@ import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../core/constant.dart';
-import '../../../providers/user_provider.dart';
 import '../../auth/controller/auth_controller.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -24,12 +23,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   final photosKey = GlobalKey();
   final profileKey = GlobalKey();
   final statsKey = GlobalKey();
@@ -70,11 +63,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ref.watch(userDataProvider);
 
     bool isNewUser = ref.read(isNewUserProvider);
-    print("containing ${user!.tourPage}");
-    print("home screen2 $isNewUser");
+
     if (isNewUser ||
-        !user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) {
-      print("enters");
+        !user.tourPage.contains("${tourMap['UserProfileScreen2']}")) {
       initAppTour();
       _showTutorial(user);
       user.tourPage = user.tourPage + "${tourMap['UserProfileScreen2']}";
@@ -85,28 +76,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     var tabBarIcons = [
       Tab(
         key: photosKey,
-        icon: Icon(
-          Icons.photo_outlined,
-          color: Colors.blueGrey,
-          size: 30,
+        // icon: const Icon(
+        //   Icons.photo_outlined,
+        //   color: Colors.blueGrey,
+        //   size: 30,
+        // ),
+        child: const Text(
+          'Loops',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
         ),
       ),
       Tab(
-        key: profileKey,
-        icon: Icon(
-          Icons.person,
-          color: Colors.blueGrey,
-          size: 30,
-        ),
-      ),
+          key: profileKey,
+          // icon: const Icon(
+          //   Icons.person,
+          //   color: Colors.blueGrey,
+          //   size: 30,
+          // ),
+          child: const Text(
+            'Videos',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+          )),
       Tab(
-        key: statsKey,
-        icon: Icon(
-          Icons.brush,
-          color: Colors.blueGrey,
-          size: 30,
-        ),
-      ),
+          key: statsKey,
+          // icon: const Icon(
+          //   Icons.brush,
+          //   color: Colors.blueGrey,
+          //   size: 30,
+          // ),
+          child: const Text(
+            'Dashboard',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+          )),
     ];
 
     return Scaffold(
@@ -152,7 +156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Material(
                 color: Colors.white,
                 child: TabBar(
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   indicatorColor: Colors.black,
                   tabs: tabBarIcons,
                 ),
