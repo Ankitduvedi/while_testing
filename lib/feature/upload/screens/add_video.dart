@@ -31,6 +31,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
   late Subscription _subscription;
   bool isloading = false;
   double _uploadProgress = 0.0;
+  bool uploading = false;
   String selectedOption = 'App Development';
 
   final TextEditingController _titleController = TextEditingController();
@@ -43,7 +44,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       debugPrint('progress: $progress');
       setState(() {
         _uploadProgress = progress / 100;
-        isloading = false;
+        //isloading = false;
       });
     });
   }
@@ -77,8 +78,8 @@ class AddVideoState extends ConsumerState<AddVideo> {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height * 1;
-    final w = MediaQuery.of(context).size.width * 1;
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
 
     final categoriesAsyncValue = ref.watch(categoriesProvider);
 
@@ -88,55 +89,69 @@ class AddVideoState extends ConsumerState<AddVideo> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 15),
               Center(
                 child: SizedBox(
                   width: w,
-                  height: h / 2,
+                  height: h / 1.75,
                   child: VideoPlayerWidget(videoPath: widget.video.path),
                 ),
               ),
               const SizedBox(height: 15),
-              TextContainerWidget(
-                keyboardType: TextInputType.text,
-                controller: _titleController,
-                prefixIcon: Icons.title,
-                hintText: 'Title',
-              ),
-              const SizedBox(height: 10),
-              TextContainerWidget(
-                keyboardType: TextInputType.text,
-                controller: _descriptionController,
-                prefixIcon: Icons.description,
-                hintText: 'Description',
-              ),
-              categoriesAsyncValue.when(
-                data: (categories) {
-                  return _buildDropDown(
-                    "Select Category",
-                    selectedOption,
-                    categories,
-                    (String? newValue) {
-                      setState(() {
-                        selectedOption = newValue!;
-                      });
-                    },
-                  );
-                },
-                loading: () => const CircularProgressIndicator(),
-                error: (error, stack) => Text('Error: $error'),
-              ),
-              const SizedBox(height: 10),
-              if (isloading)
-                LinearProgressIndicator(
-                  value: _uploadProgress,
+              if (!isloading)
+                TextContainerWidget(
+                  keyboardType: TextInputType.text,
+                  controller: _titleController,
+                  prefixIcon: Icons.title,
+                  hintText: 'Title',
                 ),
               const SizedBox(height: 10),
+              if (!isloading)
+                TextContainerWidget(
+                  keyboardType: TextInputType.text,
+                  controller: _descriptionController,
+                  prefixIcon: Icons.description,
+                  hintText: 'Description',
+                ),
+              const SizedBox(height: 10),
+              if (!isloading)
+                categoriesAsyncValue.when(
+                  data: (categories) {
+                    return _buildDropDown(
+                      "Select Category",
+                      selectedOption,
+                      categories,
+                      (String? newValue) {
+                        setState(() {
+                          selectedOption = newValue!;
+                        });
+                      },
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (error, stack) => Text('Error: $error'),
+                ),
+              const SizedBox(height: 5),
+              if (isloading)
+                LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(10),
+                    value: _uploadProgress,
+                    semanticsValue: uploading ? 'Uploading' : 'Compression',
+                    minHeight: 10,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        uploading ? Colors.blue : Colors.red)),
+              const SizedBox(height: 10),
+              if (isloading)
+                Text(
+                  uploading ? 'Uploading...' : 'Compression...',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              if (isloading) const SizedBox(height: 10),
               RoundButton(
                 title: "Upload",
                 loading: isloading,
@@ -225,14 +240,16 @@ class AddVideoState extends ConsumerState<AddVideo> {
       final signatureParts = _generateSignature(videoId).split(',');
       _uploadVideo(videoId, signatureParts[0], signatureParts[1]);
     } catch (e) {
+      setState(() {});
       ScaffoldMessenger.of(this.context)
           .showSnackBar(SnackBar(content: Text('Failed to prepare video: $e')));
+      Navigator.pop(context);
     }
   }
 
   void _uploadVideo(
       String videoId, String signature, String expirationTime) async {
-    print("videopath is ${widget.video.path}");
+    log("videopath is ${widget.video.path}");
     File vid = await compressVideo(widget.video.path);
 
     XFile video = XFile(vid.path);
@@ -285,9 +302,10 @@ class AddVideoState extends ConsumerState<AddVideo> {
             isloading = false;
           });
 
-          Navigator.pop(this.context);
+          Navigator.pop(context);
         },
         onProgress: (progress) {
+          uploading = true;
           log("Progress: $progress");
           setState(() {
             _uploadProgress = progress / 100;
@@ -301,6 +319,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       setState(() {
         isloading = false;
       });
+      Navigator.pop(context);
     }
   }
 
@@ -327,6 +346,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       return data['guid'];
     } else {
       log('Failed to create video: ${response.body} , ');
+      Navigator.pop(context);
       throw Exception(
           'Failed to create video: ${response.body}, ${response.statusCode}');
     }
