@@ -78,8 +78,10 @@ class _CounsellorDetailPageState extends ConsumerState<CounsellorDetailPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ChatScreen(user: widget.userData),
+                            builder: (context) => ChatScreen(
+                              user: widget.userData,
+                              myid: '',
+                            ),
                           ));
                     },
                   ),

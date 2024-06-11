@@ -1,21 +1,18 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/constant.dart';
 import 'package:com.while.while_app/feature/social/screens/app_tour_chat.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-
 import 'package:com.while.while_app/feature/social/screens/community/community_home_widget.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
 import 'package:com.while.while_app/feature/social/screens/connect/connect_screen.dart';
 import 'package:com.while.while_app/feature/social/screens/status/status_screen.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-
 import '../../../data/model/chat_user.dart';
 import '../../../providers/user_provider copy.dart';
 
@@ -42,6 +39,10 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
         updateSearchToggleBasedOnTab(_controller.index);
       }
     });
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(ref.read(userDataProvider).userData!.id)
+        .update({'isChattingWith': ''});
   }
 
   void updateSearchToggleBasedOnTab(int index) {
@@ -104,13 +105,11 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     var searchValue = ref.watch(searchQueryProvider.notifier);
     log('toggleSearchStateProvider');
     bool isNewUser = ref.read(isNewUserProvider);
-    print("home screen2 $isNewUser");
 
     var user = ref.watch(userDataProvider).userData!;
-    print("user id1: ${user.id}");
 
     // ref.watch(userDataProvider);
-    print("containing ${user.name}");
+
     if (isNewUser || !user!.tourPage.contains("${tourMap['SocialScreen']}")) {
       initAppTour();
       _showTutorial(user);

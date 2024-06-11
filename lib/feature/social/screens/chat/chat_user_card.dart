@@ -1,5 +1,8 @@
 import 'dart:developer';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/main.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +32,11 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
 
   @override
   Widget build(BuildContext context) {
+    final myid = ref.read(userDataProvider).userData!.id;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(ref.read(userDataProvider).userData!.id)
+        .update({'isChattingWith': activeChatUserId});
     final fireService = ref.read(apisProvider);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0),
@@ -36,11 +44,15 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
       elevation: 0,
       child: InkWell(
         onTap: () {
+          activeChatUserId = widget.user.id;
           // for navigating to chat screen
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ChatScreen(user: widget.user),
+              builder: (_) => ChatScreen(
+                user: widget.user,
+                myid: myid,
+              ),
             ),
           );
         },
@@ -66,11 +78,8 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
                   backgroundImage: NetworkImage(widget
                       .user.image), // using NetworkImage to load the image
                   onBackgroundImageError: (_, __) {
-                    // Handling errors in image loading
-                    // Log error or handle the image load failure appropriately
                     log('Failed to load image');
                   },
-                  // Default image to show in case of an error or while the image is loading
                   backgroundColor: Colors.grey[
                       200], // optional: background color, shows while image is loading
                   child: Text(

@@ -12,8 +12,6 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../providers/appTourProvider.dart';
-
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(
       firestore: ref.read(fireStoreProvider),
@@ -49,6 +47,7 @@ class AuthRepository extends ConsumerStatefulWidget {
       final time = DateTime.now().millisecondsSinceEpoch.toString();
       ChatUser userModel;
       userModel = ChatUser(
+          isChattingWith: '',
           lives: 0,
           easyQuestions: 0,
           id: creds.user!.uid,
@@ -232,6 +231,7 @@ class AuthRepository extends ConsumerStatefulWidget {
             // Define userModel for a new user
             final time = DateTime.now().millisecondsSinceEpoch.toString();
             userModel = ChatUser(
+                isChattingWith: '',
                 lives: 0,
                 easyQuestions: 0,
                 id: newUser.uid,
