@@ -5,17 +5,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/social/screens/chat/chat_user_card.dart';
 import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/providers/chat_sqLite_provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../data/model/community_message.dart';
 import '../../../../providers/apis.dart';
 import '../../../../core/utils/my_date_util.dart';
 import '../../../../data/model/chat_user.dart';
@@ -49,8 +46,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     super.initState();
 
-    fetchMessage();
-
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         setState(() {
@@ -62,11 +57,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   void setmessagestream() async {
     final fireService = ref.watch(apisProvider);
-    final chatService = ref.watch(chatDBProvider);
-    final currentuser = ref.watch(userDataProvider).userData;
 
-    String conversationID = await fireService.getConversationID(widget.user.id);
-    if (isset == false)
+    String conversationID = fireService.getConversationID(widget.user.id);
+    if (isset == false) {
       setState(() {
         messageStream = FirebaseFirestore.instance
             .collection('chats/$conversationID/messages')
@@ -74,20 +67,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             .snapshots();
         isset = true;
       });
-  }
-
-  void fetchMessage() async {
-    final fireService = ref.watch(apisProvider);
-    final chatService = ref.watch(chatDBProvider);
-    final currentuser = ref.watch(userDataProvider).userData;
-
-    String conversationID = fireService.getConversationID(widget.user.id);
-    messageStream = FirebaseFirestore.instance
-        .collection('chats/$conversationID/messages')
-        .orderBy('sent', descending: true)
-        .snapshots();
-    messages = await chatService
-        .getAllChatUserList(fireService.getConversationID(widget.user.id));
+    }
   }
 
   @override
@@ -132,8 +112,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
             decoration: const BoxDecoration(
-                image: const DecorationImage(
-                    image: const AssetImage('assets/chat_bg.png'),
+                image: DecorationImage(
+                    image: AssetImage('assets/chat_bg.png'),
                     fit: BoxFit.cover)),
             child: Column(
               children: [
@@ -244,8 +224,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Widget _buildMessagesList() {
-    final fireService =
-        ref.watch(apisProvider); // Use watch for reactive updates if needed
+    // Use watch for reactive updates if needed
     return Expanded(
         child: StreamBuilder<QuerySnapshot>(
       stream: messageStream,
