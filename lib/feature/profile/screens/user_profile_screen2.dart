@@ -11,9 +11,7 @@ import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_scr
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-
 import '../../../core/constant.dart';
-import '../../../providers/user_provider.dart';
 import '../../auth/controller/auth_controller.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -24,12 +22,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   final photosKey = GlobalKey();
   final profileKey = GlobalKey();
   final statsKey = GlobalKey();
@@ -41,7 +33,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         photosKey: photosKey, profileKey: profileKey, statsKey: statsKey);
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
-      colorShadow: Colors.blueAccent,
+      colorShadow: const Color.fromARGB(255, 44, 121, 255),
       hideSkip: false,
       textSkip: 'SKIP',
       paddingFocus: 10,
@@ -71,10 +63,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userDataProvider).userData;
-    print("user id1: ${user?.id}");
 
     // ref.watch(userDataProvider);
-    print("containing ${user?.name}");
     bool isNewUser = ref.read(isNewUserProvider);
 
     print("containing ${user!.tourPage} $isNewUser $isEntered");
@@ -93,26 +83,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     var tabBarIcons = [
       Tab(
         key: photosKey,
-        icon: Icon(
-          Icons.photo_outlined,
-          color: Colors.blueGrey,
-          size: 30,
+        // icon: const Icon(
+        //   Icons.photo_outlined,
+        //   color: Colors.blueGrey,
+        //   size: 30,
+        // ),
+        child: const Text(
+          'Loops',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
         ),
       ),
       Tab(
         key: profileKey,
-        icon: Icon(
-          Icons.person,
-          color: Colors.blueGrey,
-          size: 30,
+        // icon: const Icon(
+        //   Icons.vide,
+        //   color: Colors.blueGrey,
+        //   size: 30,
+        // ),
+        child: const Text(
+          'Videos',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
         ),
       ),
       Tab(
         key: statsKey,
-        icon: Icon(
-          Icons.brush,
-          color: Colors.blueGrey,
-          size: 30,
+        // icon: const Icon(
+        //   Icons.brush,
+        //   color: Colors.blueGrey,
+        //   size: 30,
+        // ),
+        child: const Text(
+          'Dashboard',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
         ),
       ),
     ];
@@ -160,7 +165,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Material(
                 color: Colors.white,
                 child: TabBar(
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   indicatorColor: Colors.black,
                   tabs: tabBarIcons,
                 ),
