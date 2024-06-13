@@ -53,6 +53,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         log(target.toString());
       },
     );
+    setState(() {
+      isEntered = true;
+    });
   }
 
   void _showTutorial(ChatUser user) {
@@ -63,21 +66,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ref.read(userDataProvider).updateUserData(user);
   }
 
+  bool isEntered = false;
+
   @override
   Widget build(BuildContext context) {
-    var user = ref.watch(userDataProvider).userData!;
+    final user = ref.read(userDataProvider).userData;
+    print("user id2: ${user?.id}");
 
-    ref.watch(userDataProvider);
-
+    // ref.watch(userDataProvider);
+    print("containing ${user?.name}");
     bool isNewUser = ref.read(isNewUserProvider);
-    print("containing ${user!.tourPage}");
+
+    print("containing ${user!.tourPage} $isNewUser $isEntered");
     print("home screen2 $isNewUser");
-    if (isNewUser ||
-        !user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) {
-      print("enters");
+    if (user?.id != null &&
+        user?.id != "" &&
+        (!user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) &&
+        !isEntered) {
+      log("enteredprofile ${user?.tourPage}  $isNewUser $isEntered");
       initAppTour();
       _showTutorial(user);
-      user.tourPage = user.tourPage + "${tourMap['UserProfileScreen2']}";
     }
 
     log(user.id);
