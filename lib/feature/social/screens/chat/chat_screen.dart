@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +22,10 @@ import '../../../../feature/social/screens/chat/message_card.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final ChatUser user;
+  final String myid;
 
-  const ChatScreen({Key? key, required this.user}) : super(key: key);
+  const ChatScreen({Key? key, required this.user, required this.myid})
+      : super(key: key);
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -40,6 +43,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   void initState() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(ref.read(userDataProvider).userData!.id)
+        .update({'isChattingWith': activeChatUserId});
     setState(() {
       setmessagestream();
     });
@@ -71,10 +78,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
+    log('dispose called');
+    activeChatUserId = '';
+    activechatid(ref, widget.myid);
+    setState(() {
+      setmessagestream();
+    });
     _textController.dispose();
     _focusNode.dispose();
-    activeChatUserId = null;
     super.dispose();
   }
 
@@ -380,18 +392,13 @@ class MessageBox extends ConsumerWidget {
                       icon: const Icon(Icons.send),
                       onPressed: () {
                         if (textController.text.isNotEmpty) {
-                          sendMessage(user, textController.text, Type.text);
-                          textController.clear();
-
-                          if (textController.text.isNotEmpty) {
-                            if (messageLength != 0) {
-                              sendMessage(user, textController.text, Type.text);
-                            } else {
-                              sendFirstMessage(
-                                  user, textController.text, Type.text);
-                            }
-                            textController.clear();
+                          if (messageLength != 0) {
+                            sendMessage(user, textController.text, Type.text);
+                          } else {
+                            sendFirstMessage(
+                                user, textController.text, Type.text);
                           }
+                          textController.clear();
                         }
                       }),
                 ],

@@ -30,7 +30,9 @@ final toggleStateProvider = StateProvider<int>((ref) {
 final toggleSearchStateProvider = StateProvider<int>((ref) {
   return 0; // Initial value is false
 });
-
+final isChattingWithStateProvider = StateProvider<int>((ref) {
+  return 0; // Initial value is false
+});
 final authStateChangeProvider = StreamProvider((ref) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.authStateChange;

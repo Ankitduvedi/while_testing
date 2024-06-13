@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -83,27 +82,43 @@ class APIs {
   Future<void> sendPushNotification(ChatUser chatUser, String msg) async {
     final user = _ref.read(userDataProvider).userData!;
     try {
-      final body = {
-        "to": chatUser.pushToken,
-        "notification": {
-          "title": user.name, //our name should be send
-          "body": msg,
-          "android_channel_id": "chats"
-        },
-        "data": {
-          "some_data": "User ID: ${user.id}",
-        },
-      };
+      // Fetch the recipient user data
+      final recipientDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(chatUser.id)
+          .get();
 
-      var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader:
-                'key=AAAAsNkZIGs:APA91bGeaCnMuqtGmil4H3ZKYVQ_9aaWIZlqd1hvrBzJlaKIUYl-w2XCycnvx8l5Iis61lezhZzdjphO4kYG0ahxTZUiz0fMdcaiKyZ3SjQxlt_y57i4sc3npUM4jjgoA7kUSawYYTDt'
-          },
-          body: jsonEncode(body));
-      log('Response status: ${res.statusCode}');
-      log('Response body: ${res.body}');
+      // Check if the recipient user is online
+      if (recipientDoc.exists) {
+        if (recipientDoc.data()!['isChattingWith'] != user.id ||
+            recipientDoc.data()!['is_online'] == 0) {
+          // Construct the notification body
+          final body = {
+            "to": chatUser.pushToken,
+            "notification": {
+              "title": user.name, //our name should be send
+              "body": msg,
+              "android_channel_id": "chats"
+            },
+            "data": {
+              "some_data": "User ID: ${user.id}",
+            },
+          };
+
+          // Send the notification
+          var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAAsNkZIGs:APA91bGeaCnMuqtGmil4H3ZKYVQ_9aaWIZlqd1hvrBzJlaKIUYl-w2XCycnvx8l5Iis61lezhZzdjphO4kYG0ahxTZUiz0fMdcaiKyZ3SjQxlt_y57i4sc3npUM4jjgoA7kUSawYYTDt'
+              },
+              body: jsonEncode(body));
+          log('Response status: ${res.statusCode}');
+          log('Response body: ${res.body}');
+        }
+      } else {
+        log('Recipient user is not online, no notification sent.');
+      }
     } catch (e) {
       log('\nsendPushNotificationE: $e');
     }
@@ -333,33 +348,33 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final chatUser = ChatUser(
-      isCounsellorVerified: 0,
-      isCounsellor: 0,
-      isContentCreator: 0,
-      isApproved: 0,
-      lives: 0,
-      easyQuestions: 0,
-      hardQuestions: 0,
-      mediumQuestions: 0,
-      id: user.uid,
-      name: user.displayName.toString(),
-      email: user.email.toString(),
-      about: "Hey, I'm using We Chat!",
-      image: user.photoURL.toString(),
-      createdAt: time,
-      isOnline: 0,
-      lastActive: time,
-      pushToken: '',
-      dateOfBirth: '',
-      gender: '',
-      phoneNumber: '',
-      place: '',
-      designation: 'Member',
-      profession: '',
-      follower: 0,
-      following: 0,
-      tourPage: ""
-    );
+        isChattingWith: '',
+        isCounsellorVerified: 0,
+        isCounsellor: 0,
+        isContentCreator: 0,
+        isApproved: 0,
+        lives: 0,
+        easyQuestions: 0,
+        hardQuestions: 0,
+        mediumQuestions: 0,
+        id: user.uid,
+        name: user.displayName.toString(),
+        email: user.email.toString(),
+        about: "Hey, I'm using We Chat!",
+        image: user.photoURL.toString(),
+        createdAt: time,
+        isOnline: 0,
+        lastActive: time,
+        pushToken: '',
+        dateOfBirth: '',
+        gender: '',
+        phoneNumber: '',
+        place: '',
+        designation: 'Member',
+        profession: '',
+        follower: 0,
+        following: 0,
+        tourPage: "");
 
     return await firestore
         .collection('users')
@@ -433,11 +448,12 @@ class APIs {
 
   Future<void> sendFirstMessage(
       ChatUser chatUser, String msg, Type type) async {
+    final user = _ref.read(userDataProvider).userData!;
     await firestore
         .collection('users')
         .doc(chatUser.id)
         .collection('my_users')
-        .doc(user.uid)
+        .doc(user.id)
         .set({}).then((value) => sendMessage(chatUser, msg, type));
   }
 

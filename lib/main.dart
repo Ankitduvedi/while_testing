@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/home_screen.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +20,14 @@ import 'package:get/get.dart';
 
 late Size mq;
 String? activeChatUserId;
+activechatid(WidgetRef ref, String id) {
+  log('activechatid $id');
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(id)
+      .update({'isChattingWith': 'activeChatUserId'});
+}
+
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(

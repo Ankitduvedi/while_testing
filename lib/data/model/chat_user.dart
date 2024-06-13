@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 class ChatUser {
   ChatUser({
     required this.image,
+    required this.isChattingWith,
     required this.about,
     required this.name,
     required this.createdAt,
@@ -34,6 +33,7 @@ class ChatUser {
   late String image;
   late String about;
   late String name;
+  late String isChattingWith;
   late String createdAt;
   late int isOnline;
   late String id;
@@ -65,6 +65,7 @@ class ChatUser {
     isCounsellorVerified = json['isCounsellorVerified'] ?? 0;
     image = json['image'] ?? '';
     about = json['about'] ?? '';
+    isChattingWith = json['isChattingWith'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
     isOnline = json['is_online'] ?? 0;
@@ -101,6 +102,7 @@ class ChatUser {
     data['image'] = image;
     data['about'] = about;
     data['name'] = name;
+    data['isChattingWith'] = isChattingWith;
     data['created_at'] = createdAt;
     data['is_online'] = isOnline;
     data['id'] = id;
@@ -133,6 +135,7 @@ class ChatUser {
       'lives': lives,
       'image': image,
       'about': about,
+      'isChattingWith': isChattingWith,
       'name': name,
       'createdAt': createdAt,
       'isOnline': isOnline,
@@ -164,6 +167,7 @@ class ChatUser {
   // If you have a factory constructor for creating an empty object, make sure to include the new field there as well
   factory ChatUser.empty() {
     return ChatUser(
+        isChattingWith: '',
         isCounsellor: 0,
         isCounsellorVerified: 0,
         lives: 0,
@@ -197,6 +201,7 @@ class ChatUser {
   ChatUser copyWith({
     String? image,
     String? about,
+    String? isChattingWith,
     String? name,
     String? createdAt,
     int? isOnline,
@@ -222,6 +227,7 @@ class ChatUser {
     int? isCounsellorVerified,
   }) {
     return ChatUser(
+        isChattingWith: isChattingWith ?? this.isChattingWith,
         isCounsellorVerified: isCounsellorVerified ?? this.isCounsellorVerified,
         isCounsellor: isCounsellor ?? this.isCounsellor,
         image: image ?? this.image,

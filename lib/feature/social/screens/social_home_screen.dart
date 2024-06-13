@@ -64,7 +64,6 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
   final chatsKey = GlobalKey();
   final communityKey = GlobalKey();
   final statusKey = GlobalKey();
-  bool isEntered = false;
 
   late TutorialCoachMark tutorialCoachMark;
 
@@ -89,9 +88,6 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
         log(target.toString());
       },
     );
-    setState(() {
-      isEntered = true;
-    });
   }
 
   void _showTutorial(ChatUser user) {
@@ -110,19 +106,14 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     bool isNewUser = ref.read(isNewUserProvider);
     print("home screen2 $isNewUser");
 
-    final user = ref.read(userDataProvider).userData;
-    print("user id1: ${user?.id}");
+    var user = ref.watch(userDataProvider).userData!;
+    print("user id1: ${user.id}");
 
     // ref.watch(userDataProvider);
-
-    print("containing1 ${user?.name}");
-    if (user?.id != null &&
-        user?.id != "" &&
-        (!user!.tourPage.contains("${tourMap['SocialScreen']}")) &&
-        !isEntered) {
-      log("enteredsocial ${user?.tourPage} $isNewUser $isEntered");
+    print("containing ${user.name}");
+    if (isNewUser || !user!.tourPage.contains("${tourMap['SocialScreen']}")) {
       initAppTour();
-      _showTutorial(user!);
+      _showTutorial(user);
     }
 
     return GestureDetector(

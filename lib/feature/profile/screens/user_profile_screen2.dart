@@ -70,8 +70,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(userDataProvider).userData;
-    print("user id2: ${user?.id}");
+    final user = ref.read(userProvider);
+    print("user id1: ${user?.id}");
 
     // ref.watch(userDataProvider);
     print("containing ${user?.name}");
