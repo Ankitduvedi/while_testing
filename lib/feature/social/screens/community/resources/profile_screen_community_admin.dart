@@ -16,9 +16,9 @@ import '../../../../../data/model/community_user.dart';
 
 //profile screen -- to show signed in user info
 class ProfileScreen extends ConsumerStatefulWidget {
-  final Community user;
+  final Community community;
 
-  const ProfileScreen({super.key, required this.user});
+  const ProfileScreen({super.key, required this.community});
 
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
@@ -51,7 +51,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     String designation = "";
     List<ChatUser> list = [];
     final Community community = Community.empty();
-    community.id = widget.user.id;
+    community.id = widget.community.id;
     return GestureDetector(
       // for hiding keyboard
       onTap: () => FocusScope.of(context).unfocus(),
@@ -59,7 +59,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           //app bar
           appBar: AppBar(
             title: Text(
-              widget.user.name,
+              widget.community.name,
               style: const TextStyle(color: Colors.black),
             ),
             actions: [
@@ -70,7 +70,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   color: Colors.deepPurple,
                 ),
                 onPressed: () {
-                  _openUserListDialog(widget.user.id, list);
+                  _openUserListDialog(widget.community.id, list);
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     log(community.toJson().toString());
@@ -119,7 +119,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   height: mq.height * .2,
                                   filterQuality: FilterQuality.low,
                                   fit: BoxFit.cover,
-                                  imageUrl: widget.user.image,
+                                  imageUrl: widget.community.image,
                                   errorWidget: (context, url, error) =>
                                       const CircleAvatar(
                                           child: Icon(CupertinoIcons.person)),
@@ -147,7 +147,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     SizedBox(height: mq.height * .03),
 
                     // user email label
-                    Text(widget.user.email,
+                    Text(widget.community.email,
                         style: const TextStyle(
                             color: Colors.black54, fontSize: 16)),
 
@@ -156,7 +156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     // name input field
                     TextFormField(
-                      initialValue: widget.user.name,
+                      initialValue: widget.community.name,
                       onSaved: (val) => community.name = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null
@@ -175,7 +175,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     // about input field
                     TextFormField(
-                      initialValue: widget.user.about,
+                      initialValue: widget.community.about,
                       onSaved: (val) => community.about = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null
@@ -192,7 +192,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     // domain input field
                     TextFormField(
-                      initialValue: widget.user.domain,
+                      initialValue: widget.community.domain,
                       onSaved: (val) => community.domain = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null
@@ -209,7 +209,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     // email input field
                     TextFormField(
-                      initialValue: widget.user.email,
+                      initialValue: widget.community.email,
                       onSaved: (val) => community.email = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null
@@ -270,8 +270,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     SingleChildScrollView(
                       child: StreamBuilder(
-                          stream: fireService
-                              .getCommunityParticipantsInfo(widget.user.id),
+                          stream: fireService.getCommunityParticipantsInfo(
+                              widget.community.id),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               //if data is loading
@@ -433,11 +433,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     ),
                                                   ),
                                                   title: Text(list[index].name),
-                                                  trailing: widget.user.email ==
-                                                          list[index].email
-                                                      ? const Text('Admin')
-                                                      : Text(list[index]
-                                                          .designation),
+                                                  trailing:
+                                                      widget.community.email ==
+                                                              list[index].email
+                                                          ? const Text('Admin')
+                                                          : Text(list[index]
+                                                              .designation),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -512,7 +513,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           });
 
                           fireservice.updateProfilePictureCommunity(
-                              File(_image!), widget.user.id);
+                              File(_image!), widget.community.id);
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }
@@ -542,7 +543,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           });
 
                           fireservice.updateProfilePictureCommunity(
-                              File(_image!), widget.user.id);
+                              File(_image!), widget.community.id);
                           // for hiding bottom sheet
                           Navigator.pop(context);
                         }

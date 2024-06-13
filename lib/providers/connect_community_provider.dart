@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
@@ -50,13 +51,13 @@ final joinedCommuntiesProvider =
 });
 
 final joinCommunityProvider = Provider((ref) {
-  return (String currentUserId, String communityIdToJoin,
+  return (ChatUser currentUser, String communityIdToJoin,
       BuildContext context) async {
     try {
       // Add the user to the 'my_users' subcollection of the current user
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(currentUserId)
+          .doc(currentUser.id)
           .collection('my_communities')
           .doc(communityIdToJoin)
           .set({'timeStamp': Timestamp.now()});
@@ -64,13 +65,13 @@ final joinCommunityProvider = Provider((ref) {
           .collection('communities')
           .doc(communityIdToJoin)
           .collection('participants')
-          .doc(currentUserId)
-          .set(ref.read(userProvider)!.toJson())
+          .doc(currentUser.id)
+          .set(currentUser.toJson())
           .then((value) => firestore
                   .collection('communities')
                   .doc(communityIdToJoin)
                   .collection('participants')
-                  .doc(currentUserId)
+                  .doc(currentUser.id)
                   .update({
                 'easyQuestions': 0,
                 'mediumQuestions': 0,
