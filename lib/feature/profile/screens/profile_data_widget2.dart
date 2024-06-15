@@ -15,7 +15,6 @@ class ProfileDataWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
     final user = ref.watch(userDataProvider).userData;

@@ -6,13 +6,11 @@ import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../../../core/constant.dart';
-import '../../auth/controller/auth_controller.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});

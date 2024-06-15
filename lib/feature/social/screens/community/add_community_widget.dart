@@ -82,10 +82,17 @@ class AddCommunityScreen {
                       borderRadius: BorderRadius.circular(15))),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              onChanged: (value) => type = value,
+            DropdownButtonFormField<String>(
+              value: type.isEmpty ? null : type,
+              items: const [
+                DropdownMenuItem(value: 'primary', child: Text('Primary')),
+                DropdownMenuItem(value: 'secondary', child: Text('Secondary')),
+              ],
+              onChanged: (value) {
+                type = value!;
+              },
               decoration: InputDecoration(
-                  hintText: 'Primary/Secondary',
+                  hintText: 'Select Type',
                   prefixIcon: const Icon(Icons.swap_horiz,
                       color: Colors
                           .blueAccent), // Icon changed for semantic purposes and color to blue

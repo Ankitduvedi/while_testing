@@ -47,7 +47,7 @@ class CommunityConnect extends ConsumerWidget {
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
                           ref.read(userDataProvider).userData!,
-                          community.id,
+                          community,
                           context);
 
                       if (didJoin) {
