@@ -35,7 +35,7 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 4, vsync: this, initialIndex: 0);
+    _controller = TabController(length: 4, vsync: this, initialIndex: 1);
     _controller.addListener(() {
       // Check if the controller index is changing, if you need this check
       if (!_controller.indexIsChanging) {

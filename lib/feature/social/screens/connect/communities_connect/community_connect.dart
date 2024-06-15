@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/connect_community_provider.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
@@ -29,41 +28,42 @@ class CommunityConnect extends ConsumerWidget {
             return ListView.builder(
               itemCount: nonJoinedCommunities.length,
               itemBuilder: (context, index) {
-                final user = nonJoinedCommunities[index];
-                //log("${ref.read(userProvider)?.id} ");
+                final community = nonJoinedCommunities[index];
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.image),
+                    backgroundImage: NetworkImage(community.image),
                     onBackgroundImageError: (exception, stackTrace) {
                       log('Failed to load image');
                     },
                   ),
                   title: Text(
-                    user.name,
+                    community.name,
                     style: GoogleFonts.ptSans(),
                   ),
-                  subtitle: Text(user.about, style: GoogleFonts.ptSans()),
+                  subtitle: Text(community.about, style: GoogleFonts.ptSans()),
                   trailing: ElevatedButton(
                     onPressed: () async {
                       // Use the provider to follow the user
                       final didJoin = await ref.read(joinCommunityProvider)(
-                          ref.read(userDataProvider).userData!.id,
-                          user.id,
+                          ref.read(userDataProvider).userData!,
+                          community.id,
                           context);
 
                       if (didJoin) {
                         log("joined community");
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(
-                        //       content: Text('You have joined ${user.name}')),
-                        // );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('You have joined ${community.name}')),
+                        );
                       } else {
                         log("failed to join");
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(
-                        //       content: Text('Failed to join ${user.name}')),
-                        // );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Failed to join ${community.name}')),
+                        );
                       }
                     },
                     child: Text('Join', style: GoogleFonts.ptSans()),

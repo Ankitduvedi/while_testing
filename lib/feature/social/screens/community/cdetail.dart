@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/community_detail_resources_widget%20.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/community_detail_opportunities_widget.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/community_detail_quiz_widget.dart';
@@ -49,7 +49,7 @@ class _CCommunityDetailScreenState
       CChatScreen(
         community: community,
       ),
-       CommunityDetailResources(
+      CommunityDetailResources(
         user: community,
       ),
       OpportunitiesScreen(
@@ -68,17 +68,17 @@ class _CCommunityDetailScreenState
         automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () {
-            if (community.email == ref.read(userProvider)!.email) {
+            if (community.email == ref.read(userDataProvider).userData!.email) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => ProfileScreen(user: community)));
+                      builder: (_) => ProfileScreen(community: community)));
             } else {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) =>
-                          ProfileScreenParticipant(user: community)));
+                          ProfileScreenParticipant(community: community)));
             }
           },
           child: Row(

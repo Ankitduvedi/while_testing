@@ -1,23 +1,19 @@
-import 'dart:developer';
-
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'dart:io';
-
 import '../../../../../main.dart';
 import '../../../../../providers/apis.dart';
 import '../../../../../data/model/community_user.dart';
 
 class ProfileScreenParticipant extends ConsumerStatefulWidget {
-  final Community user;
+  final Community community;
 
-  const ProfileScreenParticipant({Key? key, required this.user})
+  const ProfileScreenParticipant({Key? key, required this.community})
       : super(key: key);
 
   @override
@@ -37,7 +33,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.user.name,
+            widget.community.name,
             style: const TextStyle(color: Color.fromARGB(255, 43, 21, 21)),
           ),
           actions: [
@@ -48,17 +44,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                 color: Colors.deepPurple,
               ),
               onPressed: () {
-                log(widget.user.id);
-                log(ref.read(userProvider)!.id);
                 ref
                     .read(socialControllerProvider.notifier)
-                    .removeUserFromCommunity(
-                        widget.user.id, ref.read(userProvider)!.id, context);
+                    .removeUserFromCommunity(widget.community.id,
+                        ref.read(userDataProvider).userData!.id, context);
 
                 ref
                     .read(socialControllerProvider.notifier)
                     .removeCommunityFromUser(
-                        ref.read(userProvider)!.id, widget.user.id, context);
+                        ref.read(userDataProvider).userData!.id,
+                        widget.community.id,
+                        context);
                 Future.delayed(const Duration(seconds: 5));
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -92,7 +88,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                                 height: mq.height * .2,
                                 filterQuality: FilterQuality.low,
                                 fit: BoxFit.cover,
-                                imageUrl: widget.user.image,
+                                imageUrl: widget.community.image,
                                 errorWidget: (context, url, error) =>
                                     const CircleAvatar(
                                         child: Icon(CupertinoIcons.person)),
@@ -101,14 +97,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                     ],
                   ),
                   SizedBox(height: mq.height * .03),
-                  Text(widget.user.name,
+                  Text(widget.community.name,
                       style:
                           const TextStyle(color: Colors.black54, fontSize: 16)),
                   SizedBox(height: mq.height * .02),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      ' Domain: ${widget.user.domain.isNotEmpty ? widget.user.domain : 'No Domain is Mentioned'} ',
+                      ' Domain: ${widget.community.domain.isNotEmpty ? widget.community.domain : 'No Domain is Mentioned'} ',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
@@ -125,7 +121,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      ' Email: ${widget.user.email.isNotEmpty ? widget.user.email : 'No Email is Available'} ',
+                      ' Email: ${widget.community.email.isNotEmpty ? widget.community.email : 'No Email is Available'} ',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
@@ -142,7 +138,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      ' About: ${widget.user.about.isNotEmpty ? widget.user.about : 'No Description Available'} ',
+                      ' About: ${widget.community.about.isNotEmpty ? widget.community.about : 'No Description Available'} ',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
@@ -178,7 +174,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                     child: StreamBuilder(
                       stream: ref
                           .read(apisProvider)
-                          .getCommunityParticipantsInfo(widget.user.id),
+                          .getCommunityParticipantsInfo(widget.community.id),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
@@ -231,7 +227,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                                           ),
                                         ),
                                         title: Text(list[index].name),
-                                        trailing: Text(widget.user.email ==
+                                        trailing: Text(widget.community.email ==
                                                 list[index].email
                                             ? 'Admin'
                                             : ''),
