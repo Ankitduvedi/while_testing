@@ -214,6 +214,8 @@ class _AddReelState extends ConsumerState<AddReel> {
                   title: "Add Reel",
                   loading: isloading,
                   onPress: () {
+                    _titleController.text = "delete";
+                    _descriptionController.text = "delete";
                     if (_titleController.text.isEmpty) {
                       Utils.flushBarErrorMessage('Please enter title', context);
                     } else if (_descriptionController.text.isEmpty) {
@@ -327,14 +329,15 @@ class _AddReelState extends ConsumerState<AddReel> {
         FirebaseFirestore.instance
             .collection('loops')
             .doc(videoId)
+            .set(loop.toJson());
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(ref.read(userDataProvider).userData!.id)
+            .collection('loops')
+            .doc(videoId)
             .set(loop.toJson())
             .then((value) {
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(ref.read(userDataProvider).userData!.id)
-              .collection('loops')
-              .doc(videoId)
-              .set(loop.toJson());
           Utils.toastMessage('Your video is uploaded!');
           setState(() {
             isloading = false;

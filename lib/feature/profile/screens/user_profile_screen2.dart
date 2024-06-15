@@ -75,20 +75,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     // ref.watch(userDataProvider);
     print("containing ${user?.name}");
-    bool isNewUser = ref.read(isNewUserProvider);
 
-    print("containing ${user!.tourPage} $isNewUser $isEntered");
-    print("home screen2 $isNewUser");
+    log("uid ${user?.id} ");
+
     if (user?.id != null &&
         user?.id != "" &&
         (!user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) &&
         !isEntered) {
-      log("enteredprofile ${user?.tourPage}  $isNewUser $isEntered");
       initAppTour();
       _showTutorial(user);
     }
-
-    log(user.id);
 
     var tabBarIcons = [
       Tab(
@@ -122,7 +118,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Text(
-          user.name,
+          user?.name ?? "",
           style: GoogleFonts.ptSans(color: Colors.black),
         ),
         actions: [
@@ -170,11 +166,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   children: [
                     Center(
                         child: CreatorProfile(
-                      user: user,
+                      user: user!,
                     )),
                     Center(
                         child: CreatorProfileVideo(
-                      user: user,
+                      user: user!,
                     )),
                     const Center(child: LeaderboardScreen()),
                   ],

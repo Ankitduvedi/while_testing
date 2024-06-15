@@ -196,6 +196,20 @@ class APIs {
   }
 
   Future<bool> deleteReel(String id) async {
+    var url = 'https://video.bunnycdn.com/library/243538/videos/$id';
+    const headers = {
+      'accept': 'application/json',
+      'AccessKey': '6973830f-6890-472d-b8e3b813c493-5c4d-4c50',
+    };
+
+    final response = await delete(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
     firestore.collection('videos').doc(id).delete();
     return true;
   }

@@ -258,7 +258,6 @@ class AuthRepository extends ConsumerStatefulWidget {
                 isApproved: 0,
                 isCounsellor: 0,
                 isCounsellorVerified: 0,
-                isnewUser: true,
                 tourPage: "");
             await createNewUser(
                 userModel); // Ensure this is awaited if asynchronous

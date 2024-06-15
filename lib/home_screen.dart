@@ -169,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final ChatUser user = ref.watch(userDataProvider).userData!;
-    bool isNewUser = ref.read(isNewUserProvider);
+
     // Future.delayed(const Duration(seconds: 6), () {
     //   print("user id1: ${user.id}");
     //

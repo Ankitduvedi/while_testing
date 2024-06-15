@@ -10,6 +10,7 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/data/model/video_model.dart';
+import 'package:intl/intl.dart';
 // Ensure this import is correct
 
 class CreatorProfileVideo extends ConsumerStatefulWidget {
@@ -23,6 +24,7 @@ class CreatorProfileVideo extends ConsumerStatefulWidget {
 class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
   late final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late Size mq;
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
@@ -42,8 +44,9 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-            final List<Video> videoList =
-                ref.read(videoListControllerProvider.notifier).videoList(snapshot.data);
+            final List<Video> videoList = ref
+                .read(videoListControllerProvider.notifier)
+                .videoList(snapshot.data);
 
             return ListView.builder(
               scrollDirection:
@@ -115,8 +118,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
 
   void _showOptionsDialog(BuildContext context, String id, WidgetRef ref) {
     final Uri uri =
-        Uri.parse('https://sandbox.api.video/videos/vi1n0cJIAJLommOiqmqPGvhm');
-    const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
+        Uri.parse('https://video.bunnycdn.com/library/243538/videos/$id');
+    const String apiKey = '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
 
     showDialog(
       context: context,
@@ -152,6 +155,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               onPressed: () {
                 Navigator.pop(context);
                 ref.read(apisProvider).deleteReel(id);
+
                 // APIs.deleteReel(id);
               },
               style: TextButton.styleFrom(
@@ -167,7 +171,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
           future: http.get(
             uri,
             headers: {
-              'Authorization': 'Bearer $apiKey',
+              'accept': 'application/json',
+              'AccessKey': '$apiKey',
               // Add other headers if needed
             },
           ),
@@ -189,11 +194,14 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               );
             } else {
               // Data is fetched successfully, update the dialog content
+              print("body: ${snapshot.data!.body}");
               var data = json.decode(snapshot.data!.body);
               String title = data['title'] ?? "No Title";
               String description = data['description'] ?? "No Description";
               int views = data['views'] ?? 1000;
-              DateTime uploadedAt = DateTime.parse(data['createdAt']);
+              DateTime uploadedAt = DateTime.parse(data['dateUploaded']);
+              String formattedDate =
+                  DateFormat('yyyy-MM-dd').format(uploadedAt);
 
               return AlertDialog(
                 title: const Hero(
@@ -210,8 +218,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Hero(
-                      tag:
-                          'dialog-content', // Use a unique tag for the Hero widget
+                      tag: 'dialog-content',
+                      // Use a unique tag for the Hero widget
                       child: Material(
                         type: MaterialType.transparency,
                         child: Column(
@@ -226,7 +234,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                             Text('Views: $views',
                                 style: const TextStyle(
                                     fontSize: 14.0)), // Set a fixed text size
-                            Text('Uploaded At: ${uploadedAt.toString()}',
+                            Text('Uploaded At: ${formattedDate}',
                                 style: const TextStyle(
                                     fontSize: 14.0)), // Set a fixed text size
                           ],

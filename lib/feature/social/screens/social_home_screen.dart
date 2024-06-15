@@ -103,15 +103,13 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
     var toogleSearch = ref.watch(toggleSearchStateProvider);
     var searchValue = ref.watch(searchQueryProvider.notifier);
     log('toggleSearchStateProvider');
-    bool isNewUser = ref.read(isNewUserProvider);
-    print("home screen2 $isNewUser");
 
     var user = ref.watch(userDataProvider).userData!;
     print("user id1: ${user.id}");
 
     // ref.watch(userDataProvider);
     print("containing ${user.name}");
-    if (isNewUser || !user!.tourPage.contains("${tourMap['SocialScreen']}")) {
+    if (!user!.tourPage.contains("${tourMap['SocialScreen']}")) {
       initAppTour();
       _showTutorial(user);
     }

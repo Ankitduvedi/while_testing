@@ -26,7 +26,6 @@ class ChatUser {
     required this.isApproved,
     required this.isCounsellor,
     required this.isCounsellorVerified,
-    this.isnewUser = false,
     required this.tourPage,
   });
 
@@ -56,7 +55,7 @@ class ChatUser {
   late int isCounsellor;
   late int isCounsellorVerified;
   late int isApproved;
-  late bool isnewUser;
+
   late String tourPage = "";
 
   // Update fromJson method to include the new field
@@ -87,9 +86,7 @@ class ChatUser {
     lives = json['lives'] ?? 0;
     isContentCreator = json['isContentCreator'] ?? 0;
     isApproved = json['isApproved'] ?? 0;
-    if (json['isnewUser'] != null) {
-      isnewUser = json['isnewUser'];
-    }
+
     tourPage = json['tourPage'] ?? "";
     // Add the new field
   }
@@ -123,7 +120,7 @@ class ChatUser {
     data['lives'] = lives;
     data['isContentCreator'] = isContentCreator;
     data['isApproved'] = isApproved;
-    data['isnewUser'] = isnewUser;
+
     data['tourPage'] = tourPage;
     // Add the new field
     return data;
@@ -159,7 +156,7 @@ class ChatUser {
       'isApproved': isApproved,
       'isCounsellor': isCounsellor,
       'isCounsellorVerified': isCounsellorVerified,
-      'isnewUser': isnewUser,
+
       'tourPage': tourPage
     };
   }
