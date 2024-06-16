@@ -198,6 +198,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => SelectThumbnailScreen(
+                                    category: '',
                                     videoId: id,
                                     initialThumbnailUrl: thumbnail,
                                   )));
@@ -218,7 +219,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      ref.read(apisProvider).deleteReel(id);
+                      ref.read(apisProvider).deleteReel(id, '', '');
                       // APIs.deleteReel(id);
                     },
                     style: TextButton.styleFrom(

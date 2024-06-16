@@ -195,7 +195,7 @@ class APIs {
     firestore.collection('users').doc(user.uid).update({'image': userImage});
   }
 
-  Future<bool> deleteReel(String id) async {
+  Future<bool> deleteReel(String id, String category, String userId) async {
     var url = 'https://video.bunnycdn.com/library/243538/videos/$id';
     const headers = {
       'accept': 'application/json',
@@ -210,7 +210,24 @@ class APIs {
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
-    firestore.collection('videos').doc(id).delete();
+    firestore
+        .collection('videos')
+        .doc(category)
+        .collection(category)
+        .doc(id)
+        .delete();
+    try {
+      print("user id $userId");
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('videos')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print("error in deleting video from user collection $e");
+    }
+
     return true;
   }
 

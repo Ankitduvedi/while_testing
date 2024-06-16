@@ -4,17 +4,23 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class SelectThumbnailScreen extends ConsumerStatefulWidget {
   final String initialThumbnailUrl;
   final String videoId;
+  final String category;
 
   const SelectThumbnailScreen(
-      {Key? key, required this.initialThumbnailUrl, required this.videoId})
+      {Key? key,
+      required this.category,
+      required this.initialThumbnailUrl,
+      required this.videoId})
       : super(key: key);
 
   @override
@@ -36,42 +42,74 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
     }
   }
 
-  void _updateThumbnail() async {
-    log('update button pressed');
-    const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-    const apiUrl = 'https://sandbox.api.video';
-    //Uri endpoint = Uri.parse('$apiUrl$widget.videoId/thumbnail');
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('$apiUrl/videos/${widget.videoId}/thumbnail'))
-      ..headers['Authorization'] = 'Bearer $apiKey'
-      ..files.add(await http.MultipartFile.fromPath(
-          'file', _image!.path)); // Constructing the full URL
+  void updateThumbnail(String thumnailUrl, String videoId) async {
+    String libraryId = '243538';
+    String accessKey = '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
+
+    var url = Uri.parse(
+        'https://video.bunnycdn.com/library/$libraryId/videos/$videoId/thumbnail?thumbnailUrl=$thumnailUrl');
+
+    var response = await http.post(
+      url,
+      headers: {
+        'AccessKey': accessKey,
+        'accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("videoId: $videoId");
+      FirebaseFirestore.instance
+          .collection('videos')
+          .doc(widget.category)
+          .collection(widget.category)
+          .doc(videoId)
+          .update({"thumbnail": thumnailUrl});
+      var userId = ref.read(userDataProvider)!.userData?.id;
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('videos')
+          .doc(videoId)
+          .update({"thumbnail": thumnailUrl});
+      print('Thumbnail updated successfully');
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+    Navigator.pop(context);
+  }
+
+  void _uploadThumnail() async {
+    final file = _image;
+
+    final String fileName = path.basename(_image!.path);
+    String downloadUrl = '';
+    final url = Uri.parse('https://storage.bunnycdn.com/while3/$fileName');
+    String accessKey = '4573db24-8174-44e1-bb83f462173b-7d2a-4141';
+
+    final headers = {
+      'AccessKey': accessKey,
+      'Content-Type': 'application/octet-stream',
+      'accept': 'application/json',
+    };
 
     try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        // Successfully updated the thumbnail
-        final Map<String, dynamic> data =
-            json.decode(await response.stream.bytesToString());
-        log(data['assets']['thumbnail']);
-        log('Thumbnail updated successfully.');
-        FirebaseFirestore.instance
-            .collection('loops')
-            .doc(widget.videoId)
-            .update({"thumbnail": data['assets']['thumbnail']});
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(ref.read(userProvider)!.id)
-            .collection('loops')
-            .doc(widget.videoId)
-            .update({"thumbnail": data['assets']['thumbnail']});
+      final response = await http.put(
+        url,
+        headers: headers,
+        body: await _image?.readAsBytes(),
+      );
+
+      if (response.statusCode == 201) {
+        print('File uploaded successfully');
+        downloadUrl = 'https://while3.b-cdn.net/$fileName';
+        updateThumbnail(downloadUrl, widget.videoId);
       } else {
-        // Handle errors
-        log('Failed to update the thumbnail. Status code: ${response.statusCode}');
-        //print('Response body: ${response.body}');
+        print(
+            'Failed to upload file: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      log('An error occurred: $e');
+      print('An error occurred: $e');
     }
   }
 
@@ -165,7 +203,7 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _isImageSelected
-                    ? _updateThumbnail
+                    ? _uploadThumnail
                     : null, // Enabled only if an image is selected
                 style: ElevatedButton.styleFrom(
                   backgroundColor:

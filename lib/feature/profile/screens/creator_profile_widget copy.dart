@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/profile/controller/video_list_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/creators_reels_screen.dart';
+import 'package:com.while.while_app/feature/profile/screens/update_thumbnail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:intl/intl.dart';
+
+import '../../../providers/user_provider copy.dart';
 // Ensure this import is correct
 
 class CreatorProfileVideo extends ConsumerStatefulWidget {
@@ -58,7 +61,15 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                   child: InkWell(
                       onLongPress: () {
                         final String id = snapshot.data!.docs[index].id;
-                        _showOptionsDialog(context, id, ref);
+                        print("url is ${videoList[index].videoUrl}");
+                        print("category is ${videoList[index].category}");
+
+                        _showOptionsDialog(
+                            context,
+                            id,
+                            ref,
+                            videoList[index].thumbnail,
+                            videoList[index].category);
                       },
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -116,7 +127,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
         ));
   }
 
-  void _showOptionsDialog(BuildContext context, String id, WidgetRef ref) {
+  void _showOptionsDialog(BuildContext context, String id, WidgetRef ref,
+      String thumnUrl, String category) {
     final Uri uri =
         Uri.parse('https://video.bunnycdn.com/library/243538/videos/$id');
     const String apiKey = '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
@@ -139,14 +151,20 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SelectThumbnailScreen(
+                              category: category,
+                              videoId: id,
+                              initialThumbnailUrl: thumnUrl,
+                            )));
                 // Perform the action for Option 1
               },
-              child: const Text('Option 1'),
+              child: const Text('Set thumbnail'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
                 // Perform the action for Option 2
               },
               child: const Text('Option 2'),
@@ -154,9 +172,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                ref.read(apisProvider).deleteReel(id);
-
-                // APIs.deleteReel(id);
+                var userId = ref.read(userDataProvider)!.userData?.id;
+                ref.read(apisProvider).deleteReel(id, category, userId!);
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
@@ -194,12 +211,13 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               );
             } else {
               // Data is fetched successfully, update the dialog content
-              print("body: ${snapshot.data!.body}");
+
               var data = json.decode(snapshot.data!.body);
+
               String title = data['title'] ?? "No Title";
               String description = data['description'] ?? "No Description";
               int views = data['views'] ?? 1000;
-              DateTime uploadedAt = DateTime.parse(data['dateUploaded']);
+              DateTime uploadedAt = DateTime.parse(data['dateUploaded'] ?? "");
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(uploadedAt);
 
@@ -246,10 +264,16 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelectThumbnailScreen(
+                                  category: category,
+                                  videoId: id,
+                                  initialThumbnailUrl: thumnUrl)));
                       // Perform the action for Option 1
                     },
-                    child: const Text('Option 1'),
+                    child: const Text('Set Thumbnail'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -261,8 +285,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      ref.read(apisProvider).deleteReel(id);
-                      // APIs.deleteReel(id);
+                      var userId = ref.read(userDataProvider)!.userData?.id;
+                      ref.read(apisProvider).deleteReel(id, category, userId!);
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.red,
