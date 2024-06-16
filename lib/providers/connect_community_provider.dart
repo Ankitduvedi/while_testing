@@ -35,6 +35,7 @@ final myCommunityUidsProvider = StreamProvider<List<String>>((ref) {
       .collection('users')
       .doc(ref.read(userDataProvider).userData!.id)
       .collection('my_communities')
+      .where('approved', isEqualTo: true)
       .snapshots()
       .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
 });
@@ -51,40 +52,56 @@ final joinedCommuntiesProvider =
 });
 
 final joinCommunityProvider = Provider((ref) {
-  return (ChatUser currentUser, String communityIdToJoin,
+  return (ChatUser currentUser, Community community,
       BuildContext context) async {
     try {
       // Add the user to the 'my_users' subcollection of the current user
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.id)
-          .collection('my_communities')
-          .doc(communityIdToJoin)
-          .set({'timeStamp': Timestamp.now()});
-      await FirebaseFirestore.instance
-          .collection('communities')
-          .doc(communityIdToJoin)
-          .collection('participants')
-          .doc(currentUser.id)
-          .set(currentUser.toJson())
-          .then((value) => firestore
-                  .collection('communities')
-                  .doc(communityIdToJoin)
-                  .collection('participants')
-                  .doc(currentUser.id)
-                  .update({
-                'easyQuestions': 0,
-                'mediumQuestions': 0,
-                'hardQuestions': 0,
-                'attemptedEasyQuestion': 0,
-                'attemptedMediumQuestion': 0,
-                'attemptedHardQuestion': 0,
-              }));
-      ref.read(socialControllerProvider.notifier).sendCommunityMessage(
-          communityIdToJoin,
-          '${ref.read(userProvider)!.name} joined the community',
-          Types.joined,
-          context);
+      if (community.type == 'secondary') {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.id)
+            .collection('my_communities')
+            .doc(community.id)
+            .set({'timeStamp': Timestamp.now(), 'approved': true});
+        await FirebaseFirestore.instance
+            .collection('communities')
+            .doc(community.id)
+            .collection('participants')
+            .doc(currentUser.id)
+            .set(currentUser.toJson())
+            .then((value) => firestore
+                    .collection('communities')
+                    .doc(community.id)
+                    .collection('participants')
+                    .doc(currentUser.id)
+                    .update({
+                  'easyQuestions': 0,
+                  'mediumQuestions': 0,
+                  'hardQuestions': 0,
+                  'attemptedEasyQuestion': 0,
+                  'attemptedMediumQuestion': 0,
+                  'attemptedHardQuestion': 0,
+                }));
+        ref.read(socialControllerProvider.notifier).sendCommunityMessage(
+            community.id,
+            '${ref.read(userProvider)!.name} joined the community',
+            Types.joined,
+            context);
+      } else {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.id)
+            .collection('my_communities')
+            .doc(community.id)
+            .set({'timeStamp': Timestamp.now(), 'approved': false});
+        await FirebaseFirestore.instance
+            .collection('communities')
+            .doc(community.id)
+            .collection('requests')
+            .doc(currentUser.id)
+            .set(currentUser.toJson());
+      }
+
       return true; // Indicate the follow action was successful
     } catch (e) {
       // If there's an error, you can handle it here

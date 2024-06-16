@@ -294,9 +294,7 @@ class APIs {
         .doc(us.id)
         .collection('my_communities')
         .doc(id)
-        .set({
-      'id': id,
-    });
+        .set({'id': id, 'approved': true});
     return true;
   }
 

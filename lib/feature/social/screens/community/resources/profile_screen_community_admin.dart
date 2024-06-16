@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/avail_users_dialog.dart';
+import 'package:com.while.while_app/feature/social/screens/community/resources/join_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,11 +41,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 )));
   }
 
-  // Initialize the TextEditingController in your state
-  // final TextEditingController _textFieldController = TextEditingController();
-
-// Later, when you want to access the edited text:
-
   @override
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
@@ -65,6 +61,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             actions: [
               IconButton(
                 icon: const Icon(
+                  Icons.request_page_outlined,
+                  size: 28,
+                  color: Colors.deepPurple,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => JoinRequestDialog(
+                                commId: widget.community.id,
+                                list: list,
+                              )));
+                },
+              ),
+              IconButton(
+                icon: const Icon(
                   CupertinoIcons.person_add_solid,
                   size: 28,
                   color: Colors.deepPurple,
@@ -74,10 +86,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     log(community.toJson().toString());
-                    fireService.updateCommunityInfo(community).then((value) {
-                      Dialogs.showSnackbar(
-                          context, 'Added Users Successfully!');
-                    });
+                    fireService.updateCommunityInfo(community);
                   }
                 },
               ),
