@@ -3,6 +3,7 @@ import 'package:com.while.while_app/feature/feedscreen/screens/feed_video_screen
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeedScreenWidget extends ConsumerStatefulWidget {
   const FeedScreenWidget({Key? key, required this.category}) : super(key: key);
@@ -45,17 +46,17 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
     final state = ref.watch(allVideoProvider(widget.category));
     log('Total numbers of videos ${state.videos.length} category${widget.category}');
     return Padding(
-      padding: const EdgeInsets.only(left: 6),
+      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: SizedBox(
-        height: 160,
+        height: 300,
         child: GridView.builder(
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
-            crossAxisSpacing: 4.0,
-            mainAxisSpacing: 3.0,
-            childAspectRatio: 9 / 14,
+            crossAxisSpacing: 16.0,
+            mainAxisSpacing: 13.0,
+            childAspectRatio: 12 / 11,
           ),
           itemCount: state.videos.length + (state.isLoading ? 1 : 0),
           itemBuilder: (context, index) {
@@ -73,7 +74,7 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                 );
               },
               child: Card(
-                color: Colors.black,
+                color: Colors.white,
                 elevation: 4.0,
                 child: Stack(
                   alignment: AlignmentDirectional.bottomStart,
@@ -91,11 +92,11 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           gradient: LinearGradient(
-                            begin: Alignment.center,
+                            begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withOpacity(0.2),
+                              Colors.black.withOpacity(0.1),
                               Colors.black.withOpacity(0.4),
                               Colors.black.withOpacity(0.9),
                             ],
@@ -103,15 +104,89 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        state.videos[index].creatorName,
-                        maxLines: 1,
-                        style: const TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromARGB(255, 255, 255, 255)),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            state.videos[index].title,
+                            maxLines: 2,
+                            style: GoogleFonts.spaceGrotesk(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Icon(
+                                Icons.timer,
+                                size: 18,
+                                color: Color.fromARGB(255, 188, 188, 188),
+                              ),
+                              Text(
+                                '1h 21m',
+                                maxLines: 1,
+                                style: GoogleFonts.spaceGrotesk(
+                                    color: const Color.fromARGB(
+                                        255, 188, 188, 188),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: OutlinedText(
+                                text: 'Flutter',
+                                fillColor: Color.fromARGB(255, 77, 201, 209),
+                                textColor: Colors.white,
+                                borderColor: Colors.blue,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: OutlinedText(
+                                text: 'Dart',
+                                fillColor: Color.fromARGB(255, 0, 130, 205),
+                                textColor: Colors.white,
+                                borderColor: Colors.blue,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: OutlinedText(
+                                text: 'Development',
+                                fillColor: Color.fromARGB(255, 141, 94, 242),
+                                textColor: Colors.white,
+                                borderColor: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            'by. ${state.videos[index].creatorName}',
+                            maxLines: 1,
+                            style: GoogleFonts.spaceGrotesk(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -119,6 +194,38 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class OutlinedText extends StatelessWidget {
+  final String text;
+  final Color fillColor;
+  final Color textColor;
+  final Color borderColor;
+
+  const OutlinedText({
+    Key? key,
+    required this.text,
+    required this.fillColor,
+    required this.textColor,
+    required this.borderColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: fillColor,
+        //border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.spaceGrotesk(
+            color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
       ),
     );
   }

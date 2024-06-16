@@ -1,13 +1,10 @@
 import 'dart:developer';
 import 'package:com.while.while_app/feature/advertisement/widgets/carousoal_feed_screen.dart';
-import 'package:com.while.while_app/feature/counsellor/screens/tabs.dart';
-import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
-import 'package:com.while.while_app/feature/notifications/screens/notification_view.dart';
 import 'package:com.while.while_app/feature/feedscreen/controller/categories_test_provider.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -41,7 +38,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     log("feedscreen");
-    final unreadNotifsAsyncValue = ref.watch(listenUnreadNotifsProvider);
+    //final unreadNotifsAsyncValue = ref.watch(listenUnreadNotifsProvider);
     final categoriesState = ref.watch(categoryProvider);
 
     return SafeArea(
@@ -113,10 +110,13 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(11, 7, 7, 0),
+                        padding: const EdgeInsets.fromLTRB(13, 10, 7, 10),
                         child: Text(
                           categoriesState.categories[index],
-                          style: const TextStyle(fontSize: 17),
+                          style: GoogleFonts.spaceGrotesk(
+                              color: const Color.fromARGB(255, 74, 70, 70),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
                         ),
                       ),
                       FeedScreenWidget(

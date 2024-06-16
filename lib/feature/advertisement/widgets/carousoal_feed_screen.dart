@@ -49,7 +49,7 @@ class ImageCarouselState extends State<ImageCarousel> {
         return CarouselSlider(
           options: CarouselOptions(
             autoPlay: true,
-            aspectRatio: 2.0,
+            aspectRatio: 9 / 16,
             enlargeCenterPage: true,
           ),
           items: data.map((url) {
@@ -59,7 +59,7 @@ class ImageCarouselState extends State<ImageCarousel> {
                   onTap: () => _launchUrl(url.website),
                   child: Card(
                     color: Colors.black,
-                    elevation: 4.0,
+                    elevation: 2.0,
                     child: Stack(
                       alignment: AlignmentDirectional.bottomStart,
                       children: [
