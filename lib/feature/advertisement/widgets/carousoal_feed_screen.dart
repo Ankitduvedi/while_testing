@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:com.while.while_app/feature/advertisement/models/carousel_feed_scren_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

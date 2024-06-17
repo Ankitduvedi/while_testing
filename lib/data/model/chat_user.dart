@@ -55,7 +55,6 @@ class ChatUser {
   late int isCounsellor;
   late int isCounsellorVerified;
   late int isApproved;
-
   late String tourPage = "";
 
   // Update fromJson method to include the new field

@@ -16,7 +16,6 @@ class Connect extends ConsumerWidget {
     final allUsersAsyncValue = ref.watch(allUsersProvider);
 
     var user = ref.watch(userDataProvider).userData!;
-    print("user id: ${user.id}");
 
     final followingUsersAsyncValue = ref.watch(followingUsersProvider(user.id));
 
@@ -64,8 +63,6 @@ class Connect extends ConsumerWidget {
                                 '${fireService.name} started following you',
                                 user.id);
                             log("now following");
-                            ref.read(userProvider.notifier).update((state) =>
-                                state?.copyWith(follower: state.follower + 1));
                           } else {
                             log("Error: fireService or currentUser is null");
                           }

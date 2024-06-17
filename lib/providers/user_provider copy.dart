@@ -59,15 +59,25 @@ class UserDataProvider with ChangeNotifier {
 
   void _followingUpdateListener(QuerySnapshot snapshot) {
     if (!_isDisposed) {
-      _userData.following = snapshot.docs.length;
-      _safeNotifyListeners();
+      int newFollowingCount = snapshot.docs.length;
+      if (_userData.following != newFollowingCount) {
+        _userData.following = newFollowingCount;
+        _safeNotifyListeners();
+        updateUserData(
+            _userData); // Call updateUserData when following count changes
+      }
     }
   }
 
   void _followerUpdateListener(QuerySnapshot snapshot) {
     if (!_isDisposed) {
-      _userData.follower = snapshot.docs.length;
-      _safeNotifyListeners();
+      int newFollowerCount = snapshot.docs.length;
+      if (_userData.follower != newFollowerCount) {
+        _userData.follower = newFollowerCount;
+        _safeNotifyListeners();
+        updateUserData(
+            _userData); // Call updateUserData when following count changes
+      }
     }
   }
 
@@ -91,7 +101,7 @@ class UserDataProvider with ChangeNotifier {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(auth.uid)
-            .set(updatedUser.toJson());
+            .update(updatedUser.toJson());
         _userData = updatedUser;
         _safeNotifyListeners();
       } catch (e) {
@@ -105,6 +115,6 @@ class UserDataProvider with ChangeNotifier {
 
 final userDataProvider =
     ChangeNotifierProvider.autoDispose<UserDataProvider>((ref) {
-  log('userDataProvidercopy');
+  log('userDataProvider');
   return UserDataProvider(ref);
 });

@@ -31,11 +31,11 @@ class CreatorRepository {
       // Create the request document in Firestore under 'requests' collection
       await _firestore.collection('requests').doc(userId).set({
         'userId': userId,
-        'isContentCreator': false, // Assuming this means the request is pending
+        'isContentCreator': 0, // Assuming this means the request is pending
         'timeStamp': requestTime,
         'instagramLink': instagramLink,
         'youtubeLink': youtubeLink,
-        'isApproved': true, // Initially, the request is not approved
+        'isApproved': 1, // Initially, the request is not approved
       });
       // Update 'isApproved' in the 'users' collection for the user
       await _firestore.collection('users').doc(userId).update({

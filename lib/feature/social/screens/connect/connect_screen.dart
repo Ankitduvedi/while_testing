@@ -1,5 +1,5 @@
 import 'package:com.while.while_app/feature/social/screens/connect/communities_connect/community_connect.dart';
-import 'package:com.while.while_app/feature/social/screens/connect/people/demo.dart';
+import 'package:com.while.while_app/feature/social/screens/connect/people/connect_people.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

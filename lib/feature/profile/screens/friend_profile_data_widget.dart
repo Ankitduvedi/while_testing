@@ -1,239 +1,224 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/profile/screens/friend_profile_follower_screen.dart';
-import 'package:com.while.while_app/feature/profile/screens/friend_profile_following_screen.dart';
+import 'dart:developer';
+import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
+import 'package:com.while.while_app/feature/profile/screens/user_profile_follower_screen.dart';
+import 'package:com.while.while_app/feature/profile/screens/user_profile_following_screen.dart';
+import 'package:com.while.while_app/feature/social/screens/chat/chat_screen.dart';
+import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
-class FriendProfileDataWidget extends ConsumerStatefulWidget {
-  const FriendProfileDataWidget({super.key, required this.chatUser});
+class FriendProfileDataWidget extends ConsumerWidget {
+  const FriendProfileDataWidget({Key? key, required this.chatUser})
+      : super(key: key);
   final ChatUser chatUser;
-  @override
-  ConsumerState<FriendProfileDataWidget> createState() =>
-      FriendProfileDataWidgetState();
-}
-
-class FriendProfileDataWidgetState
-    extends ConsumerState<FriendProfileDataWidget> {
-  // String? _image;
 
   @override
-  Widget build(BuildContext context) {
-    // final fireService = ref.read(apisProvider);
-    var h = MediaQuery.of(context).size.height;
-    var w = MediaQuery.of(context).size.width;
-    // var nh = MediaQuery.of(context).viewPadding.top;
-    return SafeArea(
-        child: LiquidPullToRefresh(
-      onRefresh: () async {
-        // Add your refresh logic here
-        await Future.delayed(const Duration(seconds: 2));
-        // Update the UI after refreshing
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 14,
+  Widget build(BuildContext context, WidgetRef ref) {
+    double h = MediaQuery.of(context).size.height;
+
+    final user = chatUser;
+    final me = ref.read(userDataProvider).userData!;
+    final followingUsersAsyncValue = ref.watch(followingUsersProvider(me.id));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: h * 0.14,
+          width: h * 0.14,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(h * 0.7),
+            child: CachedNetworkImage(
+              imageUrl: user.image,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.low,
+              errorWidget: (context, url, error) =>
+                  const CircleAvatar(child: Icon(CupertinoIcons.person)),
+            ),
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(
+          height: 7,
+        ),
+        Text(
+          user.name,
+          style: GoogleFonts.spaceGrotesk(
+              fontSize: 20,
+              height: 2,
+              letterSpacing: 1,
+              color: const Color.fromARGB(255, 51, 51, 51),
+              fontWeight: FontWeight.w700),
+        ),
+        Text(
+          user.email,
+          style: GoogleFonts.spaceGrotesk(
+              fontSize: 16,
+              height: 1,
+              letterSpacing: 1,
+              color: const Color.fromARGB(255, 183, 177, 177),
+              fontWeight: FontWeight.w300),
+        ),
+        Text(
+          user.about,
+          style: GoogleFonts.spaceGrotesk(
+              fontSize: 14,
+              height: 3,
+              letterSpacing: 1,
+              color: const Color.fromARGB(255, 79, 79, 79),
+              fontWeight: FontWeight.w400),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  height: h * 0.12,
-                  width: w * 0.27,
-                  child: ClipOval(
-                    //borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.chatUser.image,
-                      fit: BoxFit.fill,
-                      filterQuality: FilterQuality.low,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
+            _buildStatItem('0', 'Posts'),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => UserProfileFollowerScreen(chatUser: user),
+                  ),
+                );
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    user.follower.toString(),
+                    style: GoogleFonts.spaceGrotesk(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
                     ),
                   ),
-                ),
-                _buildStatItem("0", 'Posts'),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => (FriendProfileFollowerScreen(
-                                         chatUser: widget.chatUser,
-                                         userIds: const [],
-                                       )),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(widget.chatUser.id)
-                            .collection('follower')
-                            .snapshots(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          // Check for errors
-                          if (snapshot.hasError) {
-                            return Text(
-                              'Error: ${snapshot.error}',
-                              style: GoogleFonts.ptSans(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26,
-                              ),
-                            );
-                          }
-
-                          // Check for connection state before attempting to access the data
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              // Show a loading indicator while waiting for the data
-                              return const CircularProgressIndicator();
-
-                            default:
-                              // Ensure data is not null before accessing it
-                              if (snapshot.data != null) {
-                                return Text(
-                                  snapshot.data!.docs.length.toString(),
-                                  style: GoogleFonts.ptSans(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                );
-                              } else {
-                                // Handle the case where data is null
-                                return Text(
-                                  '0',
-                                  style: GoogleFonts.ptSans(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                );
-                              }
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 3.0),
-                      const Text(
-                        "Followers",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black54,
-                            fontSize: 15),
-                      ),
-                    ],
+                  const SizedBox(height: 3.0),
+                  Text(
+                    "Followers",
+                    style: GoogleFonts.spaceGrotesk(
+                      color: const Color.fromARGB(255, 79, 79, 79),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            (FriendProfileFollowingScreen(
-                                         chatUser: widget.chatUser,
-                                         userIds: const [],
-                                       )),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(widget.chatUser.id)
-                            .collection('following')
-                            .snapshots(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          // Check for errors
-                          if (snapshot.hasError) {
-                            return Text(
-                              'Error: ${snapshot.error}',
-                              style: GoogleFonts.ptSans(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26,
-                              ),
-                            );
-                          }
-
-                          // Check for connection state before attempting to access the data
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              // Show a loading indicator while waiting for the data
-                              return const CircularProgressIndicator();
-
-                            default:
-                              // Ensure data is not null before accessing it
-                              if (snapshot.data != null) {
-                                return Text(
-                                  snapshot.data!.docs.length.toString(),
-                                  style: GoogleFonts.ptSans(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                );
-                              } else {
-                                // Handle the case where data is null
-                                return Text(
-                                  '0',
-                                  style: GoogleFonts.ptSans(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 26,
-                                  ),
-                                );
-                              }
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 3.0),
-                      const Text(
-                        "Following",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black54,
-                            fontSize: 15),
-                      ),
-                    ],
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => UserProfileFollowingScreen(chatUser: user),
                   ),
-                ),
-              ],
+                );
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    user.following.toString(),
+                    style: GoogleFonts.spaceGrotesk(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
+                    ),
+                  ),
+                  const SizedBox(height: 3.0),
+                  Text(
+                    "Following",
+                    style: GoogleFonts.spaceGrotesk(
+                      color: const Color.fromARGB(255, 79, 79, 79),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            SizedBox(
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    widget.chatUser.about,
-                    style: GoogleFonts.ptSans(fontSize: 16),
-                  )),
-            ),
-            // const SizedBox(
-            //   height: 16,
-            // ),
-            
           ],
         ),
-      ),
-    ));
+        const SizedBox(
+          height: 8,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            followingUsersAsyncValue.when(
+              data: (following) {
+                return GradientFilledButton(
+                  text: following.contains(user.id) ? 'Unfollow' : 'Follow',
+                  onPressed: () async {
+                    if (following.contains(user.id)) {
+                      await ref
+                          .read(apisProvider)
+                          .unfollow(user.id)
+                          .then((value) {
+                        if (value) {
+                          Dialogs.showSnackbar(context, 'Unfollowed');
+                        }
+                      });
+                    } else {
+                      try {
+                        final didFollow = await ref
+                            .read(followUserProvider)(user.id)
+                            .then((value) {
+                          if (value) {
+                            Dialogs.showSnackbar(context, 'following');
+                          }
+                        });
+                        if (didFollow) {
+                          final notifService =
+                              ref.watch(notifControllerProvider.notifier);
+                          notifService.addNotification(
+                              '${me.name} started following you', user.id);
+                        } else {
+                          log("failed to follow, ${user.name}");
+                        }
+                      } catch (e) {
+                        log("Error in follow button: $e");
+                      }
+                    }
+                  },
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.fromRGBO(230, 77, 255, 1),
+                      Color.fromRGBO(123, 68, 212, 1),
+                    ],
+                  ),
+                );
+              },
+              error: (e, _) => Center(child: Text('Error up: $e')),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            ),
+            GradientOutlinedButton(
+              user: user,
+              text: 'Message',
+              onPressed: () {},
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromRGBO(230, 77, 255, 1),
+                  Color.fromRGBO(123, 68, 212, 1),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _buildStatItem(String value, String label) {
@@ -244,203 +229,127 @@ class FriendProfileDataWidgetState
       children: [
         Text(
           value,
-          style: GoogleFonts.ptSans(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.spaceGrotesk(
+            fontWeight: FontWeight.w700,
             fontSize: 26,
           ),
         ),
         const SizedBox(height: 3.0),
         Text(
           label,
-          style: const TextStyle(
-              fontWeight: FontWeight.w400, color: Colors.black54, fontSize: 15),
+          style: GoogleFonts.spaceGrotesk(
+            color: const Color.fromARGB(255, 79, 79, 79),
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+          ),
         ),
       ],
     );
   }
 }
 
-    
-    
-    
-    
-    
-    
-//     StreamBuilder(
-//       stream: fireService.getMyUsersId(),
-//       builder: (context, snapshot) {
-//         switch (snapshot.connectionState) {
-//           //if data is loading
-//           case ConnectionState.waiting:
-//           case ConnectionState.none:
-//             return const SizedBox();
+class GradientOutlinedButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final Gradient gradient;
+  final ChatUser user;
 
-//           //if some or all data is loaded then show it
-//           case ConnectionState.active:
-//           case ConnectionState.done:
-//             List<String> userIds =
-//                 snapshot.data?.docs.map((e) => e.id).toList() ?? [];
-//             return SizedBox(
-//               width: double.infinity,
-//               child: Stack(
-//                 children: [
-//                   Container(
-//                     height: h / 2.5,
-//                   ),
-//                   Positioned(
-//                     top: nh,
-//                     child: InkWell(
-//                         child: ClipRRect(
-//                       // borderRadius: BorderRadius.circular(h * .13),
-//                       child: CachedNetworkImage(
-//                         width: h,
-//                         fit: BoxFit.cover,
-//                         height: h * .13,
-//                         imageUrl: widget.chatUser.image,
-//                         errorWidget: (context, url, error) =>
-//                             const CircleAvatar(
-//                                 child: Icon(CupertinoIcons.person)),
-//                       ),
-//                     )),
-//                   ),
-//                   Positioned(
-//                     top: nh + h / 7 - w / 8,
-//                     left: w / 12,
+  const GradientOutlinedButton(
+      {required this.text,
+      required this.onPressed,
+      required this.gradient,
+      required this.user});
 
-//                     //profile picture
-//                     child: _image != null
-//                         ?
-//                         //local image
-//                         ClipRRect(
-//                             borderRadius: BorderRadius.circular(h * .1),
-//                             child: Image.file(File(_image!),
-//                                 width: h * .1,
-//                                 height: h * .1,
-//                                 fit: BoxFit.cover))
-//                         :
-//                         //image from server
-//                         ClipRRect(
-//                             borderRadius: BorderRadius.circular(h * .75),
-//                             child: CachedNetworkImage(
-//                               width: h * .15,
-//                               height: h * .15,
-//                               filterQuality: FilterQuality.low,
-//                               fit: BoxFit.fill,
-//                               imageUrl: widget.chatUser.image,
-//                               errorWidget: (context, url, error) =>
-//                                   const CircleAvatar(
-//                                       child: Icon(CupertinoIcons.person)),
-//                             ),
-//                           ),
-//                   ),
-//                   Positioned(
-//                       top: nh + h / 7.5,
-//                       left: w / 2.25,
-//                       child: TextButton(
-//                         onPressed: () {
-//                           Navigator.push(
-//                               context,
-//                               MaterialPageRoute(
-//                                   builder: (_) => (FriendProfileFollowingScreen(
-//                                         chatUser: widget.chatUser,
-//                                         userIds: userIds,
-//                                       ))));
-//                         },
-//                         child: const Text(
-//                           'Followers',
-//                           style: TextStyle(color: Colors.black),
-//                         ),
-//                       )),
-//                   Positioned(
-//                       top: nh + h / 6.6,
-//                       left: w / 1.6,
-//                       child: const Text(
-//                         "3",
-//                         style: TextStyle(fontWeight: FontWeight.w500),
-//                       )),
-//                   Positioned(
-//                       top: nh + h / 6,
-//                       left: w / 2.25,
-//                       child: TextButton(
-//                         onPressed: () {
-//                           Navigator.push(
-//                               context,
-//                               MaterialPageRoute(
-//                                   builder: (_) => (FriendProfileFollowingScreen(
-//                                         chatUser: widget.chatUser,
-//                                         userIds: userIds,
-//                                       ))));
-//                         },
-//                         child: const Text(
-//                           'Following',
-//                           style: TextStyle(color: Colors.black),
-//                         ),
-//                       )),
-//                   // Positioned(
-//                   //     top: nh + h / 7.5,
-//                   //     left: w / 1.15,
-//                   //     child: IconButton(
-//                   //         onPressed: () {
-//                   //           showModalBottomSheet(
-//                   //               context: context,
-//                   //               builder: (context) {
-//                   //                 return MoreOptions(
-//                   //                   user: user,
-//                   //                 );
-//                   //               });
-//                   //         },
-//                   //         icon: const Icon(
-//                   //           Icons.more_vert,
-//                   //           color: Colors.black,
-//                   //         ))),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: gradient,
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(1), // Border width
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.white, // Background color inside the button
+            side: const BorderSide(
+              color: Colors.transparent, // Border color inside the button
+              width: 0,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    user: user,
+                    myid: '',
+                  ),
+                ));
+          },
+          child: ShaderMask(
+            shaderCallback: (bounds) {
+              return gradient.createShader(
+                Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+              );
+            },
+            child: Text(
+              text,
+              style: GoogleFonts.spaceGrotesk(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-//                   Positioned(
-//                       top: nh + h / 5.4,
-//                       left: w / 1.6,
-//                       child: StreamBuilder(
-//                           stream: FirebaseFirestore.instance
-//                               .collection('users')
-//                               .doc(widget.chatUser.id)
-//                               .collection('my_users')
-//                               .snapshots(),
-//                           builder: (context, snapshot) {
-//                             switch (snapshot.connectionState) {
-//                               //if data is loading
-//                               case ConnectionState.waiting:
-//                               case ConnectionState.none:
-//                                 return const SizedBox();
+class GradientFilledButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  final Gradient gradient;
 
-//                               //if some or all data is loaded then show it
-//                               case ConnectionState.active:
-//                               case ConnectionState.done:
-//                                 return Text(
-//                                     snapshot.data!.docs.length.toString());
-//                             }
-//                           })),
-//                   Positioned(
-//                     top: nh + h / 7 + w / 8 + 30,
-//                     child: Container(
-//                       padding: const EdgeInsets.only(left: 20, right: 20),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             widget.chatUser.name,
-//                             style: const TextStyle(
-//                                 fontSize: 25, fontWeight: FontWeight.w500),
-//                           ),
-//                           Text(widget.chatUser.about,
-//                               style: const TextStyle(
-//                                   fontSize: 15, fontWeight: FontWeight.w500))
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             );
-//         }
-//       },
-//     );
-//   }
-// }
+  const GradientFilledButton({
+    required this.text,
+    required this.onPressed,
+    required this.gradient,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: gradient,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+}

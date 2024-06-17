@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet.dart';
 import 'package:com.while.while_app/feature/profile/screens/edit_profile_user.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_follower_screen.dart';
@@ -70,7 +69,7 @@ class ProfileDataWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildStatItem("0", 'Posts'),
+            _buildStatItem('0', 'Posts'),
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -85,52 +84,12 @@ class ProfileDataWidget extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.id)
-                        .collection('follower')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      // Check for errors
-                      if (snapshot.hasError) {
-                        return Text(
-                          'Error: ${snapshot.error}',
-                          style: GoogleFonts.spaceGrotesk(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        );
-                      }
-
-                      // Check for connection state before attempting to access the data
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          // Show a loading indicator while waiting for the data
-                          return const CircularProgressIndicator();
-
-                        default:
-                          // Ensure data is not null before accessing it
-                          if (snapshot.data != null) {
-                            return Text(
-                              snapshot.data!.docs.length.toString(),
-                              style: GoogleFonts.spaceGrotesk(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 26,
-                              ),
-                            );
-                          } else {
-                            // Handle the case where data is null
-                            return Text(
-                              '0',
-                              style: GoogleFonts.spaceGrotesk(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 26,
-                              ),
-                            );
-                          }
-                      }
-                    },
+                  Text(
+                    user.follower.toString(),
+                    style: GoogleFonts.spaceGrotesk(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
+                    ),
                   ),
                   const SizedBox(height: 3.0),
                   Text(
@@ -158,52 +117,12 @@ class ProfileDataWidget extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.id)
-                        .collection('following')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      // Check for errors
-                      if (snapshot.hasError) {
-                        return Text(
-                          'Error: ${snapshot.error}',
-                          style: GoogleFonts.spaceGrotesk(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 26,
-                          ),
-                        );
-                      }
-
-                      // Check for connection state before attempting to access the data
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          // Show a loading indicator while waiting for the data
-                          return const CircularProgressIndicator();
-
-                        default:
-                          // Ensure data is not null before accessing it
-                          if (snapshot.data != null) {
-                            return Text(
-                              snapshot.data!.docs.length.toString(),
-                              style: GoogleFonts.spaceGrotesk(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 26,
-                              ),
-                            );
-                          } else {
-                            // Handle the case where data is null
-                            return Text(
-                              '0',
-                              style: GoogleFonts.spaceGrotesk(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 26,
-                              ),
-                            );
-                          }
-                      }
-                    },
+                  Text(
+                    user.following.toString(),
+                    style: GoogleFonts.spaceGrotesk(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 26,
+                    ),
                   ),
                   const SizedBox(height: 3.0),
                   Text(
