@@ -15,210 +15,212 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendProfileDataWidget extends ConsumerWidget {
-  const FriendProfileDataWidget({Key? key, required this.chatUser})
+  const FriendProfileDataWidget(
+      {Key? key, required this.user, required this.didFollow})
       : super(key: key);
-  final ChatUser chatUser;
+  final ChatUser user;
+  final bool didFollow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double h = MediaQuery.of(context).size.height;
+    final ChatUser me = ref.read(userDataProvider).userData!;
 
-    final user = chatUser;
-    final me = ref.read(userDataProvider).userData!;
-    final followingUsersAsyncValue = ref.watch(followingUsersProvider(me.id));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: h * 0.14,
-          width: h * 0.14,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(h * 0.7),
-            child: CachedNetworkImage(
-              imageUrl: user.image,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.low,
-              errorWidget: (context, url, error) =>
-                  const CircleAvatar(child: Icon(CupertinoIcons.person)),
-            ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      SizedBox(
+        height: h * 0.14,
+        width: h * 0.14,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(h * 0.7),
+          child: CachedNetworkImage(
+            imageUrl: user.image,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.low,
+            errorWidget: (context, url, error) =>
+                const CircleAvatar(child: Icon(CupertinoIcons.person)),
           ),
         ),
-        const SizedBox(
-          height: 7,
-        ),
-        Text(
-          user.name,
-          style: GoogleFonts.spaceGrotesk(
-              fontSize: 20,
-              height: 2,
-              letterSpacing: 1,
-              color: const Color.fromARGB(255, 51, 51, 51),
-              fontWeight: FontWeight.w700),
-        ),
-        Text(
-          user.email,
-          style: GoogleFonts.spaceGrotesk(
-              fontSize: 16,
-              height: 1,
-              letterSpacing: 1,
-              color: const Color.fromARGB(255, 183, 177, 177),
-              fontWeight: FontWeight.w300),
-        ),
-        Text(
-          user.about,
-          style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
-              height: 3,
-              letterSpacing: 1,
-              color: const Color.fromARGB(255, 79, 79, 79),
-              fontWeight: FontWeight.w400),
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildStatItem('0', 'Posts'),
-            GestureDetector(
-              onTap: () {
+      ),
+      const SizedBox(
+        height: 7,
+      ),
+      Text(
+        user.name,
+        style: GoogleFonts.spaceGrotesk(
+            fontSize: 20,
+            height: 2,
+            letterSpacing: 1,
+            color: const Color.fromARGB(255, 51, 51, 51),
+            fontWeight: FontWeight.w700),
+      ),
+      Text(
+        user.email,
+        style: GoogleFonts.spaceGrotesk(
+            fontSize: 16,
+            height: 1,
+            letterSpacing: 1,
+            color: const Color.fromARGB(255, 183, 177, 177),
+            fontWeight: FontWeight.w300),
+      ),
+      Text(
+        user.about,
+        style: GoogleFonts.spaceGrotesk(
+            fontSize: 14,
+            height: 3,
+            letterSpacing: 1,
+            color: const Color.fromARGB(255, 79, 79, 79),
+            fontWeight: FontWeight.w400),
+      ),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatItem('0', 'Posts'),
+          GestureDetector(
+            onTap: () {
+              if (didFollow) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => UserProfileFollowerScreen(chatUser: user),
                   ),
                 );
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    user.follower.toString(),
-                    style: GoogleFonts.spaceGrotesk(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26,
-                    ),
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  user.follower.toString(),
+                  style: GoogleFonts.spaceGrotesk(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 26,
                   ),
-                  const SizedBox(height: 3.0),
-                  Text(
-                    "Followers",
-                    style: GoogleFonts.spaceGrotesk(
-                      color: const Color.fromARGB(255, 79, 79, 79),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
+                ),
+                const SizedBox(height: 3.0),
+                Text(
+                  "Followers",
+                  style: GoogleFonts.spaceGrotesk(
+                    color: const Color.fromARGB(255, 79, 79, 79),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () {
+          ),
+          GestureDetector(
+            onTap: () {
+              if (didFollow) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => UserProfileFollowingScreen(chatUser: user),
                   ),
                 );
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    user.following.toString(),
-                    style: GoogleFonts.spaceGrotesk(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26,
-                    ),
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  user.following.toString(),
+                  style: GoogleFonts.spaceGrotesk(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 26,
                   ),
-                  const SizedBox(height: 3.0),
-                  Text(
-                    "Following",
-                    style: GoogleFonts.spaceGrotesk(
-                      color: const Color.fromARGB(255, 79, 79, 79),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
+                ),
+                const SizedBox(height: 3.0),
+                Text(
+                  "Following",
+                  style: GoogleFonts.spaceGrotesk(
+                    color: const Color.fromARGB(255, 79, 79, 79),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            followingUsersAsyncValue.when(
-              data: (following) {
-                return GradientFilledButton(
-                  text: following.contains(user.id) ? 'Unfollow' : 'Follow',
-                  onPressed: () async {
-                    if (following.contains(user.id)) {
-                      await ref
-                          .read(apisProvider)
-                          .unfollow(user.id)
-                          .then((value) {
-                        if (value) {
-                          Dialogs.showSnackbar(context, 'Unfollowed');
-                        }
-                      });
-                    } else {
-                      try {
-                        final didFollow = await ref
-                            .read(followUserProvider)(user.id)
-                            .then((value) {
-                          if (value) {
-                            Dialogs.showSnackbar(context, 'following');
-                          }
-                        });
-                        if (didFollow) {
-                          final notifService =
-                              ref.watch(notifControllerProvider.notifier);
-                          notifService.addNotification(
-                              '${me.name} started following you', user.id);
-                        } else {
-                          log("failed to follow, ${user.name}");
-                        }
-                      } catch (e) {
-                        log("Error in follow button: $e");
-                      }
+          ),
+        ],
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          GradientFilledButton(
+            text: didFollow ? 'Unfollow' : 'Follow',
+            onPressed: () async {
+              if (didFollow) {
+                await ref.read(apisProvider).unfollow(user.id).then((value) {
+                  if (value) {
+                    Dialogs.showSnackbar(context, 'Unfollowed');
+                  }
+                });
+              } else {
+                try {
+                  final didfollow =
+                      await ref.read(followUserProvider)(user.id).then((value) {
+                    if (value) {
+                      Dialogs.showSnackbar(context, 'following');
                     }
-                  },
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromRGBO(230, 77, 255, 1),
-                      Color.fromRGBO(123, 68, 212, 1),
-                    ],
-                  ),
-                );
-              },
-              error: (e, _) => Center(child: Text('Error up: $e')),
-              loading: () => const Center(child: CircularProgressIndicator()),
+                  });
+                  if (didfollow) {
+                    final notifService =
+                        ref.watch(notifControllerProvider.notifier);
+                    notifService.addNotification(
+                        '${me.name} started following you', user.id);
+                  } else {
+                    log("failed to follow, ${user.name}");
+                  }
+                } catch (e) {
+                  log("Error in follow button: $e");
+                }
+              }
+            },
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(230, 77, 255, 1),
+                Color.fromRGBO(123, 68, 212, 1),
+              ],
             ),
-            GradientOutlinedButton(
-              user: user,
-              text: 'Message',
-              onPressed: () {},
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromRGBO(230, 77, 255, 1),
-                  Color.fromRGBO(123, 68, 212, 1),
-                ],
-              ),
+          ),
+          GradientOutlinedButton(
+            text: didFollow ? 'Message' : '🔒Message',
+            onPressed: () {
+              if (didFollow) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                        user: user,
+                        myid: '',
+                      ),
+                    ));
+              } else {
+                Dialogs.showSnackbar(context, 'Follow to send message');
+              }
+            },
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(230, 77, 255, 1),
+                Color.fromRGBO(123, 68, 212, 1),
+              ],
             ),
-          ],
-        ),
-      ],
-    );
+          ),
+        ],
+      )
+    ]);
   }
 
   Widget _buildStatItem(String value, String label) {
@@ -252,13 +254,12 @@ class GradientOutlinedButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final Gradient gradient;
-  final ChatUser user;
 
-  const GradientOutlinedButton(
-      {required this.text,
-      required this.onPressed,
-      required this.gradient,
-      required this.user});
+  const GradientOutlinedButton({
+    required this.text,
+    required this.onPressed,
+    required this.gradient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -282,16 +283,7 @@ class GradientOutlinedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatScreen(
-                    user: user,
-                    myid: '',
-                  ),
-                ));
-          },
+          onPressed: onPressed,
           child: ShaderMask(
             shaderCallback: (bounds) {
               return gradient.createShader(

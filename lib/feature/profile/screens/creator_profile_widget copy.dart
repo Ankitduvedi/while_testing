@@ -61,8 +61,6 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                   child: InkWell(
                       onLongPress: () {
                         final String id = snapshot.data!.docs[index].id;
-                        print("url is ${videoList[index].videoUrl}");
-                        print("category is ${videoList[index].category}");
 
                         _showOptionsDialog(
                             context,
@@ -172,7 +170,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                var userId = ref.read(userDataProvider)!.userData?.id;
+                var userId = ref.read(userDataProvider).userData?.id;
                 ref.read(apisProvider).deleteReel(id, category, userId!);
               },
               style: TextButton.styleFrom(

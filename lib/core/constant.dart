@@ -1,4 +1,4 @@
-String version = "1.123";
+String version = "1.124";
 Map<String, String> tourMap = {
   "HomeScreen": "A",
   "SocialScreen": "B",
