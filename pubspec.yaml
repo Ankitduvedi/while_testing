@@ -106,6 +106,8 @@ dependencies:
 
 
   tutorial_coach_mark: ^1.2.11
+  flutter_datetime_picker: ^1.5.1
+  intl_phone_field: ^3.2.0
 
   
 

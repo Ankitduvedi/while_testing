@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/core/utils/buttons/gradient_filled_outlined_button.dart';
 import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
@@ -184,14 +185,6 @@ class FriendProfileDataWidget extends ConsumerWidget {
                 }
               }
             },
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromRGBO(230, 77, 255, 1),
-                Color.fromRGBO(123, 68, 212, 1),
-              ],
-            ),
           ),
           GradientOutlinedButton(
             text: didFollow ? 'Message' : '🔒Message',
@@ -298,47 +291,6 @@ class GradientOutlinedButton extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class GradientFilledButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
-  final Gradient gradient;
-
-  const GradientFilledButton({
-    required this.text,
-    required this.onPressed,
-    required this.gradient,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: GoogleFonts.spaceGrotesk(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
           ),
         ),
       ),
