@@ -219,7 +219,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      ref.read(apisProvider).deleteReel(id, '', '');
+                      ref.read(apisProvider).deleteVideo(id, '', '');
                       // APIs.deleteReel(id);
                     },
                     style: TextButton.styleFrom(

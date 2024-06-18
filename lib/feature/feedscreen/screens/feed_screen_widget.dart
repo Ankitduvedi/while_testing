@@ -113,70 +113,72 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                           child: Text(
                             state.videos[index].title,
                             maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.spaceGrotesk(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.timer,
-                                size: 18,
-                                color: Color.fromARGB(255, 188, 188, 188),
-                              ),
-                              Text(
-                                '1h 21m',
-                                maxLines: 1,
-                                style: GoogleFonts.spaceGrotesk(
-                                    color: const Color.fromARGB(
-                                        255, 188, 188, 188),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: OutlinedText(
-                                text: 'Flutter',
-                                fillColor: Color.fromARGB(255, 77, 201, 209),
-                                textColor: Colors.white,
-                                borderColor: Colors.blue,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: OutlinedText(
-                                text: 'Dart',
-                                fillColor: Color.fromARGB(255, 0, 130, 205),
-                                textColor: Colors.white,
-                                borderColor: Colors.blue,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: OutlinedText(
-                                text: 'Development',
-                                fillColor: Color.fromARGB(255, 141, 94, 242),
-                                textColor: Colors.white,
-                                borderColor: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 10),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       const Icon(
+                        //         Icons.timer,
+                        //         size: 18,
+                        //         color: Color.fromARGB(255, 188, 188, 188),
+                        //       ),
+                        //       Text(
+                        //         '1h 21m',
+                        //         maxLines: 1,
+                        //         style: GoogleFonts.spaceGrotesk(
+                        //             color: const Color.fromARGB(
+                        //                 255, 188, 188, 188),
+                        //             fontSize: 12,
+                        //             fontWeight: FontWeight.w700),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // const Row(
+                        //   children: [
+                        //     Padding(
+                        //       padding: EdgeInsets.all(8.0),
+                        //       child: OutlinedText(
+                        //         text: 'Flutter',
+                        //         fillColor: Color.fromARGB(255, 77, 201, 209),
+                        //         textColor: Colors.white,
+                        //         borderColor: Colors.blue,
+                        //       ),
+                        //     ),
+                        //     Padding(
+                        //       padding: EdgeInsets.all(8.0),
+                        //       child: OutlinedText(
+                        //         text: 'Dart',
+                        //         fillColor: Color.fromARGB(255, 0, 130, 205),
+                        //         textColor: Colors.white,
+                        //         borderColor: Colors.blue,
+                        //       ),
+                        //     ),
+                        //     Padding(
+                        //       padding: EdgeInsets.all(8.0),
+                        //       child: OutlinedText(
+                        //         text: 'Development',
+                        //         fillColor: Color.fromARGB(255, 141, 94, 242),
+                        //         textColor: Colors.white,
+                        //         borderColor: Colors.blue,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text(
                             'by. ${state.videos[index].creatorName}',
                             maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.spaceGrotesk(
                                 color: Colors.white,
                                 fontSize: 16,

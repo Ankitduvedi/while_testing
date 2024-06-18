@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
-import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget.dart';
+import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget_loops.dart';
 import 'package:com.while.while_app/feature/profile/screens/profile_data_widget2.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../../../core/constant.dart';
@@ -184,6 +184,7 @@ class GradientText extends StatelessWidget {
   final TextStyle style;
 
   const GradientText({
+    super.key,
     required this.text,
     required this.gradient,
     required this.style,
@@ -235,7 +236,8 @@ class _CurvedGradientPainter extends BoxPainter {
           offset.dy + configuration.size!.height - 4, // Adjusted height
         ) &
         Size(configuration.size!.width * 1.4, 4); // Adjusted size
-    final RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(16));
+    final RRect rrect =
+        RRect.fromRectAndRadius(rect, const Radius.circular(16));
     canvas.drawRRect(rrect, paint);
   }
 }

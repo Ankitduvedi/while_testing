@@ -195,7 +195,7 @@ class APIs {
     firestore.collection('users').doc(user.uid).update({'image': userImage});
   }
 
-  Future<bool> deleteReel(String id, String category, String userId) async {
+  Future<bool> deleteVideo(String id, String category, String userId) async {
     var url = 'https://video.bunnycdn.com/library/243538/videos/$id';
     const headers = {
       'accept': 'application/json',

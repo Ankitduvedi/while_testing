@@ -114,7 +114,7 @@ class FeedScreenState extends ConsumerState<FeedScreen> {
                         child: Text(
                           categoriesState.categories[index],
                           style: GoogleFonts.spaceGrotesk(
-                              color: const Color.fromARGB(255, 74, 70, 70),
+                              color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 18,
                               fontWeight: FontWeight.w700),
                         ),
