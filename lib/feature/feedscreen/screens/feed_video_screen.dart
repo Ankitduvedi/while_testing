@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
@@ -37,6 +38,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   @override
   void initState() {
     super.initState();
+    increaseView();
     initializePlayer();
     checkQualityOptions();
     filterQualityOptions();
@@ -45,6 +47,19 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
       statusBarColor: Colors.black, // Status bar color
       statusBarIconBrightness: Brightness.light, // Status bar icons' color
     ));
+  }
+
+  void increaseView() {
+    print("id: ${widget.video.id}");
+
+    FirebaseFirestore.instance
+        .collection('videos')
+        .doc(widget.video.category)
+        .collection(widget.video.category)
+        .doc(widget.video.id)
+        .update({
+      'views': FieldValue.increment(1),
+    });
   }
 
   Future<void> checkQualityOptions() async {

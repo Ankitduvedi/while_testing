@@ -11,18 +11,19 @@ class Video {
   final String creatorName;
   final String maxVideoRes;
 
-  Video(
-      {required this.id,
-      required this.uploadedBy,
-      required this.videoUrl,
-      required this.thumbnail,
-      required this.title,
-      required this.description,
-      required this.likes,
-      required this.views,
-      required this.category,
-      required this.creatorName,
-      required this.maxVideoRes});
+  Video({
+    required this.id,
+    required this.uploadedBy,
+    required this.videoUrl,
+    required this.thumbnail,
+    required this.title,
+    required this.description,
+    required this.likes,
+    required this.views,
+    required this.category,
+    required this.creatorName,
+    required this.maxVideoRes,
+  });
 
   factory Video.fromMap(Map<String, dynamic> map) {
     return Video(
