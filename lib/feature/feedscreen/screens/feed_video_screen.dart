@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
@@ -34,14 +35,22 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   bool isPortrait = true;
   List<String> filteredQualityOptions = [];
   List<String> validQualityOptions = [];
+  String libraryID = '243538';
+  String CDNHostname = 'vz-f0994fc7-d98.b-cdn.net';
+  String url = '';
 
+  List<String> availableRes = [];
+  String currentQuality =
+      '240p'; // Initial quality, can be dynamic based on API or default
   @override
   void initState() {
+    url = 'https://${CDNHostname}/${widget.video.id}/240p/video.m3u8';
     super.initState();
+    _initializePlayer();
     increaseView();
-    initializePlayer();
-    checkQualityOptions();
-    filterQualityOptions();
+    // initializePlayer();
+    // checkQualityOptions();
+    // filterQualityOptions();
     // Set the status bar color to black
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black, // Status bar color
@@ -60,26 +69,6 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
         .update({
       'views': FieldValue.increment(1),
     });
-  }
-
-  Future<void> checkQualityOptions() async {
-    List<String> parts = widget.video.videoUrl.split('/play');
-    String baseVideoUrl = parts[0];
-    try {
-      for (String quality in allQualityOptions) {
-        final videoUrl = '${baseVideoUrl}/play_$quality.mp4';
-        final response = await http.head(Uri.parse(videoUrl));
-
-        if (response.statusCode != 404) {
-          validQualityOptions.add(quality);
-        }
-      }
-      setState(() {
-        filteredQualityOptions = validQualityOptions;
-      });
-    } catch (e) {
-      print("Error checking quality options: $e");
-    }
   }
 
   void _onQualitySelected(String quality) async {
@@ -107,16 +96,40 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     });
   }
 
-  void _showQualityOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return QualityOptions(
-          filteredQualityOptions: filteredQualityOptions,
-          onQualitySelected: _onQualitySelected,
-        );
-      },
-    );
+  Future<void> _initializePlayer() async {
+    availableRes = await getResolution(widget.video.id, libraryID);
+
+    _videoPlayerController = VideoPlayerController.network(
+        'https://$CDNHostname/${widget.video.id}/${availableRes[0]}/video.m3u8');
+
+    await _videoPlayerController.initialize();
+
+    _createQualityOptions();
+
+    setState(() {});
+  }
+
+  Future<List<String>> getResolution(String videoId, String libraryId) async {
+    print("videoId: $videoId, libraryId: $libraryId ${widget.video.videoUrl}");
+    var url = Uri.parse(
+        'https://video.bunnycdn.com/library/$libraryId/videos/$videoId');
+
+    var headers = {
+      'AccessKey': '6973830f-6890-472d-b8e3b813c493-5c4d-4c50',
+      'accept': 'application/json',
+    };
+
+    var response = await http.get(url, headers: headers);
+    print("response: ${response.body}");
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var availableResolutions =
+          jsonResponse['availableResolutions'].split(',');
+
+      return availableResolutions;
+    } else {
+      throw Exception('Request failed with status: ${response.statusCode}');
+    }
   }
 
   Future<void> initializePlayer() async {
@@ -159,20 +172,6 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     setState(() {});
   }
 
-  Future<void> filterQualityOptions() async {
-    List<String> parts = widget.video.videoUrl.split('/play');
-    String baseVideoUrl = parts[0];
-
-    List<String> tempFilteredQualityOptions =
-        allQualityOptions.where((quality) {
-      return _isResolutionLessThanOrEqual(quality, widget.video.maxVideoRes);
-    }).toList();
-
-    setState(() {
-      filteredQualityOptions = tempFilteredQualityOptions;
-    });
-  }
-
   bool _isResolutionLessThanOrEqual(String quality, String maxRes) {
     int qualityValue = int.parse(quality.replaceAll('p', ''));
     int maxResValue = int.parse(maxRes.replaceAll('p', ''));
@@ -201,19 +200,6 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                           ? Stack(
                               children: [
                                 Chewie(controller: _chewieController!),
-                                Positioned(
-                                  top: 10,
-                                  left: 10,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      _showQualityOptions(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.settings,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
                               ],
                             )
                           : const Center(child: CircularProgressIndicator()),
@@ -372,6 +358,94 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
               ),
             ],
           );
+  }
+
+  void _createQualityOptions() {
+    // Sort available resolutions in ascending order
+    availableRes.sort((a, b) {
+      int resolutionA = int.parse(a.replaceAll('p', ''));
+      int resolutionB = int.parse(b.replaceAll('p', ''));
+      return resolutionA.compareTo(resolutionB);
+    });
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: true,
+      aspectRatio: _videoPlayerController.value.aspectRatio,
+      additionalOptions: (context) {
+        return <OptionItem>[
+          OptionItem(
+            onTap: () => _showQualityOptions(context),
+            iconData: Icons.settings,
+            title: 'Quality',
+          ),
+        ];
+      },
+    );
+  }
+
+  void _showQualityOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              title: Text('Quality of Current Video'),
+              subtitle: Text(currentQuality),
+            ),
+            Divider(),
+            ...availableRes.map((resolution) {
+              String resolutionUrl =
+                  'https://$CDNHostname/${widget.video.id}/$resolution/video.m3u8';
+              return ListTile(
+                title: Text('$resolution Quality'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _changeQuality(resolutionUrl, resolution);
+                },
+              );
+            }).toList(),
+          ],
+        );
+      },
+    );
+  }
+
+  void _changeQuality(String url, String resolution) async {
+    final currentPosition = _videoPlayerController.value.position;
+
+    setState(() {
+      currentQuality = resolution;
+    });
+
+    _videoPlayerController.pause();
+    _videoPlayerController = VideoPlayerController.network(url);
+    await _videoPlayerController.initialize();
+    _chewieController?.dispose();
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: true,
+      aspectRatio: _videoPlayerController.value.aspectRatio,
+      additionalOptions: (context) {
+        return <OptionItem>[
+          OptionItem(
+            onTap: () => _showQualityOptions(context),
+            iconData: Icons.settings,
+            title: 'Quality',
+          ),
+        ];
+      },
+    );
+
+    _videoPlayerController.seekTo(currentPosition);
+    _videoPlayerController.play();
+
+    setState(() {});
   }
 
   @override

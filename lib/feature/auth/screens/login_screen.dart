@@ -41,10 +41,10 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: isLoading
-              ? const Loader()
-              : Padding(
+        child: isLoading
+            ? const Loader()
+            : SingleChildScrollView(
+                child: Padding(
                   padding: EdgeInsets.all(screenSize.width * 0.05),
                   child: Form(
                     key: _formKey,
@@ -257,7 +257,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                 ),
-        ),
+              ),
       ),
     );
   }
