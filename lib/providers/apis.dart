@@ -852,7 +852,7 @@ class APIs {
       link: Uri.parse("https://while.co.in/app/?screen=/$screen&url=$url"),
       uriPrefix: "https://while.co.in/app",
       androidParameters: const AndroidParameters(
-        packageName: "com.example.while_app",
+        packageName: "com.while.while_app",
         //minimumVersion: 20,
       ),
       iosParameters: const IOSParameters(
