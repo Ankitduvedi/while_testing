@@ -20,6 +20,7 @@ import 'package:get/get.dart';
 
 late Size mq;
 String? activeChatUserId;
+
 activechatid(WidgetRef ref, String id) {
   log('activechatid $id');
   FirebaseFirestore.instance
@@ -76,10 +77,25 @@ Future<void> initDynamicLinks() async {
   }
 }
 
+Future<void> updateReferralPoints(String userId) async {
+  final CollectionReference referralCollection =
+      FirebaseFirestore.instance.collection('referral');
+
+  await referralCollection.doc(userId).set({
+    'points': FieldValue.increment(1),
+  }, SetOptions(merge: true));
+}
+
 void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   final Uri deepLink = dynamicLinkData.link;
+  log('Dynamic link: $deepLink');
   final route = deepLink.queryParameters['screen'];
   final url = deepLink.queryParameters['url'];
+  final String? referralCode = deepLink.queryParameters['referralCode'];
+  if (referralCode != null) {
+    updateReferralPoints(referralCode);
+    return;
+  }
 
   if (route != null) {
     log('Navigating to $route with parameter: $url');
@@ -95,6 +111,7 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;

@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import '../data/model/community_user.dart';
 import '../data/model/message.dart';
+import 'dart:math' as maths;
 
 String userImage = '';
 final apisProvider = Provider<APIs>((ref) {
@@ -873,6 +874,45 @@ class APIs {
         await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
     log(dynamicLink.shortUrl.toString());
     return dynamicLink.shortUrl.toString();
+  }
+
+  Future<String> generateReferralDynamicLink(String referralCode) async {
+    final DynamicLinkParameters dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://while.co.in/app/?referralCode=$referralCode"),
+      uriPrefix: "https://while.co.in/app",
+      androidParameters: const AndroidParameters(
+        packageName: "com.example.while_app",
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: "com.example.app.ios",
+        appStoreId: "123456789",
+        minimumVersion: "1.0.1",
+      ),
+      googleAnalyticsParameters: const GoogleAnalyticsParameters(
+        source: "While",
+        medium: "social",
+        campaign: "example-promo",
+      ),
+    );
+
+    final ShortDynamicLink dynamicLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+
+    return dynamicLink.shortUrl.toString();
+  }
+
+  String generateUniqueCode() {
+    // Generate a timestamp-based string (e.g., milliseconds since epoch)
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Generate a random number (6 digits)
+    String randomNumber =
+        maths.Random().nextInt(999999).toString().padLeft(6, '0');
+
+    // Combine timestamp and random number to create a unique code
+    String uniqueCode = timestamp + randomNumber;
+
+    return uniqueCode;
   }
 
   Future<void> getFirebaseMessagingToken(String id) async {

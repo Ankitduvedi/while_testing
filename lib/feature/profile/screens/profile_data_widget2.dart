@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
+
+import '../../../providers/apis.dart';
 
 class ProfileDataWidget extends ConsumerWidget {
   const ProfileDataWidget({Key? key}) : super(key: key);
@@ -167,6 +170,20 @@ class ProfileDataWidget extends ConsumerWidget {
                   Color.fromRGBO(123, 68, 212, 1),
                 ],
               ),
+            ),
+            InkWell(
+              onTap: () async {
+                String uniqueCode =
+                    await ref.read(apisProvider).generateUniqueCode();
+                final url = await ref
+                    .read(apisProvider)
+                    .generateReferralDynamicLink(uniqueCode);
+                //generate url
+
+                // Share text
+                Share.share(url);
+              },
+              child: Text('share'),
             ),
           ],
         ),
