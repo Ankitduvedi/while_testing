@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/comingsoon.dart';
-import 'package:com.while.while_app/feature/reels/screens/reels_screen.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,8 +17,6 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'app_info_home.dart';
-import 'core/constant.dart';
-import 'feature/auth/controller/auth_controller.dart';
 import 'providers/user_provider copy.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
