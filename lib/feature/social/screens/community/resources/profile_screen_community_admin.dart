@@ -8,6 +8,7 @@ import 'package:com.while.while_app/feature/social/screens/community/resources/j
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import '../../../../../main.dart';
@@ -44,6 +45,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
+            final screenSize = ref.read(sizeProvider);
+
     String designation = "";
     List<ChatUser> list = [];
     final Community community = Community.empty();
@@ -97,12 +100,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           body: Form(
             key: _formKey,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+              padding: EdgeInsets.symmetric(horizontal: screenSize.width * .05),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     // for adding some space
-                    SizedBox(width: mq.width, height: mq.height * .03),
+                    SizedBox(width: screenSize.width, height: screenSize.height * .03),
 
                     //user profile picture
                     Stack(
@@ -113,19 +116,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             //local image
                             ClipRRect(
                                 borderRadius:
-                                    BorderRadius.circular(mq.height * .1),
+                                    BorderRadius.circular(screenSize.height * .1),
                                 child: Image.file(File(_image!),
-                                    width: mq.height * .2,
-                                    height: mq.height * .2,
+                                    width: screenSize.height * .2,
+                                    height: screenSize.height * .2,
                                     fit: BoxFit.cover))
                             :
                             //image from server
                             ClipRRect(
                                 borderRadius:
-                                    BorderRadius.circular(mq.height * .1),
+                                    BorderRadius.circular(screenSize.height * .1),
                                 child: CachedNetworkImage(
-                                  width: mq.height * .2,
-                                  height: mq.height * .2,
+                                  width: screenSize.height * .2,
+                                  height: screenSize.height * .2,
                                   filterQuality: FilterQuality.low,
                                   fit: BoxFit.cover,
                                   imageUrl: widget.community.image,
@@ -153,7 +156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
 
                     // for adding some space
-                    SizedBox(height: mq.height * .03),
+                    SizedBox(height: screenSize.height * .03),
 
                     // user email label
                     Text(widget.community.email,
@@ -161,7 +164,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             color: Colors.black54, fontSize: 16)),
 
                     // for adding some space
-                    SizedBox(height: mq.height * .05),
+                    SizedBox(height: screenSize.height * .05),
 
                     // name input field
                     TextFormField(
@@ -180,7 +183,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
 
                     // for adding some space
-                    SizedBox(height: mq.height * .02),
+                    SizedBox(height: screenSize.height * .02),
 
                     // about input field
                     TextFormField(
@@ -197,7 +200,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           hintText: 'eg. Feeling Happy',
                           label: const Text('About')),
                     ),
-                    SizedBox(height: mq.height * .02),
+                    SizedBox(height: screenSize.height * .02),
 
                     // domain input field
                     TextFormField(
@@ -214,7 +217,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           hintText: 'eg. Feeling Happy',
                           label: const Text('Domain')),
                     ),
-                    SizedBox(height: mq.height * .02),
+                    SizedBox(height: screenSize.height * .02),
 
                     // email input field
                     TextFormField(
@@ -233,13 +236,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
 
                     // for adding some space
-                    SizedBox(height: mq.height * .05),
+                    SizedBox(height: screenSize.height * .05),
 
                     // update profile button
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
-                          minimumSize: Size(mq.width * .5, mq.height * .06)),
+                          minimumSize: Size(screenSize.width * .5, screenSize.height * .06)),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
@@ -378,9 +381,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                                         list[index]
                                                                             .id,
                                                                         context);
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(); // Close the dialog
+                                                                                           context.pop();
+// Close the dialog
                                                               },
                                                               child: const Text(
                                                                   'Remove User'),
@@ -402,9 +404,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                                           .id,
                                                                       designation,
                                                                       context);
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
+                                                                                           context.pop();
+
                                                                 }
                                                               },
                                                               child: const Text(
@@ -480,6 +481,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   // bottom sheet for picking a profile picture for user
   void _showBottomSheet(fireservice) {
+            final screenSize = ref.read(sizeProvider);
+
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -489,7 +492,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           return ListView(
             shrinkWrap: true,
             padding:
-                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+                EdgeInsets.only(top: screenSize.height * .03, bottom: screenSize.height * .05),
             children: [
               //pick profile picture label
               const Text('Pick Profile Picture',
@@ -497,7 +500,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
               //for adding some space
-              SizedBox(height: mq.height * .02),
+              SizedBox(height: screenSize.height * .02),
 
               //buttons
               Row(
@@ -508,7 +511,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                          fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
@@ -524,13 +527,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           fireservice.updateProfilePictureCommunity(
                               File(_image!), widget.community.id);
                           // for hiding bottom sheet
-                          Navigator.pop(context);
+                            context.pop();
                         }
                       },
                       child: Icon(
                         Icons.image,
                         color: Colors.black,
-                        size: mq.width * .2,
+                        size: screenSize.width * .2,
                       )),
 
                   //take picture from camera button
@@ -538,7 +541,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                          fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
@@ -554,7 +557,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           fireservice.updateProfilePictureCommunity(
                               File(_image!), widget.community.id);
                           // for hiding bottom sheet
-                          Navigator.pop(context);
+                            context.pop();
                         }
                       },
                       child: Image.asset('images/camera.png')),

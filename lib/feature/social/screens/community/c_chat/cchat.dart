@@ -9,8 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/feature/social/screens/community/c_chat/community_message_card.dart';
-import '../../../../../data/model/chat_user.dart';
-import '../../../../../main.dart';
+ import '../../../../../main.dart';
 import '../../../../../providers/apis.dart';
 import '../../../../../data/model/community_user.dart';
 
@@ -34,7 +33,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   bool isset = false;
   @override
   void initState() {
-    // TODO: implement initState
+     
     setmessagestream();
     super.initState();
   }
@@ -78,8 +77,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   }
 
   void setmessagestream() async {
-    final currentuser = ref.watch(userDataProvider).userData;
-    if (isset == false)
+     if (isset == false) {
       setState(() {
         messageStream = FirebaseFirestore.instance
             .collection('communities')
@@ -89,11 +87,11 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
             .snapshots();
         isset = true;
       });
+    }
   }
 
   void sendMessage() {
-    print("Eneter");
-    notifyCommunity(widget.community.id,
+     notifyCommunity(widget.community.id,
         ref.read(userDataProvider).userData!.id, _textController.text);
 
     ref.read(socialControllerProvider.notifier).sendCommunityMessage(
@@ -105,7 +103,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   @override
   Widget build(BuildContext context) {
     // MediaQueryData instance for responsive UI
-    final mq = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
     setmessagestream();
 
     return GestureDetector(
@@ -130,10 +128,10 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
               _buildMessagesList(),
               if (_isUploading) _buildUploadingIndicator(),
               MessageBox(_textController, _focusNode, setEmoji, setUpload,
-                  sendMessage, uploadFile), // Pass 'mq' as an argument
+                  sendMessage, uploadFile), // Pass 'screenSize' as an argument
               if (_showEmoji)
                 SizedBox(
-                  height: mq.height * .35, // Use 'mq' for responsive design
+                  height: screenSize.height * .35, // Use 'screenSize' for responsive design
                   child: EmojiPicker(
                     textEditingController: _textController,
                     config: Config(
@@ -224,6 +222,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
 
   // bottom chat input field
   Widget _chatInput(BuildContext context, WidgetRef ref) {
+            final screenSize = ref.read(sizeProvider);
+
     return Material(
       color: Colors.transparent,
       elevation: 25,
@@ -231,9 +231,9 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
         color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.fromLTRB(
-              mq.width * .005, mq.height * .01, mq.width * .005, 0
+              screenSize.width * .005, screenSize.height * .01, screenSize.width * .005, 0
 
-              //vertical: mq.height * 0, horizontal: mq.width * .01
+              //vertical: screenSize.height * 0, horizontal: screenSize.width * .01
               ),
           child: Row(
             children: [
@@ -295,7 +295,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                                 color: Color.fromARGB(255, 108, 108, 108)),
                             border: InputBorder.none),
                       )),
-                      SizedBox(width: mq.width * .02),
+                      SizedBox(width: screenSize.width * .02),
                     ],
                   ),
                 ),

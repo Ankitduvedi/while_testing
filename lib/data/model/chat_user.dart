@@ -249,6 +249,6 @@ class ChatUser {
         lives: lives ?? this.lives,
         isContentCreator: isContentCreator ?? this.isContentCreator,
         isApproved: isApproved ?? this.isApproved,
-        tourPage: tourPage ?? this.tourPage);
+        tourPage: tourPage);
   }
 }

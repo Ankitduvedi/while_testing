@@ -9,20 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
+import 'package:go_router/go_router.dart';
+//userdataprovidercopy file use
 //user data provider
 final userProvider = StateProvider<ChatUser?>((ref) {
   return null;
 });
 //user authStateProvider
-final authControllerProvider =
-    StateNotifierProvider<AuthController, bool>((ref) {
-  return AuthController(
-      authRepository: ref.watch(authRepositoryProvider), ref: ref);
+final authControllerProvider = StateNotifierProvider<AuthController, bool>((ref) {
+  return AuthController(authRepository: ref.watch(authRepositoryProvider), ref: ref);
 });
 
-final toggleStateProvider = StateProvider<int>((ref) {
-  return 0; // Initial value is false
-});
+// final toggleStateProvider = StateProvider<int>((ref) {
+//   return 0; // Initial value is false
+// });
 
 final toggleSearchStateProvider = StateProvider<int>((ref) {
   return 0; // Initial value is false
@@ -65,47 +65,58 @@ class AuthController extends StateNotifier<bool> {
     final user = await _authRepository.signInWithGoogle(_ref);
     state = false;
     log("setting user data to userProv");
-    user.fold((l) => Utils.snackBar(l.message, context),
-        (r) => _ref.read(userProvider.notifier).update((state) => r));
-    ChatUser? userdata = _ref.read(userProvider.notifier).state;
+    user.fold((l) => Utils.snackBar(l.message, context), (r) {
+      _ref.read(userProvider.notifier).update((state) => r);
+      context.push('/');
+    });
   }
 
   void signOut(BuildContext context) async {
     state = true;
     final response = await _authRepository.signout();
     state = false;
-    response.fold((l) => Utils.snackBar(l.message, context), (r) => null);
+    response.fold((l) => Utils.snackBar(l.message, context), (r) {
+      context.pushReplacement('/splashScreen');
+      null;
+    });
   }
 
   void deleteAccount(BuildContext context) async {
     state = true;
     final response = await _authRepository.deleteAccount();
     state = false;
-    response.fold((l) => Utils.snackBar(l.message, context), (r) => null);
+    response.fold((l) => Utils.snackBar(l.message, context), (r) {
+      //clear secure storage too
+      context.go('/splashScreen');
+      null;
+    });
   }
 
   void getSnapshot() {
     _authRepository.getSnapshot();
   }
 
-  void loginWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
+  void loginWithEmailAndPassword(String email, String password, BuildContext context) async {
     state = true;
-    final user = await _authRepository.loginWithEmailAndPassword(
-        email, password, context);
-    user.fold((l) => Utils.snackBar(l.message, context),
-        (r) => _ref.read(userProvider.notifier).update((state) => r));
+    final user = await _authRepository.loginWithEmailAndPassword(email, password, context);
+    user.fold((l) => Utils.snackBar(l.message, context), (r) {
+      _ref.read(userProvider.notifier).update((state) => r);
+      context.push('/');
+    });
     state = false;
   }
 
-  void signInWithEmailAndPassword(
-      String email, String password, String name, BuildContext context) async {
+  void signInWithEmailAndPassword(String email, String password, String name, BuildContext context) async {
     state = true;
-    final response = await _authRepository.signInWithEmailAndPassword(
-        email, password, name, context);
+    final response = await _authRepository.signInWithEmailAndPassword(email, password, name, context);
 
-    response.fold((l) => Utils.snackBar(l.message, context),
-        (r) => _ref.read(userProvider.notifier).update((state) => r));
+    response.fold(
+      (l) => Utils.snackBar(l.message, context),
+      (r) {
+        _ref.read(userProvider.notifier).update((state) => r);
+        context.push('/loginScreen');
+      },
+    );
 
     state = false;
   }

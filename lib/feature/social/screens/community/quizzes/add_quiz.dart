@@ -1,5 +1,6 @@
 import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/quiz_model.dart';
@@ -76,7 +77,7 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
             .update({typeOfQuestion: numberOfQuestions});
         _clearFields();
       });
-      Navigator.pop(context);
+                            context.pop();
     }
   }
 
@@ -106,7 +107,8 @@ class AddQuestionScreenState extends State<AddQuestionScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>                             context.pop(),
+
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.lightBlueAccent,

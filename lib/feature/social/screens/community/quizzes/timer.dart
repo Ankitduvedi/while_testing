@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quiver/async.dart';
 
 class TimerDialog extends StatefulWidget {
@@ -29,7 +30,7 @@ class TimerDialogState extends State<TimerDialog> {
   void _startTimer() {
     _timer.listen((CountdownTimer timer) {
       if (timer.remaining.inSeconds == 0) {
-        Navigator.pop(context);
+                            context.pop();
       }
       setState(() {}); // Update the UI
     });
@@ -42,7 +43,7 @@ class TimerDialogState extends State<TimerDialog> {
       actions: [
         ElevatedButton(
           onPressed: () {
-            Navigator.pop(context);
+                            context.pop();
           },
           child: const Text('Close'),
         ),

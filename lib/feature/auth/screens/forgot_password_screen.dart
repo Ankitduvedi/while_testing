@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:com.while.while_app/core/resource_files/colors.dart';
 import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -75,7 +76,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                         style: TextStyle(color: AppColors.theme1Color),
                       ),
                       onTap: () {
-                        Navigator.of(context).pop();
+                            context.pop();
                       },
                     )
                   ],
@@ -101,6 +102,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
       log(e.toString()); // Utils.flushBarErrorMessage(e.message!, context);
     }
     // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+      context.pop();
   }
 }

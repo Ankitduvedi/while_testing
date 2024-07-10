@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 
 class MyVerify extends StatefulWidget {
@@ -42,7 +43,7 @@ class _MyVerifyState extends State<MyVerify> {
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+                            context.pop();
           },
           icon: const Icon(
             Icons.arrow_back_ios_rounded,

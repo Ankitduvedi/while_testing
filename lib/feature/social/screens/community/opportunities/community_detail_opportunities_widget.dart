@@ -1,11 +1,12 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/AddOpportunityScreen.dart';
-import 'package:com.while.while_app/providers/apis.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Opportunity {
   final String name;
@@ -113,12 +114,13 @@ class OpportunitiesScreen extends ConsumerWidget {
                         .doc(opportunity.id)
                         .delete();
                     // Add your delete logic here before popping the dialog
-                    Navigator.of(context).pop();
+                            context.pop();
                   },
                 ),
                 TextButton(
                   child: const Text('Close'),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () =>                             context.pop()
+
                 ),
               ],
             ),

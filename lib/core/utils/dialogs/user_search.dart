@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class UserSearch extends ConsumerStatefulWidget {
   const UserSearch({Key? key}) : super(key: key);
@@ -19,8 +20,7 @@ class _MyAppState extends ConsumerState<UserSearch> {
         appBar: AppBar(
             title: Card(
           child: TextField(
-            decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+            decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search...'),
             onChanged: (val) {
               setState(() {
                 name = val;
@@ -38,8 +38,7 @@ class _MyAppState extends ConsumerState<UserSearch> {
                 : ListView.builder(
                     itemCount: snapshots.data!.docs.length,
                     itemBuilder: (context, index) {
-                      var data = snapshots.data!.docs[index].data()
-                          as Map<String, dynamic>;
+                      var data = snapshots.data!.docs[index].data() as Map<String, dynamic>;
 
                       if (name.isEmpty) {
                         return ListTile(
@@ -48,50 +47,35 @@ class _MyAppState extends ConsumerState<UserSearch> {
                             data['name'],
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
                             data['email'],
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(data['profile']),
                           ),
                         );
                       }
-                      if (data['name']
-                          .toString()
-                          .toLowerCase()
-                          .startsWith(name.toLowerCase())) {
+                      if (data['name'].toString().toLowerCase().startsWith(name.toLowerCase())) {
                         return ListTile(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            context.pop();
                           },
                           title: Text(
                             data['name'],
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
                             data['email'],
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(data['profile']),

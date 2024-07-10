@@ -8,6 +8,7 @@ import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../data/model/chat_user.dart';
@@ -38,6 +39,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
     final userProvider = ref.watch(userDataProvider);
     final user = userProvider.userData;
     final ChatUser updatedUser = user!;
+    final screenSize = ref.read(sizeProvider);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -56,39 +58,32 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
         body: Form(
           key: _formKey,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * .05),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(width: mq.width, height: mq.height * .03),
+                  SizedBox(width: screenSize.width, height: screenSize.height * .03),
                   _image != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(mq.height * .1),
-                          child: Image.file(File(_image!),
-                              width: mq.height * .2,
-                              height: mq.height * .2,
-                              fit: BoxFit.cover))
+                      ? ClipRRect(borderRadius: BorderRadius.circular(screenSize.height * .1), child: Image.file(File(_image!), width: screenSize.height * .2, height: screenSize.height * .2, fit: BoxFit.cover))
                       : ClipRRect(
-                          borderRadius: BorderRadius.circular(mq.height * .1),
+                          borderRadius: BorderRadius.circular(screenSize.height * .1),
                           child: CachedNetworkImage(
-                            width: mq.height * .2,
-                            height: mq.height * .2,
+                            width: screenSize.height * .2,
+                            height: screenSize.height * .2,
                             filterQuality: FilterQuality.low,
                             fit: BoxFit.cover,
                             imageUrl: user.image,
-                            errorWidget: (context, url, error) =>
-                                const CircleAvatar(
-                                    child: Icon(CupertinoIcons.person)),
+                            errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
                           ),
                         ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   GradientFilledButton(
                     text: 'Change Picture',
                     onPressed: () {
                       _showBottomSheet();
                     },
                   ),
-                  SizedBox(height: mq.height * .04),
+                  SizedBox(height: screenSize.height * .04),
                   TextFormField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -97,12 +92,10 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                     ),
                     initialValue: user.about,
                     onSaved: (val) => updatedUser.about = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
                     decoration: InputDecoration(
                         prefixIcon: const Icon(CupertinoIcons.info_circle),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         hintText: 'eg. Feeling Happy',
                         label: Text(
                           'About',
@@ -113,7 +106,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           ),
                         )),
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   TextFormField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -131,19 +124,16 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                       );
                       if (picked != null) {
                         setState(() {
-                          _dobController.text =
-                              "${picked.toLocal()}".split(' ')[0];
+                          _dobController.text = "${picked.toLocal()}".split(' ')[0];
                           updatedUser.dateOfBirth = _dobController.text;
                         });
                       }
                     },
                     onSaved: (val) => updatedUser.dateOfBirth = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
                     decoration: InputDecoration(
                         prefixIcon: const Icon(CupertinoIcons.calendar),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         hintText: 'YYYY//MM//DD',
                         label: Text('Date Of Birth',
                             style: GoogleFonts.spaceGrotesk(
@@ -152,7 +142,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                               fontSize: 18,
                             ))),
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   TextFormField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -161,13 +151,10 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                     ),
                     initialValue: user.gender,
                     onSaved: (val) => updatedUser.gender = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
                     decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                            CupertinoIcons.person_crop_circle_badge_exclam),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        prefixIcon: const Icon(CupertinoIcons.person_crop_circle_badge_exclam),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         hintText: 'Male/ Female/ Not to disclose',
                         label: Text('Gender',
                             style: GoogleFonts.spaceGrotesk(
@@ -176,7 +163,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                               fontSize: 18,
                             ))),
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   TextFormField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -185,12 +172,10 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                     ),
                     initialValue: user.place,
                     onSaved: (val) => updatedUser.place = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
                     decoration: InputDecoration(
                         prefixIcon: const Icon(CupertinoIcons.placemark),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         hintText: 'India',
                         label: Text('Place',
                             style: GoogleFonts.spaceGrotesk(
@@ -199,7 +184,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                               fontSize: 18,
                             ))),
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   TextFormField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -208,13 +193,10 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                     ),
                     initialValue: user.profession,
                     onSaved: (val) => updatedUser.profession = val ?? '',
-                    validator: (val) =>
-                        val != null && val.isNotEmpty ? null : 'Required Field',
+                    validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
                     decoration: InputDecoration(
-                        prefixIcon:
-                            const Icon(CupertinoIcons.person_badge_plus),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                        prefixIcon: const Icon(CupertinoIcons.person_badge_plus),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         hintText: 'Student/ Engineer/ etc..',
                         label: Text('Profession',
                             style: GoogleFonts.spaceGrotesk(
@@ -223,7 +205,7 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                               fontSize: 18,
                             ))),
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   IntlPhoneField(
                     style: GoogleFonts.spaceGrotesk(
                       color: const Color.fromARGB(255, 74, 70, 70),
@@ -254,15 +236,14 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                           )),
                     ),
                   ),
-                  SizedBox(height: mq.height * .04),
+                  SizedBox(height: screenSize.height * .04),
                   GradientFilledbutton(
                     text: 'Update',
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         userProvider.updateUserData(updatedUser);
-                        Dialogs.showSnackbar(
-                            context, 'Profile Updated Successfully!');
+                        Dialogs.showSnackbar(context, 'Profile Updated Successfully!');
                       }
                     },
                   ),
@@ -280,24 +261,20 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
 
   // bottom sheet for picking a profile picture for user
   void _showBottomSheet() {
+    final screenSize = ref.read(sizeProvider);
     showModalBottomSheet(
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         builder: (_) {
           return ListView(
             shrinkWrap: true,
-            padding:
-                EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .05),
+            padding: EdgeInsets.only(top: screenSize.height * .03, bottom: screenSize.height * .05),
             children: [
               //pick profile picture label
-              const Text('Pick Profile Picture',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              const Text('Pick Profile Picture', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
               //for adding some space
-              SizedBox(height: mq.height * .02),
+              SizedBox(height: screenSize.height * .02),
 
               //buttons
               Row(
@@ -305,64 +282,52 @@ class _ProfileScreenState extends ConsumerState<EditUserProfileScreen> {
                 children: [
                   //pick from gallery button
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const CircleBorder(), fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 80);
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
                             _image = image.path;
                           });
 
-                          ref
-                              .read(apisProvider)
-                              .updateProfilePicture(File(_image!));
+                          ref.read(apisProvider).updateProfilePicture(File(_image!));
                           // for hiding bottom sheet
-                          Navigator.pop(context);
+                            context.pop();
                         }
                       },
                       child: Icon(
                         Icons.image,
                         color: Colors.black,
-                        size: mq.width * .2,
+                        size: screenSize.width * .2,
                       )),
 
                   //take picture from camera button
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const CircleBorder(), fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 80);
+                        final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
                             _image = image.path;
                           });
 
-                          ref
-                              .read(apisProvider)
-                              .updateProfilePicture(File(_image!));
+                          ref.read(apisProvider).updateProfilePicture(File(_image!));
                           // for hiding bottom sheet
-                          Navigator.pop(context);
+                            context.pop();
                         }
                       },
                       child: Icon(
                         Icons.camera_alt,
                         color: Colors.black,
-                        size: mq.width * .2,
+                        size: screenSize.width * .2,
                       )),
                 ],
               )

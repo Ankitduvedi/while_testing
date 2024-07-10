@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/feature/upload/screens/upload_screen.dart';
-import 'package:com.while.while_app/core/routes/routes_name.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,12 +33,12 @@ class UploadRepository {
       }
 
       // _selectedVideo = File(pickedFile.path);
-      final String routeName =
-          (type == 'Video') ? RoutesName.addVideo : RoutesName.addReel;
+      // final String routeName =
+      //     (type == 'Video') ? RoutesName.addVideo : RoutesName.addReel;
 
       // Now return both the route name and the _selectedVideo.
       return right(VideoSelectionResult(
-          routeName: routeName, selectedVideo: pickedFile));
+          routeName: "", selectedVideo: pickedFile));
     } catch (e) {
       return left(Failure(
           message:

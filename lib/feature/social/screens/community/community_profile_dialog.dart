@@ -1,35 +1,38 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../main.dart';
 import '../../../../data/model/community_user.dart';
 
-class CommunityProfileDialog extends StatelessWidget {
+class CommunityProfileDialog extends ConsumerWidget {
   const CommunityProfileDialog({super.key, required this.user});
 
   final Community user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+            final screenSize = ref.read(sizeProvider);
+
     return AlertDialog(
       contentPadding: const EdgeInsets.only(bottom: 20),
       backgroundColor: Colors.white.withOpacity(.9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       content: SizedBox(
-          width: mq.width * .6,
-          height: mq.height * .35,
+          width: screenSize.width * .6,
+          height: screenSize.height * .35,
           child: Padding(
-            padding: EdgeInsets.only(right: mq.width * .06),
+            padding: EdgeInsets.only(right: screenSize.width * .06),
             child: Stack(
               children: [
                 //user profile picture
                 Positioned(
-                  top: mq.height * .075,
-                  left: mq.width * .06,
+                  top: screenSize.height * .075,
+                  left: screenSize.width * .06,
                   child: ClipRRect(
                     // borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                     child: CachedNetworkImage(
-                      width: mq.width * .6,
+                      width: screenSize.width * .6,
                       fit: BoxFit.fill,
                       imageUrl: user.image,
                       errorWidget: (context, url, error) => const CircleAvatar(
@@ -40,9 +43,9 @@ class CommunityProfileDialog extends StatelessWidget {
 
                 //user name
                 Positioned(
-                  left: mq.width * .06,
-                  top: mq.height * .02,
-                  width: mq.width * .55,
+                  left: screenSize.width * .06,
+                  top: screenSize.height * .02,
+                  width: screenSize.width * .55,
                   child: Text(user.name,
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.w600)),

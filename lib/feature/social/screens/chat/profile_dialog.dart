@@ -3,22 +3,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../main.dart';
 import '../../../../data/model/chat_user.dart';
 
-class ProfileDialog extends StatelessWidget {
+class ProfileDialog extends ConsumerWidget {
   const ProfileDialog({super.key, required this.user});
 
   final ChatUser user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+            final screenSize = ref.read(sizeProvider);
+
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: Container(
-        width: mq.width * 0.7,
-        height: mq.height * 0.4,
+        width: screenSize.width * 0.7,
+        height: screenSize.height * 0.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
@@ -46,7 +49,7 @@ class ProfileDialog extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
                     child: CachedNetworkImage(
-                      height: mq.height * 0.4,
+                      height: screenSize.height * 0.4,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       imageUrl: user.image,
@@ -79,8 +82,8 @@ class ProfileDialog extends StatelessWidget {
 
               // User name
               Positioned(
-                left: mq.width * 0.06,
-                bottom: mq.height * 0.03,
+                left: screenSize.width * 0.06,
+                bottom: screenSize.height * 0.03,
                 child: Hero(
                   tag:
                       'userName_${user.id}', // Unique tag for the hero animation
@@ -107,7 +110,7 @@ class ProfileDialog extends StatelessWidget {
                     return InkWell(
                       onTap: () {
                         // For hiding image dialog
-                        Navigator.pop(context);
+                            context.pop();
 
                         // Move to view profile screen with a subtle fade
                         Navigator.push(

@@ -1,15 +1,17 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:com.while.while_app/providers/chat_sqLite_provider.dart';
-
+ 
 class ChatDatabaseHelper {
   Database? _database;
 
   Future<Database?> get database async {
     if (_database != null) {
       return _database;
-    } else
+    } else {
       _database = await initializeDatabase();
+    }
     return _database!;
   }
 

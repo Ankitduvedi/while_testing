@@ -1,12 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
+ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/main.dart';
+ import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -58,25 +57,25 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
     );
 
     if (response.statusCode == 200) {
-      print("videoId: $videoId");
+      log("videoId: $videoId");
       FirebaseFirestore.instance
           .collection('videos')
           .doc(widget.category)
           .collection(widget.category)
           .doc(videoId)
           .update({"thumbnail": thumnailUrl});
-      var userId = ref.read(userDataProvider)!.userData?.id;
+      var userId = ref.read(userDataProvider).userData?.id;
       FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .collection('videos')
           .doc(videoId)
           .update({"thumbnail": thumnailUrl});
-      print('Thumbnail updated successfully');
+      log('Thumbnail updated successfully');
     } else {
-      print('Request failed with status: ${response.statusCode}');
+      log('Request failed with status: ${response.statusCode}');
     }
-    Navigator.pop(context);
+                            context.pop();
   }
 
   void _uploadThumnail() async {
@@ -101,20 +100,22 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
       );
 
       if (response.statusCode == 201) {
-        print('File uploaded successfully');
+        log('File uploaded successfully');
         downloadUrl = 'https://while3.b-cdn.net/$fileName';
         updateThumbnail(downloadUrl, widget.videoId);
       } else {
-        print(
+        log(
             'Failed to upload file: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      print('An error occurred: $e');
+      log('An error occurred: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+        final screenSize = ref.read(sizeProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select Thumbnail"),
@@ -136,7 +137,7 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     width: double.infinity,
-                    height: mq.height / 1.5,
+                    height: screenSize.height / 1.5,
                     decoration: BoxDecoration(
                       // Optional: Border
                       border: Border.all(

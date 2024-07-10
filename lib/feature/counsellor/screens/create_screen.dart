@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../providers/user_provider.dart';
 
 class CounsellorScreen extends river.ConsumerStatefulWidget {
   const CounsellorScreen({Key? key}) : super(key: key);

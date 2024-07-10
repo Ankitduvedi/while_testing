@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../providers/apis.dart';
 import '../../../../core/utils/dialogs/dialogs.dart';
 import '../../../../core/utils/my_date_util.dart';
@@ -35,6 +36,8 @@ class _MessageCardState extends ConsumerState<MessageCard> {
 
   // sender or another user message
   Widget _blueMessage(fireservice) {
+        final screenSize = ref.read(sizeProvider);
+
     //update last read message if sender and receiver are different
     if (widget.message.read.isEmpty) {
       fireservice.updateMessageReadStatus(widget.message);
@@ -47,10 +50,10 @@ class _MessageCardState extends ConsumerState<MessageCard> {
         Flexible(
           child: Container(
             padding: EdgeInsets.all(widget.message.type == Type.image
-                ? mq.width * .03
-                : mq.width * .04),
+                ? screenSize.width * .03
+                : screenSize.width * .04),
             margin: EdgeInsets.symmetric(
-                horizontal: mq.width * .04, vertical: mq.height * .01),
+                horizontal: screenSize.width * .04, vertical: screenSize.height * .01),
             decoration: const BoxDecoration(
                 color: Colors.white,
                 //border: Border.all(color: Colors.grey.shade800),
@@ -85,7 +88,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
 
         //message time
         Padding(
-          padding: EdgeInsets.only(right: mq.width * .04),
+          padding: EdgeInsets.only(right: screenSize.width * .04),
           child: Text(
             MyDateUtil.getFormattedTime(
                 context: context, time: widget.message.sent),
@@ -98,6 +101,8 @@ class _MessageCardState extends ConsumerState<MessageCard> {
 
   // our or user message
   Widget _greenMessage() {
+            final screenSize = ref.read(sizeProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -105,7 +110,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
         Row(
           children: [
             //for adding some space
-            SizedBox(width: mq.width * .04),
+            SizedBox(width: screenSize.width * .04),
 
             //double tick blue icon for message read
             if (widget.message.read.isNotEmpty)
@@ -128,10 +133,10 @@ class _MessageCardState extends ConsumerState<MessageCard> {
         Flexible(
           child: Container(
             padding: EdgeInsets.all(widget.message.type == Type.image
-                ? mq.width * .03
-                : mq.width * .04),
+                ? screenSize.width * .03
+                : screenSize.width * .04),
             margin: EdgeInsets.symmetric(
-                horizontal: mq.width * .04, vertical: mq.height * .01),
+                horizontal: screenSize.width * .04, vertical: screenSize.height * .01),
             decoration: const BoxDecoration(
                 color: Colors.blueAccent,
                 //border: Border.all(color: Colors.grey.shade800),
@@ -169,6 +174,8 @@ class _MessageCardState extends ConsumerState<MessageCard> {
 
   // bottom sheet for modifying message details
   void _showBottomSheet(bool isMe, fireservice) {
+            final screenSize = ref.read(sizeProvider);
+
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -182,7 +189,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
               Container(
                 height: 4,
                 margin: EdgeInsets.symmetric(
-                    vertical: mq.height * .015, horizontal: mq.width * .4),
+                    vertical: screenSize.height * .015, horizontal: screenSize.width * .4),
                 decoration: BoxDecoration(
                     color: Colors.grey, borderRadius: BorderRadius.circular(8)),
               ),
@@ -199,7 +206,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                                 ClipboardData(text: widget.message.msg))
                             .then((value) {
                           //for hiding bottom sheet
-                          Navigator.pop(context);
+                            context.pop();
 
                           Dialogs.showSnackbar(context, 'Text Copied!');
                         });
@@ -217,7 +224,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                                   albumName: 'We Chat')
                               .then((success) {
                             //for hiding bottom sheet
-                            Navigator.pop(context);
+                            context.pop();
                             if (success != null && success) {
                               Dialogs.showSnackbar(
                                   context, 'Image Successfully Saved!');
@@ -232,8 +239,8 @@ class _MessageCardState extends ConsumerState<MessageCard> {
               if (isMe)
                 Divider(
                   color: Colors.black54,
-                  endIndent: mq.width * .04,
-                  indent: mq.width * .04,
+                  endIndent: screenSize.width * .04,
+                  indent: screenSize.width * .04,
                 ),
 
               //edit option
@@ -243,7 +250,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                     name: 'Edit Message',
                     onTap: () {
                       //for hiding bottom sheet
-                      Navigator.pop(context);
+                            context.pop();
 
                       _showMessageUpdateDialog(fireservice);
                     }),
@@ -259,15 +266,15 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                           .deleteMessage(widget.message)
                           .then((value) {
                         //for hiding bottom sheet
-                        Navigator.pop(context);
+                            context.pop();
                       });
                     }),
 
               //separator or divider
               Divider(
                 color: Colors.black54,
-                endIndent: mq.width * .04,
-                indent: mq.width * .04,
+                endIndent: screenSize.width * .04,
+                indent: screenSize.width * .04,
               ),
 
               //sent time
@@ -330,7 +337,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                 MaterialButton(
                     onPressed: () {
                       //hide alert dialog
-                      Navigator.pop(context);
+                            context.pop();
                     },
                     child: const Text(
                       'Cancel',
@@ -341,7 +348,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                 MaterialButton(
                     onPressed: () {
                       //hide alert dialog
-                      Navigator.pop(context);
+                            context.pop();
                       fireservice.updateMessage(widget.message, updatedMsg);
                     },
                     child: const Text(
@@ -354,7 +361,7 @@ class _MessageCardState extends ConsumerState<MessageCard> {
 }
 
 //custom options card (for copy, edit, delete, etc.)
-class _OptionItem extends StatelessWidget {
+class _OptionItem extends ConsumerWidget {
   final Icon icon;
   final String name;
   final VoidCallback onTap;
@@ -363,14 +370,16 @@ class _OptionItem extends StatelessWidget {
       {required this.icon, required this.name, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef  ref) {
+            final screenSize = ref.read(sizeProvider);
+
     return InkWell(
         onTap: () => onTap(),
         child: Padding(
           padding: EdgeInsets.only(
-              left: mq.width * .05,
-              top: mq.height * .015,
-              bottom: mq.height * .015),
+              left: screenSize.width * .05,
+              top: screenSize.height * .015,
+              bottom: screenSize.height * .015),
           child: Row(children: [
             icon,
             Flexible(

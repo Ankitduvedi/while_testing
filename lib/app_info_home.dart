@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -20,7 +22,7 @@ List<TargetFocus> addSiteTargetPage(
           align: ContentAlign.top,
           builder: (context, controller) {
             return Container(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,7 +59,7 @@ List<TargetFocus> addSiteTargetPage(
             align: ContentAlign.top,
             builder: (context, controller) {
               return Container(
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -94,7 +96,7 @@ List<TargetFocus> addSiteTargetPage(
           align: ContentAlign.top,
           builder: (context, controller) {
             return Container(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -130,7 +132,7 @@ List<TargetFocus> addSiteTargetPage(
           align: ContentAlign.top,
           builder: (context, controller) {
             return Container(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -166,7 +168,7 @@ List<TargetFocus> addSiteTargetPage(
           align: ContentAlign.top,
           builder: (context, controller) {
             return Container(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -181,7 +183,7 @@ List<TargetFocus> addSiteTargetPage(
                   SizedBox(height: 10),
                   Text(
                     'Manage your profile',
-                    style: TextStyle(
+                    style:   TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                     ),

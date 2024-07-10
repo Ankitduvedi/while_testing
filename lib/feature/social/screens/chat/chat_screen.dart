@@ -12,6 +12,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../providers/apis.dart';
@@ -106,6 +107,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     setmessagestream();
     print("hi everyone");
+      final screenSize = ref.read(sizeProvider);
 
     final fireService = ref.watch(
         apisProvider); // Changed from read to watch if using inside build for reactivity
@@ -143,7 +145,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   fireService.sendChatImage,
                 ),
                 if (_showEmoji)
-                  SizedBox(height: mq.height * .35, child: _buildEmojiPicker()),
+                  SizedBox(height: screenSize.height * .35, child: _buildEmojiPicker()),
               ],
             ),
           ),
@@ -162,7 +164,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             children: [
               //back button
               IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () =>                             context.pop(),
                   icon: const Icon(Icons.arrow_back, color: Colors.black)),
 
               //user profile picture

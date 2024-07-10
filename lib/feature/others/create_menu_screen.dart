@@ -1,6 +1,7 @@
 import 'package:com.while.while_app/core/utils/buttons/container_button.dart';
 import 'package:com.while.while_app/core/utils/containers_widgets/menu_container.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateMenuScreen extends StatelessWidget {
   const CreateMenuScreen({super.key});
@@ -14,7 +15,7 @@ class CreateMenuScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+                            context.pop();
             },
             icon: const Icon(Icons.arrow_back, color: Colors.black)),
         title: const Row(

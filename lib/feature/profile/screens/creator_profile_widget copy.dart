@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 
@@ -28,6 +29,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
 
   @override
   Widget build(BuildContext context) {
+        final screenSize = ref.read(sizeProvider);
+
     return Scaffold(
         backgroundColor: Colors.white,
         body: StreamBuilder<QuerySnapshot>(
@@ -73,11 +76,11 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                             padding: const EdgeInsets.all(8.0),
                             child: ClipRRect(
                               borderRadius:
-                                  BorderRadius.circular(mq.height * .01),
+                                  BorderRadius.circular(screenSize.height * .01),
                               child: CachedNetworkImage(
-                                height: mq.width / 3,
+                                height: screenSize.width / 3,
                                 fit: BoxFit.cover,
-                                width: mq.width / 2,
+                                width: screenSize.width / 2,
                                 imageUrl: videoList[index].thumbnail,
                                 errorWidget: (context, url, error) =>
                                     const CircleAvatar(
@@ -92,7 +95,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  width: mq.width / 3,
+                                  width: screenSize.width / 3,
                                   child: Text(
                                     videoList[index].title,
                                     maxLines: 1,
@@ -104,7 +107,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: mq.width / 3,
+                                  width: screenSize.width / 3,
                                   child: Text(
                                     videoList[index].description,
                                     maxLines: 2,
@@ -192,14 +195,14 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                            context.pop();
                   // Perform the action for Option 2
                 },
                 child: const Text('Option 2'),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                            context.pop();
                   var userId = ref.read(userDataProvider).userData?.id;
                   ref
                       .read(apisProvider)

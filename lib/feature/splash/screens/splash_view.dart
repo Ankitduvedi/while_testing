@@ -1,34 +1,35 @@
 import 'dart:async';
+import 'package:com.while.while_app/feature/splash/screens/animation/splash_animation.dart';
+import 'package:com.while.while_app/feature/splash/screens/controller/splash_controller.dart';
+import 'package:com.while.while_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:com.while.while_app/core/routes/routes_name.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _bounceAnimation;
-  List<String> letters = [
-    'W',
-    'H',
-    'I',
-    'L',
-    'E'
-  ]; // Update letters for "WHILE"
+class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
+   AnimationController? _controller;
+  Animation<double>? _scaleAnimation;
+  Animation<double>? _fadeAnimation;
+  Animation<double>? _bounceAnimation;
+  List<String> letters = ['W', 'H', 'I', 'L', 'E'];
   List<Widget> animatedLetters = [];
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
+    Future.delayed(const Duration(seconds: 2)).then((value) async {
+      ref.read(sizeProvider.notifier).state = MediaQuery.of(context).size;
+      final splashInitilise = ref.read(SplashControllerProvider);
+      splashInitilise.intializeWhile(context);
+      splashInitilise.checkCondition(context);
+    });
     // Initialize the animation controller
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
@@ -38,39 +39,35 @@ class SplashScreenState extends State<SplashScreen>
     // Create scale and fade animations
     _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: _controller!,
         curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
       ),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: _controller!,
         curve: const Interval(0.7, 1.0, curve: Curves.easeIn),
       ),
     );
 
+    @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
+  }
+
+
     // Create a bounce animation
     _bounceAnimation = Tween<double>(begin: 0, end: 30).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: _controller!,
         curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
       ),
     );
+    _controller!.forward();
 
-    // Start the animation when the widget is initialized
-    _controller.forward();
-
-    // Start the timer to navigate to the next screen
-    Timer(const Duration(seconds: 1), navigationPage);
-
-    // Start animating letters
     animateLetters();
-  }
-
-  void navigationPage() {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(context, RoutesName.wrapper);
   }
 
   void animateLetters() {
@@ -83,7 +80,7 @@ class SplashScreenState extends State<SplashScreen>
               Text(
                 letters[_currentIndex],
                 style: const TextStyle(
-                  fontSize: 48.0, // Adjust the font size as needed
+                  fontSize: 48.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -98,30 +95,23 @@ class SplashScreenState extends State<SplashScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Set background color to black
       body: Stack(
         children: [
-          // Animated Background Particles
           const AnimatedBackgroundParticles(),
           Center(
             child: AnimatedBuilder(
-              animation: _controller,
+              animation: _controller!,
               builder: (context, child) {
                 return Transform.scale(
-                  scale: _scaleAnimation.value,
+                  scale: _scaleAnimation!.value,
                   child: Opacity(
-                    opacity: _fadeAnimation.value,
+                    opacity: _fadeAnimation!.value,
                     child: Transform.translate(
-                      offset: Offset(0, -_bounceAnimation.value),
+                      offset: Offset(0, -_bounceAnimation!.value),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: animatedLetters,
@@ -138,29 +128,3 @@ class SplashScreenState extends State<SplashScreen>
   }
 }
 
-class AnimatedBackgroundParticles extends StatefulWidget {
-  const AnimatedBackgroundParticles({super.key});
-  @override
-  AnimatedBackgroundParticlesState createState() =>
-      AnimatedBackgroundParticlesState();
-}
-
-class AnimatedBackgroundParticlesState
-    extends State<AnimatedBackgroundParticles> {
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 2),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.blue,
-            Colors.deepPurple,
-          ],
-        ),
-      ),
-    );
-  }
-}

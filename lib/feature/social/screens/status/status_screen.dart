@@ -9,6 +9,7 @@ import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -173,7 +174,8 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
           actions: [
             TextButton(
               child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () =>                             context.pop()
+
             ),
             TextButton(
               child: const Text('Post'),
@@ -182,7 +184,7 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
                 ref
                     .read(apisProvider)
                     .postStatus(imageFile, _statusTextController.text);
-                Navigator.of(context).pop();
+                            context.pop();
               },
             ),
           ],

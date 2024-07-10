@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/opportunities/community_detail_opportunities_widget.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -27,7 +28,8 @@ class AddOpportunityScreenState extends State<AddOpportunityScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>                             context.pop(),
+
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.lightBlueAccent,

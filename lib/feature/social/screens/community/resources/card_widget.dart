@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyCardWidget extends StatelessWidget {
@@ -25,9 +26,9 @@ class MyCardWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
-                const Color(0xFFF2F2F2),
+                Color(0xFFF2F2F2),
                 Color.fromARGB(255, 242, 208, 192),
               ],
               begin: Alignment.topLeft,
@@ -38,7 +39,7 @@ class MyCardWidget extends StatelessWidget {
             leading: Icon(iconData, size: 40),
             title: Text(
               resource['title'] ?? 'No Title', // handle null titles
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
             ),
             subtitle: Text(
@@ -77,15 +78,15 @@ class MyCardWidget extends StatelessWidget {
       context: context,
       position: position,
       items: <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
+        const PopupMenuItem<String>(
           value: 'Option1',
           child: Text('Details'),
         ),
-        PopupMenuItem<String>(
+        const PopupMenuItem<String>(
           value: 'Option2',
           child: Text('Download'),
         ),
-        PopupMenuItem<String>(
+        const PopupMenuItem<String>(
           value: 'Option3',
           child: Text('Delete'),
         ),
@@ -113,7 +114,7 @@ class MyCardWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             'Resource Details',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -123,7 +124,7 @@ class MyCardWidget extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Name : ',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -131,17 +132,17 @@ class MyCardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${resource['title'] ?? 'No name provided '}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.visible,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Description : ',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -151,17 +152,17 @@ class MyCardWidget extends StatelessWidget {
                         resource['text'] != null && resource['text'].isNotEmpty
                             ? resource['text']
                             : 'No description provided',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.visible,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'File Type :',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -169,7 +170,7 @@ class MyCardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         ' ${resource['type'] ?? 'No type specified'}',
-                        style: TextStyle(fontSize: 15),
+                        style: const TextStyle(fontSize: 15),
                         overflow: TextOverflow.visible,
                       ),
                     ),
@@ -180,9 +181,9 @@ class MyCardWidget extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: const Text('Close'),
               onPressed: () {
-                Navigator.of(context).pop();
+                            context.pop();
               },
             ),
           ],
@@ -201,15 +202,16 @@ class MyCardWidget extends StatelessWidget {
       builder: (BuildContext context) {
         print(user.id);
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this item?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this item?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+              onPressed: () =>                             context.pop()
+
             ),
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () {
                 print('lalalalalala');
                 _firestore
@@ -218,7 +220,7 @@ class MyCardWidget extends StatelessWidget {
                     .collection('resources')
                     .doc('${resource['id']}')
                     .delete();
-                Navigator.of(context).pop();
+                            context.pop();
               },
             ),
           ],

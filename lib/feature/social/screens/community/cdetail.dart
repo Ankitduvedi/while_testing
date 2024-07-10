@@ -8,6 +8,7 @@ import 'package:com.while.while_app/feature/social/screens/community/quizzes/com
 import 'package:com.while.while_app/feature/social/screens/community/resources/profile_screen_community_admin.dart';
 import 'package:com.while.while_app/feature/social/screens/community/resources/profileCommunity_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../main.dart';
 import 'c_chat/cchat.dart';
 import '../../../../data/model/community_user.dart';
@@ -44,6 +45,8 @@ class _CCommunityDetailScreenState
   @override
   Widget build(BuildContext context) {
     var keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+            final screenSize = ref.read(sizeProvider);
+
     log(keyboardSpace.toString());
     List items = [
       CChatScreen(
@@ -85,7 +88,8 @@ class _CCommunityDetailScreenState
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () =>                             context.pop(),
+
                   icon: const Icon(Icons.arrow_back, color: Colors.black)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -172,7 +176,7 @@ class _CCommunityDetailScreenState
 
           SingleChildScrollView(
             child: SizedBox(
-              height: mq.height - keyboardSpace - mq.height / 5.2,
+              height:screenSize.height - keyboardSpace -screenSize.height / 5.2,
               child: items[current],
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:com.while.while_app/feature/intro_screens/intro_page_4.dart';
 import 'package:com.while.while_app/feature/intro_screens/intro_page_5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:developer';
@@ -73,7 +74,8 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                   // Skip
                   GestureDetector(
                       onTap: () {
-                        _controller.jumpToPage(4); // Jump to the last page
+                        // ref.read(toggleStateProvider.notifier).state = 1;
+                        context.push('/loginScreen');
                       },
                       child: Text(
                         "Skip",
@@ -88,7 +90,9 @@ class OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                   GestureDetector(
                     onTap: () {
                       if (currentPage == 4) {
-                        ref.read(toggleStateProvider.notifier).state = 1;
+                        // log("notifying toggler");
+                        // ref.read(toggleStateProvider.notifier).state = 1;
+                        context.push('/loginScreen');
                       } else {
                         _controller.nextPage(
                           duration: const Duration(milliseconds: 500),

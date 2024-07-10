@@ -5,6 +5,7 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -117,7 +118,8 @@ class AddCommunityScreen {
                     borderRadius: BorderRadius.circular(8)),
                 elevation: 4,
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () =>                             context.pop(),
+
               child: const Text('Discard',
                   style: TextStyle(color: Colors.black, fontSize: 16))),
           ElevatedButton(

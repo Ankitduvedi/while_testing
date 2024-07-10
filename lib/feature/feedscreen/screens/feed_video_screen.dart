@@ -14,10 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
-import '../../../main.dart';
 import 'creator_feed_screen_widget.dart';
 
 class VideoScreen extends ConsumerStatefulWidget {
@@ -44,7 +44,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
       '240p'; // Initial quality, can be dynamic based on API or default
   @override
   void initState() {
-    url = 'https://${CDNHostname}/${widget.video.id}/240p/video.m3u8';
+    url = 'https://$CDNHostname/${widget.video.id}/240p/video.m3u8';
     super.initState();
     _initializePlayer();
     increaseView();
@@ -59,7 +59,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   }
 
   void increaseView() {
-    print("id: ${widget.video.id}");
+    log("id: ${widget.video.id}");
 
     FirebaseFirestore.instance
         .collection('videos')
@@ -75,13 +75,13 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     await _chewieController?.pause();
     await _videoPlayerController.pause();
     _initializeVideoPlayer(quality);
-    Navigator.pop(context);
+                            context.pop();
   }
 
   void _initializeVideoPlayer(String quality) {
     List<String> parts = widget.video.videoUrl.split('/play');
     String baseVideoUrl = parts[0];
-    final videoUrl = '${baseVideoUrl}/play_$quality.mp4';
+    final videoUrl = '$baseVideoUrl/play_$quality.mp4';
     setState(() {
       _videoPlayerController =
           VideoPlayerController.network(widget.video.videoUrl)
@@ -110,7 +110,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   }
 
   Future<List<String>> getResolution(String videoId, String libraryId) async {
-    print("videoId: $videoId, libraryId: $libraryId ${widget.video.videoUrl}");
+    log("videoId: $videoId, libraryId: $libraryId ${widget.video.videoUrl}");
     var url = Uri.parse(
         'https://video.bunnycdn.com/library/$libraryId/videos/$videoId');
 
@@ -120,7 +120,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     };
 
     var response = await http.get(url, headers: headers);
-    print("response: ${response.body}");
+    log("response: ${response.body}");
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       var availableResolutions =
@@ -394,17 +394,17 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ListTile(
-              title: Text('Quality of Current Video'),
+              title: const Text('Quality of Current Video'),
               subtitle: Text(currentQuality),
             ),
-            Divider(),
+            const Divider(),
             ...availableRes.map((resolution) {
               String resolutionUrl =
                   'https://$CDNHostname/${widget.video.id}/$resolution/video.m3u8';
               return ListTile(
                 title: Text('$resolution Quality'),
                 onTap: () {
-                  Navigator.pop(context);
+                            context.pop();
                   _changeQuality(resolutionUrl, resolution);
                 },
               );

@@ -7,27 +7,26 @@ import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 //home screen -- where all available contacts are shown
 class FriendProfileFollowerScreen extends ConsumerStatefulWidget {
-  const FriendProfileFollowerScreen(
-      {super.key, required this.chatUser, required this.userIds});
+  const FriendProfileFollowerScreen({super.key, required this.chatUser, required this.userIds});
   final ChatUser chatUser;
   final List<String> userIds;
 
   @override
-  ConsumerState<FriendProfileFollowerScreen> createState() =>
-      FriendProfileFollowingScreenState();
+  ConsumerState<FriendProfileFollowerScreen> createState() => FriendProfileFollowingScreenState();
 }
 
-class FriendProfileFollowingScreenState
-    extends ConsumerState<FriendProfileFollowerScreen> {
+class FriendProfileFollowingScreenState extends ConsumerState<FriendProfileFollowerScreen> {
   // for storing all users
   List<ChatUser> _list = [];
 
   @override
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
+    final screenSize = ref.read(sizeProvider);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -37,7 +36,7 @@ class FriendProfileFollowingScreenState
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+                            context.pop();
           },
         ),
         title: const Text(
@@ -63,8 +62,7 @@ class FriendProfileFollowingScreenState
             case ConnectionState.active:
             case ConnectionState.done:
               return StreamBuilder(
-                stream: fireService.getAllUsers(
-                    snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                stream: fireService.getAllUsers(snapshot.data?.docs.map((e) => e.id).toList() ?? []),
 
                 //get only those user, who's ids are provided
                 builder: (context, snapshot) {
@@ -79,10 +77,7 @@ class FriendProfileFollowingScreenState
                     case ConnectionState.active:
                     case ConnectionState.done:
                       final data = snapshot.data?.docs;
-                      _list = data
-                              ?.map((e) => ChatUser.fromJson(e.data()))
-                              .toList() ??
-                          [];
+                      _list = data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
                       if (_list.isNotEmpty) {
                         return ListView.builder(
@@ -94,45 +89,32 @@ class FriendProfileFollowingScreenState
                             return ListTile(
                               leading: InkWell(
                                 onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          ProfileDialog(user: person));
+                                  showDialog(context: context, builder: (_) => ProfileDialog(user: person));
                                 },
                                 child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(mq.height * .03),
+                                  borderRadius: BorderRadius.circular(screenSize.height * .03),
                                   child: CachedNetworkImage(
-                                    width: mq.height * .055,
+                                    width: screenSize.height * .055,
                                     fit: BoxFit.fill,
-                                    height: mq.height * .055,
+                                    height: screenSize.height * .055,
                                     imageUrl: person.image,
-                                    errorWidget: (context, url, error) =>
-                                        const CircleAvatar(
-                                            child: Icon(CupertinoIcons.person)),
+                                    errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
                                   ),
                                 ),
                               ),
                               title: Text(person.name),
                               subtitle: Text(person.email),
                               trailing: ElevatedButton(
-                                style: TextButton.styleFrom(
-                                    elevation: 4,
-                                    backgroundColor: Colors.white),
+                                style: TextButton.styleFrom(elevation: 4, backgroundColor: Colors.white),
                                 onPressed: () async {
-                                  await fireService
-                                      .addChatUser(person.email)
-                                      .then((value) {
+                                  await fireService.addChatUser(person.email).then((value) {
                                     if (value) {
-                                      Dialogs.showSnackbar(
-                                          context, 'User Added');
+                                      Dialogs.showSnackbar(context, 'User Added');
                                     }
                                   });
                                 },
                                 child: Text(
-                                  widget.userIds.contains(person.id)
-                                      ? 'unfollow'
-                                      : 'follow',
+                                  widget.userIds.contains(person.id) ? 'unfollow' : 'follow',
                                   style: const TextStyle(color: Colors.black),
                                 ),
                               ),
@@ -141,8 +123,7 @@ class FriendProfileFollowingScreenState
                         );
                       } else {
                         return const Center(
-                          child: Text('No Connections Found!',
-                              style: TextStyle(fontSize: 20)),
+                          child: Text('No Connections Found!', style: TextStyle(fontSize: 20)),
                         );
                       }
                   }

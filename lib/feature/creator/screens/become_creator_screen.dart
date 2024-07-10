@@ -1,7 +1,5 @@
 import 'dart:developer';
-
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
+ import 'package:com.while.while_app/feature/creator/controller/creator_contoller.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

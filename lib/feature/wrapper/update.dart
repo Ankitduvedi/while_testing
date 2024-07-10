@@ -1,10 +1,6 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+ import 'package:flutter/material.dart';
+ import 'package:url_launcher/url_launcher.dart';
 
 class UpdateAppScreen extends StatefulWidget {
   const UpdateAppScreen({super.key});
@@ -19,7 +15,7 @@ class _UpdateAppScreenState extends State<UpdateAppScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xFF15181e),
+      backgroundColor: const Color(0xFF15181e),
       body: SafeArea(
           child: Center(
         child: Column(
@@ -56,7 +52,7 @@ class _UpdateAppScreenState extends State<UpdateAppScreen> {
             TextButton(
                 style: ButtonStyle(
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.white),
+                  side: const BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(
                     screenHeight * 0.05,
                   ),

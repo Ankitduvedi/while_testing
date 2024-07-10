@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
+import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           IconButton(
               onPressed: () {
                 dispose();
-                Navigator.pop(context);
+                context.pop();
               },
               icon: const Icon(Icons.arrow_back))
         ],

@@ -1,31 +1,23 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/home_screen.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/core/initialisations/app_initialisations.dart';
+import 'package:com.while.while_app/core/utils/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_notification_channel/flutter_notification_channel.dart';
-import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/route_manager.dart';
-import 'package:com.while.while_app/core/routes/routes_name.dart';
-import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
+import 'package:com.while.while_app/core/routes/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
-import 'core/routes/routes.dart';
-import 'package:get/get.dart';
 
-late Size mq;
+final sizeProvider = StateProvider<Size>(
+  (ref) => const Size(0, 0),
+);
 String? activeChatUserId;
 activechatid(WidgetRef ref, String id) {
   log('activechatid $id');
-  FirebaseFirestore.instance
-      .collection('users')
-      .doc(id)
-      .update({'isChattingWith': 'activeChatUserId'});
+  FirebaseFirestore.instance.collection('users').doc(id).update({'isChattingWith': 'activeChatUserId'});
 }
 
 final theme = ThemeData(
@@ -45,77 +37,27 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await _initializeFirebase();
+  AppInitializations().initializeFirebaseServices;
   runApp(const ProviderScope(child: MyApp()));
 }
 
-Future<void> _initializeFirebase() async {
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
-    description: 'For showing notification',
-    id: 'chats',
-    importance: NotificationImportance.IMPORTANCE_HIGH,
-    name: 'WHILE',
-  );
-  // Optionally print the result
-  await initDynamicLinks();
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
-Future<void> initDynamicLinks() async {
-  log('Initializing Dynamic Links in main dart');
-
-  // Handle dynamic links when the app is already running
-  FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-    _handleDynamicLink(dynamicLinkData);
-  });
-
-  // Handle dynamic links when the app is not running
-  final PendingDynamicLinkData? initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
-  if (initialLink != null) {
-    _handleDynamicLink(initialLink);
-  }
-}
-
-void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
-  final Uri deepLink = dynamicLinkData.link;
-  final route = deepLink.queryParameters['screen'];
-  final url = deepLink.queryParameters['url'];
-
-  if (route != null) {
-    log('Navigating to $route with parameter: $url');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Get.toNamed(
-        route,
-      );
-    });
-  } else {
-    log('Invalid dynamic link');
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    mq = MediaQuery.of(context).size;
-
-    SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
-        systemStatusBarContrastEnforced: false);
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-
-    return MaterialApp(
-      theme: theme,
-      routes: {
-        '/profile': (BuildContext context) => const HomeScreen(),
-      },
-      title: 'While',
+    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(MyAppThemes.systemUiOverlayStyle);
+    return MaterialApp.router(
+      themeMode: ThemeMode.system,
+      theme: isDarkMode ? MyAppThemes.darkTheme : MyAppThemes.lightTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: RoutesName.wrapper,
-      onGenerateRoute: Routes.generateRoute,
-      home: const Wrapper(),
+      routerConfig: goRouter,
     );
   }
 }

@@ -28,6 +28,8 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
 
   @override
   Widget build(BuildContext context) {
+            final screenSize = ref.read(sizeProvider);
+
     log(widget.user.name);
     final fireService = ref.read(apisProvider);
     return Card(
@@ -67,10 +69,10 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                             CommunityProfileDialog(user: widget.user));
                   },
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .03),
+                    borderRadius: BorderRadius.circular(screenSize.height * .03),
                     child: CachedNetworkImage(
-                      width: mq.height * .055,
-                      height: mq.height * .055,
+                      width: screenSize.height * .055,
+                      height: screenSize.height * .055,
                       fit: BoxFit.fill,
                       imageUrl: widget.user.image,
                       errorWidget: (context, url, error) => const CircleAvatar(

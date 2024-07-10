@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class EasyQuestionsScreen extends ConsumerStatefulWidget {
   final Community user;
@@ -196,7 +197,7 @@ class QuestionsScreenState extends ConsumerState<EasyQuestionsScreen> {
                           children: [
                             IconButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                            context.pop();
                                 },
                                 icon: const Icon(
                                   CupertinoIcons.back,

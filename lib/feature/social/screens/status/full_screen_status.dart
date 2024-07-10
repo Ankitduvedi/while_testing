@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 
@@ -54,7 +55,7 @@ class FullStatusScreenState extends State<FullStatusScreen> {
           curve: Curves.easeInOut, // Optional animation curve
         );
       } else {
-        Navigator.pop(context);
+                            context.pop();
       }
     });
   }
@@ -77,7 +78,7 @@ class FullStatusScreenState extends State<FullStatusScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+                            context.pop();
           },
         ),
         backgroundColor: Colors.black,
@@ -101,7 +102,7 @@ class FullStatusScreenState extends State<FullStatusScreen> {
             );
             startTimer(); // Start the timer again
           } else {
-            Navigator.pop(context);
+                            context.pop();
           }
         },
         child: PageView.builder(

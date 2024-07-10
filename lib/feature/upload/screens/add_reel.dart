@@ -11,6 +11,7 @@ import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:http/http.dart' as http;
@@ -125,7 +126,7 @@ class _AddReelState extends ConsumerState<AddReel> {
         setState(() {
           isloading = false;
         });
-        Navigator.pop(context);
+                            context.pop();
         return data['videoId'];
       } else {
         // Handle upload failure
@@ -283,7 +284,7 @@ class _AddReelState extends ConsumerState<AddReel> {
     final expirationTime =
         (DateTime.now().millisecondsSinceEpoch ~/ 1000) + 3600;
     final signatureString =
-        '$_libraryId' + '$_apiKey' + '$expirationTime' + '$videoId';
+        '$_libraryId$_apiKey$expirationTime$videoId';
     final hash = sha256.convert(utf8.encode(signatureString)).toString();
     return '$hash,$expirationTime';
   }
@@ -317,9 +318,9 @@ class _AddReelState extends ConsumerState<AddReel> {
             id: videoId,
             uploadedBy: ref.read(userDataProvider).userData!.id,
             videoUrl:
-                'https://vz-a12f2b63-c06.b-cdn.net/${videoId}/play_360p.mp4',
+                'https://vz-a12f2b63-c06.b-cdn.net/$videoId/play_360p.mp4',
             thumbnail:
-                'https://vz-a12f2b63-c06.b-cdn.net/${videoId}/thumbnail.jpg',
+                'https://vz-a12f2b63-c06.b-cdn.net/$videoId/thumbnail.jpg',
             title: _titleController.text,
             description: _descriptionController.text,
             likes: [],
@@ -343,7 +344,7 @@ class _AddReelState extends ConsumerState<AddReel> {
             isloading = false;
           });
         });
-        Navigator.pop(context);
+                            context.pop();
       },
       onProgress: (progress) {
         log("Progress: $progress");

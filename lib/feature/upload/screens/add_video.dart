@@ -11,6 +11,7 @@ import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tus_client/tus_client.dart';
 import 'package:video_compress/video_compress.dart';
@@ -243,7 +244,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       setState(() {});
       ScaffoldMessenger.of(this.context)
           .showSnackBar(SnackBar(content: Text('Failed to prepare video: $e')));
-      Navigator.pop(context);
+                            context.pop();
     }
   }
 
@@ -302,7 +303,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
             isloading = false;
           });
 
-          Navigator.pop(context);
+                            context.pop();
         },
         onProgress: (progress) {
           uploading = true;
@@ -319,7 +320,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       setState(() {
         isloading = false;
       });
-      Navigator.pop(context);
+                            context.pop();
     }
   }
 
@@ -346,7 +347,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
       return data['guid'];
     } else {
       log('Failed to create video: ${response.body} , ');
-      Navigator.pop(context);
+                            context.pop();
       throw Exception(
           'Failed to create video: ${response.body}, ${response.statusCode}');
     }
@@ -358,7 +359,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
     final expirationTime =
         (DateTime.now().millisecondsSinceEpoch ~/ 1000) + 3600;
     final signatureString =
-        '$_libraryId' + '$_apiKey' + '$expirationTime' + '$videoId';
+        '$_libraryId$_apiKey$expirationTime$videoId';
     final hash = sha256.convert(utf8.encode(signatureString)).toString();
     return '$hash,$expirationTime';
   }

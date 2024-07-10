@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io';
 import '../../../../../main.dart';
 import '../../../../../providers/apis.dart';
@@ -27,6 +28,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
 
   @override
   Widget build(BuildContext context) {
+            final screenSize = ref.read(sizeProvider);
+
     List<ChatUser> list = [];
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -56,8 +59,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                         widget.community.id,
                         context);
                 Future.delayed(const Duration(seconds: 5));
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                            context.pop();
+                            context.pop();
               },
             ),
           ],
@@ -65,27 +68,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
         body: Form(
           key: _formKey,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * .05),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(width: mq.width, height: mq.height * .03),
+                  SizedBox(width: screenSize.width, height: screenSize.height * .03),
                   Stack(
                     children: [
                       _image != null
                           ? ClipRRect(
                               borderRadius:
-                                  BorderRadius.circular(mq.height * .1),
+                                  BorderRadius.circular(screenSize.height * .1),
                               child: Image.file(File(_image!),
-                                  width: mq.height * .2,
-                                  height: mq.height * .2,
+                                  width: screenSize.height * .2,
+                                  height: screenSize.height * .2,
                                   fit: BoxFit.cover))
                           : ClipRRect(
                               borderRadius:
-                                  BorderRadius.circular(mq.height * .1),
+                                  BorderRadius.circular(screenSize.height * .1),
                               child: CachedNetworkImage(
-                                width: mq.height * .2,
-                                height: mq.height * .2,
+                                width: screenSize.height * .2,
+                                height: screenSize.height * .2,
                                 filterQuality: FilterQuality.low,
                                 fit: BoxFit.cover,
                                 imageUrl: widget.community.image,
@@ -96,11 +99,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                             ),
                     ],
                   ),
-                  SizedBox(height: mq.height * .03),
+                  SizedBox(height: screenSize.height * .03),
                   Text(widget.community.name,
                       style:
                           const TextStyle(color: Colors.black54, fontSize: 16)),
-                  SizedBox(height: mq.height * .02),
+                  SizedBox(height: screenSize.height * .02),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -109,7 +112,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ),
-                  SizedBox(height: mq.height * .01),
+                  SizedBox(height: screenSize.height * .01),
                   SizedBox(
                     width: double.infinity,
                     height: 1,
@@ -117,7 +120,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                       color: const Color.fromARGB(131, 158, 158, 158),
                     ),
                   ),
-                  SizedBox(height: mq.height * .02),
+                  SizedBox(height: screenSize.height * .02),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -126,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ),
-                  SizedBox(height: mq.height * .01),
+                  SizedBox(height: screenSize.height * .01),
                   SizedBox(
                     width: double.infinity,
                     height: 1,
@@ -134,7 +137,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                       color: const Color.fromARGB(131, 158, 158, 158),
                     ),
                   ),
-                  SizedBox(height: mq.height * .02),
+                  SizedBox(height: screenSize.height * .02),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -143,7 +146,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ),
-                  SizedBox(height: mq.height * .01),
+                  SizedBox(height: screenSize.height * .01),
                   SizedBox(
                     width: double.infinity,
                     height: 1,
@@ -151,7 +154,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                       color: const Color.fromARGB(131, 158, 158, 158),
                     ),
                   ),
-                  SizedBox(height: mq.height * .02),
+                  SizedBox(height: screenSize.height * .02),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

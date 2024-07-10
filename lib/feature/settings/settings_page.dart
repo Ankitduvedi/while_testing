@@ -3,6 +3,7 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});
@@ -19,7 +20,7 @@ class Settings extends ConsumerWidget {
           elevation: 1,
           leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                            context.pop();
               },
               icon: const Icon(Icons.arrow_back, color: Colors.black)),
         ),
@@ -64,12 +65,10 @@ class Settings extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Textbutton(
                         ontap: () {
-                          ref.read(toggleStateProvider.notifier).state = 0;
+                          // ref.read(toggleStateProvider.notifier).state = 0;
                           ref.read(authControllerProvider);
                           SystemNavigator.pop(); // Close the app
-
-                          //Navigator.of(context).pop();
-                        },
+                         },
                         text: "Logout"),
                   )
                 ],

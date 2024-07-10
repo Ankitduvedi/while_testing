@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 import 'package:com.while.while_app/feature/advertisement/widgets/carousoal_feed_screen.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';

@@ -8,6 +8,7 @@ import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class UserProfileFollowingScreen extends ConsumerStatefulWidget {
   const UserProfileFollowingScreen({super.key, required this.chatUser});
@@ -25,13 +26,16 @@ class UserProfileFollowingScreenState
   @override
   Widget build(BuildContext context) {
     final fireService = ref.read(apisProvider);
+        final screenSize = ref.read(sizeProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () =>                             context.pop()
+
         ),
         title: const Text('Following', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
@@ -93,11 +97,11 @@ class UserProfileFollowingScreenState
                             },
                             child: ClipRRect(
                               borderRadius:
-                                  BorderRadius.circular(mq.height * .03),
+                                  BorderRadius.circular(screenSize.height * .03),
                               child: CachedNetworkImage(
-                                width: mq.height * .055,
+                                width: screenSize.height * .055,
                                 fit: BoxFit.fill,
-                                height: mq.height * .055,
+                                height: screenSize.height * .055,
                                 imageUrl: person.image,
                                 errorWidget: (context, url, error) =>
                                     const CircleAvatar(
