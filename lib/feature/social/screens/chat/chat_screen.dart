@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/data/model/SQlite_message_model.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/user_provider%20copy.dart';
 
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../chatfiledb.dart';
 import '../../../../providers/apis.dart';
 import '../../../../core/utils/my_date_util.dart';
 import '../../../../data/model/chat_user.dart';
@@ -35,56 +37,75 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _showEmoji = false;
-  bool _isUploading = false; // Ensure this is not final if its value can change
-  List<Message> messages = [];
+  bool _isUploading = false;
+  List<MessageWithImage> messages = [];
+  List<MessageWithImage> localMessages = [];
+  List<MessageWithImage> realTimeMessages = [];
   bool isset = false;
-
-  late Stream<QuerySnapshot<Map<String, dynamic>>> messageStream;
+  DatabaseHelper db = DatabaseHelper();
+  Stream<QuerySnapshot<Map<String, dynamic>>>? messageStream;
+  String conversationID = '';
 
   @override
   void initState() {
+    super.initState();
+    setmessagestream();
+    final fireService = ref.read(apisProvider);
+    conversationID = fireService.getConversationID(widget.user.id);
     FirebaseFirestore.instance
         .collection('users')
         .doc(ref.read(userDataProvider).userData!.id)
         .update({'isChattingWith': activeChatUserId});
-    setState(() {
-      setmessagestream();
-    });
-
-    super.initState();
-
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        setState(() {
-          _showEmoji = false;
-        });
-      }
-    });
   }
 
   void setmessagestream() async {
-    final fireService = ref.watch(apisProvider);
+    await db.requestPermissions();
 
-    String conversationID = fireService.getConversationID(widget.user.id);
-    if (isset == false) {
-      setState(() {
-        messageStream = FirebaseFirestore.instance
-            .collection('chats/$conversationID/messages')
-            .orderBy('sent', descending: true)
-            .snapshots();
-        isset = true;
+    String? lastTime = await db.getLastMessageTimestamp(conversationID);
+    try {
+      final lastVisible = await FirebaseFirestore.instance
+          .collection('chats/$conversationID/messages')
+          .doc(lastTime)
+          .get();
+
+      if (lastVisible.exists) {
+        setState(() {
+          messageStream = FirebaseFirestore.instance
+              .collection('chats/$conversationID/messages')
+              .orderBy('sent', descending: false)
+              .startAfterDocument(lastVisible)
+              .snapshots();
+        });
+      } else {
+        setState(() {
+          messageStream = FirebaseFirestore.instance
+              .collection('chats/$conversationID/messages')
+              .orderBy('sent', descending: true)
+              .snapshots();
+        });
+      }
+
+      _focusNode.addListener(() {
+        if (!_focusNode.hasFocus) {
+          setState(() {
+            _showEmoji = false;
+          });
+        }
       });
+
+      // Fetch local messages once
+      localMessages = await db.getMessages(conversationID);
+      // print('lengthlocal: ${localMessages.length}');
+    } catch (e) {
+      print('Error fetching last visible document: $e');
     }
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     log('dispose called');
     activeChatUserId = '';
     activechatid(ref, widget.myid);
-    setState(() {
-      setmessagestream();
-    });
     _textController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -104,11 +125,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setmessagestream();
-    print("hi everyone");
-
-    final fireService = ref.watch(
-        apisProvider); // Changed from read to watch if using inside build for reactivity
+    final fireService = ref.read(apisProvider);
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
@@ -122,30 +139,164 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         backgroundColor: Colors.white,
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/chat_bg.png'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              children: [
-                _buildMessagesList(),
-                if (_isUploading) _buildUploadingIndicator(),
-                MessageBox(
-                  _textController,
-                  _focusNode,
-                  widget.user,
-                  setEmoji,
-                  setUpload,
-                  messages.length,
-                  fireService.sendFirstMessage,
-                  fireService.sendMessage,
-                  fireService.sendChatImage,
-                ),
-                if (_showEmoji)
-                  SizedBox(height: mq.height * .35, child: _buildEmojiPicker()),
-              ],
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/chat_bg.png'),
+                      fit: BoxFit.cover)),
+              child: Column(
+                children: [
+                  _buildMessagesList(),
+                  if (_isUploading) _buildUploadingIndicator(),
+                  if (_showEmoji)
+                    SizedBox(
+                        height: mq.height * .35, child: _buildEmojiPicker()),
+                ],
+              ),
             ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 0),
+          child: MessageBox(
+            _textController,
+            _focusNode,
+            widget.user,
+            setEmoji,
+            setUpload,
+            messages.length,
+            fireService.sendFirstMessage,
+            fireService.sendMessage,
+            fireService.sendChatImage,
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildMessagesList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: messageStream,
+      builder: (context, streamSnapshot) {
+        if (messageStream == null) {
+          return SizedBox(
+            height: mq.height * .78,
+            child: ListView.builder(
+              reverse: true,
+              itemCount: localMessages.length,
+              itemBuilder: (context, index) {
+                return MessageCard(message: localMessages[index]);
+              },
+            ),
+          );
+        }
+
+        if (streamSnapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            height: mq.height * .78,
+            child: ListView.builder(
+              reverse: true,
+              itemCount: localMessages.length,
+              itemBuilder: (context, index) {
+                return MessageCard(message: localMessages[index]);
+              },
+            ),
+          );
+        }
+
+        if (streamSnapshot.hasError) {
+          return Center(child: Text('Error: ${streamSnapshot.error}'));
+        }
+
+        if (!streamSnapshot.hasData) {
+          return const Center(child: Text("No messages yet."));
+        }
+
+        List<Future<MessageWithImage>> messagesFutures =
+            streamSnapshot.data!.docs.map((DocumentSnapshot document) async {
+          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+          return await MessageWithImage.fromJson(data);
+        }).toList();
+
+        return FutureBuilder<List<MessageWithImage>>(
+          future: Future.wait(messagesFutures),
+          builder: (context, messagesSnapshot) {
+            if (messagesSnapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(
+                height: mq.height * .78,
+                child: ListView.builder(
+                  reverse: true,
+                  itemCount: localMessages.length,
+                  itemBuilder: (context, index) {
+                    return MessageCard(message: localMessages[index]);
+                  },
+                ),
+              );
+            }
+
+            if (messagesSnapshot.hasData) {
+              realTimeMessages = messagesSnapshot.data!;
+              for (var message in realTimeMessages) {
+                db.insertMessage(conversationID, message);
+              }
+
+              messages =
+                  [...localMessages, ...realTimeMessages].toSet().toList();
+              print("len ${localMessages.length}");
+              print("len1 ${realTimeMessages.length}");
+              messages.sort((a, b) => b.sent.compareTo(a.sent));
+            }
+
+            return SizedBox(
+              height: mq.height * .78,
+              child: ListView.builder(
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  return MessageCard(message: messages[index]);
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildUploadingIndicator() {
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: CircularProgressIndicator(
+        strokeWidth: 2.0,
+      ),
+    );
+  }
+
+  Widget _buildEmojiPicker() {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        height: constraints.maxHeight * .35,
+        child: EmojiPicker(
+          onEmojiSelected: (category, emoji) {
+            _textController.text += emoji.emoji;
+          },
+          config: const Config(
+            columns: 7,
+            emojiSizeMax: 32.0,
+            verticalSpacing: 0,
+            horizontalSpacing: 0,
+            initCategory: Category.RECENT,
+            bgColor: Color(0xFFF2F2F2),
+            indicatorColor: Colors.blue,
+            iconColor: Colors.grey,
+            iconColorSelected: Colors.blue,
+            backspaceColor: Colors.blue,
+            recentsLimit: 28,
+            tabIndicatorAnimDuration: kTabScrollDuration,
+            categoryIcons: CategoryIcons(),
+            buttonMode: ButtonMode.MATERIAL,
           ),
         ),
       );
@@ -234,77 +385,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ));
     });
   }
-
-  Widget _buildMessagesList() {
-    // Use watch for reactive updates if needed
-    return Expanded(
-        child: StreamBuilder<QuerySnapshot>(
-      stream: messageStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: Text("No messages yet."));
-        }
-        List<Message> messages =
-            snapshot.data!.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-          return Message.fromJson(data);
-        }).toList();
-        if (messages.isNotEmpty) {
-          return ListView.builder(
-            reverse: true,
-            itemCount: messages.length,
-            itemBuilder: (context, index) =>
-                MessageCard(message: messages[index]),
-          );
-        } else {
-          return Center(
-            child: Text('Say Hii! 👋', style: GoogleFonts.ptSans(fontSize: 20)),
-          );
-        }
-      },
-    ));
-  }
-
-  Widget _buildUploadingIndicator() {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
-      child: CircularProgressIndicator(
-        strokeWidth: 2.0,
-      ),
-    );
-  }
-
-  Widget _buildEmojiPicker() {
-    return LayoutBuilder(builder: (context, constraints) {
-      return SizedBox(
-        height: constraints.maxHeight * .35,
-        child: EmojiPicker(
-          onEmojiSelected: (category, emoji) {
-            _textController.text += emoji.emoji;
-          },
-          config: const Config(
-            columns: 7,
-            emojiSizeMax: 32.0,
-            verticalSpacing: 0,
-            horizontalSpacing: 0,
-            initCategory: Category.RECENT,
-            bgColor: Color(0xFFF2F2F2),
-            indicatorColor: Colors.blue,
-            iconColor: Colors.grey,
-            iconColorSelected: Colors.blue,
-            backspaceColor: Colors.blue,
-            recentsLimit: 28,
-            tabIndicatorAnimDuration: kTabScrollDuration,
-            categoryIcons: CategoryIcons(),
-            buttonMode: ButtonMode.MATERIAL,
-          ),
-        ),
-      );
-    });
-  }
 }
 
 class MessageBox extends ConsumerWidget {
@@ -334,78 +414,80 @@ class MessageBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Changed from read to watch if using inside build for reactivity
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          // This IconButton is wrapped with an Expanded widget with a small flex factor
-          Expanded(
-            flex: 1, // smaller flex factor means smaller space
-            child: IconButton(
-                onPressed: () async {
-                  final ImagePicker picker = ImagePicker();
-                  final List<XFile> images =
-                      await picker.pickMultiImage(imageQuality: 70);
-                  for (var i in images) {
-                    log('Image Path: ${i.path}');
-                    setUpload();
-                    sendChatImage(user, File(i.path));
-                    Future.delayed(const Duration(seconds: 1), () {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            // This IconButton is wrapped with an Expanded widget with a small flex factor
+            Expanded(
+              flex: 1, // smaller flex factor means smaller space
+              child: IconButton(
+                  onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    final List<XFile> images =
+                        await picker.pickMultiImage(imageQuality: 70);
+                    for (var i in images) {
+                      log('Image Path: ${i.path}');
                       setUpload();
-                    });
-                  }
-                },
-                icon: const Icon(Icons.add, color: Colors.black, size: 34)),
-          ),
-          // The main input field and buttons take up the remaining space
-          Expanded(
-            flex: 5, // larger flex factor means more space
-            child: Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        setEmoji();
-                      },
-                      icon: const Icon(Icons.emoji_emotions_outlined,
-                          color: Colors.black, size: 28)),
-                  Expanded(
-                    child: TextField(
-                      focusNode: focusNode,
-                      controller: textController,
-                      decoration: InputDecoration(
-                        hintText: "Type a message",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
+                      sendChatImage(user, File(i.path));
+                      Future.delayed(const Duration(seconds: 1), () {
+                        setUpload();
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.add, color: Colors.black, size: 34)),
+            ),
+            // The main input field and buttons take up the remaining space
+            Expanded(
+              flex: 5, // larger flex factor means more space
+              child: Card(
+                color: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          setEmoji();
+                        },
+                        icon: const Icon(Icons.emoji_emotions_outlined,
+                            color: Colors.black, size: 28)),
+                    Expanded(
+                      child: TextField(
+                        focusNode: focusNode,
+                        controller: textController,
+                        decoration: InputDecoration(
+                          hintText: "Type a message",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[200],
                         ),
-                        filled: true,
-                        fillColor: Colors.grey[200],
                       ),
                     ),
-                  ),
-                  IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () {
-                        if (textController.text.isNotEmpty) {
-                          if (messageLength != 0) {
-                            sendMessage(user, textController.text, Type.text);
-                          } else {
-                            sendFirstMessage(
-                                user, textController.text, Type.text);
+                    IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          if (textController.text.isNotEmpty) {
+                            if (messageLength != 0) {
+                              sendMessage(user, textController.text, Type.text);
+                            } else {
+                              sendFirstMessage(
+                                  user, textController.text, Type.text);
+                            }
+                            textController.clear();
                           }
-                          textController.clear();
-                        }
-                      }),
-                ],
+                        }),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

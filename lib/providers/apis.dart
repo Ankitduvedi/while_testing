@@ -520,7 +520,7 @@ class APIs {
 
   // for getting all messages of a specific conversation from firestore database
 
-  Stream<List<Message>> getAllMessages(ChatUser user) {
+  Stream<List<Message_Model>> getAllMessages(ChatUser user) {
     return FirebaseFirestore.instance
         .collection('chats/${getConversationID(user.id)}/messages/')
         .orderBy('sent', descending: true)
@@ -528,7 +528,7 @@ class APIs {
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
       return snapshot.docs
           .map((DocumentSnapshot<Map<String, dynamic>> doc) =>
-              Message.fromJson(doc.data()! as Map<String, dynamic>))
+              Message_Model.fromJson(doc.data()! as Map<String, dynamic>))
           .toList();
     });
   }
@@ -540,7 +540,7 @@ class APIs {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     //message to send
-    final Message message = Message(
+    final Message_Model message = Message_Model(
         toId: chatUser.id,
         msg: msg,
         read: '',
@@ -568,7 +568,7 @@ class APIs {
 
   //update read status of message
 
-  Future<void> updateMessageReadStatus(Message message) async {
+  Future<void> updateMessageReadStatus(Message_Model message) async {
     firestore
         .collection('chats/${getConversationID(message.fromId)}/messages/')
         .doc(message.sent)
@@ -578,7 +578,7 @@ class APIs {
   //get only last message of a specific chat
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(ChatUser user) {
-    print(" conversation id ${getConversationID(user.id)}");
+    // print(" conversation id ${getConversationID(user.id)}");
     return firestore
         .collection('chats/${getConversationID(user.id)}/messages/')
         .orderBy('sent', descending: true)
@@ -610,7 +610,7 @@ class APIs {
 
   //delete message
 
-  Future<void> deleteMessage(Message message) async {
+  Future<void> deleteMessage(Message_Model message) async {
     await firestore
         .collection('chats/${getConversationID(message.toId)}/messages/')
         .doc(message.sent)
@@ -623,7 +623,7 @@ class APIs {
 
   //update message
 
-  Future<void> updateMessage(Message message, String updatedMsg) async {
+  Future<void> updateMessage(Message_Model message, String updatedMsg) async {
     await firestore
         .collection('chats/${getConversationID(message.toId)}/messages/')
         .doc(message.sent)
@@ -881,7 +881,7 @@ class APIs {
       link: Uri.parse("https://while.co.in/app/?referralCode=$referralCode"),
       uriPrefix: "https://while.co.in/app",
       androidParameters: const AndroidParameters(
-        packageName: "com.example.while_app",
+        packageName: "com.while.while_app",
       ),
       iosParameters: const IOSParameters(
         bundleId: "com.example.app.ios",

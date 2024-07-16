@@ -27,7 +27,7 @@ class ChatUserCard extends ConsumerStatefulWidget {
 
 class _ChatUserCardState extends ConsumerState<ChatUserCard> {
   // last message info (if null --> no message)
-  Message? _message;
+  Message_Model? _message;
   Uint8List? bytes;
 
   @override
@@ -61,7 +61,8 @@ class _ChatUserCardState extends ConsumerState<ChatUserCard> {
           builder: (context, snapshot) {
             final data = snapshot.data?.docs;
             final list =
-                data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
+                data?.map((e) => Message_Model.fromJson(e.data())).toList() ??
+                    [];
             if (list.isNotEmpty) _message = list[0];
             // print(widget.localdata['image']);
             return ListTile(

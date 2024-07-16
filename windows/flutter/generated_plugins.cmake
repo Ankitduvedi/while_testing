@@ -10,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_auth
   firebase_core
   firebase_storage
+  permission_handler_windows
   smart_auth
   syncfusion_pdfviewer_windows
   url_launcher_windows

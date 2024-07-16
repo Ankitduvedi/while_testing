@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:com.while.while_app/data/model/SQlite_message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +16,7 @@ import '../../../../data/model/message.dart';
 class MessageCard extends ConsumerStatefulWidget {
   const MessageCard({super.key, required this.message});
 
-  final Message message;
+  final MessageWithImage message;
 
   @override
   ConsumerState<MessageCard> createState() => _MessageCardState();
@@ -68,18 +69,26 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                   )
                 :
                 //show image
+
                 ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.image, size: 70),
+                    child: widget.message.image != null
+                        ? Image.memory(widget.message.image!)
+                        : Container(
+                            height: mq.height * .2,
+                            width: mq.width * .4,
+                            child: const Icon(Icons.image, size: 70),
+                          )
+                    // CachedNetworkImage(
+                    //         imageUrl: widget.message.msg,
+                    //         placeholder: (context, url) => const Padding(
+                    //           padding: EdgeInsets.all(8.0),
+                    //           child: CircularProgressIndicator(strokeWidth: 2),
+                    //         ),
+                    //         errorWidget: (context, url, error) =>
+                    //             const Icon(Icons.image, size: 70),
+                    //       ),
                     ),
-                  ),
           ),
         ),
 
@@ -151,16 +160,23 @@ class _MessageCardState extends ConsumerState<MessageCard> {
                 //show image
                 ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.image, size: 70),
+                    child: widget.message.image != null
+                        ? Image.memory(widget.message.image!)
+                        : Container(
+                            height: mq.height * .2,
+                            width: mq.width * .4,
+                            child: const Icon(Icons.image, size: 70),
+                          )
+                    // CachedNetworkImage(
+                    //         imageUrl: widget.message.msg,
+                    //         placeholder: (context, url) => const Padding(
+                    //           padding: EdgeInsets.all(8.0),
+                    //           child: CircularProgressIndicator(strokeWidth: 2),
+                    //         ),
+                    //         errorWidget: (context, url, error) =>
+                    //             const Icon(Icons.image, size: 70),
+                    //       ),
                     ),
-                  ),
           ),
         ),
       ],

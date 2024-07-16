@@ -1,5 +1,5 @@
-class Message {
-  Message({
+class Message_Model {
+  Message_Model({
     required this.toId,
     required this.msg,
     required this.read,
@@ -15,7 +15,7 @@ class Message {
   late final String sent;
   late final Type type;
 
-  Message.fromJson(Map<String, dynamic> json) {
+  Message_Model.fromJson(Map<String, dynamic> json) {
     toId = json['toId'].toString();
     msg = json['msg'].toString();
     read = json['read'].toString();

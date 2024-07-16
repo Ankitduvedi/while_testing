@@ -21,6 +21,7 @@ class MessageHomeWidget extends ConsumerWidget {
         .update({'isChattingWith': activeChatUserId});
     log("chatScreen");
     final allUsersAsyncValue = ref.watch(allUsersProvider);
+
     var user = ref.watch(userDataProvider).userData!;
     user = ref.watch(userDataProvider).userData!;
     final myUsersAsyncValue = ref.watch(myUsersUidsProvider(user.id));

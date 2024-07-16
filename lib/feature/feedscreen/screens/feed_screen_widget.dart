@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/feature/feedscreen/controller/categories_test_provider.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_video_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 class FeedScreenWidget extends ConsumerStatefulWidget {
   const FeedScreenWidget({Key? key, required this.category}) : super(key: key);
   final String category;
+
   @override
   FeedScreenWidgetState createState() => FeedScreenWidgetState();
 }
@@ -79,13 +81,23 @@ class FeedScreenWidgetState extends ConsumerState<FeedScreenWidget> {
                 child: Stack(
                   alignment: AlignmentDirectional.bottomStart,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(state.videos[index].thumbnail),
-                            fit: BoxFit.cover,
-                          )),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: CachedNetworkImage(
+                        imageUrl: state.videos[index].thumbnail,
+                        fit: BoxFit.cover,
+                        height: double.infinity,
+                        width: double.infinity,
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.black,
+                          child: Center(
+                            child: Icon(
+                              Icons.error,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     Positioned.fill(
                       child: Container(

@@ -25,7 +25,6 @@ class DraftDb with ChangeNotifier {
     log('insertNote $user');
     int result = await database1!.insert(UsersTable, user.toJson());
     allMyUsers.add(user);
-    print("inserted $result");
 
     notifyListeners();
   }

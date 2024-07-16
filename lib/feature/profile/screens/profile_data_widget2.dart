@@ -177,7 +177,7 @@ class ProfileDataWidget extends ConsumerWidget {
                     await ref.read(apisProvider).generateUniqueCode();
                 final url = await ref
                     .read(apisProvider)
-                    .generateReferralDynamicLink(uniqueCode);
+                    .shareDynamicLinks('reel', 'ansjak');
                 //generate url
 
                 // Share text
