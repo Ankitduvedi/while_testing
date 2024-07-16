@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';

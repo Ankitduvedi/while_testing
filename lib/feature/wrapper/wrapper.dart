@@ -12,7 +12,6 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../core/constant.dart';
 // Import other necessary packages and files
 
@@ -27,8 +26,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
   ChatUser? userModel;
 
   void getData(User data) async {
-    userModel =
-        await ref.read(authControllerProvider.notifier).getUserData(data.uid);
+    userModel = ref.read(authControllerProvider.notifier).getUserData(data.uid);
     log(userModel!.email);
     ref.read(userProvider.notifier).update((state) => userModel);
     //so that ui rebuilds
@@ -37,8 +35,6 @@ class _WrapperState extends ConsumerState<Wrapper> {
 
   @override
   void initState() {
-    // final firebaseUser1 = ref.watch(authStateChangeProvider);
-    // TODO: implement initState
     intializeWhile();
     super.initState();
   }
@@ -46,8 +42,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
   intializeWhile() async {
     final versionNumber = await getAppVersion();
     final reviewVersionNumber = await getAppReviewVersion();
-    print(
-        "version number is $versionNumber and review version number is $reviewVersionNumber");
+    log("version number is $versionNumber and review version number is $reviewVersionNumber");
     if (versionNumber != version && reviewVersionNumber != version) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => UpdateAppScreen()));
@@ -62,7 +57,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
     final firebaseUser = ref.watch(authStateChangeProvider);
     // toggle for onboard on login screen
     final toggle = ref.watch(toggleStateProvider);
-    print("toggle is $toggle");
+    log("toggle is $toggle");
     final user = ref.read(userProvider);
     // Directly return the widget from firebaseUser.when
 
@@ -75,7 +70,7 @@ class _WrapperState extends ConsumerState<Wrapper> {
         if (firedata != null) {
           //user provider data
           if (user != null) {
-            print("user is ${user.name}");
+            log("user is ${user.name}");
             ref.watch(apisProvider).getFirebaseMessagingToken(user.id);
             return const HomeScreen();
           } else {
@@ -90,9 +85,6 @@ class _WrapperState extends ConsumerState<Wrapper> {
                 ? const LoginScreen()
                 : const SignUpScreen();
         // });
-        return Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
       },
       error: (error, stackTrace) {
         log("error: $error");

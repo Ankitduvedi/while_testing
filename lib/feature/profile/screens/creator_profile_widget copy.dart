@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 
-import '../../../providers/user_provider copy.dart';
+import '../../../providers/user_provider.dart';
 // Ensure this import is correct
 
 class CreatorProfileVideo extends ConsumerStatefulWidget {

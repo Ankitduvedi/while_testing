@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:com.while.while_app/core/utils/buttons/gradient_filled_outlined_button.dart';
 import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/providers/apis.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

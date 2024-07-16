@@ -5,7 +5,7 @@ import 'package:com.while.while_app/feature/social/screens/chat/chat_user_card.d
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

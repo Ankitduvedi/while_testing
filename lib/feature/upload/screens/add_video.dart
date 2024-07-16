@@ -7,7 +7,7 @@ import 'package:com.while.while_app/core/utils/containers_widgets/text_container
 import 'package:com.while.while_app/core/utils/players/video_player.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/upload/repository/provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

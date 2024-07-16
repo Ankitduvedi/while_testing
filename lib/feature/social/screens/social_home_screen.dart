@@ -17,7 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../data/model/chat_user.dart';
-import '../../../providers/user_provider copy.dart';
+import '../../../providers/user_provider.dart';
 
 class SocialScreen extends ConsumerStatefulWidget {
   const SocialScreen({super.key});

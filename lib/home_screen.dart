@@ -17,7 +17,7 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'app_info_home.dart';
-import 'providers/user_provider copy.dart';
+import 'providers/user_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
