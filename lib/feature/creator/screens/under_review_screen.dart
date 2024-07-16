@@ -23,19 +23,34 @@ class _UnderReviewScreenState extends ConsumerState<UnderReviewScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Your request is under review',
-              style: GoogleFonts.ptSans(
-                  color: Colors.lightBlueAccent,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            const SizedBox(
+              height: 130,
+            ),
+            Image.asset('assets/under_review.png',
+                width: 280 // Dynamic width for the image
+                ),
+            SizedBox(
+              width: 270,
+              child: Text(
+                'Congratulation',
+                style: GoogleFonts.spaceGrotesk(
+                    color: const Color.fromARGB(255, 218, 76, 250),
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700),
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: 20),
-            Text(
-              "Thank you for submitting your request to become a ${widget.type}. We're currently reviewing your submission and will notify you once the process is complete.",
-              style: GoogleFonts.ptSans(fontSize: 16),
-              textAlign: TextAlign.center,
+            SizedBox(
+              width: 270,
+              child: Text(
+                "Thank you for submitting your request. We're currently reviewing your submission and will notify you once the process is complete.",
+                style: GoogleFonts.spaceGrotesk(
+                    color: const Color.fromARGB(255, 128, 128, 128),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),

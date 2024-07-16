@@ -851,7 +851,9 @@ class APIs {
     final dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse("https://while.co.in/app/?screen=/$screen&url=$url"),
       uriPrefix: "https://while.co.in/app",
-      androidParameters: const AndroidParameters(
+      androidParameters: AndroidParameters(
+        fallbackUrl: Uri.parse(
+            "https://play.google.com/store/apps/details?id=com.while.while_app&pcampaignid=web_share"),
         packageName: "com.while.while_app",
         //minimumVersion: 20,
       ),
@@ -880,8 +882,10 @@ class APIs {
     final DynamicLinkParameters dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse("https://while.co.in/app/?referralCode=$referralCode"),
       uriPrefix: "https://while.co.in/app",
-      androidParameters: const AndroidParameters(
+      androidParameters: AndroidParameters(
         packageName: "com.example.while_app",
+        fallbackUrl: Uri.parse(
+            "https://play.google.com/store/apps/details?id=com.while.while_app&pcampaignid=web_share"),
       ),
       iosParameters: const IOSParameters(
         bundleId: "com.example.app.ios",

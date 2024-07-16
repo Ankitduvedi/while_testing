@@ -25,24 +25,16 @@ class _CreateScreenState extends river.ConsumerState<CreateScreen> {
     //final user = ref.watch(userDataProvider).userData;
 
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          centerTitle: false,
-          title: Text(
-            'Studio',
-            style:
-                TextStyle(color: Colors.blue[400], fontWeight: FontWeight.w800),
-          ),
-        ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-            child: (user.isContentCreator == 1 && user.isApproved == 1)
-                ? const MainCreatorScreen()
-                : (user.isContentCreator == 0 && user.isApproved == 0)
-                    ? const BecomeCreator()
-                    : const UnderReviewScreen(
-                        type: "Creator",
-                      )));
+        body: SafeArea(
+          child: SingleChildScrollView(
+              child: (user.isContentCreator == 1 && user.isApproved == 1)
+                  ? const MainCreatorScreen()
+                  : (user.isContentCreator == 0 && user.isApproved == 0)
+                      ? const BecomeCreator()
+                      : const UnderReviewScreen(
+                          type: "Creator",
+                        )),
+        ));
   }
 }
