@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:com.while.while_app/data/model/chat_user.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/splash/screens/animation/splash_animation.dart';
 import 'package:com.while.while_app/feature/splash/screens/controller/splash_controller.dart';
 import 'package:com.while.while_app/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,7 +28,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
 
     Future.delayed(const Duration(seconds: 2)).then((value) async {
       ref.read(sizeProvider.notifier).state = MediaQuery.of(context).size;
-      final splashInitilise = ref.read(SplashControllerProvider);
+      final splashInitilise = ref.read(splashControllerProvider);
       splashInitilise.intializeWhile(context);
       splashInitilise.checkCondition(context);
     });

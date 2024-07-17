@@ -75,9 +75,9 @@ class SplashRepository {
         final accessToken =
             await SecureStorage().getUserAccessToken('accessToken');
         if (accessToken != '') {
+          _ref.read(userDataProvider).userData;
           return right(2);
         } else {
-          _ref.read(userDataProvider).userData;
           return right(3);
         }
       }
