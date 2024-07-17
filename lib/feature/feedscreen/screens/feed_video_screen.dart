@@ -10,6 +10,7 @@ import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';
@@ -75,7 +76,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     await _chewieController?.pause();
     await _videoPlayerController.pause();
     _initializeVideoPlayer(quality);
-                            context.pop();
+    context.pop();
   }
 
   void _initializeVideoPlayer(String quality) {
@@ -181,7 +182,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     final notifService = ref.read(notifControllerProvider.notifier);
-    final ChatUser me = ref.read(userProvider)!;
+    final ChatUser me = ref.read(userDataProvider).userData!;
     final followingUsersList = ref.watch(followingUsersProvider('id'));
 
     return isPortrait
@@ -404,7 +405,7 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
               return ListTile(
                 title: Text('$resolution Quality'),
                 onTap: () {
-                            context.pop();
+                  context.pop();
                   _changeQuality(resolutionUrl, resolution);
                 },
               );

@@ -7,7 +7,7 @@ import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/add_quiz.dart';
 import 'package:com.while.while_app/providers/apis.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';

@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/splash/screens/animation/splash_animation.dart';
 import 'package:com.while.while_app/feature/splash/screens/controller/splash_controller.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,8 +16,9 @@ class SplashScreen extends ConsumerStatefulWidget {
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
-   AnimationController? _controller;
+class SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
   Animation<double>? _scaleAnimation;
   Animation<double>? _fadeAnimation;
   Animation<double>? _bounceAnimation;
@@ -24,6 +29,7 @@ class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPro
   @override
   void initState() {
     super.initState();
+
     Future.delayed(const Duration(seconds: 2)).then((value) async {
       ref.read(sizeProvider.notifier).state = MediaQuery.of(context).size;
       final splashInitilise = ref.read(SplashControllerProvider);
@@ -52,11 +58,10 @@ class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPro
     );
 
     @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
-
+    void dispose() {
+      _controller!.dispose();
+      super.dispose();
+    }
 
     // Create a bounce animation
     _bounceAnimation = Tween<double>(begin: 0, end: 30).animate(
@@ -95,7 +100,6 @@ class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPro
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,4 +131,3 @@ class SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPro
     );
   }
 }
-

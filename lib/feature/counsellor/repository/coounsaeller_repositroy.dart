@@ -5,6 +5,7 @@ import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/counsellor/models/categories_info.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -25,7 +26,7 @@ class CounsellerRepository {
   }) async {
     try {
       Timestamp requestTime = Timestamp.fromDate(DateTime.now());
-      final user = _ref.read(userProvider);
+      final user = _ref.read(userDataProvider).userData;
       DocumentReference requestRef =
           _firestore.collection('CounsellerRequests').doc(user!.id);
 

@@ -3,7 +3,7 @@ import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +19,7 @@ class Connect extends ConsumerWidget {
 
     final followingUsersAsyncValue = ref.watch(followingUsersProvider(user.id));
 
-    final fireService = ref.watch(userProvider);
+    final fireService = ref.watch(userDataProvider).userData;
     final notifService =
         ref.watch(notifControllerProvider.notifier); // Assume this is non-null
 
@@ -31,7 +31,7 @@ class Connect extends ConsumerWidget {
             final nonFollowingUsers = allUsers
                 .where((user) =>
                     !followingUsers.contains(user.id) &&
-                    user.id != ref.read(userProvider)!.id)
+                    user.id != ref.read(userDataProvider).userData!.id)
                 .toList();
             return ListView.builder(
               itemCount: nonFollowingUsers.length,

@@ -1,8 +1,8 @@
- import 'dart:developer';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
- import 'package:com.while.while_app/main.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/main.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +75,7 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
     } else {
       log('Request failed with status: ${response.statusCode}');
     }
-                            context.pop();
+    context.pop();
   }
 
   void _uploadThumnail() async {
@@ -104,8 +104,7 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
         downloadUrl = 'https://while3.b-cdn.net/$fileName';
         updateThumbnail(downloadUrl, widget.videoId);
       } else {
-        log(
-            'Failed to upload file: ${response.statusCode} - ${response.reasonPhrase}');
+        log('Failed to upload file: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       log('An error occurred: $e');
@@ -114,7 +113,7 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     return Scaffold(
       appBar: AppBar(

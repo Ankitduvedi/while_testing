@@ -1,5 +1,5 @@
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +28,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
 
   @override
   Widget build(BuildContext context) {
-            final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     List<ChatUser> list = [];
     return GestureDetector(
@@ -59,8 +59,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
                         widget.community.id,
                         context);
                 Future.delayed(const Duration(seconds: 5));
-                            context.pop();
-                            context.pop();
+                context.pop();
+                context.pop();
               },
             ),
           ],
@@ -72,7 +72,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreenParticipant> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(width: screenSize.width, height: screenSize.height * .03),
+                  SizedBox(
+                      width: screenSize.width, height: screenSize.height * .03),
                   Stack(
                     children: [
                       _image != null

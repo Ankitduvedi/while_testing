@@ -5,6 +5,7 @@ import 'package:com.while.while_app/feature/counsellor/controller/counseller_con
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/chat_screen.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +29,7 @@ class _CounsellorDetailPageState extends ConsumerState<CounsellorDetailPage> {
   @override
   void initState() {
     super.initState();
-    final currentUser = ref.read(userProvider);
+    final currentUser = ref.read(userDataProvider).userData;
 
     isFollowing = ref
         .read(counsellorContollerProvider.notifier)
@@ -37,7 +38,7 @@ class _CounsellorDetailPageState extends ConsumerState<CounsellorDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.read(userProvider);
+    final currentUser = ref.read(userDataProvider).userData;
     final notifService = ref.read(notifControllerProvider.notifier);
 
     return Scaffold(

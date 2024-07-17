@@ -6,7 +6,7 @@ import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/data/model/community_user.dart';
 import 'package:com.while.while_app/feature/social/screens/community/quizzes/add_quiz.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -84,7 +84,7 @@ final joinCommunityProvider = Provider((ref) {
                 }));
         ref.read(socialControllerProvider.notifier).sendCommunityMessage(
             community.id,
-            '${ref.read(userProvider)!.name} joined the community',
+            '${ref.read(userDataProvider).userData!.name} joined the community',
             Types.joined,
             context);
       } else {

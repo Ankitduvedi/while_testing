@@ -3,7 +3,7 @@ import 'package:com.while.while_app/feature/profile/screens/bottom_options_sheet
 import 'package:com.while.while_app/feature/profile/screens/edit_profile_user.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_follower_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_profile_following_screen.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';

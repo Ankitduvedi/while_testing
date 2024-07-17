@@ -17,7 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../data/model/chat_user.dart';
-import '../../../providers/user_provider copy.dart';
+import '../../../providers/user_provider.dart';
 
 class SocialScreen extends ConsumerStatefulWidget {
   const SocialScreen({super.key});
@@ -109,10 +109,10 @@ class _SocialScreenState extends ConsumerState<SocialScreen>
 
     // ref.watch(userDataProvider);
     log("containing ${user.name}");
-    if (!user.tourPage.contains("${tourMap['SocialScreen']}")) {
-      initAppTour();
-      _showTutorial(user);
-    }
+    // if (!user.tourPage.contains("${tourMap['SocialScreen']}")) {
+    //   initAppTour();
+    //   _showTutorial(user);
+    // }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

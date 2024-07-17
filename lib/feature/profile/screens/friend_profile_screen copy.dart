@@ -2,7 +2,7 @@ import 'package:com.while.while_app/feature/profile/screens/creator_profile_widg
 import 'package:com.while.while_app/feature/profile/screens/friend_profile_data_widget.dart';
 import 'package:com.while.while_app/feature/profile/screens/user_leaderboard_screen.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/profile/screens/creator_profile_widget_loops.dart';

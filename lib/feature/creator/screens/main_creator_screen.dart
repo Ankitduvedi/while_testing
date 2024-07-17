@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:com.while.while_app/core/utils/containers_widgets/create_container.dart';
 import 'package:com.while.while_app/data/model/numeric_model.dart';
 import 'package:com.while.while_app/feature/upload/controller/upload_controller.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts_new;

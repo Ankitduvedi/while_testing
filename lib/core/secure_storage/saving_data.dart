@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 /// for deleting any data
 // deleteSecureData(String key) async {
 //   await storage.delete(key: key);
@@ -19,6 +20,17 @@ class SecureStorage {
   /// Fetching Language
   Future<String> getLanguage(String key) async {
     String value = await storage.read(key: key) ?? "Hindi";
+    return value;
+  }
+
+  /// Saving userId
+  Future setUserId(String key, String id) async {
+    await storage.write(key: key, value: id);
+  }
+
+  /// Fetching userId
+  Future<String> getUserId(String key) async {
+    String value = await storage.read(key: key) ?? '';
     return value;
   }
 

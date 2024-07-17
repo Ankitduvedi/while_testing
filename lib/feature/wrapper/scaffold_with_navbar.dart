@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:com.while.while_app/feature/social/screens/chat/message_home_widget.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/apis.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +16,12 @@ class ScaffoldWithNavBar extends ConsumerStatefulWidget {
   const ScaffoldWithNavBar({required this.childScreen, super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ScaffoldWithNavBarState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ScaffoldWithNavBarState();
 }
 
-class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with TickerProviderStateMixin {
+class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
+    with TickerProviderStateMixin {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
@@ -39,6 +41,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
   TabController? _controller;
   FirebaseMessaging? _messaging;
   FlutterLocalNotificationsPlugin? _flutterLocalNotificationsPlugin;
+
   @override
   void initState() {
     final fireSevice = ref.read(apisProvider);
@@ -128,8 +131,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    ref.watch(userDataProvider).userData!;
+
     return Scaffold(
       body: SafeArea(bottom: false, child: widget.childScreen),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -153,7 +159,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
             Tab(
               // key: homeKey,
               icon: Icon(
-                _controller!.index == 0 ? FluentIcons.home_20_filled : FluentIcons.home_20_regular,
+                _controller!.index == 0
+                    ? FluentIcons.home_20_filled
+                    : FluentIcons.home_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -161,7 +169,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
             Tab(
               // key: videoKey,
               icon: Icon(
-                _controller!.index == 1 ? FluentIcons.video_add_20_filled : FluentIcons.video_add_20_regular,
+                _controller!.index == 1
+                    ? FluentIcons.video_add_20_filled
+                    : FluentIcons.video_add_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -176,7 +186,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
             Tab(
               // key: chatKey,
               icon: Icon(
-                _controller!.index == 3 ? FluentIcons.chat_20_filled : FluentIcons.chat_20_regular,
+                _controller!.index == 3
+                    ? FluentIcons.chat_20_filled
+                    : FluentIcons.chat_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -184,7 +196,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with Ti
             Tab(
               // key: profileKey,
               icon: Icon(
-                _controller!.index == 4 ? FluentIcons.person_20_filled : FluentIcons.person_20_regular,
+                _controller!.index == 4
+                    ? FluentIcons.person_20_filled
+                    : FluentIcons.person_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),

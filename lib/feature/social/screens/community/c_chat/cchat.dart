@@ -2,14 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/feature/social/controller/social_controller.dart';
-import 'package:com.while.while_app/providers/user_provider%20copy.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:com.while.while_app/data/model/community_message.dart';
 import 'package:com.while.while_app/feature/social/screens/community/c_chat/community_message_card.dart';
- import '../../../../../main.dart';
+import '../../../../../main.dart';
 import '../../../../../providers/apis.dart';
 import '../../../../../data/model/community_user.dart';
 
@@ -33,7 +33,6 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   bool isset = false;
   @override
   void initState() {
-     
     setmessagestream();
     super.initState();
   }
@@ -77,7 +76,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   }
 
   void setmessagestream() async {
-     if (isset == false) {
+    if (isset == false) {
       setState(() {
         messageStream = FirebaseFirestore.instance
             .collection('communities')
@@ -91,7 +90,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
   }
 
   void sendMessage() {
-     notifyCommunity(widget.community.id,
+    notifyCommunity(widget.community.id,
         ref.read(userDataProvider).userData!.id, _textController.text);
 
     ref.read(socialControllerProvider.notifier).sendCommunityMessage(
@@ -131,7 +130,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
                   sendMessage, uploadFile), // Pass 'screenSize' as an argument
               if (_showEmoji)
                 SizedBox(
-                  height: screenSize.height * .35, // Use 'screenSize' for responsive design
+                  height: screenSize.height *
+                      .35, // Use 'screenSize' for responsive design
                   child: EmojiPicker(
                     textEditingController: _textController,
                     config: Config(
@@ -222,7 +222,7 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
 
   // bottom chat input field
   Widget _chatInput(BuildContext context, WidgetRef ref) {
-            final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     return Material(
       color: Colors.transparent,
@@ -230,8 +230,8 @@ class _CChatScreenState extends ConsumerState<CChatScreen> {
       child: Container(
         color: Colors.transparent,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(
-              screenSize.width * .005, screenSize.height * .01, screenSize.width * .005, 0
+          padding: EdgeInsets.fromLTRB(screenSize.width * .005,
+              screenSize.height * .01, screenSize.width * .005, 0
 
               //vertical: screenSize.height * 0, horizontal: screenSize.width * .01
               ),

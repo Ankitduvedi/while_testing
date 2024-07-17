@@ -17,7 +17,10 @@ final sizeProvider = StateProvider<Size>(
 String? activeChatUserId;
 activechatid(WidgetRef ref, String id) {
   log('activechatid $id');
-  FirebaseFirestore.instance.collection('users').doc(id).update({'isChattingWith': 'activeChatUserId'});
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(id)
+      .update({'isChattingWith': 'activeChatUserId'});
 }
 
 final theme = ThemeData(
@@ -45,16 +48,17 @@ class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    bool isDarkMode =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
     SystemChrome.setSystemUIOverlayStyle(MyAppThemes.systemUiOverlayStyle);
     return MaterialApp.router(
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       theme: isDarkMode ? MyAppThemes.darkTheme : MyAppThemes.lightTheme,
       debugShowCheckedModeBanner: false,
       routerConfig: goRouter,

@@ -26,8 +26,10 @@ class ProfileController extends StateNotifier<bool> {
     final profile = await _profileRepository.updateUserData(updatedUser);
     state = false;
     log("updating user with new user data the provider");
-    profile.fold((l) => Failure(message: "Failed Updating"),
-        (r) => _ref.read(userProvider.notifier).update((state) => r));
+    // profile.fold(
+    //   (l) => Failure(message: "Failed Updating")
+    // );
+    //(r) => _ref.read(userProvider.notifier).update((state) => r));
   }
 
   // void updateProfilePicture(File file, BuildContext context) async {

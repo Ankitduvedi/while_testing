@@ -5,6 +5,7 @@ import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
+import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +25,7 @@ class ProfileRepository {
 
   Future<Either<Failure, ChatUser>> updateUserData(ChatUser updatedUser) async {
     try {
-      final uid = _ref.read(userProvider)?.id;
+      final uid = _ref.read(userDataProvider).userData?.id;
       await _firestore.collection('users').doc(uid).set(updatedUser.toJson());
       return right(updatedUser);
     } on FirebaseAuthException catch (e) {
@@ -42,10 +43,8 @@ class ProfileRepository {
       final ext = file.path.split('.').last;
       log('Extension: $ext');
 
-      final reference = _ref
-          .read(firebaseStorageProvider)
-          .ref()
-          .child('profile_pictures/${_ref.read(userProvider)!.id}.$ext');
+      final reference = _ref.read(firebaseStorageProvider).ref().child(
+          'profile_pictures/${_ref.read(userDataProvider).userData!.id}.$ext');
 
       //uploading image
       await reference
@@ -57,7 +56,7 @@ class ProfileRepository {
       final userImage = await reference.getDownloadURL();
       await _firestore
           .collection('users')
-          .doc(_ref.read(userProvider)!.id)
+          .doc(_ref.read(userDataProvider).userData!.id)
           .update({'image': userImage});
       return right(userImage);
     } catch (e) {

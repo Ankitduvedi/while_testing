@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:com.while.while_app/core/secure_storage/saving_data.dart';
 import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ class MoreOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -24,7 +26,10 @@ class MoreOptions extends ConsumerWidget {
             ListTile(
               onTap: () {
                 context.pop();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const EditUserProfileScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const EditUserProfileScreen()));
               },
               leading: const Icon(
                 Icons.edit,
@@ -53,8 +58,8 @@ class MoreOptions extends ConsumerWidget {
               title: Text("Logout", style: GoogleFonts.ptSans()),
               onTap: () async {
                 log("logging out user");
+                SecureStorage().setUserId('userId', '');
                 ref.read(apisProvider).updateActiveStatus(0);
-                // ref.read(toggleStateProvider.notifier).state = 1;
                 ref.read(authControllerProvider.notifier).signOut(context);
               },
             ),
@@ -71,7 +76,8 @@ class MoreOptions extends ConsumerWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Delete Account'),
-                        content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
+                        content: const Text(
+                            'Are you sure you want to delete your account? This action cannot be undone.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
@@ -95,10 +101,10 @@ class MoreOptions extends ConsumerWidget {
 
                 // Proceed with deletion if confirmed
                 if (shouldDelete) {
-                  // ref.read(toggleStateProvider.notifier).state = 0;
-                  ref.read(authControllerProvider.notifier).deleteAccount(context);
+                  ref
+                      .read(authControllerProvider.notifier)
+                      .deleteAccount(context);
                   ref.read(authControllerProvider.notifier).signOut(context);
-                  Navigator.pop(context);
                 }
               },
             ),

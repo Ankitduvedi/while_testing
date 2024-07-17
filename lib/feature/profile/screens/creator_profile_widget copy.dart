@@ -13,7 +13,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 
-import '../../../providers/user_provider copy.dart';
+import '../../../providers/user_provider.dart';
 // Ensure this import is correct
 
 class CreatorProfileVideo extends ConsumerStatefulWidget {
@@ -29,7 +29,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
 
   @override
   Widget build(BuildContext context) {
-        final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -75,8 +75,8 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(screenSize.height * .01),
+                              borderRadius: BorderRadius.circular(
+                                  screenSize.height * .01),
                               child: CachedNetworkImage(
                                 height: screenSize.width / 3,
                                 fit: BoxFit.cover,
@@ -195,14 +195,14 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
               ),
               TextButton(
                 onPressed: () {
-                            context.pop();
+                  context.pop();
                   // Perform the action for Option 2
                 },
                 child: const Text('Option 2'),
               ),
               TextButton(
                 onPressed: () {
-                            context.pop();
+                  context.pop();
                   var userId = ref.read(userDataProvider).userData?.id;
                   ref
                       .read(apisProvider)
