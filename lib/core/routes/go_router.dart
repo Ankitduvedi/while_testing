@@ -1,5 +1,4 @@
 import 'package:com.while.while_app/core/routes/navigation_const.dart';
-import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/screens/forgot_password_screen.dart';
 import 'package:com.while.while_app/feature/auth/screens/login_screen.dart';
 import 'package:com.while.while_app/feature/auth/screens/register_screen.dart';
@@ -17,7 +16,6 @@ import 'package:com.while.while_app/feature/social/screens/social_home_screen.da
 import 'package:com.while.while_app/feature/splash/screens/splash_view.dart';
 import 'package:com.while.while_app/feature/wrapper/scaffold_with_navbar.dart';
 import 'package:com.while.while_app/feature/wrapper/update.dart';
-import 'package:com.while.while_app/feature/wrapper/wrapper.dart';
 import 'package:go_router/go_router.dart';
 
 final goRouter = GoRouter(
@@ -29,10 +27,6 @@ final goRouter = GoRouter(
       path: '/splashScreen',
       builder: (context, state) => const SplashScreen(),
     ),
-    // GoRoute(
-    //   path: '/wrapper',
-    //   builder: (context, state) => const Wrapper(),
-    // ),
     GoRoute(
       path: '/updateAppScreen',
       builder: (context, state) => const UpdateAppScreen(),
@@ -87,7 +81,7 @@ final goRouter = GoRouter(
           GoRoute(
               path: '/creatorScreen/:user',
               builder: (context, state) {
-                return CreateScreen(user: state.extra as ChatUser);
+                return const CreateScreen();
               }),
           GoRoute(
             path: '/reelsScreen',
