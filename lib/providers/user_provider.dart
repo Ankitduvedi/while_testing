@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/core/secure_storage/saving_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,8 +32,6 @@ class UserDataProvider with ChangeNotifier {
           .listen((snapshot) {
         _userUpdateListener(snapshot);
       });
-      log('userid using auth in userDataProvider ${auth.uid}');
-      //SecureStorage().setUserId('userId', auth.uid);
 
       // Following subscription
       _followingSubscription = FirebaseFirestore.instance
