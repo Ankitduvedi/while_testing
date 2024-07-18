@@ -22,15 +22,8 @@ class CommunityHomeWidget extends ConsumerWidget {
         body: allCommunityAsyncValue.when(
           data: (allCommunities) => myCommunityAsyncValue.when(
             data: (joinedCommunity) {
-              final notJoinedCommunity = allCommunities
-                  .where((community) => joinedCommunity.contains(community.id))
-                  .toList();
-              var communityList = toogleSearch == 3
-                  ? notJoinedCommunity
-                      .where((user) =>
-                          user.name.toLowerCase().contains(searchQuery))
-                      .toList()
-                  : notJoinedCommunity;
+              final notJoinedCommunity = allCommunities.where((community) => joinedCommunity.contains(community.id)).toList();
+              var communityList = toogleSearch == 3 ? notJoinedCommunity.where((user) => user.name.toLowerCase().contains(searchQuery)).toList() : notJoinedCommunity;
 
               log("Community length ${communityList.length}");
               if (communityList.isEmpty) {

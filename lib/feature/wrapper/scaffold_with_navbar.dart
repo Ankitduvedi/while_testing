@@ -16,12 +16,10 @@ class ScaffoldWithNavBar extends ConsumerStatefulWidget {
   const ScaffoldWithNavBar({required this.childScreen, super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ScaffoldWithNavBarState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ScaffoldWithNavBarState();
 }
 
-class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
-    with TickerProviderStateMixin {
+class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> with TickerProviderStateMixin {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
@@ -70,29 +68,21 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       log('A new onMessageOpenedApp event was published!');
       // Navigate to desired screen based on message
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MessageHomeWidget(),
-          ));
+      context.push('/messageHomeWidgetScreen');
     });
   }
 
   void _checkInitialMessage() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       // Navigate to desired screen based on initialMessage
     }
   }
 
   void _initializeNotification() async {
-    const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings(
-            '@mipmap/ic_launcher'); // Set your app icon here
+    const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher'); // Set your app icon here
     //const IOSInitializationSettings iosInitializationSettings = IOSInitializationSettings();
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
+    const InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       //iOS: iosInitializationSettings,
     );
@@ -159,9 +149,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
             Tab(
               // key: homeKey,
               icon: Icon(
-                _controller!.index == 0
-                    ? FluentIcons.home_20_filled
-                    : FluentIcons.home_20_regular,
+                _controller!.index == 0 ? FluentIcons.home_20_filled : FluentIcons.home_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -169,9 +157,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
             Tab(
               // key: videoKey,
               icon: Icon(
-                _controller!.index == 1
-                    ? FluentIcons.video_add_20_filled
-                    : FluentIcons.video_add_20_regular,
+                _controller!.index == 1 ? FluentIcons.video_add_20_filled : FluentIcons.video_add_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -186,9 +172,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
             Tab(
               // key: chatKey,
               icon: Icon(
-                _controller!.index == 3
-                    ? FluentIcons.chat_20_filled
-                    : FluentIcons.chat_20_regular,
+                _controller!.index == 3 ? FluentIcons.chat_20_filled : FluentIcons.chat_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),
@@ -196,9 +180,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
             Tab(
               // key: profileKey,
               icon: Icon(
-                _controller!.index == 4
-                    ? FluentIcons.person_20_filled
-                    : FluentIcons.person_20_regular,
+                _controller!.index == 4 ? FluentIcons.person_20_filled : FluentIcons.person_20_regular,
                 size: 30,
                 color: !blackColor ? Colors.black : Colors.white,
               ),

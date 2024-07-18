@@ -22,37 +22,37 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  final photosKey = GlobalKey();
-  final profileKey = GlobalKey();
-  final statsKey = GlobalKey();
+  // final photosKey = GlobalKey();
+  // final profileKey = GlobalKey();
+  // final statsKey = GlobalKey();
 
-  late TutorialCoachMark tutorialCoachMark;
+  // late TutorialCoachMark tutorialCoachMark;
 
-  void initAppTour() {
-    final targets = addProfileSiteTargetPage(
-        photosKey: photosKey, profileKey: profileKey, statsKey: statsKey);
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      colorShadow: const Color.fromARGB(255, 44, 121, 255),
-      hideSkip: false,
-      textSkip: 'SKIP',
-      paddingFocus: 10,
-      opacityShadow: 0.8,
-      onFinish: () {
-        log('finish');
-      },
-      onClickTarget: (target) {
-        log(target.toString());
-      },
-    );
-    setState(() {
-      isEntered = true;
-    });
-  }
+  // void initAppTour() {
+  //   final targets = addProfileSiteTargetPage(
+  //       photosKey: photosKey, profileKey: profileKey, statsKey: statsKey);
+  //   tutorialCoachMark = TutorialCoachMark(
+  //     targets: targets,
+  //     colorShadow: const Color.fromARGB(255, 44, 121, 255),
+  //     hideSkip: false,
+  //     textSkip: 'SKIP',
+  //     paddingFocus: 10,
+  //     opacityShadow: 0.8,
+  //     onFinish: () {
+  //       log('finish');
+  //     },
+  //     onClickTarget: (target) {
+  //       log(target.toString());
+  //     },
+  //   );
+  //   setState(() {
+  //     isEntered = true;
+  //   });
+  // }
 
   void _showTutorial(ChatUser user) {
     Future.delayed(const Duration(seconds: 1), () {
-      tutorialCoachMark.show(context: context);
+      // tutorialCoachMark.show(context: context);
     });
     user.tourPage = user.tourPage + "${tourMap['UserProfileScreen2']}";
     ref.read(userDataProvider).updateUserData(user);
@@ -70,21 +70,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         user?.id != "" &&
         (!user!.tourPage.contains("${tourMap['UserProfileScreen2']}")) &&
         !isEntered) {
-      initAppTour();
-      _showTutorial(user);
+      // initAppTour();
+      // _showTutorial(user);
     }
 
-    var tabBarIcons = [
+    const tabBarIcons = [
       Tab(
-        key: photosKey,
+        // key: photosKey,
         text: 'Loops',
       ),
       Tab(
-        key: profileKey,
+        // key: profileKey,
         text: 'Videos',
       ),
       Tab(
-        key: statsKey,
+        // key: statsKey,
         text: 'Dashboard',
       ),
     ];

@@ -82,6 +82,4 @@ class _FeedItemState extends State<FeedItem> {
       ),
     );
   }
-
-  // No dispose method is needed here since the controller is managed by the parent widget
 }
