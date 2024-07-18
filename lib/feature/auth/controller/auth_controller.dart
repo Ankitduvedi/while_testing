@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:com.while.while_app/core/utils/utils.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/feature/auth/repository/firebase_repository.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,25 +18,10 @@ final authControllerProvider =
 final toggleSearchStateProvider = StateProvider<int>((ref) {
   return 0; // Initial value is false
 });
-final isChattingWithStateProvider = StateProvider<int>((ref) {
-  return 0; // Initial value is false
-});
+
 final authStateChangeProvider = StreamProvider((ref) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.authStateChange;
-});
-final getUserDataProvider = StreamProvider.family((ref, String uid) {
-  final authController = ref.watch(authControllerProvider.notifier);
-
-  // Create a StreamController to convert the Future into a Stream
-  final controller = StreamController<ChatUser>();
-
-  // Call getUserData and add the result to the stream
-  final userData = authController.getUserData(uid);
-  controller.add(userData);
-  controller.close(); // Close the stream after adding the data
-
-  return controller.stream;
 });
 
 class AuthController extends StateNotifier<bool> {
@@ -55,6 +41,9 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     log("setting user data to userProv");
     user.fold((l) => Utils.snackBar(l.message, context), (r) {
+      _ref
+          .watch(apisProvider)
+          .getFirebaseMessagingToken(FirebaseAuth.instance.currentUser!.uid);
       context.push('/');
     });
   }
@@ -90,6 +79,9 @@ class AuthController extends StateNotifier<bool> {
     final user = await _authRepository.loginWithEmailAndPassword(
         email, password, context);
     user.fold((l) => Utils.snackBar(l.message, context), (r) {
+      _ref
+          .watch(apisProvider)
+          .getFirebaseMessagingToken(FirebaseAuth.instance.currentUser!.uid);
       context.push('/');
     });
     state = false;
@@ -104,6 +96,9 @@ class AuthController extends StateNotifier<bool> {
     response.fold(
       (l) => Utils.snackBar(l.message, context),
       (r) {
+        _ref
+            .watch(apisProvider)
+            .getFirebaseMessagingToken(FirebaseAuth.instance.currentUser!.uid);
         context.push('/');
       },
     );

@@ -1,15 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/constant.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/core/secure_storage/saving_data.dart';
-import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/data/model/failure.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
-import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -69,39 +64,7 @@ class SplashRepository {
   }
 
   Future<Either<Failure, int>> checkCondition() async {
-    final firebaseUser = _ref.watch(authStateChangeProvider);
-    log('enteren in chechk condition');
-
     try {
-      ChatUser? userModel;
-      void getData(User data) async {
-        userModel =
-            _ref.read(authControllerProvider.notifier).getUserData(data.uid);
-        log("email ${userModel!.email}");
-        //_ref.read(userDataProvider.notifier).update((state) => userModel);
-      }
-
-      final user = _ref.read(userDataProvider).userData;
-
-      firebaseUser.when(
-          data: (firedata) {
-            //user firebase data
-            log('in firebase function');
-            if (firedata != null) {
-              //user provider data
-              if (user != null) {
-                log("user is ${user.name}");
-                _ref.watch(apisProvider).getFirebaseMessagingToken(user.id);
-              } else {
-                //function that will trigger provider update
-                getData(firedata);
-              }
-            }
-          },
-          error: (error, stackTrace) {
-            log("error: $error");
-          },
-          loading: () {});
       final tempaccessToken =
           await SecureStorage().getUserAccessToken('tempAccessToken');
 
@@ -112,6 +75,7 @@ class SplashRepository {
         final accessToken =
             await SecureStorage().getUserAccessToken('accessToken');
         if (accessToken != '') {
+          _ref.read(userDataProvider).userData;
           return right(2);
         } else {
           return right(3);
