@@ -32,9 +32,8 @@ class OpportunitiesScreen extends ConsumerWidget {
   const OpportunitiesScreen({Key? key, required this.user}) : super(key: key);
   final Community user;
 
-  Future<void> _showOpportunityDetails(
-      BuildContext context, Opportunity opportunity, WidgetRef ref) async {
-    return showDialog<void>( 
+  Future<void> _showOpportunityDetails(BuildContext context, Opportunity opportunity, WidgetRef ref) async {
+    return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -73,8 +72,7 @@ class OpportunitiesScreen extends ConsumerWidget {
                 ),
                 Wrap(
                   spacing: 8.0, // Horizontal space between children
-                  children:
-                      List<Widget>.generate(opportunity.tags.length, (index) {
+                  children: List<Widget>.generate(opportunity.tags.length, (index) {
                     // Check if the current item is the last in the list
                     bool isLast = index == opportunity.tags.length - 1;
                     // Create a text widget with or without a comma
@@ -101,27 +99,17 @@ class OpportunitiesScreen extends ConsumerWidget {
           ),
           actions: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // This will space out the children
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will space out the children
               children: <Widget>[
                 TextButton(
                   child: const Text('Delete'),
                   onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('communities')
-                        .doc(user.id)
-                        .collection('opportunities')
-                        .doc(opportunity.id)
-                        .delete();
+                    FirebaseFirestore.instance.collection('communities').doc(user.id).collection('opportunities').doc(opportunity.id).delete();
                     // Add your delete logic here before popping the dialog
-                            context.pop();
+                    context.pop();
                   },
                 ),
-                TextButton(
-                  child: const Text('Close'),
-                  onPressed: () =>                             context.pop()
-
-                ),
+                TextButton(child: const Text('Close'), onPressed: () => context.pop()),
               ],
             ),
           ],
@@ -134,11 +122,7 @@ class OpportunitiesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore
-            .collection('communities')
-            .doc(user.id)
-            .collection('opportunities')
-            .snapshots(),
+        stream: _firestore.collection('communities').doc(user.id).collection('opportunities').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -187,15 +171,11 @@ class OpportunitiesScreen extends ConsumerWidget {
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Column(
-                          mainAxisSize: MainAxisSize
-                              .min, // Ensures the column takes up minimal space
+                          mainAxisSize: MainAxisSize.min, // Ensures the column takes up minimal space
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(opportunity.organization,
-                                style: TextStyle(fontSize: 20)),
-                            SizedBox(
-                                height:
-                                    8), // Adds space between the organization and tags
+                            Text(opportunity.organization, style: TextStyle(fontSize: 20)),
+                            SizedBox(height: 8), // Adds space between the organization and tags
                             Wrap(
                               spacing: 3.0, // space between chips
                               runSpacing: 1.0, // space between lines
@@ -203,11 +183,7 @@ class OpportunitiesScreen extends ConsumerWidget {
                                   .map((tag) => Chip(
                                         padding: EdgeInsets.all(0),
                                         label: Text(tag),
-                                        backgroundColor: Color.fromARGB(
-                                            255,
-                                            187,
-                                            198,
-                                            208), // Adds a background color to the chips
+                                        backgroundColor: Color.fromARGB(255, 187, 198, 208), // Adds a background color to the chips
                                       ))
                                   .toList(),
                             ),
@@ -229,8 +205,7 @@ class OpportunitiesScreen extends ConsumerWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => AddOpportunityScreen(user: user)),
+            MaterialPageRoute(builder: (context) => AddOpportunityScreen(user: user)),
           );
         },
         child: Icon(Icons.add),

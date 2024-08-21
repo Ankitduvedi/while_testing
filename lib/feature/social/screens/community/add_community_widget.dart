@@ -23,16 +23,13 @@ class AddCommunityScreen {
     showDialog(
       useSafeArea: true,
       context: context,
-      barrierDismissible:
-          false, // Prevents closing the dialog by tapping outside of it
+      barrierDismissible: false, // Prevents closing the dialog by tapping outside of it
       builder: (_) => AlertDialog(
         actionsAlignment: MainAxisAlignment.spaceBetween,
         scrollable: true,
         elevation: 5, // Increased elevation for a more pronounced shadow
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 24), // Adjusted for a bit more space
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)), // Rounded corners
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24), // Adjusted for a bit more space
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), // Rounded corners
         title: const Row(
           children: [
             Icon(Icons.person_add, color: Colors.blueAccent, size: 28),
@@ -40,9 +37,7 @@ class AddCommunityScreen {
             Expanded(
               child: Text(
                 'Create Community',
-                style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Colors.blue), // Changed color to match the theme
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.blue), // Changed color to match the theme
               ),
             ),
           ],
@@ -54,33 +49,24 @@ class AddCommunityScreen {
               onChanged: (value) => name = value,
               decoration: InputDecoration(
                   hintText: 'Name',
-                  prefixIcon: const Icon(Icons.group,
-                      color: Colors
-                          .blueAccent), // Icon changed to group and color to blue
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15))),
+                  prefixIcon: const Icon(Icons.group, color: Colors.blueAccent), // Icon changed to group and color to blue
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
             ),
             const SizedBox(height: 10),
             TextFormField(
               onChanged: (value) => about = value,
               decoration: InputDecoration(
                   hintText: 'About',
-                  prefixIcon: const Icon(Icons.info_outline,
-                      color: Colors
-                          .blueAccent), // Icon changed for semantic purposes and color to blue
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15))),
+                  prefixIcon: const Icon(Icons.info_outline, color: Colors.blueAccent), // Icon changed for semantic purposes and color to blue
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
             ),
             const SizedBox(height: 10),
             TextFormField(
               onChanged: (value) => domain = value,
               decoration: InputDecoration(
                   hintText: 'Domain',
-                  prefixIcon: const Icon(Icons.domain,
-                      color: Colors
-                          .blueAccent), // Icon changed to domain and color to blue
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15))),
+                  prefixIcon: const Icon(Icons.domain, color: Colors.blueAccent), // Icon changed to domain and color to blue
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
@@ -94,18 +80,13 @@ class AddCommunityScreen {
               },
               decoration: InputDecoration(
                   hintText: 'Select Type',
-                  prefixIcon: const Icon(Icons.swap_horiz,
-                      color: Colors
-                          .blueAccent), // Icon changed for semantic purposes and color to blue
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15))),
+                  prefixIcon: const Icon(Icons.swap_horiz, color: Colors.blueAccent), // Icon changed for semantic purposes and color to blue
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
             ),
             const SizedBox(height: 20),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              _buildButton(context, 'Camera', Icons.camera_alt_rounded,
-                  ImageSource.camera),
-              _buildButton(
-                  context, 'Gallery', Icons.photo, ImageSource.gallery),
+              _buildButton(context, 'Camera', Icons.camera_alt_rounded, ImageSource.camera),
+              _buildButton(context, 'Gallery', Icons.photo, ImageSource.gallery),
             ]),
           ],
         ),
@@ -114,18 +95,15 @@ class AddCommunityScreen {
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 244, 182, 182),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 4,
               ),
               onPressed: () => context.pop(),
-              child: const Text('Discard',
-                  style: TextStyle(color: Colors.black, fontSize: 16))),
+              child: const Text('Discard', style: TextStyle(color: Colors.black, fontSize: 16))),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 174, 239, 133),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 4,
               ),
               onPressed: () async {
@@ -134,40 +112,18 @@ class AddCommunityScreen {
                 if (type != '' && name != '') {
                   final time = DateTime.now().millisecondsSinceEpoch.toString();
                   final String id = uuid.v4();
-
-                  final Community community = Community(
-                      image: '',
-                      about: about,
-                      name: name,
-                      createdAt: time,
-                      id: id,
-                      email: ref.read(userDataProvider).userData!.email,
-                      type: type,
-                      noOfUsers: '1',
-                      domain: domain,
-                      timeStamp: time,
-                      easyQuestions: 0,
-                      hardQuestions: 0,
-                      mediumQuestions: 0,
-                      admin: ref.read(userDataProvider).userData!.name);
-                  log("creating");
-                  ref
-                      .read(apisProvider)
-                      .addCommunities(community, File(image!.path));
-                  // APIs.addCommunities(community, File(image!.path));
-                  log("created");
-                  Navigator.pop(context);
+                  final Community community = Community(image: '', about: about, name: name, createdAt: time, id: id, email: ref.read(userDataProvider).userData!.email, type: type, noOfUsers: '1', domain: domain, timeStamp: time, easyQuestions: 0, hardQuestions: 0, mediumQuestions: 0, admin: ref.read(userDataProvider).userData!.name);
+                  ref.read(apisProvider).addCommunities(community, File(image!.path));
+                  context.pop();
                 }
               },
-              child: const Text('Create',
-                  style: TextStyle(color: Colors.black, fontSize: 16))),
+              child: const Text('Create', style: TextStyle(color: Colors.black, fontSize: 16))),
         ],
       ),
     );
   }
 
-  Widget _buildButton(
-      BuildContext context, String label, IconData icon, ImageSource source) {
+  Widget _buildButton(BuildContext context, String label, IconData icon, ImageSource source) {
     return TextButton.icon(
       style: TextButton.styleFrom(
         backgroundColor: Colors.blueGrey[100],

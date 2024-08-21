@@ -14,8 +14,7 @@ class MoreOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -26,10 +25,7 @@ class MoreOptions extends ConsumerWidget {
             ListTile(
               onTap: () {
                 context.pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const EditUserProfileScreen()));
+                context.push('account/editProfileScreen');
               },
               leading: const Icon(
                 Icons.edit,
@@ -76,22 +72,22 @@ class MoreOptions extends ConsumerWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Delete Account'),
-                        content: const Text(
-                            'Are you sure you want to delete your account? This action cannot be undone.'),
+                        content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               // User cancels
-                              Navigator.of(context).pop(false);
+                              context.pop(false);
                             },
                             child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () {
                               // User confirms deletion
-                              Navigator.of(context).pop(true);
-                              // SystemNavigator.pop();
-                            },
+                              context.pop(true);
+                              SecureStorage().setUserId('userId', '');
+                              ref.read(apisProvider).updateActiveStatus(0);
+                             },
                             child: const Text('Delete'),
                           ),
                         ],
@@ -101,9 +97,7 @@ class MoreOptions extends ConsumerWidget {
 
                 // Proceed with deletion if confirmed
                 if (shouldDelete) {
-                  ref
-                      .read(authControllerProvider.notifier)
-                      .deleteAccount(context);
+                  ref.read(authControllerProvider.notifier).deleteAccount(context);
                   ref.read(authControllerProvider.notifier).signOut(context);
                 }
               },

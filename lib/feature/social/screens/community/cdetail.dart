@@ -15,16 +15,13 @@ import '../../../../data/model/community_user.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CCommunityDetailScreen extends ConsumerStatefulWidget {
-  const CCommunityDetailScreen({Key? key, required this.community})
-      : super(key: key);
+  const CCommunityDetailScreen({Key? key, required this.community}) : super(key: key);
   final Community community;
   @override
-  ConsumerState<CCommunityDetailScreen> createState() =>
-      _CCommunityDetailScreenState();
+  ConsumerState<CCommunityDetailScreen> createState() => _CCommunityDetailScreenState();
 }
 
-class _CCommunityDetailScreenState
-    extends ConsumerState<CCommunityDetailScreen> {
+class _CCommunityDetailScreenState extends ConsumerState<CCommunityDetailScreen> {
   late Community community;
   @override
   void initState() {
@@ -72,24 +69,15 @@ class _CCommunityDetailScreenState
         title: GestureDetector(
           onTap: () {
             if (community.email == ref.read(userDataProvider).userData!.email) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => ProfileScreen(community: community)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen(community: community)));
             } else {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          ProfileScreenParticipant(community: community)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreenParticipant(community: community)));
             }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(Icons.arrow_back, color: Colors.black)),
+              IconButton(onPressed: () => context.go('/socials'), icon: const Icon(Icons.arrow_back, color: Colors.black)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(
@@ -101,18 +89,13 @@ class _CCommunityDetailScreenState
                     padding: EdgeInsets.all(8.0),
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  errorWidget: (context, url, error) => const Icon(
-                      Icons.broken_image,
-                      size: 70,
-                      color: Colors.black12),
+                  errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 70, color: Colors.black12),
                 ),
               ),
               const SizedBox(
                 width: 15,
               ),
-              Text(community.name,
-                  style: GoogleFonts.ptSans(
-                      color: Colors.black, fontWeight: FontWeight.w400)),
+              Text(community.name, style: GoogleFonts.ptSans(color: Colors.black, fontWeight: FontWeight.w400)),
             ],
           ),
         ),
@@ -142,16 +125,9 @@ class _CCommunityDetailScreenState
                           width: itemsName[index].length.toDouble() * 4 + 60,
                           height: 45,
                           decoration: BoxDecoration(
-                            color: current == index
-                                ? Colors.white
-                                : Colors.white70,
-                            borderRadius: current == index
-                                ? BorderRadius.circular(15)
-                                : BorderRadius.circular(10),
-                            border: current == index
-                                ? Border.all(
-                                    color: Colors.grey.shade800, width: 2)
-                                : null,
+                            color: current == index ? Colors.white : Colors.white70,
+                            borderRadius: current == index ? BorderRadius.circular(15) : BorderRadius.circular(10),
+                            border: current == index ? Border.all(color: Colors.grey.shade800, width: 2) : null,
                           ),
                           child: Center(
                             child: Text(
@@ -175,8 +151,7 @@ class _CCommunityDetailScreenState
 
           SingleChildScrollView(
             child: SizedBox(
-              height:
-                  screenSize.height - keyboardSpace - screenSize.height / 5.2,
+              height: screenSize.height - keyboardSpace - screenSize.height / 5.2,
               child: items[current],
             ),
           ),

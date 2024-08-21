@@ -33,19 +33,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   void _openUserListDialog(String id, List<ChatUser> listUsers) {
     log("community id$id");
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (ctx) => UserListDialog(
-                  commId: id,
-                  list: listUsers,
-                )));
+    context.push('/community/communityAdminUserCard/openListDialog/$id', extra: listUsers);
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (ctx) => UserListDialog(
+    //               commId: id,
+    //               list: listUsers,
+    //             )));
   }
 
   @override
   Widget build(BuildContext context) {
+    log("egsg");
     final fireService = ref.read(apisProvider);
-            final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     String designation = "";
     List<ChatUser> list = [];
@@ -114,27 +116,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         _image != null
                             ?
                             //local image
-                            ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(screenSize.height * .1),
-                                child: Image.file(File(_image!),
-                                    width: screenSize.height * .2,
-                                    height: screenSize.height * .2,
-                                    fit: BoxFit.cover))
+                            ClipRRect(borderRadius: BorderRadius.circular(screenSize.height * .1), child: Image.file(File(_image!), width: screenSize.height * .2, height: screenSize.height * .2, fit: BoxFit.cover))
                             :
                             //image from server
                             ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(screenSize.height * .1),
+                                borderRadius: BorderRadius.circular(screenSize.height * .1),
                                 child: CachedNetworkImage(
                                   width: screenSize.height * .2,
                                   height: screenSize.height * .2,
                                   filterQuality: FilterQuality.low,
                                   fit: BoxFit.cover,
                                   imageUrl: widget.community.image,
-                                  errorWidget: (context, url, error) =>
-                                      const CircleAvatar(
-                                          child: Icon(CupertinoIcons.person)),
+                                  errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
                                 ),
                               ),
 
@@ -159,9 +152,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     SizedBox(height: screenSize.height * .03),
 
                     // user email label
-                    Text(widget.community.email,
-                        style: const TextStyle(
-                            color: Colors.black54, fontSize: 16)),
+                    Text(widget.community.email, style: const TextStyle(color: Colors.black54, fontSize: 16)),
 
                     // for adding some space
                     SizedBox(height: screenSize.height * .05),
@@ -170,16 +161,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     TextFormField(
                       initialValue: widget.community.name,
                       onSaved: (val) => community.name = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon:
-                              const Icon(Icons.person, color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Happy Singh',
-                          label: const Text('Name')),
+                      validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
+                      decoration: InputDecoration(prefixIcon: const Icon(Icons.person, color: Colors.blue), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), hintText: 'eg. Happy Singh', label: const Text('Name')),
                     ),
 
                     // for adding some space
@@ -189,16 +172,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     TextFormField(
                       initialValue: widget.community.about,
                       onSaved: (val) => community.about = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Feeling Happy',
-                          label: const Text('About')),
+                      validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
+                      decoration: InputDecoration(prefixIcon: const Icon(Icons.info_outline, color: Colors.blue), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), hintText: 'eg. Feeling Happy', label: const Text('About')),
                     ),
                     SizedBox(height: screenSize.height * .02),
 
@@ -206,16 +181,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     TextFormField(
                       initialValue: widget.community.domain,
                       onSaved: (val) => community.domain = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Feeling Happy',
-                          label: const Text('Domain')),
+                      validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
+                      decoration: InputDecoration(prefixIcon: const Icon(Icons.info_outline, color: Colors.blue), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), hintText: 'eg. Feeling Happy', label: const Text('Domain')),
                     ),
                     SizedBox(height: screenSize.height * .02),
 
@@ -223,16 +190,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     TextFormField(
                       initialValue: widget.community.email,
                       onSaved: (val) => community.email = val ?? '',
-                      validator: (val) => val != null && val.isNotEmpty
-                          ? null
-                          : 'Required Field',
-                      decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'eg. Feeling Happy',
-                          label: const Text('Email')),
+                      validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
+                      decoration: InputDecoration(prefixIcon: const Icon(Icons.info_outline, color: Colors.blue), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), hintText: 'eg. Feeling Happy', label: const Text('Email')),
                     ),
 
                     // for adding some space
@@ -240,24 +199,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     // update profile button
                     ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          minimumSize: Size(screenSize.width * .5, screenSize.height * .06)),
+                      style: ElevatedButton.styleFrom(shape: const StadiumBorder(), minimumSize: Size(screenSize.width * .5, screenSize.height * .06)),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           log(community.toJson().toString());
-                          fireService
-                              .updateCommunityInfo(community)
-                              .then((value) {
-                            Dialogs.showSnackbar(
-                                context, 'Profile Updated Successfully!');
+                          fireService.updateCommunityInfo(community).then((value) {
+                            Dialogs.showSnackbar(context, 'Profile Updated Successfully!');
                           });
                         }
                       },
                       icon: const Icon(Icons.edit, size: 28),
-                      label:
-                          const Text('UPDATE', style: TextStyle(fontSize: 16)),
+                      label: const Text('UPDATE', style: TextStyle(fontSize: 16)),
                     ),
                     const SizedBox(
                       height: 20,
@@ -270,8 +223,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         children: [
                           Text(
                             'Participants',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 18),
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                           ),
                         ],
                       ),
@@ -282,8 +234,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     SingleChildScrollView(
                       child: StreamBuilder(
-                          stream: fireService.getCommunityParticipantsInfo(
-                              widget.community.id),
+                          stream: fireService.getCommunityParticipantsInfo(widget.community.id),
                           builder: (context, snapshot) {
                             switch (snapshot.connectionState) {
                               //if data is loading
@@ -295,11 +246,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               case ConnectionState.active:
                               case ConnectionState.done:
                                 final data = snapshot.data?.docs;
-                                list = data
-                                        ?.map(
-                                            (e) => ChatUser.fromJson(e.data()))
-                                        .toList() ??
-                                    [];
+                                list = data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
                                 if (list.isNotEmpty) {
                                   log(list.length.toString());
@@ -307,109 +254,59 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     children: [
                                       // Add participants
                                       ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemCount: snapshot.data!.docs.length,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
+                                            padding: const EdgeInsets.only(top: 8.0),
                                             child: Card(
-                                                margin: const EdgeInsets.only(
-                                                    left: 0, right: 0),
+                                                margin: const EdgeInsets.only(left: 0, right: 0),
                                                 color: Colors.white,
                                                 // elevation: 2,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15)),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                                 child: ListTile(
-                                                  subtitle:
-                                                      Text(list[index].email),
+                                                  subtitle: Text(list[index].email),
                                                   onLongPress: () {
                                                     // Show a dialog with the option to delete the user
                                                     showDialog(
                                                       context: context,
                                                       builder: (context) {
                                                         return AlertDialog(
-                                                          title: Text(
-                                                              list[index].name),
+                                                          title: Text(list[index].name),
                                                           content: Form(
                                                             key: _formKey2,
-                                                            child:
-                                                                TextFormField(
-                                                              initialValue: list[
-                                                                      index]
-                                                                  .designation,
+                                                            child: TextFormField(
+                                                              initialValue: list[index].designation,
                                                               onSaved: (val) {
                                                                 setState(() {
-                                                                  designation =
-                                                                      val!;
+                                                                  designation = val!;
                                                                 });
                                                               },
-                                                              validator: (val) =>
-                                                                  val != null &&
-                                                                          val.isNotEmpty
-                                                                      ? null
-                                                                      : 'Required Field',
-                                                              decoration: InputDecoration(
-                                                                  prefixIcon: const Icon(
-                                                                      Icons
-                                                                          .info_outline,
-                                                                      color: Colors
-                                                                          .blue),
-                                                                  border: OutlineInputBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12)),
-                                                                  hintText:
-                                                                      'eg. Feeling Happy',
-                                                                  label: const Text(
-                                                                      'Designation')),
+                                                              validator: (val) => val != null && val.isNotEmpty ? null : 'Required Field',
+                                                              decoration: InputDecoration(prefixIcon: const Icon(Icons.info_outline, color: Colors.blue), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), hintText: 'eg. Feeling Happy', label: const Text('Designation')),
                                                             ),
                                                           ),
                                                           actions: [
                                                             OutlinedButton(
                                                               onPressed: () {
-                                                                ref
-                                                                    .read(socialControllerProvider
-                                                                        .notifier)
-                                                                    .removeUserFromCommunity(
-                                                                        community
-                                                                            .id,
-                                                                        list[index]
-                                                                            .id,
-                                                                        context);
-                                                                                           context.pop();
+                                                                ref.read(socialControllerProvider.notifier).removeUserFromCommunity(community.id, list[index].id, context);
+                                                                context.pop();
 // Close the dialog
                                                               },
-                                                              child: const Text(
-                                                                  'Remove User'),
+                                                              child: const Text('Remove User'),
                                                             ),
                                                             //upddate button
                                                             TextButton(
                                                               onPressed: () {
-                                                                if (_formKey2
-                                                                    .currentState!
-                                                                    .validate()) {
-                                                                  _formKey2
-                                                                      .currentState!
-                                                                      .save();
+                                                                if (_formKey2.currentState!.validate()) {
+                                                                  _formKey2.currentState!.save();
 
-                                                                  ref.read(socialControllerProvider.notifier).uddateDesignation(
-                                                                      community
-                                                                          .id,
-                                                                      list[index]
-                                                                          .id,
-                                                                      designation,
-                                                                      context);
-                                                                                           context.pop();
-
+                                                                  ref.read(socialControllerProvider.notifier).uddateDesignation(community.id, list[index].id, designation, context);
+                                                                  context.pop();
                                                                 }
                                                               },
-                                                              child: const Text(
-                                                                  'Update'),
+                                                              child: const Text('Update'),
                                                             ),
                                                           ],
                                                         );
@@ -417,42 +314,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     );
                                                   },
                                                   leading: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
+                                                    borderRadius: BorderRadius.circular(20),
                                                     child: CachedNetworkImage(
                                                       width: 42,
                                                       height: 42,
-                                                      imageUrl:
-                                                          list[index].image,
+                                                      imageUrl: list[index].image,
                                                       fit: BoxFit.fill,
-                                                      placeholder:
-                                                          (context, url) =>
-                                                              const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                strokeWidth: 2),
+                                                      placeholder: (context, url) => const Padding(
+                                                        padding: EdgeInsets.all(8.0),
+                                                        child: CircularProgressIndicator(strokeWidth: 2),
                                                       ),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
-                                                              Icons.image,
-                                                              size: 70),
+                                                      errorWidget: (context, url, error) => const Icon(Icons.image, size: 70),
                                                     ),
                                                   ),
                                                   title: Text(list[index].name),
-                                                  trailing:
-                                                      widget.community.email ==
-                                                              list[index].email
-                                                          ? const Text('Admin')
-                                                          : Text(list[index]
-                                                              .designation),
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
+                                                  trailing: widget.community.email == list[index].email ? const Text('Admin') : Text(list[index].designation),
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                                 )),
                                           );
                                         },
@@ -481,23 +358,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   // bottom sheet for picking a profile picture for user
   void _showBottomSheet(fireservice) {
-            final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     showModalBottomSheet(
         context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         builder: (_) {
           return ListView(
             shrinkWrap: true,
-            padding:
-                EdgeInsets.only(top: screenSize.height * .03, bottom: screenSize.height * .05),
+            padding: EdgeInsets.only(top: screenSize.height * .03, bottom: screenSize.height * .05),
             children: [
               //pick profile picture label
-              const Text('Pick Profile Picture',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              const Text('Pick Profile Picture', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
 
               //for adding some space
               SizedBox(height: screenSize.height * .02),
@@ -508,26 +380,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   //pick from gallery button
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const CircleBorder(), fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 80);
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
                             _image = image.path;
                           });
 
-                          fireservice.updateProfilePictureCommunity(
-                              File(_image!), widget.community.id);
+                          fireservice.updateProfilePictureCommunity(File(_image!), widget.community.id);
                           // for hiding bottom sheet
-                            context.pop();
+                          context.pop();
                         }
                       },
                       child: Icon(
@@ -538,26 +405,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   //take picture from camera button
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const CircleBorder(), fixedSize: Size(screenSize.width * .3, screenSize.height * .15)),
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 
                         // Pick an image
-                        final XFile? image = await picker.pickImage(
-                            source: ImageSource.camera, imageQuality: 80);
+                        final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
                         if (image != null) {
                           log('Image Path: ${image.path}');
                           setState(() {
                             _image = image.path;
                           });
 
-                          fireservice.updateProfilePictureCommunity(
-                              File(_image!), widget.community.id);
+                          fireservice.updateProfilePictureCommunity(File(_image!), widget.community.id);
                           // for hiding bottom sheet
-                            context.pop();
+                          context.pop();
                         }
                       },
                       child: Image.asset('images/camera.png')),

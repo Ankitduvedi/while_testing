@@ -35,10 +35,7 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
   @override
   Widget build(BuildContext context) {
     mq = MediaQuery.of(context).size;
-    final userId = ref
-        .watch(userDataProvider)
-        .userData!
-        .id; // Assuming this is how you get the user ID.
+    final userId = ref.watch(userDataProvider).userData!.id; // Assuming this is how you get the user ID.
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -52,27 +49,23 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
               final peopleDocs = peopleSnapshot.docs;
               return followingStream.when(
                 data: (followingSnapshot) {
-                  final followingDocs =
-                      followingSnapshot.docs.map((doc) => doc.id).toList();
+                  final followingDocs = followingSnapshot.docs.map((doc) => doc.id).toList();
 
                   // Filter out the people who are already followed by the user
                   final filteredPeople = peopleDocs.where((personDoc) {
                     final person = personDoc.data() as Map<String, dynamic>;
                     final personId = person['userId'];
-                    return personId == userId ||
-                        followingDocs.contains(personId);
+                    return personId == userId || followingDocs.contains(personId);
                   }).toList();
 
                   return filteredPeople.isNotEmpty
                       ? ListView.builder(
                           itemCount: filteredPeople.length,
                           itemBuilder: (context, index) {
-                            final person = filteredPeople[index].data()
-                                as Map<String, dynamic>;
+                            final person = filteredPeople[index].data() as Map<String, dynamic>;
                             final timestamp = person['timestamp'] as Timestamp;
                             final dateTime = timestamp.toDate();
-                            final formattedDate =
-                                DateFormat.yMd().add_Hms().format(dateTime);
+                            final formattedDate = DateFormat.yMd().add_Hms().format(dateTime);
 
                             return Hero(
                               tag: 'status_${person['statusId']}',
@@ -80,44 +73,22 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
                                 children: [
                                   ListTile(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FullStatusScreen(
-                                              statuses: filteredPeople
-                                                  .map((doc) => doc.data()
-                                                      as Map<String, dynamic>)
-                                                  .toList(),
-                                              initialIndex: index,
-                                            ),
-                                          ));
+                                      context.push('/socials/statusScreen/fullStatusScreen/$index?', extra: filteredPeople.map((doc) => doc.data() as Map<String, dynamic>).toList());
                                     },
                                     leading: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          mq!.height * .03),
+                                      borderRadius: BorderRadius.circular(mq!.height * .03),
                                       child: CachedNetworkImage(
                                         width: mq!.height * .055,
                                         height: mq!.height * .055,
                                         fit: BoxFit.fill,
                                         imageUrl: person['profileImg'],
-                                        errorWidget: (context, url, error) =>
-                                            const CircleAvatar(
-                                                child: Icon(
-                                                    CupertinoIcons.person)),
+                                        errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
                                       ),
                                     ),
-                                    title: Text(person['userName'],
-                                        style: GoogleFonts.ptSans(
-                                            color: Colors.black)),
-                                    subtitle: Text(formattedDate,
-                                        style: GoogleFonts.ptSans(
-                                            color: Colors.black)),
+                                    title: Text(person['userName'], style: GoogleFonts.ptSans(color: Colors.black)),
+                                    subtitle: Text(formattedDate, style: GoogleFonts.ptSans(color: Colors.black)),
                                   ),
-                                  Divider(
-                                      color: Colors.grey.shade300,
-                                      thickness: 1,
-                                      height: 0),
+                                  Divider(color: Colors.grey.shade300, thickness: 1, height: 0),
                                 ],
                               ),
                             );
@@ -166,21 +137,17 @@ class _StatusScreenStateState extends ConsumerState<StatusScreenState> {
               Image.file(imageFile),
               TextField(
                 controller: _statusTextController,
-                decoration:
-                    const InputDecoration(hintText: 'Enter your status'),
+                decoration: const InputDecoration(hintText: 'Enter your status'),
               ),
             ],
           ),
           actions: [
-            TextButton(
-                child: const Text('Cancel'), onPressed: () => context.pop()),
+            TextButton(child: const Text('Cancel'), onPressed: () => context.pop()),
             TextButton(
               child: const Text('Post'),
               onPressed: () {
                 // Assuming postStatus is a method in your API provider
-                ref
-                    .read(apisProvider)
-                    .postStatus(imageFile, _statusTextController.text);
+                ref.read(apisProvider).postStatus(imageFile, _statusTextController.text);
                 context.pop();
               },
             ),

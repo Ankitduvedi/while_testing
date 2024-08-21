@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../providers/apis.dart';
 import 'cdetail.dart';
 import '../../../../core/utils/my_date_util.dart';
@@ -28,7 +29,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
 
   @override
   Widget build(BuildContext context) {
-            final screenSize = ref.read(sizeProvider);
+    final screenSize = ref.read(sizeProvider);
 
     log(widget.user.name);
     final fireService = ref.read(apisProvider);
@@ -39,21 +40,14 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
       child: InkWell(
           onTap: () {
             // for navigating to chat screen
+            context.push('/socials/community/communityUserCard', extra: widget.user);
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) =>
-                        CCommunityDetailScreen(community: widget.user)));
           },
           child: StreamBuilder(
             stream: fireService.getLastCommunityMessage(widget.user),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
-              final list = data
-                      ?.map((e) => CommunityMessage.fromJson(e.data()))
-                      .toList() ??
-                  [];
+              final list = data?.map((e) => CommunityMessage.fromJson(e.data())).toList() ?? [];
               if (list.isNotEmpty) {
                 _message = list[0];
                 log('message ${_message!.msg}');
@@ -63,10 +57,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 //user profile picture
                 leading: InkWell(
                   onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) =>
-                            CommunityProfileDialog(user: widget.user));
+                    showDialog(context: context, builder: (_) => CommunityProfileDialog(user: widget.user));
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(screenSize.height * .03),
@@ -75,8 +66,7 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                       height: screenSize.height * .055,
                       fit: BoxFit.fill,
                       imageUrl: widget.user.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
+                      errorWidget: (context, url, error) => const CircleAvatar(child: Icon(CupertinoIcons.person)),
                     ),
                   ),
                 ),
@@ -101,22 +91,18 @@ class _ChatCommunityCardState extends ConsumerState<ChatCommunityCard> {
                 //last message time
                 trailing: _message == null
                     ? null //show nothing when no message is sent
-                    : _message!.read.isEmpty &&
-                            _message!.fromId != fireService.user.uid
+                    : _message!.read.isEmpty && _message!.fromId != fireService.user.uid
                         ?
                         //show for unread message
                         Container(
                             width: 15,
                             height: 15,
-                            decoration: BoxDecoration(
-                                color: Colors.black12,
-                                borderRadius: BorderRadius.circular(10)),
+                            decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(10)),
                           )
                         :
                         //message sent time
                         Text(
-                            MyDateUtil.getLastMessageTime(
-                                context: context, time: _message!.sent),
+                            MyDateUtil.getLastMessageTime(context: context, time: _message!.sent),
                             style: GoogleFonts.ptSans(color: Colors.black87),
                           ),
               );
