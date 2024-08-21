@@ -1,5 +1,6 @@
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+
 
 class VideoPlayerItem extends StatefulWidget {
   const VideoPlayerItem({super.key, required this.videoUrl});
@@ -11,21 +12,53 @@ class VideoPlayerItem extends StatefulWidget {
 }
 
 class _VideoPlayerItemState extends State<VideoPlayerItem> {
-  late VideoPlayerController videoPlayerController;
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
-    videoPlayerController = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((value) {
-        videoPlayerController.play();
-        videoPlayerController.setVolume(1);
-      });
+    BetterPlayerConfiguration betterPlayerConfiguration =
+    BetterPlayerConfiguration(
+        aspectRatio: 16 / 9,
+        autoDispose: true,
+        autoDetectFullscreenAspectRatio: true,
+        fullScreenByDefault: true,
+        fullScreenAspectRatio: 16 / 9,
+        //AR dual time but it's okay.
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+            enablePip: false,
+            enableFullscreen: true,
+            enableSubtitles: false,
+            loadingColor: Colors.deepOrange,
+            progressBarBufferedColor: Colors.red,
+            //very useful
+            progressBarHandleColor: Colors.blue,
+            progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+  widget.videoUrl,
+      videoFormat: BetterPlayerVideoFormat.hls, //don't forget it if not hsl
+      bufferingConfiguration: BetterPlayerBufferingConfiguration(
+        minBufferMs: 5000,
+        maxBufferMs: 131072,
+        bufferForPlaybackMs: 2500,
+        bufferForPlaybackAfterRebufferMs: 5000,
+      ),
+      // cacheConfiguration is very useful
+      cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          preCacheSize: 3 * 1024 * 1024),
+    );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
     super.initState();
   }
 
   @override
   void dispose() {
-    videoPlayerController.dispose();
+   betterPlayerController.dispose();
     super.dispose();
   }
 
@@ -36,7 +69,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       height: size.height,
       width: size.width,
       decoration: const BoxDecoration(color: Colors.black),
-      child: VideoPlayer(videoPlayerController),
+      child: BetterPlayer(controller: betterPlayerController),
     );
   }
 }

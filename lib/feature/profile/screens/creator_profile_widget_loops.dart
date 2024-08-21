@@ -1,16 +1,17 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/profile/controller/video_list_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/creators_reels_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/update_thumbnail.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-import 'package:com.while.while_app/data/model/video_model.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../providers/user_provider.dart';
 // Ensure this import is correct
 
 class CreatorProfile extends ConsumerStatefulWidget {
@@ -110,129 +111,90 @@ class _CreatorProfileState extends ConsumerState<CreatorProfile> {
 
   void _showOptionsDialog(
       BuildContext context, String id, WidgetRef ref, Video video) {
-    const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
-    const apiUrl = 'https://sandbox.api.video';
+    // const String apiKey = 'LJd5487BMFq2YdiDxjNWeoJBPY3eqm3M0YHiw1qj7g6';
+    // const apiUrl = 'https://sandbox.api.video';
 
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Use a FutureBuilder to fetch data in the background
-        return FutureBuilder(
-          future: http.get(
-            Uri.parse('$apiUrl/videos/$id'),
-            headers: {
-              'Authorization': 'Bearer $apiKey',
-              // Add other headers if needed
-            },
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              // Error while fetching data, show an error dialog
-              return AlertDialog(
-                title: const Text('Error'),
-                content: Text('Failed to fetch data: ${snapshot.error}'),
-              );
-            } else if (!snapshot.hasData) {
-              // Data does not exist, show an error dialog
-              return const AlertDialog(
-                title: Text('Error'),
-                content: Text('Data does not exist.'),
-              );
-            } else {
-              // Data is fetched successfully, update the dialog content
-              var data = json.decode(snapshot.data!.body);
-              String title = data['title'] ?? "No Title";
-              String description = data['description'] ?? "No Description";
-              int views = data['views'] ?? 1000;
-              DateTime uploadedAt = DateTime.parse(data['createdAt']);
-              String thumbnail = data['assets']['thumbnail'] ?? "No Title";
-
-              return AlertDialog(
-                title: const Hero(
-                  tag: 'dialog-title', // Use a unique tag for the Hero widget
+        context: context,
+        builder: (BuildContext context) {
+          // Use a FutureBuilder to fetch data in the background
+          return AlertDialog(
+            title: const Hero(
+              tag: 'dialog-title', // Use a unique tag for the Hero widget
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text('Choose an Option',
+                    style: TextStyle(fontSize: 16.0)), // Set a fixed text size
+              ),
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Hero(
+                  tag: 'dialog-content',
+                  // Use a unique tag for the Hero widget
                   child: Material(
                     type: MaterialType.transparency,
-                    child: Text('Choose an Option',
-                        style:
-                            TextStyle(fontSize: 16.0)), // Set a fixed text size
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Title: ${video.title}',
+                            style: const TextStyle(
+                                fontSize: 14.0)), // Set a fixed text size
+                        Text('Description: ${video.description}',
+                            style: const TextStyle(
+                                fontSize: 14.0)), // Set a fixed text size
+                        Text('Views: ${video.views}',
+                            style: const TextStyle(
+                                fontSize: 14.0)), // Set a fixed text size
+                        // Text('Uploaded At: ${video.}',
+                        //     style: const TextStyle(
+                        //         fontSize: 14.0)), // Set a fixed text size
+                      ],
+                    ),
                   ),
                 ),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Hero(
-                      tag:
-                          'dialog-content', // Use a unique tag for the Hero widget
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Title: $title',
-                                style: const TextStyle(
-                                    fontSize: 14.0)), // Set a fixed text size
-                            Text('Description: $description',
-                                style: const TextStyle(
-                                    fontSize: 14.0)), // Set a fixed text size
-                            Text('Views: $views',
-                                style: const TextStyle(
-                                    fontSize: 14.0)), // Set a fixed text size
-                            Text('Uploaded At: ${uploadedAt.toString()}',
-                                style: const TextStyle(
-                                    fontSize: 14.0)), // Set a fixed text size
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectThumbnailScreen(
+                              isLoop: true,
+                              category: video.category,
+                              videoId: video.id,
+                              initialThumbnailUrl: video.thumbnail)));
+                  // Perform the action for Option 1
+                },
+                child: const Text('Set Thumbnail'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                  // Perform the action for Option 2
+                },
+                child: const Text('Option 2'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                  var userId = ref.read(userDataProvider).userData?.id;
+                  print("video id: ${video.id}");
+                  ref
+                      .read(apisProvider)
+                      .deleteLoop(video.id, video.category, userId!);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelectThumbnailScreen(
-                                    category: '',
-                                    videoId: id,
-                                    initialThumbnailUrl: thumbnail,
-                                  )));
-                      // Perform the action for Option 1
-                    },
-                    child: const Text('Update thumbnail'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => SelectThumbnailScreen()));
-                      // Perform the action for Option 2
-                    },
-                    child: const Text('Option 2'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      ref.read(apisProvider).deleteVideo(id, '', '');
-                      // APIs.deleteReel(id);
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                    ),
-                    child: const Text('Delete'),
-                  ),
-                ],
-              );
-            }
-          },
-        );
-      },
-    );
+                child: const Text('Delete'),
+              ),
+            ],
+          );
+        });
   }
 }

@@ -78,68 +78,68 @@ class _AddReelState extends ConsumerState<AddReel> {
     // File vid = await compressVideo(path);
     // Dialogs.showSnackbar(context, vid.path.split(".").last);
 // Api.video
-    uploadVideo(File videoFile, String id) async {
-      //Dialogs.showSnackbar(context, 'Function called');
-      const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
-      const apiUrl = 'https://ws.api.video/videos';
-
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('$apiUrl/$id/source'))
-        ..headers['Authorization'] = 'Bearer $apiKey'
-        ..files.add(await http.MultipartFile.fromPath('file', videoFile.path));
-
-      var response = await request.send();
-      //Dialogs.showSnackbar(context, 'Trying');
-      print("res is ${response.stream.bytesToString()}");
-      if (response.statusCode == 201) {
-        // Video uploaded successfully
-        final Map<String, dynamic> data =
-            json.decode(await response.stream.bytesToString());
-
-        //Dialogs.showSnackbar(context, data['videoId']);
-        //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
-        final Loops loop = Loops(
-            maxVideoRes: '360p',
-            creatorName: ref.read(userDataProvider).userData!.name,
-            id: id,
-            uploadedBy: ref.read(userDataProvider).userData!.id,
-            videoUrl: data['assets']['mp4'],
-            thumbnail: data['assets']['thumbnail'],
-            title: title,
-            description: des,
-            likes: likes,
-            views: 0,
-            category: 'category');
-
-        FirebaseFirestore.instance
-            .collection('loops')
-            .doc(id)
-            .set(loop.toJson());
-
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(ref.read(userDataProvider).userData!.id)
-            .collection('loops')
-            .doc(id)
-            .set(loop.toJson());
-        Utils.toastMessage('Your video is uploaded!');
-        setState(() {
-          isloading = false;
-        });
-        context.pop();
-        return data['videoId'];
-      } else {
-        // Handle upload failure
-        //Dialogs.showSnackbar(context, 'Failed');
-        throw Exception('Failed to upload video');
-      }
-      // } catch (e) {
-      //   // Handle exceptions
-      //   //Dialogs.showSnackbar(context, e.toString());
-      //   log('Error uploading video: $e');
-      //   throw Exception('Failed to upload video');
-      // }
-    }
+//     uploadVideo(File videoFile, String id) async {
+//       //Dialogs.showSnackbar(context, 'Function called');
+//       const apiKey = '6Rdwzgfec9nfQmGXn523qoQiuKHhuDCO0o31bcis2Da';
+//       const apiUrl = 'https://ws.api.video/videos';
+//
+//       var request = http.MultipartRequest(
+//           'POST', Uri.parse('$apiUrl/$id/source'))
+//         ..headers['Authorization'] = 'Bearer $apiKey'
+//         ..files.add(await http.MultipartFile.fromPath('file', videoFile.path));
+//
+//       var response = await request.send();
+//       //Dialogs.showSnackbar(context, 'Trying');
+//       print("res is ${response.stream.bytesToString()}");
+//       if (response.statusCode == 201) {
+//         // Video uploaded successfully
+//         final Map<String, dynamic> data =
+//             json.decode(await response.stream.bytesToString());
+//
+//         //Dialogs.showSnackbar(context, data['videoId']);
+//         //Dialogs.showSnackbar(context, data['assets']['thumbnail']);
+//         // final Loops loop = Loops(
+//         //     maxVideoRes: '360p',
+//         //     creatorName: ref.read(userDataProvider).userData!.name,
+//         //     id: id,
+//         //     uploadedBy: ref.read(userDataProvider).userData!.id,
+//         //     videoUrl: data['assets']['mp4'],
+//         //     thumbnail: data['assets']['thumbnail'],
+//         //     title: title,
+//         //     description: des,
+//         //     likes: likes,
+//         //     views: 0,
+//         //     category: 'category');
+//         //
+//         // FirebaseFirestore.instance
+//         //     .collection('loops')
+//         //     .doc(id)
+//         //     .set(loop.toJson());
+//         //
+//         // FirebaseFirestore.instance
+//         //     .collection('users')
+//         //     .doc(ref.read(userDataProvider).userData!.id)
+//         //     .collection('loops')
+//         //     .doc(id)
+//         //     .set(loop.toJson());
+//         Utils.toastMessage('Your video is uploaded!');
+//         setState(() {
+//           isloading = false;
+//         });
+//         context.pop();
+//         return data['videoId'];
+//       } else {
+//         // Handle upload failure
+//         //Dialogs.showSnackbar(context, 'Failed');
+//         throw Exception('Failed to upload video');
+//       }
+//       // } catch (e) {
+//       //   // Handle exceptions
+//       //   //Dialogs.showSnackbar(context, e.toString());
+//       //   log('Error uploading video: $e');
+//       //   throw Exception('Failed to upload video');
+//       // }
+//     }
 
     // createVideo(String title, String description) async {
     //   Dialogs.showSnackbar(context, 'Called');
@@ -215,8 +215,6 @@ class _AddReelState extends ConsumerState<AddReel> {
                   title: "Add Reel",
                   loading: isloading,
                   onPress: () {
-                    _titleController.text = "delete";
-                    _descriptionController.text = "delete";
                     if (_titleController.text.isEmpty) {
                       Utils.flushBarErrorMessage('Please enter title', context);
                     } else if (_descriptionController.text.isEmpty) {
@@ -288,6 +286,29 @@ class _AddReelState extends ConsumerState<AddReel> {
     return '$hash,$expirationTime';
   }
 
+  Future<List<String>> getResolution(String videoId, String libraryId) async {
+    var url = Uri.parse(
+        'https://video.bunnycdn.com/library/$libraryId/videos/$videoId');
+
+    var headers = {
+      'AccessKey': 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d',
+      'accept': 'application/json',
+    };
+
+    var response = await http.get(url, headers: headers);
+    log("response: ${response.body}");
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var availableResolutions =
+          jsonResponse['availableResolutions'].split(',');
+
+      return availableResolutions;
+    } else {
+      throw Exception(
+          'Request failed with status $videoId: ${response.statusCode}');
+    }
+  }
+
   void _uploadVideo(
       String videoId, String signature, String expirationTime) async {
     File vid = await compressVideo(widget.video.path);
@@ -309,41 +330,48 @@ class _AddReelState extends ConsumerState<AddReel> {
     });
 
     await client.upload(
-      onComplete: () {
-        log("Complete!");
-        final Loops loop = Loops(
-            maxVideoRes: height,
-            creatorName: ref.read(userDataProvider).userData!.name,
-            id: videoId,
-            uploadedBy: ref.read(userDataProvider).userData!.id,
-            videoUrl:
-                'https://vz-a12f2b63-c06.b-cdn.net/$videoId/play_360p.mp4',
-            thumbnail:
-                'https://vz-a12f2b63-c06.b-cdn.net/$videoId/thumbnail.jpg',
-            title: _titleController.text,
-            description: _descriptionController.text,
-            likes: [],
-            views: 0,
-            category: 'category');
+      onComplete: () async {
+        Future.delayed(const Duration(seconds: 10), () async {
+          List<String> resolutions = await getResolution(videoId, _libraryId);
+          String newVideoUrl = 'https://$_CDN_host/$videoId/playlist.m3u8';
 
-        FirebaseFirestore.instance
-            .collection('loops')
-            .doc(videoId)
-            .set(loop.toJson());
+          log("Complete!");
+          final Loops loop = Loops(
+              maxVideoRes: height,
+              creatorName: ref.read(userDataProvider).userData!.name,
+              id: videoId,
+              uploadedBy: ref.read(userDataProvider).userData!.id,
+              videoUrl: newVideoUrl,
+              thumbnail:
+                  'https://vz-a12f2b63-c06.b-cdn.net/$videoId/thumbnail.jpg',
+              title: _titleController.text,
+              description: _descriptionController.text,
+              likes: [],
+              views: 0,
+              category: 'category',
+              resolution: resolutions);
 
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(ref.read(userDataProvider).userData!.id)
-            .collection('loops')
-            .doc(videoId)
-            .set(loop.toJson())
-            .then((value) {
-          Utils.toastMessage('Your video is uploaded!');
-          setState(() {
-            isloading = false;
+          FirebaseFirestore.instance
+              .collection('loops')
+              .doc(videoId)
+              .set(loop.toJson());
+
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(ref.read(userDataProvider).userData!.id)
+              .collection('loops')
+              .doc(videoId)
+              .set(loop.toJson())
+              .then((value) {
+            Utils.toastMessage('Your video is uploaded!');
+            setState(() {
+              isloading = false;
+            });
           });
+          _titleController.clear();
+          _descriptionController.clear();
+          context.pop();
         });
-        context.pop();
       },
       onProgress: (progress) {
         log("Progress: $progress");

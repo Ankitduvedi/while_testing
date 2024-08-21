@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/core/enums/firebase_providers.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+
 import '../data/model/community_user.dart';
 import '../data/model/message.dart';
 
@@ -222,6 +224,40 @@ class APIs {
           .collection('users')
           .doc(userId)
           .collection('videos')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print("error in deleting video from user collection $e");
+    }
+
+    return true;
+  }
+
+  Future<bool> deleteLoop(String id, String category, String userId) async {
+    print("id $id");
+    var url = 'https://video.bunnycdn.com/library/239543/videos/$id';
+    const headers = {
+      'accept': 'application/json',
+      'AccessKey': 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d',
+    };
+
+    final response = await delete(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+
+    try {
+      print("id $id");
+      firestore.collection('loops').doc(id).delete();
+      print("user id $userId");
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('loops')
           .doc(id)
           .delete();
     } catch (e) {

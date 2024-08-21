@@ -1,9 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:chewie/chewie.dart';
+
 import 'package:go_router/go_router.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
@@ -20,29 +20,54 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late ChewieController _chewieController;
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
     super.initState();
-
-    _chewieController = ChewieController(
-      videoPlayerController: VideoPlayerController.network(widget.videoUrl),
-      autoPlay: false,
-      looping: false,
-      showControls: true,
-      aspectRatio: 16 / 9,
-      placeholder: Container(
-        color: Colors.black,
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            autoDispose: true,
+            autoDetectFullscreenAspectRatio: true,
+            fullScreenByDefault: true,
+            fullScreenAspectRatio: 16 / 9,
+            //AR dual time but it's okay.
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                enablePip: false,
+                enableFullscreen: true,
+                enableSubtitles: false,
+                loadingColor: Colors.deepOrange,
+                progressBarBufferedColor: Colors.red,
+                //very useful
+                progressBarHandleColor: Colors.blue,
+                progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.videoUrl,
+      videoFormat: BetterPlayerVideoFormat.hls, //don't forget it if not hsl
+      bufferingConfiguration: BetterPlayerBufferingConfiguration(
+        minBufferMs: 5000,
+        maxBufferMs: 131072,
+        bufferForPlaybackMs: 2500,
+        bufferForPlaybackAfterRebufferMs: 5000,
       ),
-      autoInitialize: false,
+      // cacheConfiguration is very useful
+      cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          preCacheSize: 3 * 1024 * 1024),
     );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
   }
 
   @override
   void dispose() {
     // print('Dispose is being called');
-    _chewieController.dispose();
+    betterPlayerController.dispose();
     super.dispose();
   }
 
@@ -62,7 +87,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               icon: const Icon(Icons.arrow_back))
         ],
       ),
-      body: Chewie(controller: _chewieController),
+      body: BetterPlayer(controller: betterPlayerController),
     );
   }
 }

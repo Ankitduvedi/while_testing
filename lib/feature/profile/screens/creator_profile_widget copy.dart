@@ -1,17 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
+import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:com.while.while_app/feature/profile/controller/video_list_controller.dart';
 import 'package:com.while.while_app/feature/profile/screens/creators_reels_screen.dart';
 import 'package:com.while.while_app/feature/profile/screens/update_thumbnail.dart';
 import 'package:com.while.while_app/main.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:com.while.while_app/providers/apis.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:com.while.while_app/data/model/video_model.dart';
 
 import '../../../providers/user_provider.dart';
 // Ensure this import is correct
@@ -186,6 +186,7 @@ class _CreatorProfileState extends ConsumerState<CreatorProfileVideo> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => SelectThumbnailScreen(
+                              isLoop: false,
                               category: video.category,
                               videoId: video.id,
                               initialThumbnailUrl: video.thumbnail)));

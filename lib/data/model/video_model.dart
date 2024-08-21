@@ -5,7 +5,7 @@ class Video {
   final String thumbnail;
   final String title;
   final String description;
-  final List likes;
+  List likes;
   final int views;
   final String category;
   final String creatorName;

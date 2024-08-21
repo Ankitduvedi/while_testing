@@ -1,5 +1,5 @@
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoPlay extends StatefulWidget {
   final String url;
@@ -14,50 +14,66 @@ class VideoPlay extends StatefulWidget {
 }
 
 class _VideoPlayState extends State<VideoPlay> {
-  late VideoPlayerController _controller;
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-        widget.url) // Access the URL directly from the widget
-      ..addListener(() {
-        setState(() {});
-      })
-      ..setLooping(true)
-      ..initialize().then((_) {
-        // Ensure the controller is initialized before playing the video
-        if (mounted) {
-          _controller.play();
-        }
-      });
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            autoDispose: true,
+            autoDetectFullscreenAspectRatio: true,
+            fullScreenByDefault: true,
+            fullScreenAspectRatio: 16 / 9,
+            //AR dual time but it's okay.
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                enablePip: false,
+                enableFullscreen: true,
+                enableSubtitles: false,
+                loadingColor: Colors.deepOrange,
+                progressBarBufferedColor: Colors.red,
+                //very useful
+                progressBarHandleColor: Colors.blue,
+                progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.url,
+      videoFormat: BetterPlayerVideoFormat.hls, //don't forget it if not hsl
+      bufferingConfiguration: BetterPlayerBufferingConfiguration(
+        minBufferMs: 5000,
+        maxBufferMs: 131072,
+        bufferForPlaybackMs: 2500,
+        bufferForPlaybackAfterRebufferMs: 5000,
+      ),
+      // cacheConfiguration is very useful
+      cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          preCacheSize: 3 * 1024 * 1024),
+    );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
   }
 
   @override
   void dispose() {
-    _controller
-        .dispose(); // Dispose of the controller when the widget is disposed
+    betterPlayerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: _controller.value.isInitialized
+      child: betterPlayerController.isVideoInitialized() == true
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
+                BetterPlayer(controller: betterPlayerController),
                 const SizedBox(height: 20),
-                VideoProgressIndicator(
-                  _controller,
-                  allowScrubbing: true,
-                  padding: const EdgeInsets.only(top: 5.0),
-                ),
               ],
             )
           : const Center(

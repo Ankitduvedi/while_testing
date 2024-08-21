@@ -18,6 +18,8 @@ import 'package:com.while.while_app/feature/wrapper/scaffold_with_navbar.dart';
 import 'package:com.while.while_app/feature/wrapper/update.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../feature/reels/screens/reels_screen.dart';
+
 final goRouter = GoRouter(
   debugLogDiagnostics: true,
   navigatorKey: NavigationService.rootNavigatorKey,
@@ -85,7 +87,7 @@ final goRouter = GoRouter(
               }),
           GoRoute(
             path: '/reelsScreen',
-            builder: (context, state) => const ComingSoonPage(),
+            builder: (context, state) => const ReelsScreentest(),
           ),
           GoRoute(
             path: '/socials',

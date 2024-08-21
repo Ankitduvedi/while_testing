@@ -1,9 +1,9 @@
+import 'package:better_player/better_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/providers/apis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:video_player/video_player.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
 import 'package:share/share.dart';
 
@@ -19,13 +19,14 @@ class DynamicReelsScreen extends ConsumerStatefulWidget {
 class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
   late Video video;
   User? user = FirebaseAuth.instance.currentUser;
-  late VideoPlayerController _controller;
+  late BetterPlayerController betterPlayerController;
   bool likeTapped = false;
   @override
   void dispose() {
-    _controller.dispose();
+   betterPlayerController.dispose();
     super.dispose();
   }
+
 
   videoDetails() async {
     final data = await FirebaseFirestore.instance
@@ -37,6 +38,43 @@ class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
 
   @override
   void initState() {
+    BetterPlayerConfiguration betterPlayerConfiguration =
+    BetterPlayerConfiguration(
+        aspectRatio: 16 / 9,
+        autoDispose: true,
+        autoDetectFullscreenAspectRatio: true,
+        fullScreenByDefault: true,
+        fullScreenAspectRatio: 16 / 9,
+        //AR dual time but it's okay.
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+            enablePip: false,
+            enableFullscreen: true,
+            enableSubtitles: false,
+            loadingColor: Colors.deepOrange,
+            progressBarBufferedColor: Colors.red,
+            //very useful
+            progressBarHandleColor: Colors.blue,
+            progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      video.videoUrl,
+      videoFormat: BetterPlayerVideoFormat.hls, //don't forget it if not hsl
+      bufferingConfiguration: BetterPlayerBufferingConfiguration(
+        minBufferMs: 5000,
+        maxBufferMs: 131072,
+        bufferForPlaybackMs: 2500,
+        bufferForPlaybackAfterRebufferMs: 5000,
+      ),
+      // cacheConfiguration is very useful
+      cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          preCacheSize: 3 * 1024 * 1024),
+    );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
     likeTapped = false;
     videoDetails();
     super.initState();
@@ -68,8 +106,7 @@ class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _controller = VideoPlayerController.network(video.videoUrl)..initialize();
-    _controller.play();
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -77,7 +114,7 @@ class DynamicReelsScreenState extends ConsumerState<DynamicReelsScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(color: Colors.black),
         child: Stack(children: [
-          VideoPlayer(_controller),
+        BetterPlayer(controller: betterPlayerController),
           // FloatingActionButton(
           //   backgroundColor: Colors.transparent,
           //   onPressed: () => Navigator.of(context).pop(),

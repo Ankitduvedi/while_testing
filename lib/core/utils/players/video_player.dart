@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
@@ -13,72 +13,69 @@ class VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.file(File(widget.videoPath));
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.play();
-    _controller.setVolume(1);
-    _controller.setLooping(true);
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+            aspectRatio: 9 / 16,
+            autoDispose: true,
+            autoDetectFullscreenAspectRatio: false,
+            fullScreenByDefault: false,
+
+            //AR dual time but it's okay.
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                enableQualities: false,
+                enablePlaybackSpeed: false,
+                enableAudioTracks: false,
+                enableOverflowMenu: false,
+                showControlsOnInitialize: false,
+                overflowMenuIconsColor: Colors.pink,
+                overflowMenuCustomItems: [],
+                enablePip: false,
+                enableFullscreen: false,
+                enableSubtitles: false,
+                loadingColor: Colors.deepOrange,
+                progressBarBufferedColor: Colors.red,
+                //very useful
+                progressBarHandleColor: Colors.blue,
+                progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.memory, "",
+        bytes: File(widget.videoPath).readAsBytesSync(), videoExtension: ".mp4"
+
+        // cacheConfiguration is very useful
+        );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
+    setState(() {});
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    betterPlayerController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Center(
-            child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: Stack(alignment: Alignment.center, children: [
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      VideoPlayer(_controller),
-                      VideoProgressIndicator(
-                        _controller,
-                        allowScrubbing: true,
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (_controller.value.isPlaying) {
-                        setState(() {
-                          _controller.pause();
-                        });
-                      } else {
-                        setState(() {
-                          _controller.play();
-                        });
-                      }
-                    },
-                    icon: Icon(
-                      _controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ])),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    ));
+        body: Center(
+      child: BetterPlayer(controller: betterPlayerController),
+    )
+        //     FutureBuilder(
+        //   future: _initializeVideoPlayerFuture,
+        //   builder: (context, snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.done) {
+        //       return ;
+        //     } else {
+        //       return const Center(child: CircularProgressIndicator());
+        //     }
+        //   },
+        // )
+        );
   }
 }

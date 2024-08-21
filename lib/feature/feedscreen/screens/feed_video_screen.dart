@@ -1,62 +1,133 @@
 import 'dart:convert';
 import 'dart:developer';
+
+import 'package:better_player/better_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/data/model/chat_user.dart';
 import 'package:com.while.while_app/data/model/video_model.dart';
-import 'package:com.while.while_app/feature/auth/controller/auth_controller.dart';
 import 'package:com.while.while_app/feature/feedscreen/screens/feed_screen_widget.dart';
 import 'package:com.while.while_app/feature/notifications/controller/notif_contoller.dart';
-import 'package:com.while.while_app/providers/apis.dart';
-import 'package:com.while.while_app/core/utils/dialogs/dialogs.dart';
 import 'package:com.while.while_app/feature/social/screens/chat/profile_dialog.dart';
+import 'package:com.while.while_app/providers/apis.dart';
 import 'package:com.while.while_app/providers/connect_users_provider.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
+
 import 'creator_feed_screen_widget.dart';
 
 class VideoScreen extends ConsumerStatefulWidget {
-  const VideoScreen({super.key, required this.video});
+  VideoScreen({super.key, required this.video});
 
-  final Video video;
+  Video video;
 
   @override
   VideoScreenState createState() => VideoScreenState();
 }
 
 class VideoScreenState extends ConsumerState<VideoScreen> {
-  late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
+  late BetterPlayerController betterPlayerController;
   bool isPortrait = true;
   List<String> filteredQualityOptions = [];
   List<String> validQualityOptions = [];
   String libraryID = '243538';
   String CDNHostname = 'vz-f0994fc7-d98.b-cdn.net';
   String url = '';
+  bool isLiked = true;
 
   List<String> availableRes = [];
   String currentQuality =
       '240p'; // Initial quality, can be dynamic based on API or default
   @override
   void initState() {
-    url = 'https://$CDNHostname/${widget.video.id}/240p/video.m3u8';
+    checkLike(ref.read(userDataProvider).userData!.id);
+    print("video url: ${widget.video.videoUrl}");
+    print(
+        "new url is ${widget.video.videoUrl.replaceAll("/play_360p.mp4", "/playlist.m3u8")} ");
     super.initState();
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            autoDispose: true,
+            autoDetectFullscreenAspectRatio: false,
+            fullScreenByDefault: false,
+            fullScreenAspectRatio: 16 / 9,
+            //AR dual time but it's okay.
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                enablePip: false,
+                enableFullscreen: true,
+                enableSubtitles: false,
+                showControlsOnInitialize: false,
+                loadingColor: Colors.yellowAccent,
+                progressBarBufferedColor: Colors.red,
+                //very useful
+                progressBarHandleColor: Colors.blue,
+                progressBarBackgroundColor: Colors.white));
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.video.videoUrl.replaceAll("/play_360p.mp4", "/playlist.m3u8"),
+      videoFormat: BetterPlayerVideoFormat.hls, //don't forget it if not hsl
+      bufferingConfiguration: BetterPlayerBufferingConfiguration(
+        minBufferMs: 5000,
+        maxBufferMs: 5000,
+        bufferForPlaybackMs: 500,
+        bufferForPlaybackAfterRebufferMs: 500,
+      ),
+
+      // cacheConfiguration is very useful
+      cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          preCacheSize: 3 * 1024 * 1024),
+    );
+
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
+        betterPlayerDataSource: dataSource);
+    betterPlayerController.play();
+    if (betterPlayerController.isVideoInitialized() == true) {
+      setState(() {});
+      betterPlayerController.play();
+    }
     _initializePlayer();
     increaseView();
-    // initializePlayer();
-    // checkQualityOptions();
-    // filterQualityOptions();
-    // Set the status bar color to black
+
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black, // Status bar color
       statusBarIconBrightness: Brightness.light, // Status bar icons' color
     ));
+  }
+
+  void checkLike(String userId) async {
+    DocumentReference videoDoc = FirebaseFirestore.instance
+        .collection('videos/${widget.video.category}/${widget.video.category}')
+        .doc(widget.video.id);
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(videoDoc);
+      if (!snapshot.exists) {
+        throw Exception("Video does not exist!");
+      }
+
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+      List<dynamic> likes = data['likes'] ?? [];
+      log("Checking like ${likes} ${userId}");
+      widget.video.likes = likes;
+      if (likes.contains(userId)) {
+        setState(() {
+          isLiked = true;
+        });
+      } else {
+        setState(() {
+          isLiked = false;
+        });
+      }
+    });
   }
 
   void increaseView() {
@@ -72,43 +143,40 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     });
   }
 
-  void _onQualitySelected(String quality) async {
-    await _chewieController?.pause();
-    await _videoPlayerController.pause();
-    _initializeVideoPlayer(quality);
-    context.pop();
+  Future<void> updateUserReaction(
+      String videoId, String userId, bool isLike) async {
+    try {
+      DocumentReference videoDoc = FirebaseFirestore.instance
+          .collection(
+              'videos/${widget.video.category}/${widget.video.category}')
+          .doc(videoId);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(videoDoc);
+        if (!snapshot.exists) {
+          throw Exception("Video does not exist!");
+        }
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+        List<dynamic> likes = data['likes'] ?? [];
+        print("likes: $likes userId $userId");
+        if (isLike) {
+          if (!likes.contains(userId)) {
+            print("adding like");
+            likes.add(userId);
+          }
+        } else {
+          likes.remove(userId);
+        }
+        print("afterlikes: $likes userId $userId");
+        transaction.update(videoDoc, {'likes': likes});
+      });
+      print("User reaction updated successfully2");
+    } catch (e) {
+      print("Failed to update user reaction1: $e");
+    }
   }
 
-  void _initializeVideoPlayer(String quality) {
-    List<String> parts = widget.video.videoUrl.split('/play');
-    String baseVideoUrl = parts[0];
-    final videoUrl = '$baseVideoUrl/play_$quality.mp4';
-    setState(() {
-      _videoPlayerController =
-          VideoPlayerController.network(widget.video.videoUrl)
-            ..initialize().then((_) {
-              setState(() {});
-              _chewieController = ChewieController(
-                videoPlayerController: _videoPlayerController,
-                autoPlay: true,
-                looping: true,
-              );
-            });
-    });
-  }
-
-  Future<void> _initializePlayer() async {
-    availableRes = await getResolution(widget.video.id, libraryID);
-
-    _videoPlayerController = VideoPlayerController.network(
-        'https://$CDNHostname/${widget.video.id}/${availableRes[0]}/video.m3u8');
-
-    await _videoPlayerController.initialize();
-
-    _createQualityOptions();
-
-    setState(() {});
-  }
+  Future<void> _initializePlayer() async {}
 
   Future<List<String>> getResolution(String videoId, String libraryId) async {
     log("videoId: $videoId, libraryId: $libraryId ${widget.video.videoUrl}");
@@ -133,46 +201,6 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
     }
   }
 
-  Future<void> initializePlayer() async {
-    _videoPlayerController =
-        VideoPlayerController.network(widget.video.videoUrl);
-    await _videoPlayerController.initialize();
-    _chewieController = ChewieController(
-      showControls: true,
-      showOptions: true,
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-    );
-
-    _chewieController!.addListener(() {
-      setState(() {});
-      if (_chewieController!.isFullScreen) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeRight,
-            DeviceOrientation.landscapeLeft,
-          ]);
-        });
-        setState(() {
-          isPortrait = false;
-        });
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          SystemChrome.setPreferredOrientations([
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
-          ]);
-        });
-        setState(() {
-          isPortrait = true;
-        });
-      }
-    });
-
-    setState(() {});
-  }
-
   bool _isResolutionLessThanOrEqual(String quality, String maxRes) {
     int qualityValue = int.parse(quality.replaceAll('p', ''));
     int maxResValue = int.parse(maxRes.replaceAll('p', ''));
@@ -193,18 +221,15 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      color: Colors.black,
-                      height: 300,
-                      child: _chewieController != null &&
-                              _chewieController!
-                                  .videoPlayerController.value.isInitialized
-                          ? Stack(
-                              children: [
-                                Chewie(controller: _chewieController!),
-                              ],
-                            )
-                          : const Center(child: CircularProgressIndicator()),
-                    ),
+                        color: Colors.black,
+                        height: 300,
+                        child: Stack(
+                          children: [
+                            BetterPlayer(
+                              controller: betterPlayerController,
+                            ),
+                          ],
+                        )),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                       child: Text(
@@ -216,9 +241,45 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                       padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
                       child: Text(
                         widget.video.description,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Color.fromARGB(255, 39, 39, 39)),
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 15, 7, 0),
+                      child: Text(
+                        widget.video.views.toString() + ' views',
+                        style:
+                            const TextStyle(fontSize: 11, color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 7, 0),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  updateUserReaction(
+                                      widget.video.id,
+                                      ref.read(userDataProvider).userData!.id,
+                                      isLiked);
+                                  isLiked = !isLiked;
+                                });
+                              },
+                              icon: Icon(isLiked
+                                  ? Icons.thumb_up_alt
+                                  : Icons.thumb_up_off_alt_outlined)),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              CupertinoIcons.arrow_turn_up_right,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     StreamBuilder(
@@ -231,7 +292,9 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                         }
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
-                            return const CircularProgressIndicator();
+                            return const CircularProgressIndicator(
+                              color: Colors.green,
+                            );
                           default:
                             if (snapshot.data != null) {
                               ChatUser user = snapshot.data!;
@@ -306,7 +369,9 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
                                                 );
                                         },
                                         loading: () => const Center(
-                                            child: CircularProgressIndicator()),
+                                            child: CircularProgressIndicator(
+                                          color: Colors.cyan,
+                                        )),
                                         error: (e, _) =>
                                             Center(child: Text('Error: $e')),
                                       ),
@@ -342,117 +407,13 @@ class VideoScreenState extends ConsumerState<VideoScreen> {
             ),
           )
         : Stack(
-            children: [
-              Chewie(controller: _chewieController!),
-              Positioned(
-                top: 10,
-                left: 10,
-                child: IconButton(
-                  onPressed: () {
-                    _showQualityOptions(context);
-                  },
-                  icon: const Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+            children: [],
           );
-  }
-
-  void _createQualityOptions() {
-    // Sort available resolutions in ascending order
-    availableRes.sort((a, b) {
-      int resolutionA = int.parse(a.replaceAll('p', ''));
-      int resolutionB = int.parse(b.replaceAll('p', ''));
-      return resolutionA.compareTo(resolutionB);
-    });
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-      aspectRatio: _videoPlayerController.value.aspectRatio,
-      additionalOptions: (context) {
-        return <OptionItem>[
-          OptionItem(
-            onTap: () => _showQualityOptions(context),
-            iconData: Icons.settings,
-            title: 'Quality',
-          ),
-        ];
-      },
-    );
-  }
-
-  void _showQualityOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ListTile(
-              title: const Text('Quality of Current Video'),
-              subtitle: Text(currentQuality),
-            ),
-            const Divider(),
-            ...availableRes.map((resolution) {
-              String resolutionUrl =
-                  'https://$CDNHostname/${widget.video.id}/$resolution/video.m3u8';
-              return ListTile(
-                title: Text('$resolution Quality'),
-                onTap: () {
-                  context.pop();
-                  _changeQuality(resolutionUrl, resolution);
-                },
-              );
-            }).toList(),
-          ],
-        );
-      },
-    );
-  }
-
-  void _changeQuality(String url, String resolution) async {
-    final currentPosition = _videoPlayerController.value.position;
-
-    setState(() {
-      currentQuality = resolution;
-    });
-
-    _videoPlayerController.pause();
-    _videoPlayerController = VideoPlayerController.network(url);
-    await _videoPlayerController.initialize();
-    _chewieController?.dispose();
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-      aspectRatio: _videoPlayerController.value.aspectRatio,
-      additionalOptions: (context) {
-        return <OptionItem>[
-          OptionItem(
-            onTap: () => _showQualityOptions(context),
-            iconData: Icons.settings,
-            title: 'Quality',
-          ),
-        ];
-      },
-    );
-
-    _videoPlayerController.seekTo(currentPosition);
-    _videoPlayerController.play();
-
-    setState(() {});
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController?.dispose();
+    betterPlayerController.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

@@ -10,6 +10,7 @@ class Loops {
   final String category;
   final String creatorName;
   final String maxVideoRes;
+  final List<String> resolution;
 
   Loops(
       {required this.id,
@@ -22,7 +23,8 @@ class Loops {
       required this.likes,
       required this.views,
       required this.category,
-      required this.maxVideoRes});
+      required this.maxVideoRes,
+      required this.resolution});
 
   factory Loops.fromMap(Map<String, dynamic> map) {
     return Loops(
@@ -37,6 +39,7 @@ class Loops {
       views: map['views'] as int,
       category: map['category'] as String,
       maxVideoRes: map['maxVideoRes'] as String,
+      resolution: List<String>.from(map['resolution']),
     );
   }
   Map<String, dynamic> toJson() {
@@ -52,6 +55,7 @@ class Loops {
     map['category'] = category;
     map['creatorName'] = creatorName;
     map['maxVideoRes'] = maxVideoRes;
+    map['resolution'] = resolution;
     return map;
   }
 }

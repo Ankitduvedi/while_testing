@@ -11,6 +11,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../providers/reelProvider.dart';
+
 class ScaffoldWithNavBar extends ConsumerStatefulWidget {
   final Widget childScreen;
   const ScaffoldWithNavBar({required this.childScreen, super.key});
@@ -45,9 +47,21 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
   @override
   void initState() {
     final fireSevice = ref.read(apisProvider);
+
     _checkInitialMessage();
     SystemChannels.lifecycle.setMessageHandler((message) {
       log('Message: $message');
+
+      if (message.toString().contains('inactive')) {
+        log("current lifecycle state: inactive");
+        ref.read(indexProvider.notifier).setCurrentIndex(-1);
+      } else if (message.toString().contains('paused')) {
+        log("current lifecycle state: paused");
+        ref.read(indexProvider.notifier).setCurrentIndex(-1);
+      } else {
+        log("current lifecycle state: resumed");
+        ref.read(indexProvider.notifier).setCurrentIndex(-1);
+      }
 
       if (fireSevice.auth.currentUser != null) {
         if (message.toString().contains('resume')) {
@@ -57,6 +71,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar>
           fireSevice.updateActiveStatus(0);
         }
       }
+
       return Future.value(message);
     });
     super.initState();

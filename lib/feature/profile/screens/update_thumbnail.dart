@@ -1,25 +1,28 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com.while.while_app/main.dart';
 import 'package:com.while.while_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
 class SelectThumbnailScreen extends ConsumerStatefulWidget {
   final String initialThumbnailUrl;
   final String videoId;
   final String category;
+  final bool isLoop;
 
   const SelectThumbnailScreen(
       {Key? key,
       required this.category,
       required this.initialThumbnailUrl,
-      required this.videoId})
+      required this.videoId,
+      required this.isLoop})
       : super(key: key);
 
   @override
@@ -42,8 +45,10 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
   }
 
   void updateThumbnail(String thumnailUrl, String videoId) async {
-    String libraryId = '243538';
-    String accessKey = '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
+    String libraryId = widget.isLoop ? '239543' : '243538';
+    String accessKey = widget.isLoop
+        ? 'dcd568cf-99ae-4d4d-9d5df4920f3f-7e3b-478d'
+        : '6973830f-6890-472d-b8e3b813c493-5c4d-4c50';
 
     var url = Uri.parse(
         'https://video.bunnycdn.com/library/$libraryId/videos/$videoId/thumbnail?thumbnailUrl=$thumnailUrl');
@@ -58,20 +63,34 @@ class SelectThumbnailScreenState extends ConsumerState<SelectThumbnailScreen> {
 
     if (response.statusCode == 200) {
       log("videoId: $videoId");
-      FirebaseFirestore.instance
-          .collection('videos')
-          .doc(widget.category)
-          .collection(widget.category)
-          .doc(videoId)
-          .update({"thumbnail": thumnailUrl});
-      var userId = ref.read(userDataProvider).userData?.id;
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('videos')
-          .doc(videoId)
-          .update({"thumbnail": thumnailUrl});
-      log('Thumbnail updated successfully');
+      if (widget.isLoop) {
+        FirebaseFirestore.instance
+            .collection('loops')
+            .doc(videoId)
+            .update({"thumbnail": thumnailUrl});
+        var userId = ref.read(userDataProvider).userData?.id;
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('loops')
+            .doc(videoId)
+            .update({"thumbnail": thumnailUrl});
+      } else {
+        FirebaseFirestore.instance
+            .collection('videos')
+            .doc(widget.category)
+            .collection(widget.category)
+            .doc(videoId)
+            .update({"thumbnail": thumnailUrl});
+        var userId = ref.read(userDataProvider).userData?.id;
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('videos')
+            .doc(videoId)
+            .update({"thumbnail": thumnailUrl});
+        log('Thumbnail updated successfully');
+      }
     } else {
       log('Request failed with status: ${response.statusCode}');
     }

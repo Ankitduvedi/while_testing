@@ -277,7 +277,7 @@ class AddVideoState extends ConsumerState<AddVideo> {
               id: videoId,
               category: selectedOption,
               uploadedBy: ref.read(userDataProvider).userData!.id,
-              videoUrl: 'https://$_CDN_host/${videoId}/play_360p.mp4',
+              videoUrl: 'https://$_CDN_host/${videoId}/playlist.m3u8',
               thumbnail: 'https://$_CDN_host/${videoId}/thumbnail.jpg',
               title: _titleController.text,
               description: _descriptionController.text,
